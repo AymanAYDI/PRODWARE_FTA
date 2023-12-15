@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Finance.GeneralLedger.Ledger;
-tableextension 50001 GLEntry extends "G/L Entry" //17
+tableextension 50002 GLEntry extends "G/L Entry" //17
 {
     keys
     {

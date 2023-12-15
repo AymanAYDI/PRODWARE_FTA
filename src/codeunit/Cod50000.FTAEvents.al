@@ -86,6 +86,27 @@ codeunit 50000 "FTA_Events"
         end;
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Cust. Ledger Entry", 'OnAfterCopyCustLedgerEntryFromGenJnlLine', '', false, false)]
+    local procedure OnAfterCopyCustLedgerEntryFromGenJnlLine(var CustLedgerEntry: Record "Cust. Ledger Entry"; GenJournalLine: Record "Gen. Journal Line")
+    begin
+        CustLedgerEntry."Mobile Salesperson Code" := GenJournalLine."Mobile Salesperson Code";
+    end;
+
+    //TODO A verifier
+    //Record 36 OnDelete
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeShowPostedDocsToPrintCreatedMsg', '', false, false)]
+    local procedure OnBeforeShowPostedDocsToPrintCreatedMsg(var ShowPostedDocsToPrint: Boolean)
+    var
+        RecLPurchHeader: Record "Purchase Header";
+        TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
+
+    begin
+        IF "Shipping Order No." <> '' THEN
+            IF CONFIRM(STRSUBSTNO(TextCdeTransp002, "Shipping Order No.")) THEN BEGIN
+                IF RecLPurchHeader.GET(RecLPurchHeader."Document Type"::Order, "Shipping Order No.") THEN RecLPurchHeader.DELETE(TRUE);
+            END;
+    end;
+
     var
         InvtSetup: Record "Inventory Setup";
         HasInvtSetup: Boolean;

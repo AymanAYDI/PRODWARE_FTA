@@ -6,7 +6,7 @@ using Microsoft.CRM.Team;
 using System.Security.AccessControl;
 using Microsoft.Inventory.Intrastat;
 using Microsoft.Sales.Setup;
-tableextension 50002 Customer extends Customer //18
+tableextension 50003 Customer extends Customer //18
 {
     fields
     {
