@@ -1,0 +1,32 @@
+{
+  "id": "7ca36239-0385-4f4c-9971-d0c71b1f29e4",
+  "name": "FTA",
+  "publisher": "Prodware",
+  "version": "23.0.0.0",
+  "brief": "FTA Customizations",
+  "description": "FTA Customizations",
+  "privacyStatement": "",
+  "EULA": "https://www.prodwaregroup.com/",
+  "help": "https://www.prodwaregroup.com/",
+  "url": "https://www.prodwaregroup.com/",
+  "logo": "./resource/logo/Logo-Prodware.jpg",
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "23.0.0.0",
+  "idRanges": [
+    {
+      "from": 50000,
+      "to": 99999
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "runtime": "12.0",
+  "features": [
+    "NoImplicitWith", "TranslationFile"
+  ]
+}
