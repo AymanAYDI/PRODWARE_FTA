@@ -1,5 +1,4 @@
 namespace Prodware.FTA;
-
 using Microsoft.Inventory.Item;
 using Microsoft.Sales.Customer;
 using Microsoft.Sales.Document;
@@ -27,11 +26,9 @@ tableextension 50007 Item extends Item //27
                 if "Purchase Price Base" = 0 then
                     Error(CstL001);
                 if "Indirect Cost %" <> 0 then
-                    //"Unit Price" := Round("Purchase Price Base" * (1 + "Indirect Cost %"/100) * "Multiplying Coefficient",0.01)
                     "Multiplying Coefficient" := Round("Unit Price" / "Purchase Price Base" * (1 + "Indirect Cost %" / 100), 0.00001)
                 else
                     "Multiplying Coefficient" := Round("Unit Price" / "Purchase Price Base", 0.00001);
-                //"Unit Price" := Round("Purchase Price Base" * "Multiplying Coefficient",0.01);
             end;
         }
         modify("Indirect Cost %")
@@ -554,9 +551,9 @@ tableextension 50007 Item extends Item //27
 
     local procedure GetInvtSetup()
     begin
-        if NOT HasInvtSetup then begin
+        if not HasInvtSetup then begin
             InvtSetup.Get;
-            HasInvtSetup := TRUE;
+            HasInvtSetup := true;
         end;
     end;
 
