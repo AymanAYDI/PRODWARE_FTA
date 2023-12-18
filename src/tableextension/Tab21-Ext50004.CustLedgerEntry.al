@@ -110,7 +110,7 @@ tableextension 50004 CustLedgerEntry extends "Cust. Ledger Entry" //21
         RecgLCustomer: Record Customer;
     begin
         IF RecgLCustomer.GET(CodLCustNo) THEN
-            EXIT(RecgLCustomer.Name)
+            EXIT(RecgLCustomer.Name[20])
         ELSE
             EXIT('');
     end;
