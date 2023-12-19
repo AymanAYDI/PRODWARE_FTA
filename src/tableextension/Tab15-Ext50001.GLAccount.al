@@ -6,13 +6,12 @@ tableextension 50001 GLAccount extends "G/L Account" //15
 {
     fields
     {
-        field(51000; "Source Type Filter"; Option)
+        field(51000; "Source Type Filter"; enum "Source Type Filter")
         {
             Caption = 'Source Type Filter';
-            Description = 'NAVEASY.001 [Multi_Collectif] Ajout du champ';
+
             FieldClass = FlowFilter;
-            OptionCaption = ' ,Customer,Vendor,Bank Account,Fixed Asset';
-            OptionMembers = " ",Customer,Vendor,"Bank Account","Fixed Asset";
+
         }
         field(51001; "Debit Amount Type"; Decimal)
         {
@@ -50,7 +49,7 @@ tableextension 50001 GLAccount extends "G/L Account" //15
         }
         field(51003; "Source No. Filter"; Code[20])
         {
-            Caption = 'Source No. Filter';
+
             FieldClass = FlowFilter;
         }
     }
