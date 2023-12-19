@@ -1,7 +1,7 @@
 enum 50005 "Comment type"
 {
     Extensible = true;
-    
+
     value(0; "")
     {
         Caption = ' ';
@@ -34,7 +34,7 @@ enum 50005 "Comment type"
     {
         Caption = 'Autres commentaires';
     }
-    value(8; """Setting information")
+    value(8; "Setting information")
     {
         Caption = 'Réglage sur banc';
     }

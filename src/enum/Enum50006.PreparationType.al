@@ -1,4 +1,4 @@
-enum 50002 "Preparation Type"
+enum 50006 "Preparation Type"
 {
     Extensible = true;
     value(0; " ")

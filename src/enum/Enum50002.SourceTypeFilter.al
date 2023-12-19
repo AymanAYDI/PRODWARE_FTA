@@ -1,7 +1,7 @@
 enum 50002 "Source Type Filter"
 {
     Extensible = true;
-    
+
     value(0; "")
     {
         Caption = '';
@@ -18,7 +18,7 @@ enum 50002 "Source Type Filter"
     {
         Caption = 'Bank Account';
     }
-    value(4; """Fixed Asset"";")
+    value(4; "Fixed Asset")
     {
         Caption = 'Fixed Asset''';
     }
