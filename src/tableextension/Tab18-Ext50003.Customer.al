@@ -28,16 +28,16 @@ tableextension 50003 Customer extends Customer //18
         }
         field(50010; "No. of Archive Quotes"; Integer)
         {
-            CalcFormula = Count("Sales Header Archive" WHERE("Document Type" = CONST(Quote),
-                                                              "Sell-to Customer No." = FIELD("No.")));
+            CalcFormula = count("Sales Header Archive" where("Document Type" = const(Quote),
+                                                              "Sell-to Customer No." = field("No.")));
             Caption = 'No. of Quotes';
             Editable = false;
             FieldClass = FlowField;
         }
         field(50011; "Bill-to No. of Archive Quotes"; Integer)
         {
-            CalcFormula = Count("Sales Header Archive" WHERE("Document Type" = CONST(Quote),
-                                                              "Sell-to Customer No." = FIELD("No.")));
+            CalcFormula = count("Sales Header Archive" where("Document Type" = const(Quote),
+                                                              "Sell-to Customer No." = field("No.")));
             Caption = 'Bill-to No. of Quotes';
             Editable = false;
             FieldClass = FlowField;

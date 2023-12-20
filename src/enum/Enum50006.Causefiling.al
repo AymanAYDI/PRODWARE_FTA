@@ -1,7 +1,7 @@
 enum 50006 "Cause filing"
 {
     Extensible = true;
-    
+
     value(0; "No proceeded")
     {
         Caption = 'No proceeded';

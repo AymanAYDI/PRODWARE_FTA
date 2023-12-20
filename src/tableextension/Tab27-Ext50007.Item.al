@@ -4,6 +4,7 @@ using Microsoft.Sales.Customer;
 using Microsoft.Sales.Document;
 using Microsoft.Purchases.Document;
 using Microsoft.Foundation.NoSeries;
+using Microsoft.Inventory.Setup;
 using Microsoft.Finance.GeneralLedger.Setup;
 tableextension 50007 Item extends Item //27
 {
@@ -549,14 +550,6 @@ tableextension 50007 Item extends Item //27
         end;
     end;
 
-    local procedure GetInvtSetup()
-    begin
-        if not HasInvtSetup then begin
-            InvtSetup.Get;
-            HasInvtSetup := true;
-        end;
-    end;
-
     local procedure FctCalcKitPriceFTA(var RecPItem: Record 27; var BooPMonoLevel: Boolean)
     var
         RecLItem: Record 27;
@@ -572,38 +565,40 @@ tableextension 50007 Item extends Item //27
 
     local procedure FctCreateFromTemplate()
     var
-        "**FTA1.00": Integer;
         CduLTemplateMgt: Codeunit 8612;
         RecRef: RecordRef;
         RecLTemplateHeader: Record 8618;
         RecLTemplateLine: Record 8619;
         RecLItemUnitofMeasure: Record 5404;
+        RecItem: Record 27;
+        InvtSetup: Record "Inventory Setup";
     begin
         if "Item Base" = "Item Base"::Transitory then begin
             GetInvtSetup();
+            // if not RecItem.HasInvtSetup then begin
+            //     InventorySetup.Get();
+            //     HasInvtSetup := true;
+            // end;
             RecRef.GetTable(Rec);
-            //TODO: table Inventory setup not migrated yet 
-            // InvtSetup.TESTFIELD("Template Item Transitory Code");
-            // RecLTemplateHeader.Get(InvtSetup."Template Item Transitory Code");
-            // RecLTemplateLine.SetRange("Data Template Code", InvtSetup."Template Item Transitory Code");
+            InvtSetup.TESTFIELD("Template Item Transitory Code");
+            RecLTemplateHeader.Get(InvtSetup."Template Item Transitory Code");
+            RecLTemplateLine.SetRange("Data Template Code", InvtSetup."Template Item Transitory Code");
             RecLTemplateLine.SetRange("Field ID", 8);
-            if RecLTemplateLine.FindSet() then begin
+            if RecLTemplateLine.FindSet() then
                 if not RecLItemUnitofMeasure.Get("No.", RecLTemplateLine."Default Value") then begin
                     RecLItemUnitofMeasure.Init();
                     RecLItemUnitofMeasure.Validate("Item No.", "No.");
                     RecLItemUnitofMeasure.Validate(Code, RecLTemplateLine."Default Value");
                     RecLItemUnitofMeasure.Insert(true);
                 end;
-            end;
             CduLTemplateMgt.UpdateRecord(RecLTemplateHeader, RecRef);
         end;
         if "Item Base" = "Item Base"::"Transitory Kit" then begin
             GetInvtSetup;
             RecRef.GetTable(Rec);
-            //TODO: table Inventory setup not migrated yet 
-            // InvtSetup.TESTFIELD("Template Item Trans. Kit Code");
-            // RecLTemplateHeader.Get(InvtSetup."Template Item Trans. Kit Code");
-            // RecLTemplateLine.SetRange("Data Template Code", InvtSetup."Template Item Trans. Kit Code");
+            InvtSetup.TESTFIELD("Template Item Trans. Kit Code");
+            RecLTemplateHeader.Get(InvtSetup."Template Item Trans. Kit Code");
+            RecLTemplateLine.SetRange("Data Template Code", InvtSetup."Template Item Trans. Kit Code");
             RecLTemplateLine.SetRange("Field ID", 8);
             if RecLTemplateLine.FindSet() then
                 if not RecLItemUnitofMeasure.Get("No.", RecLTemplateLine."Default Value") then begin
@@ -617,10 +612,9 @@ tableextension 50007 Item extends Item //27
         if "Item Base" = "Item Base"::"Bored blocks" then begin
             GetInvtSetup();
             RecRef.GetTable(Rec);
-            //TODO: table Inventory setup not migrated yet 
-            // InvtSetup.TESTFIELD(InvtSetup."Template Item Bored block Code");
-            // RecLTemplateHeader.Get(InvtSetup."Template Item Bored block Code");
-            // RecLTemplateLine.SetRange("Data Template Code", InvtSetup."Template Item Bored block Code");
+            InvtSetup.TESTFIELD(InvtSetup."Template Item Bored block Code");
+            RecLTemplateHeader.Get(InvtSetup."Template Item Bored block Code");
+            RecLTemplateLine.SetRange("Data Template Code", InvtSetup."Template Item Bored block Code");
             RecLTemplateLine.SetRange("Field ID", 8);
             if RecLTemplateLine.FindSet() then
                 if not RecLItemUnitofMeasure.Get("No.", RecLTemplateLine."Default Value") then begin
@@ -635,7 +629,6 @@ tableextension 50007 Item extends Item //27
 
     local procedure FctBOM(var RecPItem: Record 27)
     var
-        "**FTA1.00": Integer;
         RecLProdBOMHeader: Record 99000771;
         CstL001: Label 'This item does not have a BOM, do you want to create one?';
         FrmLKitBOM: Page 36;
@@ -684,6 +677,7 @@ tableextension 50007 Item extends Item //27
         RecLProductionBOMLine: Record 90;
         DecLComponentPrice: Decimal;
         RecLItem: Record 27;
+        GLSetup: Record "General Ledger Setup";
     begin
         DecLComponentPrice := 0;
         RecLProductionBOMLine.Reset();
@@ -713,19 +707,22 @@ tableextension 50007 Item extends Item //27
         RecPItem.MODIFY();
     end;
 
+    //TODO -> Verifier
+    procedure GetInvtSetup()
+    begin
+        if not HasInvtSetup then begin
+            InventorySetup.Get();
+            HasInvtSetup := true;
+        end;
+    end;
+
+
     var
-        CduLTemplateMgt: Codeunit 8612;
-        CstL001: Label 'Please enter before this opeartion the The purchase price.';
-        "**FTA1.00": Integer;
-        RecRef: RecordRef;
-        RecLTemplateHeader: Record 8618;
-        OptLItemBase: Option Standard,Transitory,"Transitory Kit";
-        toto1: Text[30];
-        RecLItem: Record 27;
-        InvtSetup: Record 313;
+        InventorySetup: Record "Inventory Setup";
         HasInvtSetup: Boolean;
-        GLSetup: Record "General Ledger Setup";
-        NoSeriesMgt: Codeunit NoSeriesManagement;
+
+
+
 
 }
 
