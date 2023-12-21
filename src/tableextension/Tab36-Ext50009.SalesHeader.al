@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
-tableextension 50008 SalesHeader extends "Sales Header" //36
+tableextension 50009 SalesHeader extends "Sales Header" //36
 {
     fields
     {
@@ -1340,24 +1340,24 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
                             EXIT(TRUE);
                         END;
                     ShipmentMethod."Shipping Costs"::Franco:
-                        BEGIN
-                            Rec.CALCFIELDS("Franco Amount");
+
+                        Rec.CALCFIELDS("Franco Amount");
                             //message(' Fraco %1, Total prep %2',Rec."Franco Amount",TotalSalesLineAmountPrepare);
                             IF TotalSalesLineAmountPrepare >= Rec."Franco Amount" THEN BEGIN
-                                DeleteOpenShipCostLine;
-                                MESSAGE('Franco dépassé, pas de frais de port et d''emballage');
-                                EXIT(TRUE);
-                            END ELSE
-                                CalcShipment;
-                        END;
-                    ShipmentMethod."Shipping Costs"::Automatic:
-                        BEGIN
+                        DeleteOpenShipCostLine;
+                        MESSAGE('Franco dépassé, pas de frais de port et d''emballage');
+                        EXIT(TRUE);
+                    END ELSE
                             CalcShipment;
-                        END;
                 END;
-            END ELSE
-                EXIT(TRUE);
+                ShipmentMethod."Shipping Costs"::Automatic:
+                
+                            CalcShipment();
+
+            END;
         END ELSE
+            EXIT(TRUE);
+    END ELSE
             EXIT(TRUE);
     end;
 
@@ -1430,39 +1430,39 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
         ShippingCostsCarrier.SETFILTER("Min. Weight", '<=%1', Rec."Total weight");
         ShippingCostsCarrier.SETFILTER("Max. Weight", '>=%1', Rec."Total weight");
         IF ShippingCostsCarrier.FINDFIRST THEN BEGIN
-            IF CONFIRM('Une ligne de frais de port va être ajoutée. Voulez-vous continuer ?', TRUE, TRUE) THEN BEGIN
-                SalesLine.RESET;
-                SalesLine.SETRANGE("Document Type", Rec."Document Type");
-                SalesLine.SETRANGE("Document No.", Rec."No.");
-                IF SalesLine.FINDLAST THEN
-                    LineNo := SalesLine."Line No."
-                ELSE
-                    LineNo := 0;
+            IF CONFIRM('Une ligne de frais de port va être ajoutée. Voulez-vous continuer ?', TRUE, TRUE) THEN
+                SalesLine.RESET();
+            SalesLine.SETRANGE("Document Type", Rec."Document Type");
+            SalesLine.SETRANGE("Document No.", Rec."No.");
+            IF SalesLine.FINDLAST() THEN
+                LineNo := SalesLine."Line No."
+            ELSE
+                LineNo := 0;
 
-                ShippingCostsCarrier.TESTFIELD("Item No.");
+            ShippingCostsCarrier.TESTFIELD("Item No.");
 
-                SalesLine.SETRANGE("No.", ShippingCostsCarrier."Item No.");
-                SalesLine.SETFILTER("Outstanding Quantity", '<>%1', 0);
-                IF SalesLine.FINDFIRST THEN BEGIN
-                    ReleaseSalesDoc.PerformManualReopen(Rec);
-                    SalesLine.Quantity := 1;
-                    SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
-                    SalesLine.MODIFY;
-                END ELSE BEGIN
-                    ReleaseSalesDoc.PerformManualReopen(Rec);
-                    SalesLine.INIT;
-                    SalesLine."Document Type" := Rec."Document Type";
-                    SalesLine."Document No." := Rec."No.";
-                    SalesLine."Line No." := LineNo + 10000;
-                    SalesLine.Type := SalesLine.Type::Item;
-                    SalesLine.VALIDATE("No.", ShippingCostsCarrier."Item No.");
-                    SalesLine.VALIDATE(Quantity, 1);
-                    SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
-                    SalesLine."Shipping Costs" := TRUE;
-                    SalesLine.INSERT;
-                END;
+            SalesLine.SETRANGE("No.", ShippingCostsCarrier."Item No.");
+            SalesLine.SETFILTER("Outstanding Quantity", '<>%1', 0);
+            IF SalesLine.FINDFIRST THEN BEGIN
+                ReleaseSalesDoc.PerformManualReopen(Rec);
+                SalesLine.Quantity := 1;
+                SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
+                SalesLine.MODIFY();
+            END ELSE BEGIN
+                ReleaseSalesDoc.PerformManualReopen(Rec);
+                SalesLine.INIT();
+                SalesLine."Document Type" := Rec."Document Type";
+                SalesLine."Document No." := Rec."No.";
+                SalesLine."Line No." := LineNo + 10000;
+                SalesLine.Type := SalesLine.Type::Item;
+                SalesLine.VALIDATE("No.", ShippingCostsCarrier."Item No.");
+                SalesLine.VALIDATE(Quantity, 1);
+                SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
+                SalesLine."Shipping Costs" := TRUE;
+                SalesLine.INSERT;
             END;
         END;
+    END;
     end;
 
 
@@ -1470,7 +1470,7 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
     var
         SalesLIne: Record "37";
     begin
-        SalesLIne.RESET;
+        SalesLIne.RESET();
         SalesLIne.SETRANGE("Document Type", Rec."Document Type");
         SalesLIne.SETRANGE("Document No.", Rec."No.");
         SalesLIne.SETRANGE("Shipping Costs", TRUE);
