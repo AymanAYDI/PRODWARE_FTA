@@ -4,6 +4,9 @@ using Microsoft.Purchases.Vendor;
 using Microsoft.Foundation.Shipping;
 using Microsoft.Inventory.Intrastat;
 using System.Security.AccessControl;
+using Microsoft.Purchases.Setup;
+using Microsoft.Purchases.Document;
+using Microsoft.Sales.Document;
 tableextension 50005 Vendor extends Vendor //23
 {
     fields
@@ -11,30 +14,28 @@ tableextension 50005 Vendor extends Vendor //23
         field(51000; "Creation Date"; Date)
         {
             Caption = 'Creation Date';
-            Description = 'NAVEASY.001 [Champs_Suppl] Ajout du champ';
+
             Editable = false;
         }
         field(51001; User; Code[20])
         {
             Caption = 'User';
-            Description = 'NAVEASY.001 [Champs_Suppl] Ajout du champ';
+
             Editable = false;
             TableRelation = User;
         }
-        field(51004; Status; Option)
+        field(51004; Status; enum "status")
+
         {
             Caption = 'Statut';
-            Description = 'NAVEASY.001 [Champs_Suppl] Ajout du champ';
+
             InitValue = "No Referred";
-            OptionCaption = 'Referencing in progress,Referred,No Referred,Unreferred';
-            OptionMembers = "Referencing in progress",Referred,"No Referred",Unreferred;
+
         }
-        field(51005; "Vendor Type"; Option)
+        field(51005; "Vendor Type"; enum "vendor type")
         {
             Caption = 'Vendor Type';
-            Description = 'NAVEASY.001 [Cde_Transport] Ajout du champ';
-            OptionCaption = 'Raw materials,Transport,Overheads';
-            OptionMembers = "Raw materials",Transport,Overheads;
+
 
 
             trigger OnValidate()
@@ -89,13 +90,12 @@ tableextension 50005 Vendor extends Vendor //23
                     //Suppression du code transporteur
                     IF RecLShippingAgent.GET("No.") THEN
                         IF RecLShippingAgent.DELETE() THEN
-                            IF "Shipping Agent Code" = "No." THEN BEGIN
-                                VALIDATE("Shipping Agent Code", '');
-                                MODIFY();
-                            END;
+                            VALIDATE("Shipping Agent Code", '');
+                    MODIFY();
                 END;
-                //<<NAVEASY.001 [Cde_Transport] Suppression du "Code transporteur" dans table Shipping agent
-            end;
+            END;
+            //<<NAVEASY.001 [Cde_Transport] Suppression du "Code transporteur" dans table Shipping agent
+
         }
         field(51100; "Transaction Type"; Code[10])
         {
@@ -132,6 +132,8 @@ tableextension 50005 Vendor extends Vendor //23
     trigger OnAfterDelete()
     var
         ShippingAgent: Record "Shipping Agent";
+        RecLSalesHeader: Record "Sales Header";
+        RecLPurchHeader: Record "Purchase Header";
     begin
         IF ("Vendor Type" = "Vendor Type"::Transport) THEN BEGIN
 
@@ -153,10 +155,10 @@ tableextension 50005 Vendor extends Vendor //23
         //Suppression du code transporteur
         IF ShippingAgent.GET("No.") THEN ShippingAgent.DELETE();
     end;
-    end;
+
     trigger OnAfterRename()
     var
-        RecLShippingAgent: Record "Shipping Agent"
+        RecLShippingAgent: Record "Shipping Agent";
     begin
         //>>NAVEASY.001 [Cde_Transport] Modification du Code transporteur quand le Fournisseur est renomm‚
         IF "Vendor Type" = "Vendor Type"::Transport THEN
@@ -465,19 +467,13 @@ tableextension 50005 Vendor extends Vendor //23
     //Variable type has not been exported.
 
     var
-        "-NAVEASY.001-": Integer;
-        RecLShippingAgent: Record "291";
+
+        RecLShippingAgent: Record "Shipping Agent";
+
+
         TextCdeTransp001: Label 'You cannot modify Vendor type because there is Sales Header with the Shipping agent code %1 !!';
         TextCdeTransp002: Label 'You cannot modify Vendor type because there is Purchase Header with the Shipping agent code %1 !!';
-        RecLSalesHeader: Record "36";
-        RecLPurchHeader: Record 38;
 
-    var
-        "-NAVEASY.001-": Integer;
-        RecLShippingAgent: Record "291";
 
-    var
-        "-NAVEASY.001-": Integer;
-        RecLShippingAgent: Record "Shipping Agent";
 }
 

@@ -1,7 +1,10 @@
 namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
-tableextension 50008 SalesHeader extends "Sales Header" //36
+using Microsoft.Foundation.Shipping;
+using Microsoft.Sales.Customer;
+using Microsoft.CRM.Team;
+tableextension 50009 SalesHeader extends "Sales Header" //36
 {
     fields
     {
@@ -826,16 +829,15 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
         field(50000; "Franco Amount"; Decimal)
         {
             FieldClass = FlowField;
-
-            // TODO tablespec CalcFormula = Lookup(Customer."Franco Amount" WHERE("No." = FIELD("Sell-to Customer No.")));
+            CalcFormula = Lookup(Customer."Franco Amount" WHERE("No." = FIELD("Sell-to Customer No.")));
             Caption = 'Franco Amount';
-            Description = 'FTA1.00';
+
             Editable = false;
 
         }
         field(50001; "Desc. Shipment Method"; Text[50])
         {
-            // TODO tablespec    CalcFormula = Lookup("Shipment Method".Description WHERE(Code = FIELD(Shipment Method Code)));
+            CalcFormula = Lookup("Shipment Method".Description WHERE(Code = FIELD("Shipment Method Code")));
             Caption = 'Shipment Method Desc.';
             Description = 'FTA1.00';
             Editable = false;
@@ -868,10 +870,10 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
             begin
                 //>>FTA:AM  31.03.2023
                 IF ("Total weight" <> 0) AND ("Total Parcels" <> 0) THEN
-                    CreateShipCosts()
+                    CreateShipCosts();
 
-                IF ("Total weight" = 0) OR ("Total Parcels" = 0) THEN
-                    DeleteOpenShipCostLine;
+                if ("Total weight" = 0) OR ("Total Parcels" = 0) THEN
+                    DeleteOpenShipCostLine();
                 //<<FTA:AM  31.03.2023
             end;
         }
@@ -937,7 +939,7 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
         field(50010; "Customer India Product"; Boolean)
         {
             FieldClass = FlowField;
-            //TODO:   CalcFormula = Lookup(Customer."India Product" WHERE("No."=FIELD("Sell-to Customer No.")));
+            CalcFormula = Lookup(Customer."India Product" WHERE("No." = FIELD("Sell-to Customer No.")));
             Caption = 'Customer India Product';
             Description = 'TI448733';
             Editable = false;
@@ -953,26 +955,26 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
                 RecLUserSetup: Record "91";
             begin
                 RecLUserSetup.GET(USERID);
-                RecLUserSetup.TESTFIELD('Allowed To Modify Cust Dispute');
+                RecLUserSetup.TESTFIELD("Allowed To Modify Cust Dispute");
             end;
         }
         field(50012; Preparer; Text[30])
         {
             Caption = 'Preparer';
             Description = 'NDBI';
-            //TODO tablespec TableRelation = "Workshop Person";
+            TableRelation = "Workshop Person";
         }
         field(50013; Assembler; Text[30])
         {
             Caption = 'Assembler';
             Description = 'NDBI';
-            //TODO : tbalespec TableRelation = "Workshop Person";
+            TableRelation = "Workshop Person";
         }
         field(50014; Packer; Text[30])
         {
             Caption = 'Packer';
             Description = 'NDBI';
-            //TODO : tbalespec TableRelation = "Workshop Person";
+            TableRelation = "Workshop Person";
         }
         field(50015; "Auto AR Blocked"; Boolean)
         {
@@ -983,13 +985,13 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
         {
             Caption = 'Customer Typology';
             Description = 'FTA1.04';
-            //TODO : tbalespec  TableRelation = "Customer Typology";
+            // TODO table spec TableRelation = "Customer Typology";
         }
         field(50029; "Mobile Salesperson Code"; Code[10])
         {
             Caption = 'Mobile Salesperson Code';
-            Description = 'FTA1.04';
-            //TODO : tbalespec TableRelation = Salesperson/Purchaser;
+
+            TableRelation = "Salesperson/Purchaser";
         }
         field(50030; "Show Comment AR"; Option)
         {
@@ -1016,7 +1018,7 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
         }
         field(51008; "Shipping Agent Name"; Text[50])
         {
-            //TODO tablespec CalcFormula = Lookup("Shipping Agent".Name WHERE (Code=FIELD(Shipping Agent Code)));
+            CalcFormula = Lookup("Shipping Agent".Name WHERE(Code = FIELD("Shipping Agent Code")));
             Caption = 'Shipping Agent Name';
             Description = 'NAVEASY.001 [Cde_Transport] Ajout du champ';
             FieldClass = FlowField;
@@ -1307,13 +1309,135 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
     */
     //end;
 
+
+    local procedure CalcShipment(): Boolean
+    var
+        ShippingAgent: Record "291";
+    begin
+        IF ShippingAgent.GET("Shipping Agent Code") THEN
+            CASE ShippingAgent."Shipping Costs" OF
+                ShippingAgent."Shipping Costs"::" ":
+                    BEGIN
+                        DeleteOpenShipCostLine();
+                        MESSAGE('Pas de frais de port et d''emballage.');
+                        EXIT(TRUE);
+                    END;
+                ShippingAgent."Shipping Costs"::Manual:
+                    BEGIN
+                        DeleteOpenShipCostLine();
+                        MESSAGE('Veuillez ajouter manuellement les frais de port.');
+                        EXIT(TRUE);
+                    END;
+                ShippingAgent."Shipping Costs"::"Pick-up":
+                    BEGIN
+                        DeleteOpenShipCostLine();
+                        MESSAGE('Enlèvement, ajout des frais d''emballage.');
+                        EXIT(TRUE);
+                    END;
+                ShippingAgent."Shipping Costs"::Automatic:
+                    BEGIN
+                        IF "Total weight" >= 30 THEN
+                            DeleteOpenShipCostLine();
+                        MESSAGE('Poids dépassé. Ajouter un colis ou changer de transporteur.');
+                        EXIT(TRUE);
+                    END ELSE
+                            InsertShipLineToOrder();
+            END;
+    END;
+
+    local procedure TotalSalesLineAmountPrepare(): Decimal
+    var
+        LRecSalesLine: Record "Sales Line";
+        TotAmount: Decimal;
+    begin
+        TotAmount := 0;
+
+        LRecSalesLine.RESET();
+        LRecSalesLine.SETRANGE("Document Type", Rec."Document Type");
+        LRecSalesLine.SETRANGE("Document No.", Rec."No.");
+
+        //  TODO champ sepecifique LRecSalesLine.SETRANGE("Prepare", TRUE);
+        LRecSalesLine.CALCSUMS(Amount);
+        EXIT(LRecSalesLine.Amount);
+    end;
+
+
+    local procedure DeleteOpenShipCostLine()
+    var
+        SalesLIne: Record "Sales line";
+    begin
+        SalesLIne.RESET();
+        SalesLIne.SETRANGE("Document Type", Rec."Document Type");
+        SalesLIne.SETRANGE("Document No.", Rec."No.");
+        // TODO champ specfique SalesLIne.SETRANGE("Shipping Costs", TRUE);
+        SalesLIne.SETFILTER("Outstanding Quantity", '<>%1', 0);
+        SalesLIne.DELETEALL(FALSE);
+    end;
+
+    local procedure InsertShipLineToOrder()
+
+    var
+        ShippingCostsCarrier: Record "50007";
+        SalesLine: Record "37";
+        LineNo: Integer;
+    //TODO:codeunitspe  ReleaseSalesDoc: Codeunit "414":
+
+    begin
+
+        ShippingCostsCarrier.RESET();
+        ShippingCostsCarrier.SETRANGE("Shipping Agent Code", Rec."Shipping Agent Code");
+        ShippingCostsCarrier.SETFILTER("Min. Weight", '<=%1', Rec."Total weight");
+        ShippingCostsCarrier.SETFILTER("Max. Weight", '>=%1', Rec."Total weight");
+        IF ShippingCostsCarrier.FINDFIRST() THEN BEGIN
+            IF CONFIRM('Une ligne de frais de port va être ajoutée. Voulez-vous continuer ?', TRUE, TRUE) THEN
+                SalesLine.RESET();
+            SalesLine.SETRANGE("Document Type", Rec."Document Type");
+            SalesLine.SETRANGE("Document No.", Rec."No.");
+            IF SalesLine.FINDLAST() THEN
+                LineNo := SalesLine."Line No."
+            ELSE
+                LineNo := 0;
+
+            ShippingCostsCarrier.TESTFIELD("Item No.");
+
+            SalesLine.SETRANGE("No.", ShippingCostsCarrier."Item No.");
+            SalesLine.SETFILTER("Outstanding Quantity", '<>%1', 0);
+            IF SalesLine.FINDFIRST THEN BEGIN
+                // TODO CODE UNIT SEPC  ReleaseSalesDoc.PerformManualReopen(Rec);
+                SalesLine.Quantity := 1;
+                SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
+                SalesLine.MODIFY();
+            END ELSE BEGIN
+                // TODO CODE UNIT SEPC  ReleaseSalesDoc.PerformManualReopen(Rec);
+                SalesLine.INIT();
+                SalesLine."Document Type" := Rec."Document Type";
+                SalesLine."Document No." := Rec."No.";
+                SalesLine."Line No." := LineNo + 10000;
+                SalesLine.Type := SalesLine.Type::Item;
+                SalesLine.VALIDATE("No.", ShippingCostsCarrier."Item No.");
+                SalesLine.VALIDATE(Quantity, 1);
+                SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
+                // TODO field spec  SalesLine."Shipping Costs" := TRUE;
+                SalesLine.INSERT;
+            END;
+        END;
+
+    END;
+
+
+
+
+
+
+
+
     local procedure CreateShipCosts(): Boolean
     var
         ShipmentMethod: Record "10";
     begin
         //IF ("Total Weight" <>  0) AND ("Total Parcels" <> 0) THEN
         IF "Total Parcels" > 1 THEN BEGIN
-            DeleteOpenShipCostLine;
+            DeleteOpenShipCostLine();
             MESSAGE('2 colis et plus, veuillez ajouter manuellement les frais de port.');
             EXIT(TRUE);
         end;
@@ -1324,327 +1448,206 @@ tableextension 50008 SalesHeader extends "Sales Header" //36
             EXIT(TRUE);
         END;
 
-        IF "Shipment Method Code" <> '' THEN BEGIN
-            IF ShipmentMethod.GET("Shipment Method Code") THEN BEGIN
+        IF "Shipment Method Code" <> '' THEN
+            IF ShipmentMethod.GET("Shipment Method Code") THEN
                 CASE ShipmentMethod."Shipping Costs" OF
                     ShipmentMethod."Shipping Costs"::" ":
                         BEGIN
-                            DeleteOpenShipCostLine;
+                            DeleteOpenShipCostLine();
                             MESSAGE('Pas de frais de port et d''emballage.');
                             EXIT(TRUE);
+                            TotalSalesLineAmountPrepare()
                         END;
                     ShipmentMethod."Shipping Costs"::Manual:
                         BEGIN
-                            DeleteOpenShipCostLine;
+                            DeleteOpenShipCostLine();
                             MESSAGE('Veuillez ajouter manuellement les frais de port.');
                             EXIT(TRUE);
                         END;
                     ShipmentMethod."Shipping Costs"::Franco:
-                        BEGIN
+                        begin
                             Rec.CALCFIELDS("Franco Amount");
                             //message(' Fraco %1, Total prep %2',Rec."Franco Amount",TotalSalesLineAmountPrepare);
-                            IF TotalSalesLineAmountPrepare >= Rec."Franco Amount" THEN BEGIN
-                                DeleteOpenShipCostLine;
+                            if (TotalSalesLineAmountPrepare() > Rec."Franco Amount") and
+                            (TotalSalesLineAmountPrepare() = Rec."Franco Amount")
+                             then BEGIN
+                                DeleteOpenShipCostLine();
                                 MESSAGE('Franco dépassé, pas de frais de port et d''emballage');
                                 EXIT(TRUE);
                             END ELSE
-                                CalcShipment;
+                                CalcShipment();
                         END;
                     ShipmentMethod."Shipping Costs"::Automatic:
-                        BEGIN
-                            CalcShipment;
-                        END;
-                END;
-            END ELSE
-                EXIT(TRUE);
-        END ELSE
-            EXIT(TRUE);
-    end;
 
-    local procedure TotalSalesLineAmountPrepare(): Decimal
-    var
-        LRecSalesLine: Record "Sales Line";
-        TotAmount: Decimal;
-    begin
-        TotAmount := 0;
+                        CalcShipment();
 
-        LRecSalesLine.RESET;
-        LRecSalesLine.SETRANGE("Document Type", Rec."Document Type");
-        LRecSalesLine.SETRANGE("Document No.", Rec."No.");
-        //TODO "Prepare"' does not exist in the current context
-        //LRecSalesLine.SETRANGE("Prepare", TRUE);
-        LRecSalesLine.CALCSUMS(Amount);
-        EXIT(LRecSalesLine.Amount);
-    end;
 
-    local procedure CalcShipment(): Boolean
-    var
-        ShippingAgent: Record "291";
-    begin
-        IF ShippingAgent.GET("Shipping Agent Code") THEN BEGIN
-            CASE ShippingAgent."Shipping Costs" OF
-                ShippingAgent."Shipping Costs"::" ":
-                    BEGIN
-                        DeleteOpenShipCostLine;
-                        MESSAGE('Pas de frais de port et d''emballage.');
+                    else
                         EXIT(TRUE);
-                    END;
-                ShippingAgent."Shipping Costs"::Manual:
-                    BEGIN
-                        DeleteOpenShipCostLine;
-                        MESSAGE('Veuillez ajouter manuellement les frais de port.');
-                        EXIT(TRUE);
-                    END;
-                ShippingAgent."Shipping Costs"::"Pick-up":
-                    BEGIN
-                        DeleteOpenShipCostLine;
-                        MESSAGE('Enlèvement, ajout des frais d''emballage.');
-                        EXIT(TRUE);
-                    END;
-                ShippingAgent."Shipping Costs"::Automatic:
-                    BEGIN
-                        IF "Total weight" >= 30 THEN BEGIN
-                            DeleteOpenShipCostLine;
-                            MESSAGE('Poids dépassé. Ajouter un colis ou changer de transporteur.');
-                            EXIT(TRUE);
-                        END ELSE BEGIN
-                            InsertShipLineToOrder;
-                        END;
-                    END;
-            END;
-        END;
+
+                end;
+
+
+
+
+
+        //Unsupported feature: Property Modification (Id) on "OnDelete.DOPaymentTransLogEntry(Variable 1002)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //OnDelete.DOPaymentTransLogEntry : 1002;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //OnDelete.DOPaymentTransLogEntry : 1100267000;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "Text062(Variable 1072)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //Text062 : 1072;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //Text062 : 1100267007;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "Text063(Variable 1077)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //Text063 : 1077;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //Text063 : 1100267000;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "Text064(Variable 1090)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //Text064 : 1090;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //Text064 : 1100267001;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "UpdateDocumentDate(Variable 1120)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //UpdateDocumentDate : 1120;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //UpdateDocumentDate : 1100267008;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "Text066(Variable 1095)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //Text066 : 1095;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //Text066 : 1100267009;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "Text070(Variable 1096)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //Text070 : 1096;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //Text070 : 1100267012;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "BilltoCustomerNoChanged(Variable 1121)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //BilltoCustomerNoChanged : 1121;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //BilltoCustomerNoChanged : 1100267002;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "Text071(Variable 1011)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //Text071 : 1011;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //Text071 : 1100267003;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "Text072(Variable 1013)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //Text072 : 1013;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //Text072 : 1100267004;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "SynchronizingMsg(Variable 1026)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //SynchronizingMsg : 1026;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //SynchronizingMsg : 1100267006;
+        //Variable type has not been exported.
+
+
+        //Unsupported feature: Property Modification (Id) on "ShippingAdviceErr(Variable 1029)".
+
+        //var
+        //>>>> ORIGINAL VALUE:
+        //ShippingAdviceErr : 1029;
+        //Variable type has not been exported.
+        //>>>> MODIFIED VALUE:
+        //ShippingAdviceErr : 1100267005;
+        //Variable type has not been exported.
+
     end;
-
-    local procedure InsertShipLineToOrder()
-
-    var
-        //TODO TABLE spec ShippingCostsCarrier: Record "50007";
-        SalesLine: Record "37";
-        LineNo: Integer;
-    //TODO:codeunitspe  ReleaseSalesDoc: Codeunit "414":
-
-    begin
-
-        ShippingCostsCarrier.RESET;
-        ShippingCostsCarrier.SETRANGE("Shipping Agent Code", Rec."Shipping Agent Code");
-        ShippingCostsCarrier.SETFILTER("Min. Weight", '<=%1', Rec."Total weight");
-        ShippingCostsCarrier.SETFILTER("Max. Weight", '>=%1', Rec."Total weight");
-        IF ShippingCostsCarrier.FINDFIRST THEN BEGIN
-            IF CONFIRM('Une ligne de frais de port va être ajoutée. Voulez-vous continuer ?', TRUE, TRUE) THEN BEGIN
-                SalesLine.RESET;
-                SalesLine.SETRANGE("Document Type", Rec."Document Type");
-                SalesLine.SETRANGE("Document No.", Rec."No.");
-                IF SalesLine.FINDLAST THEN
-                    LineNo := SalesLine."Line No."
-                ELSE
-                    LineNo := 0;
-
-                ShippingCostsCarrier.TESTFIELD("Item No.");
-
-                SalesLine.SETRANGE("No.", ShippingCostsCarrier."Item No.");
-                SalesLine.SETFILTER("Outstanding Quantity", '<>%1', 0);
-                IF SalesLine.FINDFIRST THEN BEGIN
-                    ReleaseSalesDoc.PerformManualReopen(Rec);
-                    SalesLine.Quantity := 1;
-                    SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
-                    SalesLine.MODIFY;
-                END ELSE BEGIN
-                    ReleaseSalesDoc.PerformManualReopen(Rec);
-                    SalesLine.INIT;
-                    SalesLine."Document Type" := Rec."Document Type";
-                    SalesLine."Document No." := Rec."No.";
-                    SalesLine."Line No." := LineNo + 10000;
-                    SalesLine.Type := SalesLine.Type::Item;
-                    SalesLine.VALIDATE("No.", ShippingCostsCarrier."Item No.");
-                    SalesLine.VALIDATE(Quantity, 1);
-                    SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
-                    SalesLine."Shipping Costs" := TRUE;
-                    SalesLine.INSERT;
-                END;
-            END;
-        END;
-    end;
-
-
-    local procedure DeleteOpenShipCostLine()
-    var
-        SalesLIne: Record "37";
-    begin
-        SalesLIne.RESET;
-        SalesLIne.SETRANGE("Document Type", Rec."Document Type");
-        SalesLIne.SETRANGE("Document No.", Rec."No.");
-        SalesLIne.SETRANGE("Shipping Costs", TRUE);
-        SalesLIne.SETFILTER("Outstanding Quantity", '<>%1', 0);
-        SalesLIne.DELETEALL(FALSE);
-    end;
-
-    var
-        RecLCommentLine: Record "97";
-        //TODO:page spe FrmLCommentSheet: Page "124";
-        RecLSalesHeader: Record "36";
-
-    var
-        RecLPurchHeader: Record "38";
-        TextCdeTransp003: Label 'You cannot modify Shipping Code agent because there is a Shipping Purchase Order linked (Order %1) !!';
-
-    var
-        RecLSalesLine: Record "37";
-        CstL001: Label 'This change can delete the reservation of the lines : do want to continue?';
-        CstL002: Label 'Canceled operation';
-
-    var
-        RecLSalesLine: Record "37";
-        CstL001: Label 'This change can delete the reservation of the lines : do want to continue?';
-        CstL002: Label 'Canceled operation';
-
-
-    //Unsupported feature: Property Modification (Id) on "OnDelete.DOPaymentTransLogEntry(Variable 1002)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //OnDelete.DOPaymentTransLogEntry : 1002;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //OnDelete.DOPaymentTransLogEntry : 1100267000;
-    //Variable type has not been exported.
-
-    var
-        "--NAVEASY.001--": Integer;
-        TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
-        RecLPurchHeader: Record "38";
-
-
-
-
-    //Unsupported feature: Property Modification (Id) on "Text062(Variable 1072)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //Text062 : 1072;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //Text062 : 1100267007;
-    //Variable type has not been exported.
-
-
-    //Unsupported feature: Property Modification (Id) on "Text063(Variable 1077)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //Text063 : 1077;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //Text063 : 1100267000;
-    //Variable type has not been exported.
-
-
-    //Unsupported feature: Property Modification (Id) on "Text064(Variable 1090)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //Text064 : 1090;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //Text064 : 1100267001;
-    //Variable type has not been exported.
-
-
-    //Unsupported feature: Property Modification (Id) on "UpdateDocumentDate(Variable 1120)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //UpdateDocumentDate : 1120;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //UpdateDocumentDate : 1100267008;
-    //Variable type has not been exported.
-
-
-    //Unsupported feature: Property Modification (Id) on "Text066(Variable 1095)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //Text066 : 1095;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //Text066 : 1100267009;
-    //Variable type has not been exported.
-
-
-    //Unsupported feature: Property Modification (Id) on "Text070(Variable 1096)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //Text070 : 1096;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //Text070 : 1100267012;
-    //Variable type has not been exported.
-
-
-    //Unsupported feature: Property Modification (Id) on "BilltoCustomerNoChanged(Variable 1121)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //BilltoCustomerNoChanged : 1121;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //BilltoCustomerNoChanged : 1100267002;
-    //Variable type has not been exported.
-
-
-    //Unsupported feature: Property Modification (Id) on "Text071(Variable 1011)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //Text071 : 1011;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //Text071 : 1100267003;
-    //Variable type has not been exported.
-
-
-    //Unsupported feature: Property Modification (Id) on "Text072(Variable 1013)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //Text072 : 1013;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //Text072 : 1100267004;
-    //Variable type has not been exported.
-
-
-    //Unsupported feature: Property Modification (Id) on "SynchronizingMsg(Variable 1026)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //SynchronizingMsg : 1026;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //SynchronizingMsg : 1100267006;
-    //Variable type has not been exported.
-
-
-    //Unsupported feature: Property Modification (Id) on "ShippingAdviceErr(Variable 1029)".
-
-    //var
-    //>>>> ORIGINAL VALUE:
-    //ShippingAdviceErr : 1029;
-    //Variable type has not been exported.
-    //>>>> MODIFIED VALUE:
-    //ShippingAdviceErr : 1100267005;
-    //Variable type has not been exported.
 
     var
         "-NAVEASY.001-": Integer;
         RecGCustomer: Record "18";
-        RecGParamNavi: Record "51004";
+        // TODO table hadil RecGParamNavi: Record "51004";
         RecGCommentLine: Record "97";
         //TODO : page specFrmGLignesCommentaires: Page "124";
         ShippingAgent: Record "291";
         "//PWD 02/02/2010": Integer;
         RecGContact: Record "5050";
+
+
+        TextCdeTransp003: Label 'You cannot modify Shipping Code agent because there is a Shipping Purchase Order linked (Order %1) !!';
+
+
+        RecLSalesLine: Record "37";
+        CstL001: Label 'This change can delete the reservation of the lines : do want to continue?';
+        CstL002: Label 'Canceled operation';
+        //TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
+        //RecLPurchHeader: Record "38";
+
+        "--NAVEASY.001--": Integer;
+        // TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
+        RecLPurchHeader: Record "38";
+
 
 
 
