@@ -1,7 +1,7 @@
-enum 50018 "Vendor Type"
+enum 50019 "Vendor Type"
 {
     Extensible = true;
-    
+
     value(0; "Raw materials")
     {
         Caption = 'Raw materials';

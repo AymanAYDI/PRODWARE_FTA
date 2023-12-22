@@ -1,7 +1,7 @@
-enum 50016 "Type"
+enum 50017 "Type"
 {
     Extensible = true;
-    
+
     value(0; " ")
     {
         Caption = ' ';
