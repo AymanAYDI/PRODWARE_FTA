@@ -6,6 +6,7 @@ using Microsoft.Purchases.Document;
 using Microsoft.Foundation.NoSeries;
 using Microsoft.Inventory.Setup;
 using Microsoft.Finance.GeneralLedger.Setup;
+using System.Security.AccessControl;
 tableextension 50007 Item extends Item //27
 {
     fields
@@ -140,9 +141,8 @@ tableextension 50007 Item extends Item //27
                                                                             "Location Code" = field("Location Filter"),
                                                                             "Drop Shipment" = field("Drop Shipment Filter"),
                                                                             "Variant Code" = field("Variant Filter"),
-                                                                            "Shipment Date" = field("Date Filter")));
-            //TODO::Field SPE  Sales line
-            //"Preparation Type" = CONST(Stock)));
+                                                                            "Shipment Date" = field("Date Filter"),
+                                                                            "Preparation Type" = const(Stock)));
             Caption = 'Qty. Stock on Sales Order';
             Editable = false;
             FieldClass = FlowField;
@@ -175,19 +175,18 @@ tableextension 50007 Item extends Item //27
                     if RecLSalesLineDisc.FindSet() then
                         if RecLSalesLineDisc."Line Discount %" <> 0 then
                             "Unit Price net" := "Unit Price net" * (1 - (RecLSalesLineDisc."Line Discount %" / 100))
-                    //TODO: field spe table SalesReceiveSetup not migrated yet
-                    //else
+                        else
 
-                    // if RecLSalesReceiveSetup."Discount All Item" <> '' then begin
-                    //     RecLSalesLineDisc.Reset();
-                    //     RecLSalesLineDisc.SetRange(Type, RecLSalesLineDisc.Type::"Item Disc. Group");
-                    //     RecLSalesLineDisc.SetRange(Code, RecLSalesReceiveSetup."Discount All Item");
-                    //     RecLSalesLineDisc.SetRange("Sales Type", RecLSalesLineDisc."Sales Type"::Customer);
-                    //     RecLSalesLineDisc.SetRange("Sales Code", "Customer Code");
-                    //     if RecLSalesLineDisc.FindSet() then
-                    //         if RecLSalesLineDisc."Line Discount %" <> 0 then
-                    //             "Unit Price net" := "Unit Price net" * (1 - (RecLSalesLineDisc."Line Discount %" / 100));
-                    // end;
+                            if RecLSalesReceiveSetup."Discount All Item" <> '' then begin
+                                RecLSalesLineDisc.Reset();
+                                RecLSalesLineDisc.SetRange(Type, RecLSalesLineDisc.Type::"Item Disc. Group");
+                                RecLSalesLineDisc.SetRange(Code, RecLSalesReceiveSetup."Discount All Item");
+                                RecLSalesLineDisc.SetRange("Sales Type", RecLSalesLineDisc."Sales Type"::Customer);
+                                RecLSalesLineDisc.SetRange("Sales Code", "Customer Code");
+                                if RecLSalesLineDisc.FindSet() then
+                                    if RecLSalesLineDisc."Line Discount %" <> 0 then
+                                        "Unit Price net" := "Unit Price net" * (1 - (RecLSalesLineDisc."Line Discount %" / 100));
+                            end;
 
                 end;
                 if "Unit Price net" <> 0 then
@@ -259,15 +258,13 @@ tableextension 50007 Item extends Item //27
         {
             BlankZero = true;
             Caption = 'Temps de montage';
-            //TODO: Table SPE NOT Migrated yet
-            //TableRelation = "Work Time";
+            TableRelation = "Work Time";
         }
         field(50018; "Item Machining Time"; Integer)
         {
             BlankZero = true;
             Caption = 'Temps d''usinage';
-            //TODO: Table SPE NOT Migrated yet
-            //TableRelation = "Work Time";
+            TableRelation = "Work Time";
         }
         field(50019; "Default Prepared Sales Lines"; Boolean)
         {
@@ -444,8 +441,7 @@ tableextension 50007 Item extends Item //27
         {
             Caption = 'User';
             Description = 'NAVEASY.001 [Champs_Suppl] Ajout du champ';
-            //TODO: TABLE SPE not migrated yet
-            // TableRelation = User."User Name";
+            TableRelation = User."User Name";
         }
     }
     fieldgroups
@@ -460,8 +456,7 @@ tableextension 50007 Item extends Item //27
         RecLPurchPrice: Record 7012;
         RecLPurchLineDisc: Record 7014;
         RecLProductionBOMLine: Record 99000772;
-        //TODO: Table SPE not migrated yet
-        //ItemProductionCost: Record 50006;
+        ItemProductionCost: Record 50006;
         DecLQty: Decimal;
         BooLQtyFound: Boolean;
         DecLCost: Decimal;
@@ -514,37 +509,36 @@ tableextension 50007 Item extends Item //27
                 "Purchase Price Base" := Round(DecLCost * (1 - (DecLDisc / 100)), 0.01)
             else
                 "Purchase Price Base" := DecLCost;
-            //TODO: instance for Table SPE not migrated
-            // ItemProductionCost.Reset;
-            // ItemProductionCost.SetRange("Item No.", "No.");
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 0);
-            // if ItemProductionCost.FindFirst then
-            //     "Purchase Price Base 1" := ItemProductionCost."Unit Cost";
+            ItemProductionCost.Reset();
+            ItemProductionCost.SetRange("Item No.", "No.");
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 0);
+            if ItemProductionCost.FindFirst() then
+                "Purchase Price Base 1" := ItemProductionCost."Unit Cost";
 
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 2);
-            // if ItemProductionCost.FindFirst then
-            //     "Purchase Price Base 2" := ItemProductionCost."Unit Cost";
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 2);
+            if ItemProductionCost.FindFirst() then
+                "Purchase Price Base 2" := ItemProductionCost."Unit Cost";
 
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 5);
-            // if ItemProductionCost.FindFirst then
-            //     "Purchase Price Base 5" := ItemProductionCost."Unit Cost";
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 5);
+            if ItemProductionCost.FindFirst() then
+                "Purchase Price Base 5" := ItemProductionCost."Unit Cost";
 
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 10);
-            // if ItemProductionCost.FindFirst then
-            //     "Purchase Price Base 10" := ItemProductionCost."Unit Cost";
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 10);
+            if ItemProductionCost.FindFirst() then
+                "Purchase Price Base 10" := ItemProductionCost."Unit Cost";
 
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 25);
-            // if ItemProductionCost.FindFirst then
-            //     "Purchase Price Base 25" := ItemProductionCost."Unit Cost";
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 25);
+            if ItemProductionCost.FindFirst() then
+                "Purchase Price Base 25" := ItemProductionCost."Unit Cost";
 
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
-            // ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 50);
-            // if ItemProductionCost.FindFirst then
-            //     "Purchase Price Base 50" := ItemProductionCost."Unit Cost";
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
+            ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 50);
+            if ItemProductionCost.FindFirst() then
+                "Purchase Price Base 50" := ItemProductionCost."Unit Cost";
 
             Validate("Margin in %");
         end;

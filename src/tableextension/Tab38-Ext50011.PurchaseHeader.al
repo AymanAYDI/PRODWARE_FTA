@@ -139,8 +139,8 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
             Caption = 'Planned Receipt Date';
         }
         field(51028; "Order Type"; enum "Order Type")
-        {   //TODO: TABLE Vendor not migrated yet
-            //CalcFormula = lookup(Vendor."Vendor Type" where("No." = field("Buy-from Vendor No.")));
+        {
+            CalcFormula = lookup(Vendor."Vendor Type" where("No." = field("Buy-from Vendor No.")));
             Caption = 'Order Type';
             Editable = false;
             FieldClass = FlowField;
@@ -189,24 +189,23 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
     begin
         CALCFIELDS("Order Type");
         if "Order Type" = "Order Type"::Transport then
-            // if "Initial Order No." <> '' then
-            //     case "Initial Order Type" of
-            //         "Initial Order Type"::Sale:
-            //         //TODO: table sales header not migrated yet
-            //              if RecLSalesHeader.Get(RecLSalesHeader."Document Type"::Order, "Initial Order No.") then begin
-            //                  RecLSalesHeader.Validate("Shipping Order No.", '');
-            //                  RecLSalesHeader.MODIFY();
-            //              end;
-            //         "Initial Order Type"::Purchase:
-            //             if RecLPurchHeader.Get(RecLSalesHeader."Document Type"::Order, "Initial Order No.") then begin
-            //                 RecLPurchHeader.Validate("Shipping Order No.", '');
-            //                 RecLPurchHeader.MODIFY();
-            //             end;
-            //     end;
+            if "Initial Order No." <> '' then
+                case "Initial Order Type" of
+                    "Initial Order Type"::Sale:
+                        if RecLSalesHeader.Get(RecLSalesHeader."Document Type"::Order, "Initial Order No.") then begin
+                            RecLSalesHeader.Validate("Shipping Order No.", '');
+                            RecLSalesHeader.MODIFY();
+                        end;
+                    "Initial Order Type"::Purchase:
+                        if RecLPurchHeader.Get(RecLSalesHeader."Document Type"::Order, "Initial Order No.") then begin
+                            RecLPurchHeader.Validate("Shipping Order No.", '');
+                            RecLPurchHeader.MODIFY();
+                        end;
+                end;
         if "Order Type" <> "Order Type"::Transport then
-                if "Shipping Order No." <> '' then
-                    if CONFIRM(StrSubstNo(TextCdeTransp002, "Shipping Order No.")) then
-                        if RecLPurchHeader.Get(RecLPurchHeader."Document Type"::Order, "Shipping Order No.") then RecLPurchHeader.Delete(true);
+            if "Shipping Order No." <> '' then
+                if CONFIRM(StrSubstNo(TextCdeTransp002, "Shipping Order No.")) then
+                    if RecLPurchHeader.Get(RecLPurchHeader."Document Type"::Order, "Shipping Order No.") then RecLPurchHeader.Delete(true);
     end;
 
     procedure CreatePurchaseTransport(CodLNumVendor: Code[20]; CodLInitialOrder: Code[20]; DecLPrice: Decimal; CodLCurrency: Code[10]; DateLRequested: Date; DateLPromised: Date; DateLPlanned: Date; OptLTypeInitialOrder: Option " ",Sale,Purchase) CodLTransportOrder: Code[20]
@@ -216,8 +215,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
     begin
         TestVerifExistence(CodLInitialOrder);
         PurchSetup.Get();
-        //TODO: TABLE "Purchases & Payables Setup" NOT migrated yet 
-        //PurchSetup.TESTFIELD("Charge (Item) used for Transp.");
+        PurchSetup.TESTFIELD("Charge (Item) used for Transp.");
         CodLTransportOrder := CreatePurchHeadTransport(CodLNumVendor, CodLInitialOrder, CodLCurrency, OptLTypeInitialOrder);
         CreatePurchLineTransport(CodLTransportOrder, CodLNumVendor, DecLPrice, DateLRequested, DateLPromised, DateLPlanned);
         if RecLPurchHead.Get(RecLPurchHead."Document Type"::Order, CodLTransportOrder) then
@@ -263,8 +261,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
         RecLPurchLine.Validate("Line No.", 10000);
         RecLPurchLine.Validate("Buy-from Vendor No.", CodLNumVendor);
         RecLPurchLine.Validate(Type, RecLPurchLine.Type::"Charge (Item)");
-        //TODO: Table "Purchases & Payables Setup" not migrated yet
-        //RecLPurchLine.Validate("No.", PurchSetup."Charge (Item) used for Transp.");
+        RecLPurchLine.Validate("No.", PurchSetup."Charge (Item) used for Transp.");
         RecLPurchLine.Validate(Quantity, 1);
         RecLPurchLine.Validate("Direct Unit Cost", DecLPrice);
         RecLPurchLine.Validate("Requested Receipt Date", DateLRequested);

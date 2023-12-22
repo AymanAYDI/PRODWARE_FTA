@@ -31,20 +31,17 @@ tableextension 50021 SalesShipmentHeader extends "Sales Shipment Header" //110
         field(50012; Preparer; Text[30])
         {
             Caption = 'Preparer';
-            //TODO: table SPE not migrated yet
-            //TableRelation = "Workshop Person";
+            TableRelation = "Workshop Person";
         }
         field(50013; Assembler; Text[30])
         {
             Caption = 'Assembler';
-            //TODO: table SPE not migrated yet
-            //TableRelation = "Workshop Person";
+            TableRelation = "Workshop Person";
         }
         field(50014; Packer; Text[30])
         {
             Caption = 'Packer';
-            //TODO: table SPE not migrated yet
-            //TableRelation = "Workshop Person";
+            TableRelation = "Workshop Person";
         }
         field(50029; "Mobile Salesperson Code"; Code[10])
         {

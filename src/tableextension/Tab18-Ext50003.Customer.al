@@ -45,7 +45,7 @@ tableextension 50003 Customer extends Customer //18
         field(50021; "Customer Typology"; Code[20])
         {
             Caption = 'Customer Typology';
-            //TODO: Tabel SPE TableRelation = "Customer Typology";
+            TableRelation = "Customer Typology";
         }
         field(50029; "Mobile Salesperson Code"; Code[10])
         {
@@ -105,23 +105,21 @@ tableextension 50003 Customer extends Customer //18
 
         }
     }
-    //TODO:fields  SalesSetup non migree
-
-    /*trigger OnAfterInsert()
-      var
-      SalesSetup : Record "Sales & Receivables Setup";
-      begin
-          "Creation Date" := WorkDate();
-          User := UserId;
-          SalesSetup.GET;
-          "Transaction Type" := SalesSetup."Transaction Type";
-          "Transaction Specification" := SalesSetup."Transaction Specification";
-          "Transport Method" := SalesSetup."Transport Method";
-          "Exit Point" := SalesSetup."Exit Point";
-          Area := SalesSetup.Area;
-          "EU 3-Party Trade" := SalesSetup."EU 3-Party Trade";
-          Modify()
-      end;*/
+    trigger OnAfterInsert()
+    var
+        SalesSetup: Record "Sales & Receivables Setup";
+    begin
+        "Creation Date" := WorkDate();
+        User := UserId;
+        SalesSetup.GET();
+        "Transaction Type" := SalesSetup."Transaction Type";
+        "Transaction Specification" := SalesSetup."Transaction Specification";
+        "Transport Method" := SalesSetup."Transport Method";
+        "Exit Point" := SalesSetup."Exit Point";
+        Area := SalesSetup.Area;
+        "EU 3-Party Trade" := SalesSetup."EU 3-Party Trade";
+        Modify()
+    end;
 
 
 }

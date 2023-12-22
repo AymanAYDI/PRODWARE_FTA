@@ -1,3 +1,9 @@
+namespace Prodware.FTA;
+
+using Microsoft.Foundation.Shipping;
+using Microsoft.Foundation.Address;
+using Microsoft.Finance.Currency;
+using Microsoft.Purchases.Vendor;
 table 51025 "Shipping Agent Price"
 {
     Caption = 'Shipping Agent Price';
@@ -48,14 +54,11 @@ table 51025 "Shipping Agent Price"
         {
             Caption = 'Ville';
         }
-        field(9; Status; Option)
+        field(9; Status; enum status)
         {
-            //TODO: Table Vendor not migrated yet
-            //CalcFormula = lookup(Vendor.Status where("No." = field("Shipping Agent")));
+            CalcFormula = lookup(Vendor.Status where("No." = field("Shipping Agent")));
             Caption = 'Status';
             FieldClass = FlowField;
-            OptionCaption = 'Referencing in progress,Referred,No Referred,Unreferred';
-            OptionMembers = "Referencing in progress",Referred,"No Referred",Unreferred;
         }
         field(10; "Currency Code"; Code[10])
         {
@@ -78,9 +81,5 @@ table 51025 "Shipping Agent Price"
     fieldgroups
     {
     }
-
-    var
-        PostCode: Record "225";
-        County: Text[30];
 }
 
