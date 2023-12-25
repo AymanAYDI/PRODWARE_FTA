@@ -80,7 +80,7 @@ page 50008 "Purchase Assignment"
                     Caption = 'Qty Not Assigned';
                     DecimalPlaces = 0 : 5;
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                     ToolTip = 'Specifies the value of the Qty Not Assigned field.';
                 }
                 field("Requested Receipt Date"; Rec."Requested Receipt Date")
@@ -97,10 +97,10 @@ page 50008 "Purchase Assignment"
             part(ReserveSubform; "Reservation Entries FTA")
             {
                 Editable = false;
-                SubPageLink = "Source ID" = FIELD("Document No."),
-                "Source Ref. No." = FIELD("Line No."),
-                "Reservation Status" = CONST(Reservation),
-                "Source Type" = CONST(39);
+                SubPageLink = "Source ID" = field("Document No."),
+                "Source Ref. No." = field("Line No."),
+                "Reservation Status" = const(Reservation),
+                "Source Type" = const(39);
                 toolTip = 'Specifies the value of the No field.';
             }
         }

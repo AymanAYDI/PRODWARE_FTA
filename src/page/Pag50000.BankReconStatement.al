@@ -1,3 +1,10 @@
+namespace Prodware.FTA;
+
+using Microsoft.Bank.Ledger;
+using Microsoft.Finance.Dimension;
+using Microsoft.Bank.BankAccount;
+using Microsoft.Foundation.Navigate;
+
 page 50000 "Bank Recon. Statement"
 {
     Caption = 'Bank Recon. Statement';
@@ -6,7 +13,7 @@ page 50000 "Bank Recon. Statement"
     InsertAllowed = false;
     PageType = Document;
     SourceTable = "Bank Account Ledger Entry";
-    SourceTableView = SORTING("Bank Account No.", Open) WHERE(Open = CONST(true));
+    SourceTableView = sorting("Bank Account No.", Open) where(Open = const(true));
     ApplicationArea = All;
 
     layout
@@ -20,7 +27,7 @@ page 50000 "Bank Recon. Statement"
                     Editable = false;
                     ShowCaption = false;
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field("Net Change"; RecGBankAccount."Net Change")
                 {
@@ -28,7 +35,7 @@ page 50000 "Bank Recon. Statement"
                     Editable = false;
                     ShowCaption = false;
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field(TxtGDateFilter; TxtGDateFilter)
                 {
@@ -36,22 +43,22 @@ page 50000 "Bank Recon. Statement"
                     ToolTip = 'Specifies the value of the Date Filter field.';
                     trigger OnValidate()
                     begin
-                        IF TxtGDateFilter <> '' THEN
+                        if TxtGDateFilter <> '' then
                             Rec.SETFILTER("Posting Date", TxtGDateFilter)
-                        ELSE
+                        else
                             Rec.SETRANGE("Posting Date");
-                        IF CodGBankCode = '' THEN
+                        if CodGBankCode = '' then
                             CodGBankCode := '512100';
 
                         RecGBankAccount.GET(CodGBankCode);
-                        IF Rec.GETFILTER("Posting Date") <> '' THEN
+                        if Rec.GETFILTER("Posting Date") <> '' then
                             RecGBankAccount.SETFILTER("Date Filter", Rec.GETFILTER("Posting Date"));
                         RecGBankAccount.CALCFIELDS("Net Change");
                         TxtGBankStat := STRSUBSTNO(Txt004, RecGBankAccount."Last Statement No.");
                         RecGBankLedg.COPYFILTERS(Rec);
                         RecGBankLedg.CALCSUMS(Amount);
 
-                        CurrPage.UPDATE(TRUE);
+                        CurrPage.UPDATE(true);
                     end;
                 }
             }
@@ -126,39 +133,39 @@ page 50000 "Bank Recon. Statement"
                     Caption = 'Total not reconciliated';
                     ShowCaption = false;
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field(Txt003; Txt003)
                 {
                     Caption = 'Bank balance';
                     ShowCaption = false;
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field(TxtGBankStat; TxtGBankStat)
                 {
                     Caption = 'Balance for last statement No.';
                     ShowCaption = false;
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field("1"; RecGBankLedg.Amount)
                 {
                     ShowCaption = false;
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field("2"; RecGBankAccount."Net Change" - RecGBankLedg.Amount)
                 {
                     ShowCaption = false;
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field("3"; RecGBankAccount."Balance Last Statement")
                 {
                     ShowCaption = false;
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
             }
         }
@@ -211,11 +218,11 @@ page 50000 "Bank Recon. Statement"
 
     trigger OnOpenPage()
     begin
-        IF CodGBankCode = '' THEN
+        if CodGBankCode = '' then
             CodGBankCode := '512100';
 
         RecGBankAccount.GET(CodGBankCode);
-        IF Rec.GETFILTER("Posting Date") <> '' THEN
+        if Rec.GETFILTER("Posting Date") <> '' then
             RecGBankAccount.SETFILTER("Date Filter", Rec.GETFILTER("Posting Date"));
         RecGBankAccount.CALCFIELDS("Net Change");
         TxtGBankStat := STRSUBSTNO(Txt004, RecGBankAccount."Last Statement No.");

@@ -10,7 +10,7 @@ page 50006 "Posted Transitory Item List"
     Caption = 'Posted Transitory Item List';
     PageType = List;
     SourceTable = "Sales Invoice Line";
-    SourceTableView = WHERE("Item Base" = FILTER(Transitory | "Transitory Kit"));
+    SourceTableView = where("Item Base" = filter(Transitory | "Transitory Kit"));
     ApplicationArea = All;
 
     layout
@@ -46,7 +46,7 @@ page 50006 "Posted Transitory Item List"
             //     begin
             //         FctSelection();
             //     end;
-            // }
+            // } //TODO -> Table Removed
             field(CodGStat; CodGStat)
             {
                 Caption = 'Item Statistics Group';
@@ -59,7 +59,7 @@ page 50006 "Posted Transitory Item List"
             field(CodGDim; CodGDim)
             {
                 Caption = 'Item Type';
-                TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+                TableRelation = "Dimension Value".Code where("Global Dimension No." = const(1));
 
                 trigger OnValidate()
                 begin
@@ -114,7 +114,7 @@ page 50006 "Posted Transitory Item List"
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                 }
-                field("Item Product Group Code"; REc."Item Product Group Code")
+                field("Item Product Group Code"; Rec."Item Product Group Code")
                 {
                 }
             }
@@ -134,25 +134,25 @@ page 50006 "Posted Transitory Item List"
 
     procedure FctSelection()
     begin
-        IF CodGVendorNo <> '' THEN
+        if CodGVendorNo <> '' then
             Rec.SETFILTER("Item Vendor No.", CodGVendorNo)
-        ELSE
+        else
             Rec.SETRANGE("Item Vendor No.");
-        IF CodGProduct <> '' THEN
+        if CodGProduct <> '' then
             Rec.SETFILTER("Item Product Group Code", CodGProduct)
-        ELSE
+        else
             Rec.SETRANGE("Item Product Group Code");
-        IF CodGCategory <> '' THEN
+        if CodGCategory <> '' then
             Rec.SETFILTER("Item Category Code 2", CodGCategory)
-        ELSE
+        else
             Rec.SETRANGE("Item Category Code 2");
-        IF CodGStat <> '' THEN
+        if CodGStat <> '' then
             Rec.SETFILTER("Item Statistics Group", CodGStat)
-        ELSE
+        else
             Rec.SETRANGE("Item Statistics Group");
-        IF CodGDim <> '' THEN
+        if CodGDim <> '' then
             Rec.SETFILTER("Shortcut Dimension 1 Code", CodGDim)
-        ELSE
+        else
             Rec.SETRANGE("Shortcut Dimension 1 Code");
     end;
 }

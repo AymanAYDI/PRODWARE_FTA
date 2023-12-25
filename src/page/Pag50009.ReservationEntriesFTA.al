@@ -63,7 +63,7 @@ page 50009 "Reservation Entries FTA"
                     ToolTip = 'Specifies the value of the Quantity (Base) field.';
                     trigger OnValidate()
                     begin
-                        ReservEngineMgt.ModifyReservEntry(xRec, Rec."Quantity (Base)", Rec.Description, FALSE);
+                        ReservEngineMgt.ModifyReservEntry(xRec, Rec."Quantity (Base)", Rec.Description, false);
                         QuantityBaseOnAfterValidate();
                     end;
                 }
@@ -148,8 +148,8 @@ page 50009 "Reservation Entries FTA"
 
     trigger OnModifyRecord(): Boolean
     begin
-        ReservEngineMgt.ModifyReservEntry(xRec, Rec."Quantity (Base)", Rec.Description, TRUE);
-        EXIT(FALSE);
+        ReservEngineMgt.ModifyReservEntry(xRec, Rec."Quantity (Base)", Rec.Description, true);
+        exit(false);
     end;
 
     var
@@ -164,7 +164,7 @@ page 50009 "Reservation Entries FTA"
         PlanningComponent: Record "Planning Component";
         ServiceInvLine: Record "Service Line";
         TransLine: Record "Transfer Line";
-        ReservEntry: Record "Reservation Entry";
+        //ReservEntry: Record "Reservation Entry";
         KitSalesLine: Record "Assembly Line";
         AssembletoOrderLink: Record "Assemble-to-Order Link";
         ReservEngineMgt: Codeunit "Reservation Engine Mgt.";
@@ -174,7 +174,7 @@ page 50009 "Reservation Entries FTA"
     var
         ReservEntry: Record "Reservation Entry";
     begin
-        ReservEntry.GET(Rec."Entry No.", FALSE);
+        ReservEntry.GET(Rec."Entry No.", false);
         LookupReserved(ReservEntry);
     end;
 
@@ -183,48 +183,48 @@ page 50009 "Reservation Entries FTA"
     var
         ReservEntry: Record "Reservation Entry";
     begin
-        ReservEntry.GET(Rec."Entry No.", TRUE);
+        ReservEntry.GET(Rec."Entry No.", true);
         LookupReserved(ReservEntry);
     end;
 
 
     procedure LookupReserved(ReservEntry: Record "Reservation Entry")
     begin
-        WITH ReservEntry DO
-            CASE "Source Type" OF
+        with ReservEntry do
+            case "Source Type" of
                 DATABASE::"Sales Line":
-                    BEGIN
+                    begin
                         SalesLine.RESET();
                         SalesLine.SETRANGE("Document Type", "Source Subtype");
                         SalesLine.SETRANGE("Document No.", "Source ID");
                         SalesLine.SETRANGE("Line No.", "Source Ref. No.");
                         PAGE.RUNMODAL(PAGE::"Sales Lines", SalesLine);
-                    END;
+                    end;
                 DATABASE::"Requisition Line":
-                    BEGIN
+                    begin
                         ReqLine.RESET();
                         ReqLine.SETRANGE("Worksheet Template Name", "Source ID");
                         ReqLine.SETRANGE("Journal Batch Name", "Source Batch Name");
                         ReqLine.SETRANGE("Line No.", "Source Ref. No.");
                         PAGE.RUNMODAL(PAGE::"Requisition Lines", ReqLine);
-                    END;
+                    end;
                 DATABASE::"Purchase Line":
-                    BEGIN
+                    begin
                         PurchLine.RESET();
                         PurchLine.SETRANGE("Document Type", "Source Subtype");
                         PurchLine.SETRANGE("Document No.", "Source ID");
                         PurchLine.SETRANGE("Line No.", "Source Ref. No.");
                         PAGE.RUNMODAL(PAGE::"Purchase Lines", PurchLine);
-                    END;
+                    end;
                 DATABASE::"Item Journal Line":
-                    BEGIN
+                    begin
                         ItemJnlLine.RESET();
                         ItemJnlLine.SETRANGE("Journal Template Name", "Source ID");
                         ItemJnlLine.SETRANGE("Journal Batch Name", "Source Batch Name");
                         ItemJnlLine.SETRANGE("Line No.", "Source Ref. No.");
                         ItemJnlLine.SETRANGE("Entry Type", "Source Subtype");
                         PAGE.RUNMODAL(PAGE::"Item Journal Lines", ItemJnlLine);
-                    END;
+                    end;
                 //>>MIG NAV 2015 : Not Supported
                 /*
                 DATABASE::"BOM Journal Line":
@@ -238,64 +238,64 @@ page 50009 "Reservation Entries FTA"
                 */
                 //<<MIG NAV 2015 : Not Supported
                 DATABASE::"Item Ledger Entry":
-                    BEGIN
+                    begin
                         ItemLedgEntry.RESET();
                         ItemLedgEntry.SETRANGE("Entry No.", "Source Ref. No.");
                         PAGE.RUNMODAL(0, ItemLedgEntry);
-                    END;
+                    end;
                 DATABASE::"Prod. Order Line":
-                    BEGIN
+                    begin
                         ProdOrderLine.RESET();
                         ProdOrderLine.SETRANGE(Status, "Source Subtype");
                         ProdOrderLine.SETRANGE("Prod. Order No.", "Source ID");
                         ProdOrderLine.SETRANGE("Line No.", "Source Prod. Order Line");
                         PAGE.RUNMODAL(0, ProdOrderLine);
-                    END;
+                    end;
                 DATABASE::"Prod. Order Component":
-                    BEGIN
+                    begin
                         ProdOrderComp.RESET();
                         ProdOrderComp.SETRANGE(Status, "Source Subtype");
                         ProdOrderComp.SETRANGE("Prod. Order No.", "Source ID");
                         ProdOrderComp.SETRANGE("Prod. Order Line No.", "Source Prod. Order Line");
                         ProdOrderComp.SETRANGE("Line No.", "Source Ref. No.");
                         PAGE.RUNMODAL(0, ProdOrderComp);
-                    END;
+                    end;
                 DATABASE::"Planning Component":
-                    BEGIN
+                    begin
                         PlanningComponent.RESET();
                         PlanningComponent.SETRANGE("Worksheet Template Name", "Source ID");
                         PlanningComponent.SETRANGE("Worksheet Batch Name", "Source Batch Name");
                         PlanningComponent.SETRANGE("Worksheet Line No.", "Source Prod. Order Line");
                         PlanningComponent.SETRANGE("Line No.", "Source Ref. No.");
                         PAGE.RUNMODAL(0, PlanningComponent);
-                    END;
+                    end;
                 DATABASE::"Transfer Line":
-                    BEGIN
+                    begin
                         TransLine.RESET();
                         TransLine.SETRANGE("Document No.", "Source ID");
                         TransLine.SETRANGE("Line No.", "Source Ref. No.");
                         TransLine.SETRANGE("Derived From Line No.", "Source Prod. Order Line");
                         PAGE.RUNMODAL(0, TransLine);
-                    END;
+                    end;
                 DATABASE::"Service Line":
-                    BEGIN
+                    begin
                         ServiceInvLine.SETRANGE("Document Type", "Source Subtype");
                         ServiceInvLine.SETRANGE("Document No.", "Source ID");
                         ServiceInvLine.SETRANGE("Line No.", "Source Ref. No.");
                         PAGE.RUNMODAL(0, ServiceInvLine);
-                    END;
+                    end;
                 DATABASE::"Assembly Line":
 
-                    IF AssembletoOrderLink.GET("Source Subtype", "Source ID") THEN BEGIN
+                    if AssembletoOrderLink.GET("Source Subtype", "Source ID") then begin
                         KitSalesLine.RESET();
                         KitSalesLine.SETRANGE("Document Type", AssembletoOrderLink."Document Type");
                         KitSalesLine.SETRANGE("Document No.", "Source ID");
                         KitSalesLine.SETRANGE("Line No.", "Source Ref. No.");
                         PAGE.RUNMODAL(0, KitSalesLine);
 
-                    END;
+                    end;
 
-            END;
+            end;
 
     end;
 

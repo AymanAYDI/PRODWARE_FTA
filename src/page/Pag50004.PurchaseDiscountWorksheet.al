@@ -83,7 +83,7 @@ page 50004 "Purchase Discount Worksheet"
                     ToolTip = 'Executes the Suggest &Item Price on Wksh. action.';
                     trigger OnAction()
                     begin
-                        REPORT.RUNMODAL(REPORT::"Suggest Item Price on Wksh.", TRUE, TRUE);
+                        REPORT.RUNMODAL(REPORT::"Suggest Item Price on Wksh.", true, true);
                     end;
                 }
                 //TODO Rapport Specifique
