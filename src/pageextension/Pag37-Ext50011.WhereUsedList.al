@@ -3,7 +3,7 @@ namespace Prodware.FTA;
 
 using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Item;
-pageextension 50010 WhereUsedList extends "Where-Used List" //37
+pageextension 50011 WhereUsedList extends "Where-Used List" //37
 {
     layout
     {

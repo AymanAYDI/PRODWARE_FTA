@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Finance.GeneralLedger.Journal;
-pageextension 50011 GeneralJournal extends "General Journal" //39
+pageextension 50012 GeneralJournal extends "General Journal" //39
 {
     layout
     {

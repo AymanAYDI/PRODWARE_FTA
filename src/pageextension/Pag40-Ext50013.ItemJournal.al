@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Inventory.Journal;
-pageextension 50012 ItemJournal extends "Item Journal"//40
+pageextension 50013 ItemJournal extends "Item Journal"//40
 {
     layout
     {
