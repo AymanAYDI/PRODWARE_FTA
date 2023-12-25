@@ -621,7 +621,7 @@ tableextension 50007 Item extends Item //27
         end;
     end;
 
-    local procedure FctBOM(var RecPItem: Record 27)
+    procedure FctBOM(var RecPItem: Record 27)
     var
         RecLProdBOMHeader: Record 99000771;
         CstL001: Label 'This item does not have a BOM, do you want to create one?';
