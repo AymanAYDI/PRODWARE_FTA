@@ -17,8 +17,8 @@ tableextension 50018 BOMComponent extends "BOM Component" //90
     }
     procedure CopyBOM(CodPFromParentItemNo: Code[20]; CodPToParentItemNo: Code[20])
     var
-        RecLFromBOM: Record 90;
-        RecLToBOM: Record 90;
+        RecLFromBOM: Record "BOM Component";
+        RecLToBOM: Record "BOM Component";
     begin
         RecLToBOM.SETRANGE("Parent Item No.", CodPToParentItemNo);
         RecLToBOM.DELETEALL();

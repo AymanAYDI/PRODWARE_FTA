@@ -7,8 +7,8 @@ using Microsoft.Inventory.Ledger;
 table 50002 "Reservation EntryFTA"
 {
     Caption = 'Reservation Entry';
-    DrillDownPageID = 497;
-    LookupPageID = 497;
+    DrillDownPageID = "Reservation Entries";
+    LookupPageID = "Reservation Entries";
 
     fields
     {

@@ -62,7 +62,7 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
         TxtGBalAccName: Text[50];
         DecGBalance: Decimal;
 
-    LOCAL PROCEDURE UpdateLineInfo(RecLVendEntry: Record 25);
+    LOCAL PROCEDURE UpdateLineInfo(RecLVendEntry: Record "Vendor Ledger Entry");
     BEGIN
         WITH RecLVendEntry DO BEGIN
             CodGAccName := "Vendor No.";
@@ -82,7 +82,7 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
 
     LOCAL PROCEDURE CalcRecBalance(): Decimal;
     VAR
-        RecLVendEntry: Record 25;
+        RecLVendEntry: Record "Vendor Ledger Entry";
         DecLAmount: Decimal;
     BEGIN
         RecLVendEntry.COPY(Rec);

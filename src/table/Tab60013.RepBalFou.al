@@ -202,7 +202,7 @@ table 60013 "Rep Bal Fou"
 
     trigger OnInsert()
     var
-        RecLRepBalTiers: Record 60012;
+        RecLRepBalTiers: Record "Rep Bal Cli";
     begin
         if "Entry No." = 0 then
             if RecLRepBalTiers.FINDLAST() then

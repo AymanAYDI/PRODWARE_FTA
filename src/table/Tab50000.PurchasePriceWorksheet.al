@@ -131,7 +131,7 @@ table 50000 "Purchase Price Worksheet"
 
     procedure CalcCurrentPrice(var PriceAlreadyExists: Boolean)
     var
-        PurchPrice: Record 7012;
+        PurchPrice: Record "Purchase Price";
     begin
         PurchPrice.SETRANGE("Item No.", "Item No.");
         PurchPrice.SETRANGE("Currency Code", "Currency Code");

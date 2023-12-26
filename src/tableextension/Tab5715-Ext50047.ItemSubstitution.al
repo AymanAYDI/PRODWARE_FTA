@@ -1,6 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Inventory.Item.Substitution;
+using Microsoft.Inventory.Item;
 tableextension 50047 ItemSubstitution extends "Item Substitution"//5715
 {
     fields
@@ -14,7 +15,7 @@ tableextension 50047 ItemSubstitution extends "Item Substitution"//5715
     }
     procedure CalcAvailableNoReserv() AvaibilityNoReserved: Decimal
     var
-        Item: Record 27;
+        Item: Record Item;
     begin
         AvaibilityNoReserved := 0;
         if Type = Type::Item then begin

@@ -329,7 +329,7 @@ table 60250 "Kit Sales LineSV"
 
             trigger OnValidate()
             var
-                CheckDateConflict: codeunit 99000815;
+                CheckDateConflict: codeunit "Reservation-Check Date Confl.";
             begin
                 //TODO : KitSalesLineCheck NOT FOUND IN CODEUNIT CheckDateConflict
                 // IF ("Extended Quantity" <> 0) AND
@@ -363,7 +363,7 @@ table 60250 "Kit Sales LineSV"
 
             trigger OnValidate()
             var
-                ItemLedgEntry: Record 32;
+                ItemLedgEntry: Record "Item Ledger Entry";
             begin
                 if "Applies-to Entry" <> 0 then begin
                     ItemLedgEntry.GET("Applies-to Entry");
@@ -631,7 +631,7 @@ table 60250 "Kit Sales LineSV"
 
     procedure GetCurrencyCode(): Code[10]
     var
-        SalesHeader: Record 36;
+        SalesHeader: Record "Sales Header";
     begin
         if ("Document Type" = SalesHeader."Document Type") and
            ("Document No." = SalesHeader."No.")
@@ -658,7 +658,7 @@ table 60250 "Kit Sales LineSV"
 
     local procedure GetFieldCaption(FieldNumber: Integer): Text[100]
     var
-        "Field": Record 2000000041;
+        "Field": Record Field;
     begin
         //TODO: "Kit Sales Line" not found
         //Field.GET(DATABASE::"Kit Sales Line", FieldNumber);
@@ -690,7 +690,7 @@ table 60250 "Kit Sales LineSV"
 
     local procedure InitCompLine()
     var
-        RecLItem: Record 27;
+        RecLItem: Record Item;
     begin
         GetKitLine();
 
@@ -724,7 +724,7 @@ table 60250 "Kit Sales LineSV"
 
     local procedure SelectItemEntry()
     var
-        ItemLedgEntry: Record 32;
+        ItemLedgEntry: Record "Item Ledger Entry";
         KitSalesLine2: Record "Kit Sales LineSV";
     begin
         ItemLedgEntry.SETCURRENTKEY("Item No.", Open);
@@ -735,7 +735,7 @@ table 60250 "Kit Sales LineSV"
         ItemLedgEntry.SETRANGE(Positive, true);
         ItemLedgEntry.SETRANGE(Open, true);
 
-        if Page.RUNMODAL(38, ItemLedgEntry) = ACTION::LookupOK then begin
+        if Page.RUNMODAL(Page::"Item Ledger Entries", ItemLedgEntry) = ACTION::LookupOK then begin
             KitSalesLine2 := Rec;
             KitSalesLine2.VALIDATE("Applies-to Entry", ItemLedgEntry."Entry No.");
             if Reserve <> Reserve::Always then
@@ -746,7 +746,7 @@ table 60250 "Kit Sales LineSV"
 
     local procedure CheckItemAvailable()
     var
-        SalesHeader: Record 36;
+        SalesHeader: Record "Sales Header";
         ItemCheckAvail: codeunit "Item-Check Avail.";
     begin
         if "Shipment Date" = 0D then begin
@@ -792,7 +792,7 @@ table 60250 "Kit Sales LineSV"
         KitLine: Record "Sales Line";
         KitLine2: Record "Sales Line";
         CompLine: Record "Sales Line";
-        xKitSalesLine: Record 60250;
+        xKitSalesLine: Record "Kit Sales LineSV";
         Text001: Label 'You cannot rename a %1.';
         Text25000: Label 'You cannot change %1 when %2 is %3.';
         Item: Record Item;

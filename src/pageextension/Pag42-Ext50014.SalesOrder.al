@@ -2,6 +2,8 @@ namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Comment;
+using Microsoft.Inventory.Item;
+using Microsoft.Foundation.Reporting;
 pageextension 50014 "SalesOrder" extends "Sales Order" //42
 {
     layout
@@ -219,8 +221,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
                 var
                     //TODO: codeunit not migrated yet
                     //CduLPrintPDF: Codeunit 50006;
-                    RecLSalesLine: Record 37;
-                    RecLItem: Record 27;
+                    RecLSalesLine: Record "Sales Line";
+                    RecLItem: Record Item;
                 begin
                     // TODO: table sales header not migrated yet
                     //DocPrint.PrintSalesOrder(Rec, rec.Usage::"Work Order");
@@ -279,13 +281,13 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
 
     trigger OnClosePage()
     var
-        ReleaseSalesDocument: Codeunit 414;
+        ReleaseSalesDocument: Codeunit "Release Sales Document";
     begin
         ReleaseSalesDocument.PerformManualRelease(Rec);
     end;
 
     var
-        DocPrint: Codeunit 229;
+        DocPrint: Codeunit "Document-Print";
 
     LOCAL PROCEDURE GetRecordLinkExist();
     VAR

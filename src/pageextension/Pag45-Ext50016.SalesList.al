@@ -1,6 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
+using Microsoft.Sales.Customer;
 pageextension 50016 SalesList extends "Sales List" //45
 {
     layout
@@ -35,7 +36,7 @@ pageextension 50016 SalesList extends "Sales List" //45
 
     var
         GTel: Text[30];
-        GCust: Record 18;
+        GCust: Record Customer;
 
 
     trigger OnAfterGetRecord()

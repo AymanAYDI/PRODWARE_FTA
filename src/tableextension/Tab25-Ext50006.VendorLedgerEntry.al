@@ -35,7 +35,7 @@ tableextension 50006 VendorLedgerEntry extends "Vendor Ledger Entry" //25
 
     procedure getVendorName(CodLVendNo: Code[20]): Text[100]
     var
-        RecgLVendor: Record 23;
+        RecgLVendor: Record Vendor;
     begin
         if RecgLVendor.GET(CodLVendNo) then
             exit(RecgLVendor.Name)
