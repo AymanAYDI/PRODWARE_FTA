@@ -38,6 +38,6 @@ table 50021 "Customer Typology"
     end;
 
     var
-        ExtTextHeader: Record 279;
+        ExtTextHeader: Record "Extended Text Header";
 }
 

@@ -3,6 +3,8 @@ namespace Prodware.FTA;
 using Microsoft.Purchases.Document;
 using Microsoft.Foundation.Shipping;
 using Microsoft.Purchases.Vendor;
+using Microsoft.Sales.Document;
+using Microsoft.CRM.Contact;
 tableextension 50011 PurchaseHeader extends "Purchase Header" //38
 {
     fields
@@ -44,7 +46,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
             trigger OnBeforeValidate()
             var
                 "**FTA1.00": Integer;
-                RecLPurchLine: Record 39;
+                RecLPurchLine: Record "Purchase Line";
                 CstL001: label 'This change can delete the reservation of the lines : do want to continue?';
                 CstL002: label 'Canceled operation';
             begin
@@ -116,7 +118,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
 
             trigger OnValidate()
             var
-                RecLPurchHeader: Record 38;
+                RecLPurchHeader: Record "Purchase Header";
                 TextCdeTransp003: Label 'You cannot modify Shipping Code agent because there is a Shipping Purchase Order linked (Order %1) !!';
             begin
                 TESTFIELD(Status, Status::Open);
@@ -170,8 +172,8 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
     trigger OnBeforeDelete()
     var
         "--NAVEASY.001--": Integer;
-        RecLSalesHeader: Record 36;
-        RecLPurchHeader: Record 38;
+        RecLSalesHeader: Record "Sales Header";
+        RecLPurchHeader: Record "Purchase Header";
         TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
     begin
         PurchLine.SetRange("Document Type", "Document Type");
@@ -210,8 +212,8 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
 
     procedure CreatePurchaseTransport(CodLNumVendor: Code[20]; CodLInitialOrder: Code[20]; DecLPrice: Decimal; CodLCurrency: Code[10]; DateLRequested: Date; DateLPromised: Date; DateLPlanned: Date; OptLTypeInitialOrder: Option " ",Sale,Purchase) CodLTransportOrder: Code[20]
     var
-        RecLPurchHead: Record 38;
-        CuLReleasePurchaseDoc: codeunit 415;
+        RecLPurchHead: Record "Purchase Header";
+        CuLReleasePurchaseDoc: codeunit "Release Purchase Document";
     begin
         TestVerifExistence(CodLInitialOrder);
         PurchSetup.Get();
@@ -226,7 +228,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
 
     procedure TestVerifExistence(CodLInitialOrder: Code[20])
     var
-        RecLPurchHead: Record 38;
+        RecLPurchHead: Record "Purchase Header";
         TextCdeTransp001: Label 'There is a Transport Purchase order linked to this document.\ Impossible to modify or to create another Transport Purchase order !!';
     begin
         RecLPurchHead.Reset();
@@ -237,7 +239,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
 
     procedure CreatePurchHeadTransport(CodLNumVendor: Code[20]; CodLInitialOrder: Code[20]; CodLCurrency: Code[10]; OptLTypeInitialOrder: Enum "Initial Order Type"): Code[20]
     var
-        RecLPurchHead: Record 38;
+        RecLPurchHead: Record "Purchase Header";
     begin
         RecLPurchHead.Init();
         RecLPurchHead."Document Type" := RecLPurchHead."Document Type"::Order;
@@ -253,7 +255,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
 
     procedure CreatePurchLineTransport(CodLNumOrder: Code[20]; CodLNumVendor: Code[20]; DecLPrice: Decimal; DateLRequested: Date; DateLPromised: Date; DateLPlanned: Date)
     var
-        RecLPurchLine: Record 39;
+        RecLPurchLine: Record "Purchase Line";
     begin
         RecLPurchLine.Init();
         RecLPurchLine."Document Type" := RecLPurchLine."Document Type"::Order;
@@ -271,10 +273,10 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
     end;
 
     var
-        RecLSalesHeader: Record 36;
-        RecLPurchHeader: Record 38;
+        RecLSalesHeader: Record "Sales Header";
+        RecLPurchHeader: Record "Purchase Header";
         TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
-        ShippingAgent: Record 291;
-        RecGContact: Record 5050;
+        ShippingAgent: Record "Shipping Agent";
+        RecGContact: Record Contact;
 }
 
