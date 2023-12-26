@@ -3,6 +3,7 @@ namespace Prodware.FTA;
 using Microsoft.Purchases.Payables;
 using Microsoft.Bank.BankAccount;
 using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Purchases.Vendor;
 tableextension 50006 VendorLedgerEntry extends "Vendor Ledger Entry" //25
 {
     fields

@@ -67,7 +67,7 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
 
     local procedure CalcRecBalance(): Decimal;
     var
-        RecLCustEntry: Record 21;
+        RecLCustEntry: Record "Cust. Ledger Entry";
         DecLAmount: Decimal;
     begin
         RecLCustEntry.COPY(Rec);
@@ -84,7 +84,7 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
         exit(DecLAmount);
     end;
 
-    local procedure UpdateLineInfo(RecLCustEntry: Record 21);
+    local procedure UpdateLineInfo(RecLCustEntry: Record "Cust. Ledger Entry");
     begin
         with RecLCustEntry do begin
             CodGAccName := "Customer No.";
