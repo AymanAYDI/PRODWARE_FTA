@@ -21,6 +21,9 @@ using Microsoft.Foundation.UOM;
 using Microsoft.FixedAssets.Depreciation;
 using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Foundation.AuditCodes;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Service.Item;
+using Microsoft.Sales.Comment;
 table 60111 "Sales Shipment Liness"
 {
     Caption = 'Sales Shipment Line';

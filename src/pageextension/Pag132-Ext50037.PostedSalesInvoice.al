@@ -3,7 +3,7 @@ namespace Prodware.FTA;
 using Microsoft.Sales.History;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.History;
-pageextension 50022 "PostedSalesInvoice" extends "Posted Sales Invoice" //132
+pageextension 50037 "PostedSalesInvoice" extends "Posted Sales Invoice" //132
 {
 
     layout

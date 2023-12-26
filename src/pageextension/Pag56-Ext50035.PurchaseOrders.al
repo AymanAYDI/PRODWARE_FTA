@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Purchases.Document;
-pageextension 50020 PurchaseOrders extends "Purchase Orders" //56
+pageextension 50035 PurchaseOrders extends "Purchase Orders" //56
 {
     layout
     {

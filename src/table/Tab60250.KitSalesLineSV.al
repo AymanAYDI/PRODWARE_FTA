@@ -12,6 +12,8 @@ using Microsoft.Warehouse.Activity;
 using Microsoft.Manufacturing.ProductionBOM;
 using Microsoft.Inventory.Availability;
 using Microsoft.Warehouse.Request;
+using Microsoft.Inventory.Ledger;
+using System.Reflection;
 table 60250 "Kit Sales LineSV"
 {
     Caption = 'Kit Sales Line';

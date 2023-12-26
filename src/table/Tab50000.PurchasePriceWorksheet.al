@@ -3,6 +3,7 @@ namespace Prodware.FTA;
 using Microsoft.Inventory.Item;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Finance.Currency;
+using Microsoft.Purchases.Pricing;
 table 50000 "Purchase Price Worksheet"
 {
     Caption = 'Purchase Price Worksheet';

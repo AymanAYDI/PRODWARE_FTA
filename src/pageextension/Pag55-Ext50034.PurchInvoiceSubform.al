@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Purchases.Document;
-pageextension 50019 PurchInvoiceSubform extends "Purch. Invoice Subform" //55
+pageextension 50034 PurchInvoiceSubform extends "Purch. Invoice Subform" //55
 {
     layout
     {

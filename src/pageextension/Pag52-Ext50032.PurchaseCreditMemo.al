@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Purchases.Document;
-pageextension 50019 "PurchaseCreditMemo" extends "Purchase Credit Memo" //52
+pageextension 50032 "PurchaseCreditMemo" extends "Purchase Credit Memo" //52
 {
     layout
     {

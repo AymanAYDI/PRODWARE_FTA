@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using System.Security.User;
-pageextension 50022 "UserSetup" extends "User Setup" //119
+pageextension 50036 "UserSetup" extends "User Setup" //119
 {
     layout
     {
