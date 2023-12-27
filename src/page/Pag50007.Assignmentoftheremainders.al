@@ -1,3 +1,7 @@
+namespace Prodware.FTA;
+
+using Microsoft.Sales.Document;
+using Microsoft.Purchases.Vendor;
 page 50007 "Assignment of the remainders"
 {
     // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -57,7 +61,7 @@ page 50007 "Assignment of the remainders"
                     Editable = false;
                     Visible = false;
                 }
-                field("Sell-to Customer Name"; SalesLineSV."Sell-to Customer Name")
+                field("Sell-to Customer Name"; Rec."Sell-to Customer Name")
                 {
                 }
                 field("Line No."; Rec."Line No.")
@@ -74,7 +78,7 @@ page 50007 "Assignment of the remainders"
                 {
                     Editable = false;
                 }
-                field("Item No.2"; SalesLineSV."Item No.2")
+                field("Item No.2"; Rec."Item No.2")
                 {
                     Editable = false;
                 }
@@ -91,7 +95,7 @@ page 50007 "Assignment of the remainders"
                     Editable = false;
                     Visible = false;
                 }
-                field("Item Base"; SalesLineSV."Item Base")
+                field("Item Base"; Rec."Item Base")
                 {
                     Editable = false;
                 }
@@ -107,7 +111,7 @@ page 50007 "Assignment of the remainders"
                 {
                     Editable = false;
                 }
-                field("Qty Not Assign FTA"; SalesLineSV."Qty Not Assign FTA")
+                field("Qty Not Assign FTA"; Rec."Qty Not Assign FTA")
                 {
                     Caption = 'Qty. to Assign';
                     Visible = false;
@@ -115,12 +119,12 @@ page 50007 "Assignment of the remainders"
                 field("Vendor No."; Rec."Vendor No.")
                 {
                 }
-                field("Qty to be Ordered"; SalesLineSV."Qty to be Ordered")
+                field("Qty to be Ordered"; Rec."Qty to be Ordered")
                 {
                     Style = Strong;
                     StyleExpr = true;
                 }
-                field("Selected for Order"; SalesLineSV."Selected for Order")
+                field("Selected for Order"; Rec."Selected for Order")
                 {
                     Style = Strong;
                     StyleExpr = true;
@@ -130,7 +134,7 @@ page 50007 "Assignment of the remainders"
                 //     Style = Strong;
                 //     StyleExpr = TRUE;
                 // }
-                field("Item Lead Time Calculation"; SalesLineSV."Item Lead Time Calculation")
+                field("Item Lead Time Calculation"; Rec."Item Lead Time Calculation")
                 {
                 }
                 field("Shipment Date"; Rec."Shipment Date")
@@ -200,7 +204,7 @@ page 50007 "Assignment of the remainders"
     trigger OnAfterGetRecord()
     begin
         Rec.CALCFIELDS("Reserved Quantity");
-        SalesLineSV."Qty Not Assign FTA" := Rec."Outstanding Quantity" - Rec."Reserved Quantity";
+        Rec."Qty Not Assign FTA" := Rec."Outstanding Quantity" - Rec."Reserved Quantity";
     end;
 
     trigger OnOpenPage()
@@ -211,13 +215,12 @@ page 50007 "Assignment of the remainders"
         Rec.FctSelectRecForOrder3(Rec);
         //<<TI302489
         FctSelection();
-        Rec.SETRANGE("Document Type", "Document Type"::Order);
+        Rec.SETRANGE("Document Type", Rec."Document Type"::Order);
         Rec.CALCFIELDS("Inventory Value Zero");
         Rec.SETRANGE("Inventory Value Zero", false);
     end;
 
     var
-        SalesLineSV: Record "Sales LineSV";
         CodGVendorNo: Code[100];
         BooGSelectLine: Boolean;
 
@@ -228,9 +231,9 @@ page 50007 "Assignment of the remainders"
         else
             Rec.SETRANGE(Rec."Vendor No.");
         if BooGSelectLine then
-            SalesLineSV.SETRANGE("Selected for Order", true)
+            Rec.SETRANGE("Selected for Order", true)
         else
-            SalesLineSV.SETRANGE("Selected for Order");
+            Rec.SETRANGE("Selected for Order");
         CurrPage.KitLines.PAGE.FctShowKitLine(CodGVendorNo, BooGSelectLine);
     end;
 

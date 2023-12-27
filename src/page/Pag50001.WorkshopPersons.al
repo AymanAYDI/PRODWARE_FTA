@@ -1,3 +1,4 @@
+namespace Prodware.FTA;
 page 50001 "Workshop Persons"
 {
 

@@ -3,6 +3,7 @@ namespace Prodware.FTA;
 using Microsoft.Inventory.Item;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Finance.Currency;
+using Microsoft.Purchases.Pricing;
 table 50000 "Purchase Price Worksheet"
 {
     Caption = 'Purchase Price Worksheet';
@@ -131,7 +132,7 @@ table 50000 "Purchase Price Worksheet"
 
     procedure CalcCurrentPrice(var PriceAlreadyExists: Boolean)
     var
-        PurchPrice: Record 7012;
+        PurchPrice: Record "Purchase Price";
     begin
         PurchPrice.SETRANGE("Item No.", "Item No.");
         PurchPrice.SETRANGE("Currency Code", "Currency Code");
@@ -139,7 +140,7 @@ table 50000 "Purchase Price Worksheet"
         PurchPrice.SETRANGE("Starting Date", 0D, "Starting Date");
         PurchPrice.SETRANGE("Minimum Quantity", 0, "Minimum Quantity");
         PurchPrice.SETRANGE("Variant Code", "Variant Code");
-        if PurchPrice.FIND('+') then begin
+        if PurchPrice.FINDLAST() then begin
             "Current Unit Cost" := PurchPrice."Direct Unit Cost";
             PriceAlreadyExists := PurchPrice."Starting Date" = "Starting Date";
         end else begin

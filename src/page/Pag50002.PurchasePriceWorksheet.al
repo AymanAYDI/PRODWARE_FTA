@@ -1,3 +1,6 @@
+namespace Prodware.FTA;
+
+using Microsoft.Sales.Pricing;
 page 50002 "Purchase Price Worksheet"
 {
     Caption = 'Purchase Price Worksheet';

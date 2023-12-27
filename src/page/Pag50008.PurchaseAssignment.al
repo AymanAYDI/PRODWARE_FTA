@@ -1,3 +1,6 @@
+namespace Prodware.FTA;
+
+using Microsoft.Purchases.Document;
 page 50008 "Purchase Assignment"
 {
     Caption = 'Purchase Assignment';

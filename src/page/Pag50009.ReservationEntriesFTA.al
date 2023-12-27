@@ -1,3 +1,16 @@
+namespace Prodware.FTA;
+
+using Microsoft.Inventory.Tracking;
+using Microsoft.Sales.Document;
+using Microsoft.Inventory.Requisition;
+using Microsoft.Purchases.Document;
+using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Manufacturing.Document;
+using Microsoft.Inventory.Planning;
+using Microsoft.Service.Document;
+using Microsoft.Inventory.Transfer;
+using Microsoft.Assembly.Document;
 page 50009 "Reservation Entries FTA"
 {
     Caption = 'Reservation Entries';

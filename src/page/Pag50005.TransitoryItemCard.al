@@ -1,3 +1,29 @@
+namespace Prodware.FTA;
+
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Tracking;
+using Microsoft.Inventory.Counting.Journal;
+using Microsoft.Inventory.Analysis;
+using Microsoft.Inventory.Availability;
+using Microsoft.Warehouse.Structure;
+using Microsoft.Foundation.Comment;
+using Microsoft.Finance.Dimension;
+using Microsoft.Inventory.Item.Picture;
+using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Item.Substitution;
+using Microsoft.Foundation.ExtendedText;
+using Microsoft.Manufacturing.ProductionBOM;
+using Microsoft.Service.Item;
+using Microsoft.Service.Maintenance;
+using Microsoft.Service.Resources;
+using Microsoft.Warehouse.ADCS;
+using Microsoft.Sales.Pricing;
+using Microsoft.Purchases.Pricing;
+using System.IO;
+using Microsoft.Manufacturing.StandardCost;
+using Microsoft.Inventory.Planning;
 page 50005 "Transitory Item Card"
 {
 

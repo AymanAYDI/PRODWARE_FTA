@@ -12,6 +12,8 @@ using Microsoft.FixedAssets.FixedAsset;
 using Microsoft.Sales.Customer;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Location;
+using Microsoft.Warehouse.Activity;
 tableextension 50010 SalesLine extends "Sales Line" //37
 {
     fields
@@ -373,17 +375,17 @@ tableextension 50010 SalesLine extends "Sales Line" //37
     procedure FctReserveOnStock(RecPSalesLine: Record 37; DecPQtyToReserv: Decimal; var RemainingQtyToReserveBase: Decimal)
     var
         DecLOriginQuantity: Decimal;
-        RecLSalesLine: Record "37";
-        RecLReservEntry: Record 337;
-        RecLLocation: Record "14";
-        FrmLAvailableItemLedgEntries: page "504";
-        RecLItemLedgerEntry: Record "32";
-        CduLCreatePick: Codeunit "7312";
+        RecLSalesLine: Record "Sales Line";
+        RecLReservEntry: Record "Reservation Entry";
+        RecLLocation: Record "Location";
+        FrmLAvailableItemLedgEntries: page "Available - Item Ledg. Entries";
+        RecLItemLedgerEntry: Record "Item Ledger Entry";
+        CduLCreatePick: Codeunit "Create Pick";
         DecLWorkQty: Decimal;
         "**PAMO": Integer;
-        ReservMgt: Codeunit "99000845";
-        RecLEntrySummary: Record "338" temporary;
-        Reservation: Page 498;
+        ReservMgt: Codeunit "Reservation Management";
+        RecLEntrySummary: Record "Entry Summary" temporary;
+        Reservation: Page Reservation;
     begin
         if (RecPSalesLine.Type <> RecPSalesLine.Type::Item) or (DecPQtyToReserv = 0) then
             exit;
@@ -407,6 +409,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecLSalesLine.TESTFIELD("No.");
         Clear(Reservation);
         //TODO: procedure SetSalesLine not found in page Reservation
+        Reservation.SetReservSource(RecLSalesLine);
         // Reservation.SetSalesLine(RecLSalesLine);
         // ReservMgt.SetSalesLine(RecLSalesLine);
         ReservMgt.AutoReserveOneLine(

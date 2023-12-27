@@ -1,3 +1,9 @@
+namespace Prodware.FTA;
+
+using Microsoft.Sales.History;
+using Microsoft.Purchases.Vendor;
+using Microsoft.Inventory.Item;
+using Microsoft.Finance.Dimension;
 page 50006 "Posted Transitory Item List"
 {
     // ------------------------------------------------------------------------

@@ -557,7 +557,7 @@ tableextension 50007 Item extends Item //27
         RecPItem.MODIFY();
     end;
 
-    local procedure FctCreateFromTemplate()
+    procedure FctCreateFromTemplate()
     var
         CduLTemplateMgt: Codeunit 8612;
         RecRef: RecordRef;
