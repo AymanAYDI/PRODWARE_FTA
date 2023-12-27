@@ -21,6 +21,7 @@ page 51009 "Sales Archive"
     Editable = false;
     PageType = List;
     SourceTable = "Sales Line Archive";
+    ApplicationArea = All;
 
     layout
     {

@@ -14,6 +14,7 @@ page 51007 "NavEasy Setup"
     Caption = 'NavEasy Setup';
     PageType = Card;
     SourceTable = "NavEasy Setup";
+    ApplicationArea = All;
 
     layout
     {

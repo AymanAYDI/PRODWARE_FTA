@@ -19,6 +19,7 @@ page 50007 "Assignment of the remainders"
     PageType = Worksheet;
     SourceTable = "Sales Line";
     SourceTableView = sorting("Vendor No.", "No.", "Location Code") where("Document Type" = filter(Order), Type = filter(Item), "Outstanding Quantity" = filter(<> 0));
+    ApplicationArea = All;
 
     layout
     {

@@ -1,6 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
+using Microsoft.Sales.Customer;
 pageextension 50016 SalesList extends "Sales List" //45
 {
     layout
@@ -9,6 +10,8 @@ pageextension 50016 SalesList extends "Sales List" //45
         {
             field("Order Date"; rec."Order Date")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the date when the order was created.';
             }
         }
         addafter("No.")
@@ -16,26 +19,32 @@ pageextension 50016 SalesList extends "Sales List" //45
             field(GTel; GTel)
             {
                 Caption = 'No Tel°phone ';
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the No Tel°phone  field.';
             }
         }
         addafter("External Document No.")
         {
             field("Your Reference"; rec."Your Reference")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the customer''s reference. The content will be printed on sales documents.';
             }
         }
         addafter("Salesperson Code")
         {
-            // field("Mobile Salesperson Code"; rec."Mobile Salesperson Code")
-            // {
-            //     Visible = false;
-            // }
+            field("Mobile Salesperson Code"; rec."Mobile Salesperson Code")
+            {
+                Visible = false;
+                ToolTip = 'Specifies the value of the Mobile Salesperson Code field.';
+                ApplicationArea = All;
+            }
         }
     }
 
     var
         GTel: Text[30];
-        GCust: Record 18;
+        GCust: Record Customer;
 
 
     trigger OnAfterGetRecord()

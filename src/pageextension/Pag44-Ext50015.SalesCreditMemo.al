@@ -7,27 +7,37 @@ pageextension 50015 SalesCreditMemo extends "Sales Credit Memo" //44
     {
         addafter("Sell-to Customer Name")
         {
-            // field("Customer India Product"; "Customer India Product")
-            // {
-            // }
+            field("Customer India Product"; rec."Customer India Product")
+            {
+                ToolTip = 'Specifies the value of the Customer India Product field.';
+                ApplicationArea = All;
+            }
         }
         addafter("Salesperson Code")
         {
-            // field("Mobile Salesperson Code"; "Mobile Salesperson Code")
-            // {
-            // }
+            field("Mobile Salesperson Code"; rec."Mobile Salesperson Code")
+            {
+                ToolTip = 'Specifies the value of the Mobile Salesperson Code field.';
+                ApplicationArea = All;
+            }
         }
         addafter(Status)
         {
-            // field("Fax No."; "Fax No.")
-            // {
-            // }
-            // field("E-Mail"; "E-Mail")
-            // {
-            // }
-            // field("Subject Mail"; "Subject Mail")
-            // {
-            // }
+            field("Fax No."; rec."Fax No.")
+            {
+                ToolTip = 'Specifies the value of the Fax No. field.';
+                ApplicationArea = All;
+            }
+            field("E-Mail"; rec."E-Mail")
+            {
+                ToolTip = 'Specifies the value of the E-Mail field.';
+                ApplicationArea = All;
+            }
+            field("Subject Mail"; rec."Subject Mail")
+            {
+                ToolTip = 'Specifies the value of the Sujet Mail field.';
+                ApplicationArea = All;
+            }
         }
     }
 }

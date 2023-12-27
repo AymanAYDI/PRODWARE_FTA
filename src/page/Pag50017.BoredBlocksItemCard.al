@@ -77,6 +77,7 @@ page 50017 "Bored Blocks Item Card"
     RefreshOnActivate = true;
     SourceTable = Item;
     SourceTableView = where("Item Base" = filter("Bored blocks"));
+    ApplicationArea = All;
 
     layout
     {

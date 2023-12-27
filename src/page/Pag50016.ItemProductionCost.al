@@ -7,6 +7,7 @@ page 50016 "Item Production Cost"
     InsertAllowed = false;
     PageType = List;
     SourceTable = "Item Production Cost";
+    ApplicationArea = All;
 
     layout
     {

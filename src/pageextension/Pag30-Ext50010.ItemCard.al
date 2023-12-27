@@ -58,7 +58,8 @@ pageextension 50010 ItemCard extends "Item Card" //30
         {
             field("No. 2"; rec."No. 2")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the No. 2 field.';
             }
 
         }
@@ -66,26 +67,31 @@ pageextension 50010 ItemCard extends "Item Card" //30
         {
             field("Global Dimension 1 Code"; rec."Global Dimension 1 Code")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Global Dimension 1 Code field.';
             }
             field("Creation Date"; rec."Creation Date")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Creation Date field.';
             }
             field(User; rec.User)
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the User field.';
             }
         }
         addafter("Inventory")
         {
             field("Reserved Qty. on Inventory"; rec."Reserved Qty. on Inventory")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Reserved Qty. on Inventory field.';
             }
             field("Reserved Qty. on Purch. Orders"; rec."Reserved Qty. on Purch. Orders")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Reserved Qty. on Purch. Orders field.';
             }
         }
         addafter("Qty. on Asm. Component")
@@ -95,6 +101,8 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 Caption = 'Available';
                 DecimalPlaces = 0 : 5;
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Available field.';
             }
         }
         addafter("PreventNegInventoryDefaultNo")
@@ -102,53 +110,67 @@ pageextension 50010 ItemCard extends "Item Card" //30
             field("Margin in %"; rec."Margin in %")
             {
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Margin in % field.';
             }
             field("Pdf Url"; rec."Pdf Url")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Pdf Url field.';
             }
             field("Send To Web"; rec."Send To Web")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Send To Web field.';
             }
             field("Assembly time"; rec."Assembly time")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Temps de montage field.';
             }
             field("Item Machining Time"; rec."Item Machining Time")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Temps d''usinage field.';
             }
             field("Item Work Time"; rec."Item Work Time")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Temps de montage field.';
             }
             field(Weight; rec.Weight)
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Poids field.';
             }
             field("Storage type"; rec."Storage type")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Type stockage field.';
             }
             field("Default Prepared Sales Lines"; rec."Default Prepared Sales Lines")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Préparé automatiquement lignes vente field.';
             }
         }
         addafter("Last Direct Cost")
         {
             field("Single-Level Material Cost"; rec."Single-Level Material Cost")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Single-Level Material Cost field.';
             }
             field("Purchase Price Base"; rec."Purchase Price Base")
             {
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Purchase Price Base field.';
             }
             field("Multiplying Coefficient"; rec."Multiplying Coefficient")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Multiplying Coefficient field.';
             }
 
         }
@@ -157,13 +179,16 @@ pageextension 50010 ItemCard extends "Item Card" //30
             field("Kit - Sales Price"; rec."Kit - Sales Price")
             {
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Kit - Sales Price field.';
             }
         }
         addafter("Assembly Policy")
         {
             field("Rolled-up Material Cost"; rec."Rolled-up Material Cost")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Rolled-up Material Cost field.';
             }
         }
 
@@ -256,12 +281,16 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 Promoted = true;
                 PromotedIsBig = true;
                 Image = History;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Historique de l''article action.';
             }
         }
         addbefore("Return Orders")
         {
             action("Sales order archive")
             {
+                ApplicationArea = All;
+                ToolTip = 'Executes the Sales order archive action.';
                 //TODO: page SPE not migrated yet
                 // RunObject = Page 51009;
                 // RunPageView = sorting("Document Type", Type, "No.") order(descending);
@@ -269,6 +298,8 @@ pageextension 50010 ItemCard extends "Item Card" //30
             }
             action("Sales quote archive")
             {
+                ApplicationArea = All;
+                ToolTip = 'Executes the Sales quote archive action.';
                 //TODO: page SPE not migrated yet
                 // RunObject = Page 51009;
                 // RunPageView = SORTING("Document Type", Type, "No.") ORDER(Descending);
@@ -279,6 +310,8 @@ pageextension 50010 ItemCard extends "Item Card" //30
         {
             action("Calculation Purchase Price Base")
             {
+                ApplicationArea = All;
+                ToolTip = 'Executes the Calculation Purchase Price Base action.';
                 trigger OnAction()
                 var
                     RecLItem: Record Item;
@@ -290,6 +323,8 @@ pageextension 50010 ItemCard extends "Item Card" //30
             }
             action("Calulation Unit price")
             {
+                ApplicationArea = All;
+                ToolTip = 'Executes the Calulation Unit price action.';
                 trigger OnAction()
                 var
                     RecLItem: Record Item;
@@ -301,6 +336,8 @@ pageextension 50010 ItemCard extends "Item Card" //30
             }
             action("Calcul Prix Kit")
             {
+                ApplicationArea = All;
+                ToolTip = 'Executes the Calcul Prix Kit action.';
                 trigger OnAction()
                 var
                     RecLItem: Record Item;
@@ -312,6 +349,8 @@ pageextension 50010 ItemCard extends "Item Card" //30
             }
             action("Calculer Co– Kit")
             {
+                ApplicationArea = All;
+                ToolTip = 'Executes the Calculer Co– Kit action.';
                 trigger OnAction()
                 begin
                     CLEAR(CalculateStdCost);
@@ -320,6 +359,8 @@ pageextension 50010 ItemCard extends "Item Card" //30
             }
             action("Calculation all Prices")
             {
+                ApplicationArea = All;
+                ToolTip = 'Executes the Calculation all Prices action.';
                 trigger OnAction()
                 var
                     RecLItem: Record Item;
@@ -341,6 +382,8 @@ pageextension 50010 ItemCard extends "Item Card" //30
                     Visible = false;
                     PromotedIsBig = true;
                     Image = AssemblyBOM;
+                    ApplicationArea = All;
+                    ToolTip = 'Executes the kit action.';
                     trigger OnAction()
                     var
                         RecLProdBOMHeader: Record "Production BOM Header";

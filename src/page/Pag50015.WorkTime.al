@@ -5,6 +5,7 @@ page 50015 "Work Time"
 {
     PageType = List;
     SourceTable = "Work Time";
+    ApplicationArea = All;
 
     layout
     {

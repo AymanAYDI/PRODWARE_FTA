@@ -2,6 +2,8 @@ namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Comment;
+using Microsoft.Inventory.Item;
+using Microsoft.Foundation.Reporting;
 pageextension 50014 "SalesOrder" extends "Sales Order" //42
 {
     layout
@@ -193,6 +195,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             {
                 Caption = 'Co&mments';
                 Image = ViewComments;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Co&mments action.';
                 trigger OnAction()
                 var
                     SalesCommentLine: Record "Sales Comment Line";
@@ -215,12 +219,14 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             {
                 Caption = 'Assembly Order';
                 Image = Print;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Assembly Order action.';
                 trigger OnAction()
                 var
                     //TODO: codeunit not migrated yet
                     //CduLPrintPDF: Codeunit 50006;
-                    RecLSalesLine: Record 37;
-                    RecLItem: Record 27;
+                    RecLSalesLine: Record "Sales Line";
+                    RecLItem: Record Item;
                 begin
                     // TODO: table sales header not migrated yet
                     //DocPrint.PrintSalesOrder(Rec, rec.Usage::"Work Order");
@@ -231,6 +237,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             {
                 Caption = 'Preparatory Delivery';
                 Image = Print;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Preparatory Delivery action.';
                 trigger OnAction()
                 var
                     SalesHeader: Record "Sales Header";
@@ -244,6 +252,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             {
                 Caption = 'Assembly Order';
                 Image = Print;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Assembly Order action.';
                 trigger OnAction()
                 var
                     SalesHeader: Record "Sales Header";
@@ -260,6 +270,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             action(Action1100267019)
             {
                 Caption = 'Proforma';
+                ApplicationArea = All;
+                ToolTip = 'Executes the Proforma action.';
                 trigger OnAction()
                 var
                     RecLOrder: Record "Sales Header";
@@ -279,13 +291,13 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
 
     trigger OnClosePage()
     var
-        ReleaseSalesDocument: Codeunit 414;
+        ReleaseSalesDocument: Codeunit "Release Sales Document";
     begin
         ReleaseSalesDocument.PerformManualRelease(Rec);
     end;
 
     var
-        DocPrint: Codeunit 229;
+        DocPrint: Codeunit "Document-Print";
 
     LOCAL PROCEDURE GetRecordLinkExist();
     VAR

@@ -21,12 +21,15 @@ using Microsoft.Foundation.UOM;
 using Microsoft.FixedAssets.Depreciation;
 using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Foundation.AuditCodes;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Service.Item;
+using Microsoft.Sales.Comment;
 table 60111 "Sales Shipment Liness"
 {
     Caption = 'Sales Shipment Line';
-    LookupPageID = 525;
-    Permissions = TableData 32 = r,
-                  TableData 5802 = r;
+    LookupPageID = "Posted Sales Shipment Lines";
+    Permissions = TableData "Item Ledger Entry" = r,
+                  TableData "Value Entry" = r;
 
     fields
     {
@@ -537,8 +540,8 @@ table 60111 "Sales Shipment Liness"
 
     trigger OnDelete()
     var
-        ServItem: Record 5940;
-        SalesDocLineComments: Record 44;
+        ServItem: Record "Service Item";
+        SalesDocLineComments: Record "Sales Comment Line";
     begin
         //TODO: DeletePostedDocDim not found in codeunit DimMgt
         // DimMgt.DeletePostedDocDim(DATABASE::"Sales Shipment Line", "Document No.", "Line No.");
@@ -563,8 +566,8 @@ table 60111 "Sales Shipment Liness"
     end;
 
     var
-        SalesShptHeader: Record 110;
-        DimMgt: codeunit 408;
+        SalesShptHeader: Record "Sales Shipment Header";
+        DimMgt: codeunit DimensionManagement;
 
     procedure GetCurrencyCode(): Code[10]
     begin
@@ -575,11 +578,11 @@ table 60111 "Sales Shipment Liness"
         exit('');
     end;
 
-    procedure GetSalesInvLines(var TempSalesInvLine: Record 113 temporary)
+    procedure GetSalesInvLines(var TempSalesInvLine: Record "Sales Invoice Line" temporary)
     var
-        SalesInvLine: Record 113;
-        ItemLedgEntry: Record 32;
-        ValueEntry: Record 5802;
+        SalesInvLine: Record "Sales Invoice Line";
+        ItemLedgEntry: Record "Item Ledger Entry";
+        ValueEntry: Record "Value Entry";
     begin
         TempSalesInvLine.RESET();
         TempSalesInvLine.DELETEALL();
@@ -608,7 +611,7 @@ table 60111 "Sales Shipment Liness"
         end;
     end;
 
-    procedure FilterPstdDocLnItemLedgEntries(var ItemLedgEntry: Record 32)
+    procedure FilterPstdDocLnItemLedgEntries(var ItemLedgEntry: Record "Item Ledger Entry")
     begin
         ItemLedgEntry.RESET();
         ItemLedgEntry.SETCURRENTKEY("Document No.");

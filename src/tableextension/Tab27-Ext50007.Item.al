@@ -7,6 +7,13 @@ using Microsoft.Foundation.NoSeries;
 using Microsoft.Inventory.Setup;
 using Microsoft.Finance.GeneralLedger.Setup;
 using System.Security.AccessControl;
+using Microsoft.Purchases.Pricing;
+using Microsoft.Sales.Pricing;
+using Microsoft.Sales.Setup;
+using Microsoft.Purchases.History;
+using Microsoft.Manufacturing.ProductionBOM;
+using System.IO;
+using Microsoft.Inventory.BOM;
 tableextension 50007 Item extends Item //27
 {
     fields
@@ -46,7 +53,7 @@ tableextension 50007 Item extends Item //27
 
             trigger OnValidate()
             var
-                RecLPurchPrice: Record 7012;
+                RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
                     TESTFIELD("Vendor No.");
@@ -99,7 +106,7 @@ tableextension 50007 Item extends Item //27
             Caption = 'Margin in %';
             trigger OnValidate()
             var
-                RecLSalesLineDisc: Record 7004;
+                RecLSalesLineDisc: Record "Sales Line Discount";
                 DecGUnitPrice: Decimal;
             begin
                 DecGUnitPrice := "Unit Price";
@@ -158,8 +165,8 @@ tableextension 50007 Item extends Item //27
             Editable = false;
             trigger OnValidate()
             var
-                RecLSalesLineDisc: Record 7004;
-                RecLSalesReceiveSetup: Record 311;
+                RecLSalesLineDisc: Record "Sales Line Discount";
+                RecLSalesReceiveSetup: Record "Sales & Receivables Setup";
                 DecGUnitPrice: Decimal;
 
             begin
@@ -238,7 +245,7 @@ tableextension 50007 Item extends Item //27
         }
         field(50016; "Qty. on Purch. Order Confirmed"; Decimal)
         {
-            AccessByPermission = TableData 120 = R;
+            AccessByPermission = TableData "Purch. Rcpt. Header" = R;
             CalcFormula = sum("Purchase Line"."Outstanding Qty. (Base)" where("Document Type" = const(Order),
                                                                                Type = const(Item),
                                                                                "No." = field("No."),
@@ -275,7 +282,7 @@ tableextension 50007 Item extends Item //27
             Caption = 'Purchase Price Base';
             trigger OnValidate()
             var
-                RecLPurchPrice: Record 7012;
+                RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
                     TESTFIELD("Vendor No.");
@@ -302,7 +309,7 @@ tableextension 50007 Item extends Item //27
             Caption = 'Purchase Price Base';
             trigger OnValidate()
             var
-                RecLPurchPrice: Record 7012;
+                RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
                     TESTFIELD("Vendor No.");
@@ -329,7 +336,7 @@ tableextension 50007 Item extends Item //27
             Caption = 'Purchase Price Base';
             trigger OnValidate()
             var
-                RecLPurchPrice: Record 7012;
+                RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
                     TESTFIELD("Vendor No.");
@@ -356,7 +363,7 @@ tableextension 50007 Item extends Item //27
             Caption = 'Purchase Price Base';
             trigger OnValidate()
             var
-                RecLPurchPrice: Record 7012;
+                RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
                     TESTFIELD("Vendor No.");
@@ -383,7 +390,7 @@ tableextension 50007 Item extends Item //27
             Caption = 'Purchase Price Base';
             trigger OnValidate()
             var
-                RecLPurchPrice: Record 7012;
+                RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
                     TESTFIELD("Vendor No.");
@@ -410,7 +417,7 @@ tableextension 50007 Item extends Item //27
             Caption = 'Purchase Price Base';
             trigger OnValidate()
             var
-                RecLPurchPrice: Record 7012;
+                RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
                     TESTFIELD("Vendor No.");
@@ -451,12 +458,12 @@ tableextension 50007 Item extends Item //27
 
         }
     }
-    local procedure FctCalcPurchasePriceFTA(var RecPItem: Record 27)
+    local procedure FctCalcPurchasePriceFTA(var RecPItem: Record Item)
     var
-        RecLPurchPrice: Record 7012;
-        RecLPurchLineDisc: Record 7014;
-        RecLProductionBOMLine: Record 99000772;
-        ItemProductionCost: Record 50006;
+        RecLPurchPrice: Record "Purchase Price";
+        RecLPurchLineDisc: Record "Purchase Line Discount";
+        RecLProductionBOMLine: Record "Production BOM Line";
+        ItemProductionCost: Record "Item Production Cost";
         DecLQty: Decimal;
         BooLQtyFound: Boolean;
         DecLCost: Decimal;
@@ -544,9 +551,9 @@ tableextension 50007 Item extends Item //27
         end;
     end;
 
-    local procedure FctCalcKitPriceFTA(var RecPItem: Record 27; var BooPMonoLevel: Boolean)
+    local procedure FctCalcKitPriceFTA(var RecPItem: Record Item; var BooPMonoLevel: Boolean)
     var
-        RecLItem: Record 27;
+        RecLItem: Record Item;
     begin
         RecPItem.CALCFIELDS(RecPItem."Assembly BOM");
         if not RecPItem."Assembly BOM" then begin
@@ -559,12 +566,12 @@ tableextension 50007 Item extends Item //27
 
     procedure FctCreateFromTemplate()
     var
-        CduLTemplateMgt: Codeunit 8612;
+        CduLTemplateMgt: Codeunit "Config. Template Management";
         RecRef: RecordRef;
-        RecLTemplateHeader: Record 8618;
-        RecLTemplateLine: Record 8619;
-        RecLItemUnitofMeasure: Record 5404;
-        RecItem: Record 27;
+        RecLTemplateHeader: Record "Config. Template Header";
+        RecLTemplateLine: Record "Config. Template Line";
+        RecLItemUnitofMeasure: Record "Item Unit of Measure";
+        RecItem: Record Item;
         InvtSetup: Record "Inventory Setup";
     begin
         if "Item Base" = "Item Base"::Transitory then begin
@@ -621,12 +628,12 @@ tableextension 50007 Item extends Item //27
         end;
     end;
 
-    procedure FctBOM(var RecPItem: Record 27)
+    procedure FctBOM(var RecPItem: Record Item)
     var
-        RecLProdBOMHeader: Record 99000771;
+        RecLProdBOMHeader: Record "Production BOM Header";
         CstL001: Label 'This item does not have a BOM, do you want to create one?';
-        FrmLKitBOM: Page 36;
-        RecLBOMComponent: Record 90;
+        FrmLKitBOM: Page "Assembly BOM";
+        RecLBOMComponent: Record "BOM Component";
     begin
         RecPItem.CALCFIELDS("Assembly BOM");
         if not RecPItem."Assembly BOM" then
@@ -642,16 +649,16 @@ tableextension 50007 Item extends Item //27
 
     end;
 
-    local procedure FctCalcSalesPriceFTA(var RecPItem: Record 27)
+    local procedure FctCalcSalesPriceFTA(var RecPItem: Record Item)
     var
-        RecLPurchPrice: Record 7012;
-        RecLPurchLineDisc: Record 7014;
+        RecLPurchPrice: Record "Purchase Price";
+        RecLPurchLineDisc: Record "Purchase Line Discount";
         DecLQty: Decimal;
         BooLQtyFound: Boolean;
         DecLCost: Decimal;
         BooLRecOK: Boolean;
         DecLDisc: Decimal;
-        RecLProductionBOMLine: Record 99000772;
+        RecLProductionBOMLine: Record "Production BOM Line";
     begin
         with RecPItem do begin
 
@@ -666,11 +673,11 @@ tableextension 50007 Item extends Item //27
         end;
     end;
 
-    local procedure RollUpPriceFTA(var RecPItem: Record 27; var BooPMonoLevel: Boolean)
+    local procedure RollUpPriceFTA(var RecPItem: Record Item; var BooPMonoLevel: Boolean)
     var
-        RecLProductionBOMLine: Record 90;
+        RecLProductionBOMLine: Record "BOM Component";
         DecLComponentPrice: Decimal;
-        RecLItem: Record 27;
+        RecLItem: Record Item;
         GLSetup: Record "General Ledger Setup";
     begin
         DecLComponentPrice := 0;

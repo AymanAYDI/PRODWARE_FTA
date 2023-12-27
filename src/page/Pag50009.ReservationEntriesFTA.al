@@ -19,6 +19,7 @@ page 50009 "Reservation Entries FTA"
     InsertAllowed = false;
     PageType = ListPart;
     SourceTable = "Reservation Entry";
+    ApplicationArea = All;
 
     layout
     {

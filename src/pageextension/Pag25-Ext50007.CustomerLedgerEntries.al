@@ -13,6 +13,8 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
                 field(CodGPostGrpFilter; CodGPostGrpFilter)
                 {
                     TableRelation = "Customer Posting Group".Code;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CodGPostGrpFilter field.';
                     trigger OnValidate()
                     begin
                         ApplyFilters();
@@ -26,6 +28,8 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
             {
                 Visible = false;
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Mobile Salesperson Code field.';
             }
         }
         addafter("Control1")
@@ -36,15 +40,20 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
                 {
                     AutoFormatType = 1;
                     Editable = false;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CalcRecBalance() field.';
                 }
                 field(CodGAccName; CodGAccName)
                 {
                     Visible = false;
                     Editable = false;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CodGAccName field.';
                 }
                 field(TxtGBalAccName; TxtGBalAccName)
                 {
-
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the TxtGBalAccName field.';
                 }
             }
         }
@@ -67,7 +76,7 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
 
     local procedure CalcRecBalance(): Decimal;
     var
-        RecLCustEntry: Record 21;
+        RecLCustEntry: Record "Cust. Ledger Entry";
         DecLAmount: Decimal;
     begin
         RecLCustEntry.COPY(Rec);
@@ -84,7 +93,7 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
         exit(DecLAmount);
     end;
 
-    local procedure UpdateLineInfo(RecLCustEntry: Record 21);
+    local procedure UpdateLineInfo(RecLCustEntry: Record "Cust. Ledger Entry");
     begin
         with RecLCustEntry do begin
             CodGAccName := "Customer No.";

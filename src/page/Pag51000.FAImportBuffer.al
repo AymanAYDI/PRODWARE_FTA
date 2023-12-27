@@ -15,6 +15,7 @@ page 51000 "FA Import Buffer"
     Editable = false;
     PageType = List;
     SourceTable = "FA Import Buffer";
+    ApplicationArea = All;
 
     layout
     {

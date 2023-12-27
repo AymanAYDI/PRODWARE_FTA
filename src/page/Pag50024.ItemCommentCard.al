@@ -6,6 +6,7 @@ page 50024 "Item Comment Card"
 
     PageType = Card;
     SourceTable = "Item Comment";
+    ApplicationArea = All;
 
     layout
     {

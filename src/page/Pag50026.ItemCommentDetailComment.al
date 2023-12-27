@@ -12,6 +12,7 @@ page 50026 "Item Comment Detail Comment"
     SourceTable = "Item Comment Detail";
     SourceTableView = sorting("Parent Entry No.", "Entry No.")
                       where("Comment Type" = const(Comment));
+    ApplicationArea = All;
 
     layout
     {

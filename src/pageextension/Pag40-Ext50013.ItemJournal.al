@@ -23,6 +23,8 @@ pageextension 50013 ItemJournal extends "Item Journal"//40
         {
             field("Shelf No."; rec."Shelf No.")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Shelf No. field.';
             }
         }
 
@@ -38,7 +40,8 @@ pageextension 50013 ItemJournal extends "Item Journal"//40
                 Image = ExplodeBOM;
                 Promoted = true;
                 PromotedCategory = Process;
-
+                ApplicationArea = All;
+                ToolTip = 'Executes the Montage action.';
                 trigger OnAction()
                 var
                     CduLItemJnlExplode: Codeunit "Item Jnl.-Explode BOM";
@@ -56,7 +59,8 @@ pageextension 50013 ItemJournal extends "Item Journal"//40
                 Image = ExplodeBOM;
                 Promoted = true;
                 PromotedCategory = Process;
-
+                ApplicationArea = All;
+                ToolTip = 'Executes the Démontage action.';
                 trigger OnAction()
                 var
                     CduLItemJnlExplode: Codeunit "Item Jnl.-Explode BOM";

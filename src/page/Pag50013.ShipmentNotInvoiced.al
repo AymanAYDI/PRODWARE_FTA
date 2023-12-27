@@ -24,6 +24,7 @@ page 50013 "Shipment Not Invoiced"
     Editable = true;
     PageType = List;
     SourceTable = "Sales Shipment Line";
+    ApplicationArea = All;
 
     layout
     {
