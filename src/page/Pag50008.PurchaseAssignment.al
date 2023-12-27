@@ -3,6 +3,7 @@ page 50008 "Purchase Assignment"
     Caption = 'Purchase Assignment';
     PageType = Document;
     SourceTable = "Purchase Line";
+    ApplicationArea = All;
 
     layout
     {

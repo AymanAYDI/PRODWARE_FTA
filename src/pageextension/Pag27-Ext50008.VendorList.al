@@ -9,7 +9,8 @@ pageextension 50008 VendorList extends "Vendor List" //27
         {
             field("Balance"; rec.Balance)
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Balance field.';
             }
         }
     }

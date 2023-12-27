@@ -10,7 +10,8 @@ pageextension 50027 "PostedPurchaseInvoice" extends "Posted Purchase Invoice" //
         {
             field("Order Type"; rec."Order Type")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Order Type field.';
             }
         }
         addafter("Ship-to City")
@@ -18,9 +19,13 @@ pageextension 50027 "PostedPurchaseInvoice" extends "Posted Purchase Invoice" //
             field("Shipping Agent Code"; rec."Shipping Agent Code")
             {
                 editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Shipping Agent Code field.';
             }
             field("Shipping Agent Name"; rec."Shipping Agent Name")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Shipping Agent Name field.';
             }
         }
     }
@@ -32,6 +37,8 @@ pageextension 50027 "PostedPurchaseInvoice" extends "Posted Purchase Invoice" //
             {
                 action("Voir Commande d'achat transport")
                 {
+                    ApplicationArea = All;
+                    ToolTip = 'Executes the Voir Commande d''achat transport action.';
                     trigger OnAction()
                     var
                         RecLPurchHeader: Record "Purchase Header";

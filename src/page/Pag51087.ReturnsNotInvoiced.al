@@ -23,6 +23,7 @@ page 51087 "Returns Not Invoiced"
     SourceTableView = sorting("Document Type", "Document No.", "Line No.")
                       where("Document Type" = FILTER("Return Order"),
                             "Return Qty. Rcd. Not Invd." = FILTER(<> 0));
+    ApplicationArea = All;
 
     layout
     {

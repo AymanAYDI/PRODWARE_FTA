@@ -9,6 +9,8 @@ pageextension 50034 PurchInvoiceSubform extends "Purch. Invoice Subform" //55
         {
             field("Vendor Item No."; rec."Vendor Item No.")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Vendor Item No. field.';
             }
         }
     }

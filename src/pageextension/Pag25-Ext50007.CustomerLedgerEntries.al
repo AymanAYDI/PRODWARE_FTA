@@ -13,6 +13,8 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
                 field(CodGPostGrpFilter; CodGPostGrpFilter)
                 {
                     TableRelation = "Customer Posting Group".Code;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CodGPostGrpFilter field.';
                     trigger OnValidate()
                     begin
                         ApplyFilters();
@@ -26,6 +28,8 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
             {
                 Visible = false;
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Mobile Salesperson Code field.';
             }
         }
         addafter("Control1")
@@ -36,15 +40,20 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
                 {
                     AutoFormatType = 1;
                     Editable = false;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CalcRecBalance() field.';
                 }
                 field(CodGAccName; CodGAccName)
                 {
                     Visible = false;
                     Editable = false;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CodGAccName field.';
                 }
                 field(TxtGBalAccName; TxtGBalAccName)
                 {
-
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the TxtGBalAccName field.';
                 }
             }
         }

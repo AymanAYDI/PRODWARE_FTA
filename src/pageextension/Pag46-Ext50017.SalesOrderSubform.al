@@ -75,6 +75,8 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             {
                 Style = Favorable;
                 StyleExpr = BooGOK;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Item Base field.';
                 trigger OnValidate()
                 begin
                     CurrPage.UPDATE(true);
@@ -86,30 +88,37 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             field(Prepare; rec.Prepare)
             {
                 Enabled = PrepareEnable;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Préparé field.';
             }
         }
         addafter("Reserved Quantity")
         {
             field("Item Machining Time"; rec."Item Machining Time")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Temps d''usinage field.';
             }
             field("Item Work Time"; rec."Item Work Time")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Temps de montage field.';
             }
             field("Preparation Type"; rec."Preparation Type")
             {
                 Editable = false;
                 Style = Favorable;
                 StyleExpr = BooGOK;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Preparation Type field.';
             }
         }
         addafter("Line Discount %")
         {
             field("Unit Price Discounted"; rec."Unit Price Discounted")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Unit Price Discounted field.';
             }
         }
         addafter("Line Discount Amount")
@@ -118,12 +127,16 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             {
                 Style = Favorable;
                 StyleExpr = BooGOK;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Purchase Price Base field.';
             }
             field("Margin %"; rec."Margin %")
             {
                 Editable = false;
                 Style = Favorable;
                 StyleExpr = BooGOK;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Margin % field.';
             }
         }
         addafter("Shipment Date")
@@ -131,13 +144,16 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             field("Start Date"; rec."Start Date")
             {
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Date départ field.';
             }
         }
         addafter("Line No.")
         {
             field("Parcel No."; rec."Parcel No.")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Parcel No. field.';
             }
         }
     }
@@ -150,6 +166,8 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
                 action("Item Card")
                 {
                     Caption = 'Item Card';
+                    ApplicationArea = All;
+                    ToolTip = 'Executes the Item Card action.';
                     trigger OnAction()
                     begin
                         SalesInfoPaneMgt.LookupItem(Rec);
@@ -162,6 +180,8 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             action("Afficher ligne expédier uniquement")
             {
                 Image = Filter;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Afficher ligne expédier uniquement action.';
                 trigger OnAction()
                 begin
                     Rec.SETFILTER("Outstanding Quantity", '<>%1', 0);
@@ -170,6 +190,8 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             action("Afficher ligne expédier mois en cours")
             {
                 Image = Filter;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Afficher ligne expédier mois en cours action.';
                 trigger OnAction()
                 var
                     SalesLine: Record "Sales Line";

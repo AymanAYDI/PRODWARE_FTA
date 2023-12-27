@@ -13,11 +13,15 @@ pageextension 50011 WhereUsedList extends "Where-Used List" //37
             {
                 Caption = 'Inventory';
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Inventory field.';
             }
             field(CalcAvailableInvt; CalcAvailableInvt(Rec."Parent Item No."))
             {
                 Caption = 'Available';
                 Editable = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Available field.';
             }
         }
     }

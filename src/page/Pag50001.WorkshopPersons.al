@@ -4,6 +4,7 @@ page 50001 "Workshop Persons"
     Caption = 'Workshop Persons';
     PageType = List;
     SourceTable = "Workshop Person";
+    ApplicationArea = All;
 
     layout
     {

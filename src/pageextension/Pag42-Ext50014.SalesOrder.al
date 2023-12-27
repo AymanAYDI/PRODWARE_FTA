@@ -195,6 +195,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             {
                 Caption = 'Co&mments';
                 Image = ViewComments;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Co&mments action.';
                 trigger OnAction()
                 var
                     SalesCommentLine: Record "Sales Comment Line";
@@ -217,6 +219,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             {
                 Caption = 'Assembly Order';
                 Image = Print;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Assembly Order action.';
                 trigger OnAction()
                 var
                     //TODO: codeunit not migrated yet
@@ -233,6 +237,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             {
                 Caption = 'Preparatory Delivery';
                 Image = Print;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Preparatory Delivery action.';
                 trigger OnAction()
                 var
                     SalesHeader: Record "Sales Header";
@@ -246,6 +252,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             {
                 Caption = 'Assembly Order';
                 Image = Print;
+                ApplicationArea = All;
+                ToolTip = 'Executes the Assembly Order action.';
                 trigger OnAction()
                 var
                     SalesHeader: Record "Sales Header";
@@ -262,6 +270,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             action(Action1100267019)
             {
                 Caption = 'Proforma';
+                ApplicationArea = All;
+                ToolTip = 'Executes the Proforma action.';
                 trigger OnAction()
                 var
                     RecLOrder: Record "Sales Header";

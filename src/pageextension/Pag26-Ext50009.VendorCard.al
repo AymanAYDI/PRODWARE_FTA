@@ -9,34 +9,41 @@ pageextension 50009 VendorCard extends "Vendor Card" //26
         {
             field("Transaction Type"; Rec."Transaction Type")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Transaction Type Code field.';
             }
             field("Transaction Specification"; Rec."Transaction Specification")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Transaction Specification Code field.';
             }
             field("Transport Method"; Rec."Transport Method")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Transport Method Code field.';
             }
             field("Entry Point"; Rec."Entry Point")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Entry/Exit Point Code field.';
             }
             field("Area"; Rec.Area)
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Area Code field.';
             }
         }
         addafter("Last Date Modified")
         {
             field("Creation Date"; Rec."Creation Date")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Creation Date field.';
             }
             field(User; rec.User)
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the User field.';
             }
         }
         modify("Responsibility Center")
@@ -54,6 +61,8 @@ pageextension 50009 VendorCard extends "Vendor Card" //26
         {
             action("Tarif transporteur")
             {
+                ApplicationArea = All;
+                ToolTip = 'Executes the Tarif transporteur action.';
                 //TODO: page 51026 not migrated yet
                 // RunObject = Page 51026;
                 // RunPageView = sorting("Shipping Agent", "Country Code", "Departement Code", "Post Code", "Pallet Nb", "Beginning Date", "Currency Code");

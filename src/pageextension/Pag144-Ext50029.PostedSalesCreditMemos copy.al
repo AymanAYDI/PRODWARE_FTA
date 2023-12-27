@@ -10,6 +10,8 @@ pageextension 50029 "PostedSalesCreditMemos" extends "Posted Sales Credit Memos"
             field("Mobile Salesperson Code"; rec."Mobile Salesperson Code")
             {
                 Visible = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Mobile Salesperson Code field.';
             }
         }
     }

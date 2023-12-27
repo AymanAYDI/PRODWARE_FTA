@@ -8,6 +8,7 @@ page 50023 "Item Comment"
     CardPageID = "Item Comment Card";
     PageType = List;
     SourceTable = "Item Comment";
+    ApplicationArea = All;
 
     layout
     {

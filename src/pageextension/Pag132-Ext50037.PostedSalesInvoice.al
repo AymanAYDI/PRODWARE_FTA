@@ -61,7 +61,8 @@ pageextension 50037 "PostedSalesInvoice" extends "Posted Sales Invoice" //132
             {
                 action("Voir Commande d'achat transport")
                 {
-
+                    ApplicationArea = All;
+                    ToolTip = 'Executes the Voir Commande d''achat transport action.';
                     trigger OnAction()
 
                     var

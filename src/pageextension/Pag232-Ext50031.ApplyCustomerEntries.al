@@ -10,15 +10,21 @@ pageextension 50031 "applycustomerentries" extends "apply customer entries" //23
             field(customername; rec.getcustomername(rec."customer no."))
             {
                 caption = 'name';
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the name field.';
             }
             field("customer posting group"; rec."customer posting group")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the customer''s market type to link business transactions to.';
             }
         }
         addafter("remaining amount")
         {
             field(CPFLG1; rec.CPFLG1)
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Lettrage ORION field.';
             }
         }
     }

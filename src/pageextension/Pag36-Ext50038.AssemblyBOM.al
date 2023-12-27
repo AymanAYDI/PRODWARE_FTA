@@ -15,7 +15,8 @@ pageextension 50038 "AssemblyBOM" extends "Assembly BOM"//36
                 PromotedIsBig = TRUE;
                 Image = CopyBOM;
                 PromotedCategory = Process;
-
+                ApplicationArea = All;
+                ToolTip = 'Executes the Copy BOM action.';
                 trigger OnAction()
                 var
                     RecLItem: Record Item;

@@ -13,6 +13,8 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
                 field(CodGPostGrpFilter; CodGPostGrpFilter)
                 {
                     TableRelation = "Customer Posting Group".Code;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CodGPostGrpFilter field.';
                     trigger OnValidate()
                     begin
                         ApplyFilters();
@@ -28,16 +30,22 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
                 {
                     AutoFormatType = 1;
                     Editable = false;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CalcRecBalance() field.';
                 }
                 field("TxtGBalAccName"; TxtGBalAccName)
                 {
                     Visible = false;
                     Editable = false;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the TxtGBalAccName field.';
                 }
                 field("CodGAccName"; CodGAccName)
                 {
                     Visible = false;
                     Editable = false;
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the CodGAccName field.';
                 }
             }
         }

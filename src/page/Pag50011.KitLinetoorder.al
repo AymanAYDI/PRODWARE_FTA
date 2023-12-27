@@ -16,6 +16,7 @@ page 50011 "Kit Line to order"
     SourceTable = "Assembly Line";
     SourceTableView = sorting("Remaining Quantity")
                       where("Remaining Quantity" = FILTER(<> 0));
+    ApplicationArea = All;
 
     layout
     {

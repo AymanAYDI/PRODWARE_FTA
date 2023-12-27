@@ -21,7 +21,8 @@ pageextension 50033 "PurchaseList" extends "Purchase List"//53
             {
                 Style = StandardAccent;
                 StyleExpr = BooGTransportType;
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Order Type field.';
             }
 
 
@@ -33,7 +34,8 @@ pageextension 50033 "PurchaseList" extends "Purchase List"//53
         {
             field("Order Date"; Rec."Order Date")
             {
-
+                ApplicationArea = All;
+                ToolTip = 'Specifies the date when the order was created.';
             }
 
         }

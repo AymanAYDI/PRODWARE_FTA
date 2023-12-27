@@ -14,6 +14,7 @@ page 51026 "Shipping agent prices"
     Caption = 'Shipping Agent Price';
     PageType = List;
     SourceTable = "Shipping Agent Price";
+    ApplicationArea = All;
 
     layout
     {

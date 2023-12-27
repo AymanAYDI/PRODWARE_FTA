@@ -20,6 +20,7 @@ page 50020 "Assignment of the remainders v"
                       WHERE("Document Type" = FILTER(Order),
                             Type = FILTER(Item),
                             "Outstanding Quantity" = FILTER(<> 0));
+    ApplicationArea = All;
 
     layout
     {

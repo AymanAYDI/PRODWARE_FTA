@@ -78,6 +78,7 @@ page 50010 "Transitory Kit Item Card"
     RefreshOnActivate = true;
     SourceTable = Item;
     SourceTableView = where("Item Base" = filter("Transitory Kit"));
+    ApplicationArea = All;
 
     layout
     {

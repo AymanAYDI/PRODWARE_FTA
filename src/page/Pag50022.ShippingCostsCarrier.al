@@ -7,6 +7,7 @@ page 50022 "Shipping Costs Carrier"
     Caption = 'Frais de port transporteur';
     PageType = List;
     SourceTable = "Shipping Costs Carrier";
+    ApplicationArea = All;
 
     layout
     {

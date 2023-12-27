@@ -12,6 +12,7 @@ page 50025 "Item Comment Detail Old"
     SourceTable = "Item Comment Detail";
     SourceTableView = SORTING("Parent Entry No.", "Entry No.")
                       WHERE("Comment Type" = CONST(Old));
+    ApplicationArea = All;
 
     layout
     {

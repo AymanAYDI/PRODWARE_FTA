@@ -10,6 +10,8 @@ pageextension 50021 AppliedCustomerEntries extends "Applied Customer Entries" //
             field("Mobile Salesperson Code"; rec."Mobile Salesperson Code")
             {
                 Visible = false;
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Mobile Salesperson Code field.';
             }
         }
     }

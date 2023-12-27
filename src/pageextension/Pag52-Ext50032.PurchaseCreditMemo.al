@@ -11,6 +11,7 @@ pageextension 50032 "PurchaseCreditMemo" extends "Purchase Credit Memo" //52
             {
                 Caption = 'Gen. Bus. Posting Group';
                 ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Gen. Bus. Posting Group field.';
             }
 
         }
