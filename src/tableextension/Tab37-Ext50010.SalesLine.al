@@ -1572,7 +1572,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         ReservEngineMgt: Codeunit "Reservation Engine Mgt.";
         ReservEntry: Record "Reservation Entry";
         ReserveSalesLine: Codeunit "Sales Line-Reserve";
-        //  FrmTransitoryItem : Page 50005;
+        //  FrmTransitoryItem : Page 50005;     
         "Item Ledger Entry": Record "Item Ledger Entry";
 }
 
