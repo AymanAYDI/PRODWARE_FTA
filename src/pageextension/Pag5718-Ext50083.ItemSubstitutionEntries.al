@@ -1,4 +1,4 @@
-pageextension 50042 "ItemSubstitutionEntries" extends "Item Substitution Entries"
+pageextension 50083 "ItemSubstitutionEntries" extends "Item Substitution Entries"//5718
 {
 
     layout
@@ -17,6 +17,6 @@ pageextension 50042 "ItemSubstitutionEntries" extends "Item Substitution Entries
     }
     trigger OnAfterGetRecord()
     begin
-        "Avaibility no reserved" := CalcAvailableNoReserv;
+        //"Avaibility no reserved" := CalcAvailableNoReserv;
     end;
 }

@@ -1,4 +1,4 @@
-pageextension 50036 "SalesQuotes" extends "Sales Quotes"
+pageextension 50036 "SalesQuotes" extends "Sales Quotes"//9300
 {
     layout
     {

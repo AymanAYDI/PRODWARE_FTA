@@ -2,7 +2,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Inventory.Journal;
-pageextension 50074 "RevaluationJournal" extends "Revaluation Journal"//5803
+pageextension 50082 "RevaluationJournal" extends "Revaluation Journal"//5803
 {
     layout
 
