@@ -3,7 +3,7 @@ namespace Prodware.FTA;
 using Microsoft.Sales.Document;
 using Microsoft.Sales.History;
 using Microsoft.Sales.Archive;
-pageextension 50032 "SalesHistSelltoFactBox" extends "Sales Hist. Sell-to FactBox" //9080
+pageextension 50077 "SalesHistSelltoFactBox" extends "Sales Hist. Sell-to FactBox" //9080
 {
     layout
     {

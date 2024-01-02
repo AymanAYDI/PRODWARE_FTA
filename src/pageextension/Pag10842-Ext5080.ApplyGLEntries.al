@@ -2,7 +2,7 @@ namespace Prodware.FTA;
 
 using Microsoft.Finance.GeneralLedger.Ledger;
 
-pageextension 50037 "ApplyGLEntries" extends "Apply G/L Entries" //10842
+pageextension 5080 "ApplyGLEntries" extends "Apply G/L Entries" //10842
 {
     actions
     {

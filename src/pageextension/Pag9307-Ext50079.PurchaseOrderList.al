@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 using Microsoft.Purchases.Document;
 using Microsoft.Foundation.Reporting;
-pageextension 50036 "PurchaseOrderList" extends "Purchase Order List" //9307
+pageextension 50079 "PurchaseOrderList" extends "Purchase Order List" //9307
 {
     layout
     {
