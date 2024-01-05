@@ -337,6 +337,7 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
 
                 // ReservMgt.FctSetBooResaAssFTA(TRUE);  
                 // TODO deux fonction a trouver
+                //verifuir reservMGT
 
 
                 ReservMgt.AutoReserve(FullAutoReservation, '', "Due Date", "Remaining Quantity", "Remaining Quantity (Base)");
