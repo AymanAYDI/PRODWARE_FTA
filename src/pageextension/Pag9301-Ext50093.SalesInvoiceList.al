@@ -2,12 +2,14 @@ namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
 
-pageextension 50081 BlanketSalesOrders extends "Blanket Sales Orders" //9303
-{
 
+pageextension 50093 SalesInvoiceList extends "Sales Invoice List" //9301
+{
 
     layout
     {
+
+
         addafter("Salesperson Code")
         {
             field("Mobile Salesperson Code"; Rec."Mobile Salesperson Code")
@@ -20,3 +22,4 @@ pageextension 50081 BlanketSalesOrders extends "Blanket Sales Orders" //9303
 
     }
 }
+

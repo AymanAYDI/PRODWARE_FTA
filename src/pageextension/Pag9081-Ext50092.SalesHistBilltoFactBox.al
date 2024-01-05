@@ -4,7 +4,7 @@ using Microsoft.Sales.Document;
 using Microsoft.Sales.History;
 using Microsoft.Sales.Archive;
 
-pageextension 50079 SalesHistBilltoFactBox extends "Sales Hist. Bill-to FactBox" //9081
+pageextension 50092 SalesHistBilltoFactBox extends "Sales Hist. Bill-to FactBox" //9081
 {
     layout
     {

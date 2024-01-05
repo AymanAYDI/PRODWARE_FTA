@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Bank.Payment;
-pageextension 50081 "PaymentSlip" extends "Payment Slip" //10868
+pageextension 50099 "PaymentSlip" extends "Payment Slip" //10868
 {
     actions
     {

@@ -1,10 +1,9 @@
 namespace Prodware.FTA;
 
-using Microsoft.Sales.Archive;
+using Microsoft.Sales.Document;
 
-pageextension 50084 SalesQuoteArchives extends "Sales Quote Archives" //9348
+pageextension 50095 SalesReturnOrderList extends "Sales Return Order List" //9304
 {
-
 
     layout
     {
@@ -12,6 +11,7 @@ pageextension 50084 SalesQuoteArchives extends "Sales Quote Archives" //9348
         {
             field("Mobile Salesperson Code"; Rec."Mobile Salesperson Code")
             {
+                Visible = false;
                 ToolTip = 'Specifies the value of the Mobile Salesperson Code field.';
                 ApplicationArea = All;
             }

@@ -2,7 +2,7 @@ namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
 
-pageextension 50083 SalesOrderList extends "Sales Order List" //9305
+pageextension 50096 SalesOrderList extends "Sales Order List" //9305
 {
 
 

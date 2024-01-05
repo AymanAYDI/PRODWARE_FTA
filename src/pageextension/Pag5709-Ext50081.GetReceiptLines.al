@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Purchases.History;
-pageextension 50075 "GetReceiptLines" extends "Get Receipt Lines"//5709
+pageextension 50081 "GetReceiptLines" extends "Get Receipt Lines"//5709
 {
     layout
     {

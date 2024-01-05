@@ -3,7 +3,7 @@ namespace Prodware.FTA;
 using Microsoft.Sales.Pricing;
 using Microsoft.Purchases.Pricing;
 
-pageextension 50078 PurchasePrices extends "Purchase Prices" //7012
+pageextension 50090 PurchasePrices extends "Purchase Prices" //7012
 {
     // ------------------------------------------------------------------------
     // Prodware - www.prodware.fr
