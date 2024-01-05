@@ -1,17 +1,20 @@
 enum 50008 "frais de port"
 {
     Extensible = true;
-
-    value(0; Manual)
+    value(0; " ")
     {
-        Caption = '';
+        Caption = ' ';
     }
-    value(1; "Pick-up")
+    value(1; Manual)
     {
-        Caption = 'Manuel';
+        Caption = 'Manual';
     }
-    value(2; Automatic)
+    value(2; "Pick-up")
     {
         Caption = 'Enlèvement';
+    }
+    value(3; Automatic)
+    {
+        Caption = 'Automatique';
     }
 }
