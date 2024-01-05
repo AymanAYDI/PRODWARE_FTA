@@ -401,9 +401,9 @@ page 50012 "Kit Sales Lines Temp"
                 Caption = 'Comments';
                 Image = ViewComments;
                 RunObject = Page "Assembly Comment Sheet";
-                RunPageLink = "Document Type" = FIELD("Document Type"),
-                              "Document No." = FIELD("Document No."),
-                              "Document Line No." = FIELD("Line No.");
+                RunPageLink = "Document Type" = field("Document Type"),
+                              "Document No." = field("Document No."),
+                              "Document Line No." = field("Line No.");
                 ToolTip = 'Executes the Comments action.';
             }
             action(ShowWarning)
@@ -427,11 +427,11 @@ page 50012 "Kit Sales Lines Temp"
         Rec.UpdateAvailWarning();
 
         //>>FED_20090415:PA 15/04/2009
-        IF Rec.Type = Rec.Type::Item THEN
-            IF RecLItem.GET(Rec."No.") THEN BEGIN
+        if Rec.Type = Rec.Type::Item then
+            if RecLItem.GET(Rec."No.") then begin
                 //OLD RecLItem.SETRANGE("Date Filter","Shipment Date");
                 RecLItem.SETRANGE("Date Filter", Rec."Due Date");
-                IF Rec."Location Code" <> '' THEN
+                if Rec."Location Code" <> '' then
                     RecLItem.SETFILTER("Location Filter", Rec."Location Code");
                 //PAMO RecLItem.CALCFIELDS(Inventory,"Reserved Qty. on Inventory");
                 //PAMO "Avaibility no reserved" := RecLItem.Inventory - RecLItem."Reserved Qty. on Inventory";
@@ -441,7 +441,7 @@ page 50012 "Kit Sales Lines Temp"
                            + RecLItem."Reserved Qty. on Purch. Orders" + Rec."Remaining Quantity (Base)";
                 //<<FED_20090415:PA 15/04/2009
 
-            END;
+            end;
         //<<FED_20090415:PA 15/04/2009
     end;
 
@@ -449,12 +449,12 @@ page 50012 "Kit Sales Lines Temp"
     var
         AssemblyLineReserve: codeunit "Assembly Line-Reserve";
     begin
-        IF (Rec.Quantity <> 0) AND Rec.ItemExists(Rec."No.") THEN BEGIN
+        if (Rec.Quantity <> 0) and Rec.ItemExists(Rec."No.") then begin
             COMMIT();
-            IF NOT AssemblyLineReserve.DeleteLineConfirm(Rec) THEN
-                EXIT(FALSE);
+            if not AssemblyLineReserve.DeleteLineConfirm(Rec) then
+                exit(false);
             AssemblyLineReserve.DeleteLine(Rec);
-        END;
+        end;
     end;
 
     var
@@ -472,12 +472,12 @@ page 50012 "Kit Sales Lines Temp"
     begin
         Description := '';
 
-        IF AsmHeader.GET(Rec."Document Type", Rec."Document No.") THEN BEGIN
+        if AsmHeader.GET(Rec."Document Type", Rec."Document No.") then begin
             SourceTableName := ObjTransln.TranslateObject(ObjTransln."Object Type"::table, 27);
             SourceFilter := AsmHeader."Item No.";
             Description := AsmHeader.Description;
-        END;
-        EXIT(STRSUBSTNO(Text001, SourceTableName, SourceFilter, Description));
+        end;
+        exit(STRSUBSTNO(Text001, SourceTableName, SourceFilter, Description));
     end;
 }
 

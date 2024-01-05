@@ -506,7 +506,7 @@ page 50017 "Bored Blocks Item Card"
                 {
                     Caption = 'Nonstoc&k Items';
                     Image = NonStockItem;
-                    RunObject = page 5726;
+                    RunObject = page "Catalog Item List";
                     Visible = false;
                 }
                 separator(separator2)
@@ -516,7 +516,7 @@ page 50017 "Bored Blocks Item Card"
                 {
                     Caption = 'Translations';
                     Image = Translation;
-                    RunObject = page 35;
+                    RunObject = page "Item Translations";
                     RunPageLink = "Item No." = field("No.");
                     Visible = false;
                 }
@@ -778,7 +778,7 @@ page 50017 "Bored Blocks Item Card"
                     {
                         Caption = 'Where-Used';
                         Image = Track;
-                        RunObject = page 37;
+                        RunObject = page "Where-Used List";
                         RunPageLink = Type = const(Item),
                                       "No." = field("No.");
                         RunPageView = sorting(Type, "No.");
@@ -786,7 +786,7 @@ page 50017 "Bored Blocks Item Card"
                     }
                     action("Calc. Standard Cost")
                     {
-                        AccessByPermission = TableData 90 = R;
+                        AccessByPermission = TableData "BOM Component" = R;
                         Caption = 'Calc. Stan&dard Cost';
                         Image = CalculateCost;
 
@@ -798,7 +798,7 @@ page 50017 "Bored Blocks Item Card"
                     }
                     action("Calc. Unit Price")
                     {
-                        AccessByPermission = TableData 90 = R;
+                        AccessByPermission = TableData "BOM Component" = R;
                         Caption = 'Calc. Unit Price';
                         Image = SuggestItemPrice;
 
@@ -817,7 +817,7 @@ page 50017 "Bored Blocks Item Card"
                     {
                         Caption = 'Production BOM';
                         Image = BOM;
-                        RunObject = page 99000786;
+                        RunObject = page "Production BOM";
                         RunPageLink = "No." = field("No.");
                     }
                     action("Where- Used")

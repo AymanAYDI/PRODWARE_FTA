@@ -340,7 +340,7 @@ page 50014 "Sales Order total"
 
     local procedure LocationCodeOnAfterValidate()
     begin
-        SaveAndAutoAsmToOrder;
+        SaveAndAutoAsmToOrder();
 
         if (Rec.Reserve = Rec.Reserve::Always) and
            (Rec."Outstanding Qty. (Base)" <> 0) and

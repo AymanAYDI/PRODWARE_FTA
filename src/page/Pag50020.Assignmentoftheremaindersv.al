@@ -16,10 +16,10 @@ page 50020 "Assignment of the remainders v"
     InsertAllowed = false;
     PageType = Worksheet;
     SourceTable = "Sales Line";
-    SourceTableView = SORTING("Vendor No.", "No.", "Location Code")
-                      WHERE("Document Type" = FILTER(Order),
-                            Type = FILTER(Item),
-                            "Outstanding Quantity" = FILTER(<> 0));
+    SourceTableView = sorting("Vendor No.", "No.", "Location Code")
+                      where("Document Type" = filter(Order),
+                            Type = filter(Item),
+                            "Outstanding Quantity" = filter(<> 0));
     ApplicationArea = All;
 
     layout
@@ -124,17 +124,17 @@ page 50020 "Assignment of the remainders v"
                 field("Qty to be Ordered"; Rec."Qty to be Ordered")
                 {
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field("Selected for Order"; Rec."Selected for Order")
                 {
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field("Requested Receipt Date"; Rec."Requested Receipt Date")
                 {
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field("Item Lead Time Calculation"; Rec."Item Lead Time Calculation")
                 {
@@ -218,7 +218,7 @@ page 50020 "Assignment of the remainders v"
         FctSelection();
         Rec.SETRANGE("Document Type", Rec."Document Type"::Order);
         Rec.CALCFIELDS("Inventory Value Zero");
-        Rec.SETRANGE("Inventory Value Zero", FALSE);
+        Rec.SETRANGE("Inventory Value Zero", false);
     end;
 
     var
@@ -228,20 +228,20 @@ page 50020 "Assignment of the remainders v"
 
     procedure FctSelection()
     begin
-        IF CodGVendorNo <> '' THEN
+        if CodGVendorNo <> '' then
             Rec.SETFILTER("Vendor No.", CodGVendorNo)
-        ELSE
+        else
             Rec.SETRANGE("Vendor No.");
-        IF BooGSelectLine THEN
-            Rec.SETRANGE("Selected for Order", TRUE)
-        ELSE
+        if BooGSelectLine then
+            Rec.SETRANGE("Selected for Order", true)
+        else
             Rec.SETRANGE("Selected for Order");
         CurrPage.KitLines.PAGE.FctShowKitLine(CodGVendorNo, BooGSelectLine);
     end;
 
     local procedure CodGVendorNoOnAfterValidate()
     begin
-        CurrPage.UPDATE(FALSE);
+        CurrPage.UPDATE(false);
         //CurrForm.UPDATECONTROLS;
     end;
 

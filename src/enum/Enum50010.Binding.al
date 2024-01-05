@@ -1,7 +1,7 @@
 enum 50010 Binding
 {
     Extensible = true;
-    
+
     value(0; " ")
     {
         Caption = ' ';

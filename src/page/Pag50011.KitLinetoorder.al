@@ -15,7 +15,7 @@ page 50011 "Kit Line to order"
     PageType = ListPart;
     SourceTable = "Assembly Line";
     SourceTableView = sorting("Remaining Quantity")
-                      where("Remaining Quantity" = FILTER(<> 0));
+                      where("Remaining Quantity" = filter(<> 0));
     ApplicationArea = All;
 
     layout
@@ -101,17 +101,17 @@ page 50011 "Kit Line to order"
                 field("Qty to be Ordered"; Rec."Qty to be Ordered")
                 {
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field("Selected for Order"; Rec."Selected for Order")
                 {
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field("Requested Receipt Date"; Rec."Requested Receipt Date")
                 {
                     Style = Strong;
-                    StyleExpr = TRUE;
+                    StyleExpr = true;
                 }
                 field("Requested Delivery Date"; Rec."Requested Delivery Date")
                 {
@@ -152,7 +152,7 @@ page 50011 "Kit Line to order"
         Rec.FILTERGROUP(0);
         Rec.SETRANGE("Document Type", Rec."Document Type"::Order);
         Rec.CALCFIELDS("Inventory Value Zero");
-        Rec.SETRANGE("Inventory Value Zero", FALSE);
+        Rec.SETRANGE("Inventory Value Zero", false);
         Rec.FILTERGROUP(2);
     end;
 
@@ -163,29 +163,29 @@ page 50011 "Kit Line to order"
         RecLAssembletoOrderLink: Record "Assemble-to-Order Link";
     begin
         //>>MIG NAV 2015 : Update OLD Code
-        IF RecLAssembletoOrderLink.GET(Rec."Document Type", Rec."Document No.") THEN BEGIN
+        if RecLAssembletoOrderLink.GET(Rec."Document Type", Rec."Document No.") then begin
             RecLSalesHeader.SETRANGE("Document Type", RecLAssembletoOrderLink."Document Type");
             RecLSalesHeader.SETRANGE("No.", RecLAssembletoOrderLink."Document No.");
-            IF RecLAssembletoOrderLink."Document Type" = RecLAssembletoOrderLink."Document Type"::Order THEN
+            if RecLAssembletoOrderLink."Document Type" = RecLAssembletoOrderLink."Document Type"::Order then
                 page.RUNMODAL(Page::"Sales Order", RecLSalesHeader);
-            IF RecLAssembletoOrderLink."Document Type" = RecLAssembletoOrderLink."Document Type"::Invoice THEN
+            if RecLAssembletoOrderLink."Document Type" = RecLAssembletoOrderLink."Document Type"::Invoice then
                 page.RUNMODAL(Page::"Sales Invoice", RecLSalesHeader);
-        END;
+        end;
         //<<MIG NAV 2015 : Update OLD Code
     end;
 
 
     procedure FctShowKitLine(var CodPVendorNo: Code[20]; var BooPSelectLine: Boolean)
     begin
-        IF CodPVendorNo <> '' THEN
+        if CodPVendorNo <> '' then
             Rec.SETFILTER("Vendor No.", CodPVendorNo)
-        ELSE
+        else
             Rec.SETRANGE("Vendor No.");
-        IF BooPSelectLine THEN
-            Rec.SETRANGE(Rec."Selected for Order", TRUE)
-        ELSE
+        if BooPSelectLine then
+            Rec.SETRANGE(Rec."Selected for Order", true)
+        else
             Rec.SETRANGE("Selected for Order");
-        CurrPage.UPDATE(FALSE);
+        CurrPage.UPDATE(false);
     end;
 }
 

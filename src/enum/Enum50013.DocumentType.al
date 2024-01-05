@@ -1,7 +1,7 @@
 enum 50013 "Document Type"
 {
     Extensible = true;
-    
+
     value(0; Quote)
     {
         Caption = 'Quote';

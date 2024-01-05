@@ -1,7 +1,7 @@
 enum 50003 "Order Type"
 {
     Extensible = true;
-    
+
     value(0; "Raw materials")
     {
         Caption = 'Raw materials';

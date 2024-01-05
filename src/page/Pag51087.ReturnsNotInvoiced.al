@@ -4,6 +4,7 @@ using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
 using Microsoft.Sales.History;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Finance.Dimension;
 page 51087 "Returns Not Invoiced"
 {
     // ------------------------------------------------------------------------
@@ -21,8 +22,8 @@ page 51087 "Returns Not Invoiced"
     PageType = List;
     SourceTable = "Sales Line";
     SourceTableView = sorting("Document Type", "Document No.", "Line No.")
-                      where("Document Type" = FILTER("Return Order"),
-                            "Return Qty. Rcd. Not Invd." = FILTER(<> 0));
+                      where("Document Type" = filter("Return Order"),
+                            "Return Qty. Rcd. Not Invd." = filter(<> 0));
     ApplicationArea = All;
 
     layout
@@ -122,13 +123,13 @@ page 51087 "Returns Not Invoiced"
                     trigger OnAction()
                     begin
                         RecGSalesHeader.SETRANGE("No.", Rec."Document No.");
-                        IF RecGSalesHeader.FINDFIRST() THEN
+                        if RecGSalesHeader.FINDFIRST() then
                             page.RUN(page::"Sales Return Order", RecGSalesHeader);
                     end;
                 }
                 action(Dimensions)
                 {
-                    AccessByPermission = TableData 348 = R;
+                    AccessByPermission = TableData Dimension = R;
                     Caption = 'Dimensions';
                     Image = Dimensions;
                     ShortCutKey = 'Shift+Ctrl+D';

@@ -1,7 +1,7 @@
 enum 50020 "Option Process"
 {
     Extensible = true;
-    
+
     value(0; " ")
     {
         Caption = ' ';

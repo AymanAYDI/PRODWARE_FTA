@@ -1,7 +1,7 @@
 enum 50012 "Item Tracking"
 {
     Extensible = true;
-    
+
     value(0; "None")
     {
         Caption = 'None';

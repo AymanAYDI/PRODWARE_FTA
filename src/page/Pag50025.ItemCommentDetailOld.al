@@ -10,8 +10,8 @@ page 50025 "Item Comment Detail Old"
     MultipleNewLines = true;
     PageType = ListPart;
     SourceTable = "Item Comment Detail";
-    SourceTableView = SORTING("Parent Entry No.", "Entry No.")
-                      WHERE("Comment Type" = CONST(Old));
+    SourceTableView = sorting("Parent Entry No.", "Entry No.")
+                      where("Comment Type" = const(Old));
     ApplicationArea = All;
 
     layout
