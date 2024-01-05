@@ -215,7 +215,7 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
             Description = 'FTA1.00';
             Editable = false;
         }
-        field(50032; "Preparation Type"; enum Assembly)
+        field(50032; "Preparation Type"; enum "Preparation Type")
         {
 
             FieldClass = FlowField;
