@@ -1,6 +1,6 @@
 namespace Prodware.FTA;
 using Microsoft.Sales.Document;
-pageextension 50061 "BlanketSalesOrder" extends "Blanket Sales Order" //507
+pageextension 50064 "BlanketSalesOrder" extends "Blanket Sales Order" //507
 {
     layout
     {

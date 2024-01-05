@@ -2,7 +2,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Purchases.Pricing;
-pageextension 50076 "PurchaseLineDiscounts" extends "Purchase Line Discounts"//7014
+pageextension 50086 "PurchaseLineDiscounts" extends "Purchase Line Discounts"//7014
 {
     layout
     {

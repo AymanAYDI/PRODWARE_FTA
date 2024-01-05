@@ -1,6 +1,6 @@
 namespace Prodware.FTA;
 using Microsoft.Sales.Document;
-pageextension 50064 "SalesLines" extends "Sales Lines" //516
+pageextension 50066 "SalesLines" extends "Sales Lines" //516
 {
     layout
     {

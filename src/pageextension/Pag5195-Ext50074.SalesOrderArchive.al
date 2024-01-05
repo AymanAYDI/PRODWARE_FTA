@@ -4,7 +4,7 @@ namespace Prodware.FTA;
 using Microsoft.Sales.Archive;
 
 
-pageextension 50072 "SalesOrderArchive" extends "Sales Order Archive"//5195
+pageextension 50074 "SalesOrderArchive" extends "Sales Order Archive"//5195
 {
     layout
     {

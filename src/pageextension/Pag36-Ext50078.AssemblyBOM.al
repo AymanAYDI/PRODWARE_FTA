@@ -2,7 +2,7 @@ namespace Prodware.FTA;
 
 using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Item;
-pageextension 50074 "AssemblyBOM" extends "Assembly BOM"//36
+pageextension 50078 "AssemblyBOM" extends "Assembly BOM"//36
 {
     actions
     {

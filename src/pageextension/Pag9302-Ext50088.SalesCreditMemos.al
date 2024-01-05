@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
-pageextension 50078 "SalesCreditMemos" extends "Sales Credit Memos" //9302
+pageextension 50088 "SalesCreditMemos" extends "Sales Credit Memos" //9302
 {
     layout
     {
