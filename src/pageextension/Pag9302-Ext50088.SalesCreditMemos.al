@@ -1,6 +1,7 @@
 namespace Prodware.FTA;
+
 using Microsoft.Sales.Document;
-pageextension 50061 "BlanketSalesOrder" extends "Blanket Sales Order" //507
+pageextension 50088 "SalesCreditMemos" extends "Sales Credit Memos" //9302
 {
     layout
     {
@@ -8,16 +9,9 @@ pageextension 50061 "BlanketSalesOrder" extends "Blanket Sales Order" //507
         {
             field("Mobile Salesperson Code"; rec."Mobile Salesperson Code")
             {
-                ApplicationArea = All;
+                Visible = false;
                 ToolTip = 'Specifies the value of the Mobile Salesperson Code field.';
-            }
-        }
-        addafter("Bill-to Contact")
-        {
-            field("Customer Posting Group"; rec."Customer Posting Group")
-            {
                 ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Customer Posting Group field.';
             }
         }
     }

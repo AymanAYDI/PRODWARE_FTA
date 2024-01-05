@@ -4,7 +4,7 @@ using Microsoft.Inventory.Tracking;
 using Microsoft.Sales.Document;
 using Microsoft.Assembly.Document;
 
-pageextension 50059 "ReservationEntries" extends "Reservation Entries" //497
+pageextension 50062 "ReservationEntries" extends "Reservation Entries" //497
 {
     layout
     {

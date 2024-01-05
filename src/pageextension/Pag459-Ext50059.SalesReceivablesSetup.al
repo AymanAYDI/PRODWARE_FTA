@@ -2,7 +2,7 @@ namespace Prodware.FTA;
 
 using Microsoft.Sales.Setup;
 
-pageextension 50058 "SalesReceivablesSetup" extends "Sales & Receivables Setup" //459
+pageextension 50059 "SalesReceivablesSetup" extends "Sales & Receivables Setup" //459
 {
     layout
     {

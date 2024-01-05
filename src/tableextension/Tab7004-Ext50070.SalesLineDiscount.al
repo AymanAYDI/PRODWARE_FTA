@@ -3,22 +3,22 @@ namespace Prodware.FTA;
 
 using Microsoft.Sales.Pricing;
 using Microsoft.Inventory.Item;
-tableextension 50070 SalesLineDiscount extends "Sales Line Discount"
+tableextension 50070 SalesLineDiscount extends "Sales Line Discount" //7004
 {
     fields
     {
         modify(Code)
         {
-            TableRelation = IF (Type = CONST(Item)) Item WHERE("Quote Associated" = FILTER(false))
-            ELSE
-            IF (Type = CONST("Item Disc. Group")) "Item Discount Group";
+            TableRelation = if (Type = const(Item)) Item where("Quote Associated" = filter(false))
+            else
+            if (Type = const("Item Disc. Group")) "Item Discount Group";
         }
 
 
         field(50000; "Item Description"; Text[50])
         {
             FieldClass = FlowField;
-            CalcFormula = Lookup(Item.Description WHERE("No." = FIELD(Code)));
+            CalcFormula = lookup(Item.Description where("No." = field(Code)));
             Caption = 'Description';
 
             Editable = false;
@@ -29,7 +29,7 @@ tableextension 50070 SalesLineDiscount extends "Sales Line Discount"
 
             FieldClass = FlowField;
 
-            CalcFormula = Lookup(Item."No. 2" WHERE("No." = FIELD(Code)));
+            CalcFormula = lookup(Item."No. 2" where("No." = field(Code)));
             Caption = 'No. 2';
 
             Editable = false;

@@ -12,6 +12,12 @@ using Microsoft.FixedAssets.FixedAsset;
 using Microsoft.Sales.Customer;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Purchases.Document;
+using Microsoft.Inventory.BOM;
+using Microsoft.Inventory.Location;
+using Microsoft.Warehouse.Activity;
+using Microsoft.Foundation.NoSeries;
+using Microsoft.Purchases.Setup;
 tableextension 50010 SalesLine extends "Sales Line" //37
 {
     fields
@@ -382,17 +388,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         FrmLAvailableItemLedgEntries: page "Available - Item Ledg. Entries";
         Reservation: Page Reservation;
         DecLOriginQuantity: Decimal;
-        RecLSalesLine: Record "37";
-        RecLReservEntry: Record 337;
-        RecLLocation: Record "14";
-        FrmLAvailableItemLedgEntries: page "504";
-        RecLItemLedgerEntry: Record "32";
-        CduLCreatePick: Codeunit "7312";
         DecLWorkQty: Decimal;
         "**PAMO": Integer;
-        ReservMgt: Codeunit "99000845";
-        RecLEntrySummary: Record "338" temporary;
-        Reservation: Page 498;
     begin
         if (RecPSalesLine.Type <> RecPSalesLine.Type::Item) or (DecPQtyToReserv = 0) then
             exit;
@@ -702,8 +699,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             KitSalesLine.SetRange("Document Type", RecGATOLinkToSalesLine."Assembly Document Type");
             KitSalesLine.SetRange("Document No.", RecGATOLinkToSalesLine."Assembly Document No.");
             KitSalesLines.SetTableView(KitSalesLine);
-            //TODO: page Assemble-to-Order Lines not migrated yet
-            //KitSalesLines.FctSetParm(true);
+            KitSalesLines.FctSetParm(true);
             KitSalesLines.Run();
         end;
     end;
@@ -742,9 +738,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecLRes: Record Resource;
         RecLFixedAsset: Record "Fixed Asset";
         RecLItemCharge: Record "Item Charge";
-        //TODO:page specifique not migrated yet
-        //FrmTransitoryItem: page "50005";
-        //FrmTransitoryKitItem: Page "50010";
+        FrmTransitoryItem: page "50005";
+        FrmTransitoryKitItem: Page "50010";
         CstL001: Label 'Do you want to create the %1 item %2? ';
         CstL002: Label 'Process cancelled';
         CstL003: Label 'Item No. %1 does not exist.';
@@ -753,8 +748,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         CstL006: Label 'Item Charge %1 does not exist.';
         CstL007: Label 'Fixed asset %1 does not exist.';
         CstL010: Label 'Item No. %1 created.';
-        //TODO:page specifique not migrated yet
-        //PagBoredBlocksItemCard: page "50017";
+        PagBoredBlocksItemCard: page "50017";
         BooLItemNoFound: Boolean;
     begin
         case Type of
@@ -842,13 +836,11 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                     RecLItem.MODIFY(true);
                                     "No." := RecLItem."No.";
                                     Commit();
-                                    //TODO: page Spe not migrated yet
-                                    //Clear(FrmTransitoryItem);
+                                    Clear(FrmTransitoryItem);
                                     RecLItem.Reset();
                                     RecLItem.SetRange("No.", RecLItem."No.");
-                                    //TODO: page Spe not migrated yet
-                                    // FrmTransitoryItem.SetTableView(RecLItem);
-                                    // FrmTransitoryItem.RunModal;
+                                    FrmTransitoryItem.SetTableView(RecLItem);
+                                    FrmTransitoryItem.RunModal();
                                 end;
                             "Item Base"::"Transitory Kit":
                                 begin
@@ -865,12 +857,11 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                         RecLItem."Quote Associated" := true;
                                     RecLItem.MODIFY(true);
                                     Commit();
-                                    //TODO: page spe not migrated yet
-                                    // Clear(FrmTransitoryKitItem);
+                                    Clear(FrmTransitoryKitItem);
                                     RecLItem.Reset();
                                     RecLItem.SetRange("No.", RecLItem."No.");
-                                    // FrmTransitoryKitItem.SetTableView(RecLItem);
-                                    // FrmTransitoryKitItem.RunModal;
+                                    FrmTransitoryKitItem.SetTableView(RecLItem);
+                                    FrmTransitoryKitItem.RunModal();
                                     "No." := RecLItem."No.";
                                 end;
                             "Item Base"::"Bored blocks":
@@ -888,12 +879,11 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                         RecLItem."Quote Associated" := true;
                                     RecLItem.MODIFY(true);
                                     Commit();
-                                    //TODO: page spe not migrated yet
-                                    // Clear(PagBoredBlocksItemCard);
+                                    Clear(PagBoredBlocksItemCard);
                                     RecLItem.Reset();
                                     RecLItem.SetRange("No.", RecLItem."No.");
-                                    // PagBoredBlocksItemCard.SetTableView(RecLItem);
-                                    // PagBoredBlocksItemCard.RunModal;
+                                    PagBoredBlocksItemCard.SetTableView(RecLItem);
+                                    PagBoredBlocksItemCard.RunModal();
                                     "No." := RecLItem."No.";
                                 end;
 
@@ -1582,7 +1572,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         ReservEngineMgt: Codeunit "Reservation Engine Mgt.";
         ReservEntry: Record "Reservation Entry";
         ReserveSalesLine: Codeunit "Sales Line-Reserve";
-        //  FrmTransitoryItem : Page 50005;
+        //  FrmTransitoryItem : Page 50005;     
         "Item Ledger Entry": Record "Item Ledger Entry";
 }
 

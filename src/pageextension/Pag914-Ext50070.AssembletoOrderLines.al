@@ -7,6 +7,7 @@ using Microsoft.Purchases.Document;
 using Microsoft.Inventory.BOM;
 using Microsoft.Sales.Document;
 using Microsoft.Inventory.Item.Substitution;
+using Microsoft.Inventory.Item;
 pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //914
 {
     layout
@@ -74,7 +75,8 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         {
             field("Substitution Available"; rec."Substitution Available")
             {
-
+                ToolTip = 'Specifies if a substitute is available for the item on the assembly order line.';
+                ApplicationArea = All;
             }
             //TODO : TABLE ASSEMBLY LINE 
             // field("Originally Ordered No."; rec."Originally Ordered No.")
@@ -93,6 +95,8 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 Caption = 'Inventory';
                 DecimalPlaces = 0 : 5;
                 Editable = false;
+                ToolTip = 'Specifies the value of the Inventory field.';
+                ApplicationArea = All;
             }
             // field(Avaibility; rec."Avaibility no reserved")
             // {
@@ -103,6 +107,8 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
             {
                 Caption = 'Disponibilité sur achat';
                 DecimalPlaces = 0 : 2;
+                ToolTip = 'Specifies the value of the Disponibilité sur achat field.';
+                ApplicationArea = All;
                 // TODO->A verifier
                 trigger OnLookup(var myText: Text): Boolean
                 begin
@@ -113,12 +119,16 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
             {
                 Caption = 'Disponibilité date récéption confirmée';
                 Editable = false;
+                ToolTip = 'Specifies the value of the Disponibilité date récéption confirmée field.';
+                ApplicationArea = All;
             }
             field("Disponibilité quantité non affectées"; GetAvailbilityPurchaseQty())
             {
                 Caption = 'Disponibilité quantité non affectées';
                 DecimalPlaces = 0 : 2;
                 Editable = false;
+                ToolTip = 'Specifies the value of the Disponibilité quantité non affectées field.';
+                ApplicationArea = All;
                 // TODO->A verifier
                 trigger OnLookup(var myText: Text): Boolean
                 begin
@@ -131,6 +141,8 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
             field("Remaining Quantity"; rec."Remaining Quantity")
             {
                 StyleExpr = TxTGStyle;
+                ToolTip = 'Specifies the value of the Remaining Quantity field.';
+                ApplicationArea = All;
             }
         }
         // addafter("Cost Amount")
@@ -183,6 +195,13 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
     }
     actions
     {
+        modify("&Reserve")
+        {
+            trigger OnBeforeAction()
+            begin
+                rec.FctSetBooResaAssFTA(true);
+            end;
+        }
         addafter("&Reserve")
         {
             action("Modifier réservation achat sur stock")
@@ -190,6 +209,8 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 Promoted = true;
                 Image = LineReserve;
                 PromotedCategory = Process;
+                ToolTip = 'Executes the Modifier réservation achat sur stock action.';
+                ApplicationArea = All;
                 trigger OnAction()
                 var
                     RecL337: Record "Reservation Entry";
@@ -253,10 +274,12 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
             action("Get All Item Substitution List")
             {
                 Image = SelectItemSubstitution;
+                ToolTip = 'Executes the Get All Item Substitution List action.';
+                ApplicationArea = All;
                 trigger OnAction()
                 var
-                    ItemSubstMgt: Codeunit "Item Subst.";
                     AssemblyLineRec: Record "Assembly Line";
+                    ItemSubstMgt: Codeunit "Item Subst.";
                 begin
                     CLEAR(AssemblyLineRec);
                     CurrPage.SETSELECTIONFILTER(AssemblyLineRec);
@@ -271,10 +294,12 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
             action("Get All Available Item Substitution List")
             {
                 Image = SelectItemSubstitution;
+                ToolTip = 'Executes the Get All Available Item Substitution List action.';
+                ApplicationArea = All;
                 trigger OnAction()
                 var
-                    ItemSubstMgt: Codeunit "Item Subst.";
                     AssemblyLineRec: Record "Assembly Line";
+                    ItemSubstMgt: Codeunit "Item Subst.";
                 begin
                     CLEAR(AssemblyLineRec);
                     CurrPage.SETSELECTIONFILTER(AssemblyLineRec);
@@ -289,10 +314,12 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
             action("Remplace And Reserve All Available Item Substitution List")
             {
                 Image = SelectItemSubstitution;
+                ToolTip = 'Executes the Remplace And Reserve All Available Item Substitution List action.';
+                ApplicationArea = All;
                 trigger OnAction()
                 var
-                    ItemSubstMgt: Codeunit "Item Subst.";
                     AssemblyLineRec: Record "Assembly Line";
+                    ItemSubstMgt: Codeunit "Item Subst.";
                 begin
                     CLEAR(AssemblyLineRec);
                     CurrPage.SETSELECTIONFILTER(AssemblyLineRec);
@@ -335,24 +362,26 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 RunPageLink = Type = const(Item),
                                   "No." = field("No.");
                 Image = "Where-Used";
+                ToolTip = 'Executes the Where-Used action.';
+                ApplicationArea = All;
             }
         }
     }
     var
+        RecGKitSalesLine: Record "Assembly Line";
         KitLine: Record "Sales Line";
+        AsmLinMgt: Codeunit "Assembly Line Management";
         IntGColor: Integer;
         BooGAvailWithoutCurrentLine: Boolean;
         DecGQtyKit: Decimal;
-        RecGKitSalesLine: Record "Assembly Line";
         TxTGStyle: Text;
-        AsmLinMgt: Codeunit "Assembly Line Management";
         DateFilter: Date;
 
     procedure FctSearchColor();
     var
-        RecL337: Record 337;
-        RecL337b: Record 337;
-        RecLATOLink: Record 904;
+        RecL337: Record "Reservation Entry";
+        RecL337b: Record "Reservation Entry";
+        RecLATOLink: Record "Assemble-to-Order Link";
     begin
         rec.CALCFIELDS(rec."Reserved Quantity");
         IntGColor := 0;
@@ -378,10 +407,8 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                                         IntGColor := 2;
                                 end;
                             1:
-                                begin
-                                    if RecL337b."Source Type" = DATABASE::"Purchase Line" then
-                                        IntGColor := 2;
-                                end;
+                                if RecL337b."Source Type" = DATABASE::"Purchase Line" then
+                                    IntGColor := 2;
                         end;
                 until (RecL337.NEXT() = 0) or (IntGColor = 2);
         end;
@@ -407,8 +434,9 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
 
     local procedure GetAvailbilityPurchase(): Decimal;
     var
+        PurchaseLine: Record "Purchase Line";
         AvailibilityQty: Decimal;
-        PurchaseLine: Record 39;
+
     begin
         AvailibilityQty := 0;
 
@@ -427,11 +455,11 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         exit(AvailibilityQty);
     end;
 
-    LOCAL PROCEDURE LookUpAvailPurchase();
-    VAR
-        PurchaseLines: Page 518;
-        PurchaseLine: Record 39;
-    BEGIN
+    local procedure LookUpAvailPurchase();
+    var
+        PurchaseLine: Record "Purchase Line";
+        PurchaseLines: Page "Purchase Lines";
+    begin
         PurchaseLine.RESET();
         PurchaseLine.SETRANGE(PurchaseLine."Document Type", PurchaseLine."Document Type"::Order);
         PurchaseLine.SETRANGE(Type, PurchaseLine.Type::Item);
@@ -439,13 +467,13 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         PurchaseLine.SETFILTER("Expected Receipt Date", '<=%1', DateFilter);
         PurchaseLines.SETTABLEVIEW(PurchaseLine);
         PurchaseLines.RUNMODAL();
-    END;
+    end;
 
-    LOCAL PROCEDURE GetAvailbilityPurchaseQty(): Decimal;
-    VAR
+    local procedure GetAvailbilityPurchaseQty(): Decimal;
+    var
+        PurchaseLine: Record "Purchase Line";
         AvailibilityQty: Decimal;
-        PurchaseLine: Record 39;
-    BEGIN
+    begin
         AvailibilityQty := 0;
 
         PurchaseLine.RESET();
@@ -454,22 +482,22 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         PurchaseLine.SETRANGE(Type, PurchaseLine.Type::Item);
         PurchaseLine.SETRANGE("No.", rec."No.");
         PurchaseLine.SETFILTER("Promised Receipt Date", '<>%1', 0D);
-        IF PurchaseLine.FINDSET() THEN
-            REPEAT
+        if PurchaseLine.FINDSET() then
+            repeat
                 PurchaseLine.CALCFIELDS("Reserved Quantity");
                 AvailibilityQty := PurchaseLine."Outstanding Quantity" - PurchaseLine."Reserved Quantity";
-                IF AvailibilityQty >= Rec.Quantity THEN
-                    EXIT(AvailibilityQty);
-            UNTIL PurchaseLine.NEXT() = 0;
+                if AvailibilityQty >= Rec.Quantity then
+                    exit(AvailibilityQty);
+            until PurchaseLine.NEXT() = 0;
 
-        EXIT(AvailibilityQty);
-    END;
+        exit(AvailibilityQty);
+    end;
 
-    LOCAL PROCEDURE GetAvailbilityPurchaseDate(): Date;
-    VAR
+    local procedure GetAvailbilityPurchaseDate(): Date;
+    var
         AvailibilityQty: Decimal;
-        PurchaseLine: Record 39;
-    BEGIN
+        PurchaseLine: Record "Purchase Line";
+    begin
         AvailibilityQty := 0;
 
         PurchaseLine.RESET();
@@ -478,26 +506,59 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         PurchaseLine.SETRANGE(Type, PurchaseLine.Type::Item);
         PurchaseLine.SETRANGE("No.", rec."No.");
         PurchaseLine.SETFILTER("Promised Receipt Date", '<>%1', 0D);
-        IF PurchaseLine.FINDSET() THEN
-            REPEAT
+        if PurchaseLine.FINDSET() then
+            repeat
                 PurchaseLine.CALCFIELDS("Reserved Quantity");
                 AvailibilityQty := PurchaseLine."Outstanding Quantity" - PurchaseLine."Reserved Quantity";
-                IF AvailibilityQty >= Rec.Quantity THEN
-                    EXIT(PurchaseLine."Promised Receipt Date");
-            UNTIL PurchaseLine.NEXT() = 0;
+                if AvailibilityQty >= Rec.Quantity then
+                    exit(PurchaseLine."Promised Receipt Date");
+            until PurchaseLine.NEXT() = 0;
 
-        EXIT(0D);
-    END;
+        exit(0D);
+    end;
 
-    LOCAL PROCEDURE GetItemInventory(): Decimal;
-    VAR
-        Item: Record 27;
-    BEGIN
-        IF Item.GET(rec."No.") THEN BEGIN
+    local procedure GetItemInventory(): Decimal;
+    var
+        Item: Record Item;
+    begin
+        if Item.GET(rec."No.") then begin
             Item.CALCFIELDS(Inventory);
-            EXIT(Item.Inventory);
-        END;
+            exit(Item.Inventory);
+        end;
 
-        EXIT(0);
-    END;
+        exit(0);
+    end;
+
+    trigger OnAfterGetRecord()
+    var
+        RecLItem: Record Item;
+        RecLATOLink: Record "Assemble-to-Order Link";
+    begin
+        if rec.Type = rec.Type::Item then
+            if RecLItem.GET(rec."No.") then begin
+                if rec."Location Code" <> '' then
+                    RecLItem.SETFILTER("Location Filter", rec."Location Code");
+                RecLItem.CALCFIELDS(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
+                if not BooGAvailWithoutCurrentLine then
+                    rec."Avaibility no reserved" := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + RecLItem."Qty. on Asm. Component")
+                               + RecLItem."Reserved Qty. on Purch. Orders"
+                else begin
+                    DecGQtyKit := 0;
+                    RecGKitSalesLine.SETRANGE("Document Type", RecGKitSalesLine."Document Type"::Order);
+                    RecGKitSalesLine.SETRANGE(Type, RecGKitSalesLine.Type::Item);
+                    RecGKitSalesLine.SETRANGE("No.", rec."No.");
+                    RecGKitSalesLine.SETFILTER("Remaining Quantity (Base)", '<>0');
+                    if not RecGKitSalesLine.ISEMPTY then begin
+                        RecGKitSalesLine.FINDSET();
+                        repeat
+                            if (RecGKitSalesLine."Document No." <> rec."Document No.") or (RecGKitSalesLine."Line No." <> rec."Line No.") then
+                                DecGQtyKit += RecGKitSalesLine."Remaining Quantity (Base)";
+                        until RecGKitSalesLine.NEXT() = 0;
+                    end;
+                    rec."Avaibility no reserved" := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + DecGQtyKit) + RecLItem."Reserved Qty. on Purch. Orders";
+                end;
+
+            end;
+        FctSearchColor();
+    end;
 }

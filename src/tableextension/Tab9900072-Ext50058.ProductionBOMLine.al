@@ -1,4 +1,7 @@
-tableextension 50058 ProductionBOMLine extends "Production BOM Line" //99000772
+namespace Prodware.FTA;
+
+using Microsoft.Manufacturing.ProductionBOM;
+tableextension 50058 ProductionBOMLine extends "Production BOM Line" //9900072
 {
     fields
     {

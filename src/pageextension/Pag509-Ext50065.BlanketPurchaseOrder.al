@@ -1,7 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Purchases.Document;
-pageextension 50063 "BlanketPurchaseOrder" extends "Blanket Purchase Order"//509
+pageextension 50065 "BlanketPurchaseOrder" extends "Blanket Purchase Order"//509
 {
     layout
     {
