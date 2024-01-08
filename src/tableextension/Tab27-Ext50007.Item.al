@@ -458,7 +458,7 @@ tableextension 50007 Item extends Item //27
 
         }
     }
-    local procedure FctCalcPurchasePriceFTA(var RecPItem: Record Item)
+    procedure FctCalcPurchasePriceFTA(var RecPItem: Record Item)
     var
         RecLPurchPrice: Record "Purchase Price";
         RecLPurchLineDisc: Record "Purchase Line Discount";
@@ -551,7 +551,7 @@ tableextension 50007 Item extends Item //27
         end;
     end;
 
-    local procedure FctCalcKitPriceFTA(var RecPItem: Record Item; var BooPMonoLevel: Boolean)
+    procedure FctCalcKitPriceFTA(var RecPItem: Record Item; var BooPMonoLevel: Boolean)
     var
         RecLItem: Record Item;
     begin
@@ -649,7 +649,7 @@ tableextension 50007 Item extends Item //27
 
     end;
 
-    local procedure FctCalcSalesPriceFTA(var RecPItem: Record Item)
+    procedure FctCalcSalesPriceFTA(var RecPItem: Record Item)
     var
         RecLPurchPrice: Record "Purchase Price";
         RecLPurchLineDisc: Record "Purchase Line Discount";
