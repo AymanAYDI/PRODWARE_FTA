@@ -699,4 +699,4 @@ codeunit 50031 "FTA_Events"
         GenJnlLine."Mobile Salesperson Code" := SalesHeader."Mobile Salesperson Code";
     end;
 
-}
+}//
