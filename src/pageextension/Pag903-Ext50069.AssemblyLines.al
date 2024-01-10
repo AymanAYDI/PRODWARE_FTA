@@ -63,7 +63,7 @@ pageextension 50069 "AssemblyLines" extends "Assembly Lines"//903
     END;
 
     VAR
-        RecGAssToOrder: Record 904;
+        RecGAssToOrder: Record "Assemble-to-Order Link";
 
 }
 

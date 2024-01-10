@@ -7,6 +7,8 @@ using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Item.Substitution;
+using Microsoft.Inventory.Tracking;
 tableextension 50089 AssemblyLine extends "Assembly Line"//901
 {
     fields
@@ -240,14 +242,14 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         }
         field(50043; "Originally Ordered No."; Code[20])
         {
-            AccessByPermission = TableData 5715 = R;
+            AccessByPermission = TableData "Item Substitution" = R;
             Caption = 'Originally Ordered No.';
             Description = 'FTA1.02';
             TableRelation = IF (Type = CONST(Item)) Item;
         }
         field(50044; "Originally Ordered Var. Code"; Code[10])
         {
-            AccessByPermission = TableData 5715 = R;
+            AccessByPermission = TableData "Item Substitution" = R;
             Caption = 'Originally Ordered Var. Code';
             Description = 'FTA1.02';
             TableRelation = IF (Type = CONST(Item)) "Item Variant".Code WHERE("Item No." = FIELD("Originally Ordered No."));
@@ -315,7 +317,7 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
 
     procedure FCtAutoReserveFTA()
     var
-        ReservMgt: Codeunit 99000845;
+        ReservMgt: Codeunit "Reservation Management";
         FullAutoReservation: Boolean;
         Text001: Label 'Automatic reservation is not possible.\Do you want to reserve items manually?';
     // todo a verifier

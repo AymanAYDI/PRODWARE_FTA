@@ -1,6 +1,7 @@
 namespace Prodware.FTA;
 
 using Microsoft.Bank.Payment;
+using Microsoft.Sales.Receivables;
 reportextension 50009 "SuggestCustomerPayments" extends "Suggest Customer Payments" //10864
 {
     dataset
@@ -31,8 +32,8 @@ reportextension 50009 "SuggestCustomerPayments" extends "Suggest Customer Paymen
         }
     }
     var
+        CustEntryEdit: Codeunit "Cust. Entry-Edit";
         CodGNextDocNo: Code[20];
         BooGCheckPostGroup: Boolean;
         CodGPayMetFilter: Code[50];
-        CustEntryEdit: Codeunit 103;
 }

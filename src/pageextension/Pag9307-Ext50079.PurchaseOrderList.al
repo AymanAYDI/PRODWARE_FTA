@@ -36,10 +36,9 @@ pageextension 50079 "PurchaseOrderList" extends "Purchase Order List" //9307
                 ToolTip = 'Executes the Email action.';
                 trigger OnAction()
                 var
-                    DocPrint: Codeunit "Document-Print";
+                    DocPrint: Codeunit FTA_Functions;
                 BEGIN
-                    //TODO: codeunit not migrated yet
-                    // DocPrint.EmailPurchHeader(Rec);
+                    DocPrint.EmailPurchHeader(Rec);
                 END;
             }
         }

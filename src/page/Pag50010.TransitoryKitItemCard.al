@@ -868,7 +868,7 @@ page 50010 "Transitory Kit Item Card"
                 begin
                     CLEAR(RecLItem);
                     RecLItem.SETRANGE("No.", Rec."No.");
-                    REPORT.RUNMODAL(50008, true, false, RecLItem);
+                    REPORT.RUNMODAL(Report::"Calculate Kit Price Item", true, false, RecLItem);
                 end;
             }
             action("Calc. Stan&dard Cost")

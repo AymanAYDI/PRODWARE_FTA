@@ -25,19 +25,17 @@ report 50009 "Calculate FTA Prices"
                 FctCalcPurchasePriceFTA(Item);
                 FctCalcSalesPriceFTA(Item);
                 FctCalcKitPriceFTA(Item, BooGMonoLevel);
-                MODIFY(TRUE);
-                //CLEAR(CalculateStdCost);
+                MODIFY(true);
                 CALCFIELDS("Assembly BOM");
                 NewUseAssemblyList := "Assembly BOM";
-                IF BooGMonoLevel THEN
-                    //todo setparam codenunit not migrated 
-                    //CalculateStdCost.SetParms(TRUE, FALSE)
-                    //  ELSE
-                    //todo setparam codenunit not migrated 
-                    //   CalculateStdCost.SetParms(TRUE, TRUE);
+                if BooGMonoLevel then
+                    FTAEvent.SetParms(true, false)
+                else
+                    FTAEvent.SetParms(true, true);
 
 
-                    CalculateStdCost.CalcItem("No.", NewUseAssemblyList);
+                CalculateStdCost.CalcItem("No.", NewUseAssemblyList);
+                FTAEvent.SetParms(false, false);
             end;
 
             trigger OnPreDataItem()
@@ -78,7 +76,7 @@ report 50009 "Calculate FTA Prices"
 
     trigger OnInitReport()
     begin
-        BooGMonoLevel := TRUE;
+        BooGMonoLevel := true;
     end;
 
     var
@@ -89,10 +87,11 @@ report 50009 "Calculate FTA Prices"
         Text009: Label 'Sales Code             #3##########\';
         Text010: Label 'Currency Code          #3##########\';
         Text011: Label 'Starting Date          #4######';
-        PurchasePrice: Record "7012";
+        PurchasePrice: Record 7012;
         Window: Dialog;
         DeleteWhstLine: Boolean;
-        CalculateStdCost: Codeunit "5812";
+        CalculateStdCost: Codeunit 5812;
+        FTAEvent: Codeunit FTA_Events;
         BooGMonoLevel: Boolean;
 }
 

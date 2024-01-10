@@ -1,9 +1,8 @@
 table 50021 "Customer Typology"
 {
     Caption = 'Customer Typology';
-    //TODO: Page SPE not migrated yet
-    // DrillDownPageID = 50021;
-    // LookupPageID = 50021;
+    DrillDownPageID = "Customer Typology List";
+    LookupPageID = "Customer Typology List";
 
     fields
     {

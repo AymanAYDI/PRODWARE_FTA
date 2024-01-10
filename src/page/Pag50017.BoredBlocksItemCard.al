@@ -885,7 +885,7 @@ page 50017 "Bored Blocks Item Card"
                 begin
                     CLEAR(RecLItem);
                     RecLItem.SETRANGE("No.", Rec."No.");
-                    report.RUNMODAL(50008, true, false, RecLItem);
+                    report.RUNMODAL(Report::"Calculate Kit Price Item", true, false, RecLItem);
                 end;
             }
             action(" Calc. Standard Cost ")

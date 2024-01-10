@@ -12,65 +12,64 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
 {
     layout
     {
-        //TODO : table assembly line not migrated yet
-        // addfirst(Group)
-        // {
-        //     field("Line No."; rec."Line No.")
-        //     {
-        //         ApplicationArea = All;
-        //         Editable = false;
-        //     }
-        //     field("Level No."; rec."Level No.")
-        //     {
-        //         ApplicationArea = All;
-        //         StyleExpr = TxTGStyle;
-        //     }
-        //     field(Kit; rec.Kit)
-        //     {
-        //         ApplicationArea = All;
-        //     }
-        //     field("Kit Action"; rec."Kit Action")
-        //     {
-        //         ApplicationArea = All;
-        //         StyleExpr = TxTGStyle;
-        //         trigger OnValidate()
-        //         var
-        //             IntLDocumentLineNo: Integer;
-        //             IntLLineNo: Integer;
-        //             BoolEndLoop: Boolean;
-        //             RecLATOLink: Record 904;
-        //         begin
-        //             CurrPage.SAVERECORD();
-        //             IntLDocumentLineNo := "Line No.";
-        //             IntLLineNo := "Line No.";
-        //             case "Kit Action" of
-        //                 "Kit Action"::Assembly:
-        //                     begin
-        //                         if RecLATOLink.GET("Document Type", "Document No.") then begin
-        //                             KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
-        //                             AsmLinMgt.FctRefreshTempSubKitSalesFTA(Rec);
-        //                         end;
-        //                     end;
+        addfirst(Group)
+        {
+            field("Line No."; rec."Line No.")
+            {
+                ApplicationArea = All;
+                Editable = false;
+            }
+            field("Level No."; rec."Level No.")
+            {
+                ApplicationArea = All;
+                StyleExpr = TxTGStyle;
+            }
+            field(Kit; rec.Kit)
+            {
+                ApplicationArea = All;
+            }
+            field("Kit Action"; rec."Kit Action")
+            {
+                ApplicationArea = All;
+                StyleExpr = TxTGStyle;
+                trigger OnValidate()
+                var
+                    IntLDocumentLineNo: Integer;
+                    IntLLineNo: Integer;
+                    BoolEndLoop: Boolean;
+                    RecLATOLink: Record 904;
+                begin
+                    CurrPage.SAVERECORD();
+                    IntLDocumentLineNo := rec."Line No.";
+                    IntLLineNo := rec."Line No.";
+                    case rec."Kit Action" of
+                        rec."Kit Action"::Assembly:
 
-        //                 "Kit Action"::Disassembly:
-        //                     begin
-        //                         if RecLATOLink.GET("Document Type", "Document No.") then begin
-        //                             KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
-        //                             AsmLinMgt.FctRefreshTempSubKitSalesFTA(Rec);
-        //                         end;
-        //                     end;
-        //             end;
-        //             BoolEndLoop := false;
-        //             if FINDSET then
-        //                 repeat
-        //                     if IntLLineNo = "Line No." then
-        //                         BoolEndLoop := true;
-        //                 until (NEXT = 0) or (BoolEndLoop = true);
-        //             NEXT(-1);
-        //             CurrPage.UPDATE();
-        //         end;
-        //     }
-        // }
+                            if RecLATOLink.GET(rec."Document Type", rec."Document No.") then begin
+                                KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
+                                //  AsmLinMgt.FctRefreshTempSubKitSalesFTA(Rec);
+                            end;
+
+
+                        rec."Kit Action"::Disassembly:
+
+                            if RecLATOLink.GET(rec."Document Type", rec."Document No.") then begin
+                                KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
+                                // AsmLinMgt.FctRefreshTempSubKitSalesFTA(Rec);
+                            end;
+
+                    end;
+                    BoolEndLoop := false;
+                    if rec.FindSet() then
+                        repeat
+                            if IntLLineNo = rec."Line No." then
+                                BoolEndLoop := true;
+                        until (rec.NEXT() = 0) or (BoolEndLoop = true);
+                    rec.NEXT(-1);
+                    CurrPage.UPDATE();
+                end;
+            }
+        }
         addafter(Type)
         {
             field("Substitution Available"; rec."Substitution Available")
@@ -78,15 +77,14 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 ToolTip = 'Specifies if a substitute is available for the item on the assembly order line.';
                 ApplicationArea = All;
             }
-            //TODO : TABLE ASSEMBLY LINE 
-            // field("Originally Ordered No."; rec."Originally Ordered No.")
-            // {
-            //     Editable = false;
-            // }
-            // field("Originally Ordered Var. Code"; rec."Originally Ordered Var. Code")
-            // {
-            //     Visible = false;
-            // }
+            field("Originally Ordered No."; rec."Originally Ordered No.")
+            {
+                Editable = false;
+            }
+            field("Originally Ordered Var. Code"; rec."Originally Ordered Var. Code")
+            {
+                Visible = false;
+            }
         }
         addafter("Location Code")
         {
@@ -98,11 +96,11 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 ToolTip = 'Specifies the value of the Inventory field.';
                 ApplicationArea = All;
             }
-            // field(Avaibility; rec."Avaibility no reserved")
-            // {
-            //     Caption = 'Avaibility';
-            //     StyleExpr = TxTGStyle;
-            // }
+            field(Avaibility; rec."Avaibility no reserved")
+            {
+                Caption = 'Avaibility';
+                StyleExpr = TxTGStyle;
+            }
             field("Disponibilité sur achat"; GetAvailbilityPurchase())
             {
                 Caption = 'Disponibilité sur achat';
@@ -145,16 +143,16 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 ApplicationArea = All;
             }
         }
-        // addafter("Cost Amount")
-        // {
-        //     field("Kit Qty Available by Assembly"; rec."Kit Qty Available by Assembly")
-        //     {
-        //         StyleExpr = TxTGStyle;
-        //     }
-        //     field("x Quantity per"; rec."x Quantity per")
-        //     {
-        //     }
-        // }
+        addafter("Cost Amount")
+        {
+            field("Kit Qty Available by Assembly"; rec."Kit Qty Available by Assembly")
+            {
+                StyleExpr = TxTGStyle;
+            }
+            field("x Quantity per"; rec."x Quantity per")
+            {
+            }
+        }
         modify(Type)
         {
             StyleExpr = TxTGStyle;
@@ -279,14 +277,13 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 trigger OnAction()
                 var
                     AssemblyLineRec: Record "Assembly Line";
-                    ItemSubstMgt: Codeunit "Item Subst.";
+                    ItemSubstMgt: Codeunit FTA_Functions;
                 begin
                     CLEAR(AssemblyLineRec);
                     CurrPage.SETSELECTIONFILTER(AssemblyLineRec);
                     if AssemblyLineRec.FindFirst() then
                         repeat
-                        //TODO : codeunit not migrated yet
-                        //ItemSubstMgt.ExplodeItemAssemblySubst(AssemblyLineRec, false, false);
+                            ItemSubstMgt.ExplodeItemAssemblySubst(AssemblyLineRec, false, false);
                         until AssemblyLineRec.NEXT() = 0;
                     CurrPage.UPDATE();
                 end;
@@ -299,14 +296,13 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 trigger OnAction()
                 var
                     AssemblyLineRec: Record "Assembly Line";
-                    ItemSubstMgt: Codeunit "Item Subst.";
+                    ItemSubstMgt: Codeunit FTA_Functions;
                 begin
                     CLEAR(AssemblyLineRec);
                     CurrPage.SETSELECTIONFILTER(AssemblyLineRec);
                     if AssemblyLineRec.FindFirst() then
                         repeat
-                        //TODO : codeunit not migrated yet
-                        //ItemSubstMgt.ExplodeItemAssemblySubst(AssemblyLineRec, true, false);
+                            ItemSubstMgt.ExplodeItemAssemblySubst(AssemblyLineRec, true, false);
                         until AssemblyLineRec.NEXT() = 0;
                     CurrPage.UPDATE();
                 end;
@@ -319,14 +315,13 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 trigger OnAction()
                 var
                     AssemblyLineRec: Record "Assembly Line";
-                    ItemSubstMgt: Codeunit "Item Subst.";
+                    ItemSubstMgt: Codeunit FTA_Functions;
                 begin
                     CLEAR(AssemblyLineRec);
                     CurrPage.SETSELECTIONFILTER(AssemblyLineRec);
                     if AssemblyLineRec.FindFirst() then
                         repeat
-                        //TODO : codeunit not migrated yet
-                        //ItemSubstMgt.ExplodeItemAssemblySubst(AssemblyLineRec, true, true);
+                            ItemSubstMgt.ExplodeItemAssemblySubst(AssemblyLineRec, true, true);
                         until AssemblyLineRec.NEXT() = 0;
                     CurrPage.UPDATE();
                 end;
@@ -334,25 +329,20 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         }
         addafter("Explode BOM")
         {
-            // action("Explode and Reserve BOM")
-            // {
-            //     Promoted = true;
-            //     PromotedIsBig = true;
-            //     Image = ExplodeBOM;
-            //     trigger OnAction()
-            //     var
-            //         IntLDocumentLineNo: Integer;
-            //         IntLLineNo: Integer;
-            //         BoolEndLoop: Boolean;
-            //         RecLATOLink: Record 904;
-            //     begin
-            //         VALIDATE(rec."Kit Action", rec."Kit Action"::Disassembly);
-            //         MODIFY();
-            //         AsmLinMgt.SetAutoReserve;
-            //         AsmLinMgt.FctRefreshTempSubKitSalesFTA(Rec);
-            //         CurrPage.UPDATE();
-            //     end;
-            // }
+            action("Explode and Reserve BOM")
+            {
+                Promoted = true;
+                PromotedIsBig = true;
+                Image = ExplodeBOM;
+                trigger OnAction()
+                begin
+                    Rec.VALIDATE(rec."Kit Action", rec."Kit Action"::Disassembly);
+                    Rec.MODIFY();
+                    // AsmLinMgt.SetAutoReserve;
+                    // AsmLinMgt.FctRefreshTempSubKitSalesFTA(Rec);
+                    CurrPage.UPDATE();
+                end;
+            }
         }
         addafter("Item &Tracking Lines")
         {
@@ -414,8 +404,8 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         end;
 
         TxTGStyle := '';
-        // if ("Level No." <> 0) then
-        //     TxTGStyle := 'Strong';
+        if (rec."Level No." <> 0) then
+            TxTGStyle := 'Strong';
         if IntGColor = 1 then
             TxTGStyle := 'Favorable';
         if IntGColor = 2 then
@@ -561,4 +551,6 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
             end;
         FctSearchColor();
     end;
+
+
 }

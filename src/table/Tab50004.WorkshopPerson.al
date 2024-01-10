@@ -2,8 +2,7 @@ table 50004 "Workshop Person"
 {
 
     Caption = 'Workshop Person';
-    //TODO: page 50001 Not migrated yet
-    //LookupPageID = 50001;
+    LookupPageID = "Workshop Persons";
 
     fields
     {

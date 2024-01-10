@@ -948,7 +948,7 @@ page 50005 "Transitory Item Card"
                         RecLItem.SETRANGE("No.", Rec."No.");
                         //Record.SETRECFILTER()
                         //Report.SETTABLEVIEW(Reclitem)
-                        REPORT.RUNMODAL(50007, true, false, RecLItem)
+                        REPORT.RUNMODAL(Report::"Calculate Unit Price Item", true, false, RecLItem)
                     end;
                 }
                 action("Calculation Kit Price")
@@ -963,7 +963,7 @@ page 50005 "Transitory Item Card"
                     begin
                         CLEAR(RecLItem);
                         RecLItem.SETRANGE("No.", Rec."No.");
-                        REPORT.RUNMODAL(50008, true, false, RecLItem);
+                        REPORT.RUNMODAL(Report::"Calculate Kit Price Item", true, false, RecLItem);
                     end;
                 }
                 action("Calc. Stan&dard Cost")

@@ -23,6 +23,9 @@ using Microsoft.CRM.Segment;
 using Microsoft.Sales.Setup;
 using Microsoft.Inventory.Item;
 using Microsoft.CRM.Interaction;
+using Microsoft.CRM.Contact;
+using Microsoft.Bank.BankAccount;
+using System.Security.User;
 report 51003 "Purchases - Order FTA"
 {
     DefaultLayout = RDLC;
@@ -1085,8 +1088,8 @@ report 51003 "Purchases - Order FTA"
 
                 trigger OnAfterGetRecord()
                 var
-                    PrepmtPurchLine: Record 39 temporary;
-                    TempPurchLine: Record 39 temporary;
+                    PrepmtPurchLine: Record "Purchase Line" temporary;
+                    TempPurchLine: Record "Purchase Line" temporary;
                 begin
                     CLEAR(PurchLine);
                     CLEAR(PurchPost);
@@ -1531,13 +1534,13 @@ report 51003 "Purchases - Order FTA"
         LblSalesperson: Label 'Salesperson';
         LblOurReferences: Label 'Your customer No.';
         LblDocumentDate: Label 'Document date';
-        RecGContact: Record 5050;
+        RecGContact: Record Contact;
         TxtGOurReferences: Text[100];
-        RecGVendor: Record 23;
+        RecGVendor: Record Vendor;
         LblTermsOfSale: Label 'Shipping Conditions :';
         LblTermsOfPayment: Label 'Terms of payment';
         LblCurrency: Label 'Currency';
-        RecGPaymentMethod: Record 289;
+        RecGPaymentMethod: Record "Payment Method";
         TxtGCodeDevise: Text[10];
         TxtGLibDevise: Text[30];
         LblContact: Label 'Contact';
@@ -1558,7 +1561,7 @@ report 51003 "Purchases - Order FTA"
         RecGUserReport: Record "Report Email By User";
         BooGPrintLogo: Boolean;
         BoolGPrintFax: Boolean;
-        RecGUserSetup: Record 91;
+        RecGUserSetup: Record "User Setup";
         TxtGMailFax: array[6] of Text[200];
         RefClient: Text;
         RefFournisseur: Text;

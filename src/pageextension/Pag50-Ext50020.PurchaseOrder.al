@@ -128,7 +128,7 @@ pageextension 50020 PurchaseOrder extends "Purchase Order" //50
 
 
                         //IF FORM.RUNMODAL(50026,RecLShippingPrice,RecLShippingPrice."Shipping Agent")=ACTION::LookupOK THEN BEGIN
-                        if PAGE.RUNMODAL(51026, RecLShippingPrice, RecLShippingPrice."Shipping Agent") = ACTION::LookupOK then begin
+                        if PAGE.RUNMODAL(Page::"Shipping agent prices", RecLShippingPrice, RecLShippingPrice."Shipping Agent") = ACTION::LookupOK then begin
                             Rec.VALIDATE("Shipping Agent Code", RecLShippingPrice."Shipping Agent");
                             DecLPrice := RecLShippingPrice.Price;
                             CodLCurrency := RecLShippingPrice."Currency Code";
@@ -258,21 +258,19 @@ pageextension 50020 PurchaseOrder extends "Purchase Order" //50
 
         addafter("&Print")
         {
-            // action("Email ") //TODO -> EmailPurchHeader CodeUnit 229 
-            // {
-            //     Caption = 'Email ';
-            //     Ellipsis = true;
-            //     Image = Email;
+            action("Email ")
+            {
+                Caption = 'Email ';
+                Ellipsis = true;
+                Image = Email;
 
-            //     trigger OnAction()
-            //     var 
-            //         DocPrint: Codeunit "Document-Print";
-            //     begin
-            //         //>>MIGR NAV 2015
-            //         DocPrint.EmailPurchHeader(Rec);
-            //         //<<MIGR NAV 2015
-            //     end;
-            // }
+                trigger OnAction()
+                var
+                    DocPrint: Codeunit "FTA_Functions";
+                begin
+                    DocPrint.EmailPurchHeader(Rec);
+                end;
+            }
         }
     }
 }

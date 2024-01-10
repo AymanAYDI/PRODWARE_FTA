@@ -5,6 +5,9 @@ using Microsoft.Sales.Customer;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Purchases.Document;
+using Microsoft.Sales.Document;
+using Microsoft.Inventory.Tracking;
+using Microsoft.Inventory.Item;
 reportextension 50002 "SalesReservationAvail" extends "Sales Reservation Avail." //209
 {
     RDLCLayout = './src/reportextension/rdlc/SalesReservationAvail.rdl';
@@ -56,23 +59,19 @@ reportextension 50002 "SalesReservationAvail" extends "Sales Reservation Avail."
         BooGPurchase: Boolean;
         BooGNegativeAvailable: Boolean;
 
-    procedure FctctrlKitReserv(SalesLine: Record 37) BooLOK: Boolean;
+    procedure FctctrlKitReserv(SalesLine: Record "Sales Line") BooLOK: Boolean;
     var
-        RecLKitSalesLine: Record 901;
-        RecL337: Record 337;
-        RecL337b: Record 337;
-        RecLAssemblyOrderLink: Record 904;
+        RecLKitSalesLine: Record "Assembly Line";
+        RecL337: Record "Reservation Entry";
+        RecL337b: Record "Reservation Entry";
+        RecLAssemblyOrderLink: Record "Assemble-to-Order Link";
     begin
         BooLOK := false;
         BooGPurchase := false;
         BooGNegativeAvailable := false;
 
-        //
         RecLAssemblyOrderLink.SETRANGE("Document Type", SalesLine."Document Type");
         RecLAssemblyOrderLink.SETRANGE("Document No.", SalesLine."Document No.");
-        //RecLKitSalesLine.SETRANGE("Document Type",SalesLine."Document Type");
-        //RecLKitSalesLine.SETRANGE("Document No.",SalesLine."Document No.");
-        //IF RecLAssemblyOrderLink.GET(RecLKitSalesLine."Document Type",RecLKitSalesLine."Document No.") THEN;
         RecLAssemblyOrderLink.SETRANGE("Document Line No.", SalesLine."Line No.");
         if not RecLAssemblyOrderLink.FINDFIRST() then
             RecLAssemblyOrderLink.INIT();
@@ -97,10 +96,6 @@ reportextension 50002 "SalesReservationAvail" extends "Sales Reservation Avail."
                         RecL337.SETRANGE("Source Subtype", RecLKitSalesLine."Document Type");
                         RecL337.SETRANGE("Source Subtype", RecLKitSalesLine."Document Type");
                         RecL337.SETRANGE("Source ID", RecLKitSalesLine."Document No.");
-
-                        //<<MIG NAV 2015 : Not supported
-                        //RecL337.SETRANGE("Source Prod. Order Line",RecLAssemblyOrderLink."Document Line No.");
-                        //>>MIG NAV 2015 : Not supported
                         RecL337.SETRANGE("Source Ref. No.", RecLKitSalesLine."Line No.");
                         RecL337.SETRANGE("Reservation Status", RecL337."Reservation Status"::Reservation);
                         if RecL337.FINDSET() then
@@ -126,9 +121,9 @@ reportextension 50002 "SalesReservationAvail" extends "Sales Reservation Avail."
         end;
     end;
 
-    procedure FctCkeckAvailableItem(RecPKitSalesLine: Record 901; DecPQty: Decimal) BooLOK: Boolean;
+    procedure FctCkeckAvailableItem(RecPKitSalesLine: Record "Assembly Line"; DecPQty: Decimal) BooLOK: Boolean;
     var
-        RecLItem: Record 27;
+        RecLItem: Record Item;
         DecLDisposalQtyStock: Decimal;
         DecLAvailable: Decimal;
     begin
@@ -138,8 +133,6 @@ reportextension 50002 "SalesReservationAvail" extends "Sales Reservation Avail."
         DecLDisposalQtyStock := RecLItem.Inventory - (RecLItem."Reserved Qty. on Inventory");
         DecLAvailable := RecLItem.Inventory - (RecLItem."Qty. on Sales Order")
                      + RecLItem."Reserved Qty. on Purch. Orders";
-
-        //IF (DecPQty = RecPKitSalesLine."Outstanding Qty. (Base)") then begin
         if DecLDisposalQtyStock >= DecPQty then begin
             if DecLAvailable < 0 then begin
                 BooGNegativeAvailable := true; //Verif dispo
@@ -148,14 +141,6 @@ reportextension 50002 "SalesReservationAvail" extends "Sales Reservation Avail."
                 BooLOK := true;
         end else
             BooLOK := false;
-        //end else begin
-
-        //end;
-
-        //IF DecLDisposalQtyStock >= DecPQty THEN
-        //  BooLOK :=TRUE;
-        //IF (DecPQty = RecPKitSalesLine."Outstanding Qty. (Base)") AND (DecLDisposalQtyStock < 0) THEN
-        //  BooGNegativeAvailable := TRUE;
     end;
 }
 

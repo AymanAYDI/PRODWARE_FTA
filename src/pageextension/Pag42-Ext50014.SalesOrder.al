@@ -52,119 +52,120 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
         {
             Visible = false;
         }
-        // addafter("Sell-to Customer Name")
-        // {
-        //     field("Customer India Product";rec."Customer India Product")
-        //     {
+        addafter("Sell-to Customer Name")
+        {
+            field("Customer India Product"; rec."Customer India Product")
+            {
 
-        //     }
-        // }
+            }
+        }
         addafter("Promised Delivery Date")
         {
-            // field("Order Shipment Date";rec."Order Shipment Date")
-            // {
+            field("Order Shipment Date"; rec."Order Shipment Date")
+            {
 
-            // }
+            }
         }
         addafter("Salesperson Code")
         {
-            // field("Mobile Salesperson Code";rec."Mobile Salesperson Code")
-            // {
+            field("Mobile Salesperson Code"; rec."Mobile Salesperson Code")
+            {
 
-            // }
+            }
         }
         addafter(Status)
         {
 
-            // field("Franco Amount";rec."Franco Amount")
-            // {
+            field("Franco Amount"; rec."Franco Amount")
+            {
 
-            // }
-            // field("Desc. Shipment Method";rec."Desc. Shipment Method")
-            // {
+            }
+            field("Desc. Shipment Method"; rec."Desc. Shipment Method")
+            {
 
-            // }
-            // field("Total Parcels";rec."Total Parcels")
-            // {
+            }
+            field("Total Parcels"; rec."Total Parcels")
+            {
 
-            // }
-            // field("Total weight";rec."Total weight")
-            // {
+            }
+            field("Total weight"; rec."Total weight")
+            {
 
-            // }
-            // field("Fax No.";rec."Fax No.")
-            // {
+            }
+            field("Fax No."; rec."Fax No.")
+            {
 
-            // }
-            //  field("E-Mail";rec."E-Mail")
-            // {
+            }
+            field("E-Mail"; rec."E-Mail")
+            {
 
-            // }
-            //  field("Subject Mail";rec."Subject Mail")
-            // {
+            }
+            field("Subject Mail"; rec."Subject Mail")
+            {
 
-            // }
-            //  field(Preparer;rec.Preparer)
-            // {
+            }
+            field(Preparer; rec.Preparer)
+            {
 
-            // }
-            //  field(Assembler;rec.Assembler)
-            // {
+            }
+            field(Assembler; rec.Assembler)
+            {
 
-            // }
-            //     field(Packer;rec.Packer)
-            // {
+            }
+            field(Packer; rec.Packer)
+            {
 
-            // }
-            //     field("Auto AR Blocked";rec."Auto AR Blocked")
-            // {
+            }
+            field("Auto AR Blocked"; rec."Auto AR Blocked")
+            {
 
-            // }
-            //     field("Show Comment AR";rec."Show Comment AR")
-            // {
+            }
+            field("Show Comment AR"; rec."Show Comment AR")
+            {
 
-            // }
-            //     field("Workshop File";rec."Workshop File")
-            // {
+            }
+            field("Workshop File"; rec."Workshop File")
+            {
 
-            // }
-            //     field("Equipment Loans";rec."Equipment Loans")
-            // {
+            }
+            field("Equipment Loans"; rec."Equipment Loans")
+            {
 
-            // }
+            }
         }
         addafter("Prepmt. Pmt. Discount Date")
         {
             group(Transport)
             {
-                // field("Shipping Order No."; rec."Shipping Order No.")
-                // {
+                field("Shipping Order No."; rec."Shipping Order No.")
+                {
 
-                // }
-                // field("Shipping Agent Name"; rec."Shipping Agent Name")
-                // {
+                }
+                field("Shipping Agent Name"; rec."Shipping Agent Name")
+                {
 
-                // }
-                // field("Planned Shipment Date" ; rec."Planned Shipment Date" )
-                // {
+                }
+                field("Planned Shipment Date"; rec."Planned Shipment Date")
+                {
 
-                // }
+                }
             }
         }
         addafter(Control1906127307)
         {
-            //TODO: page 50014 not migrated yet
-            // part("Sales Order total"; "Sales Order total")
-            // {
-            //     SubPageLink = "Document Type" = field("Document Type"),
-            //                   "Document No." = field("Document No."),
-            //                   "Line No." = field("Line No.");
-            //     PagePartID =Page 50014;
-            //     ProviderID =58;
-            //     Visible = TRUE;
-            //     PartType =Page;
+            part("Sales Order total"; "Sales Order total")
+            {
+                SubPageLink = "Document Type" = field("Document Type"),
+                              "Document No." = field("No.");
+                //TODO : verifier 
+                // "Line No." = field("Line No.");
+                Provider = SalesLines;
+                Visible = true;
+                //TODO : verifier 
+                // PagePartID=Page50014;
+                // PartType=Page
 
-            // }
+            }
         }
 
     }
@@ -215,25 +216,19 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
         }
         addfirst("&Print")
         {
-            action(Action1100267032)
+            action("Assembly Order")
             {
                 Caption = 'Assembly Order';
                 Image = Print;
                 ApplicationArea = All;
                 ToolTip = 'Executes the Assembly Order action.';
                 trigger OnAction()
-                var
-                    //TODO: codeunit not migrated yet
-                    //CduLPrintPDF: Codeunit 50006;
-                    RecLSalesLine: Record "Sales Line";
-                    RecLItem: Record Item;
                 begin
-                    // TODO: table sales header not migrated yet
-                    //DocPrint.PrintSalesOrder(Rec, rec.Usage::"Work Order");
+                    DocPrint.PrintSalesOrder(Rec, Usage::"Work Order");
                 end;
 
             }
-            action(Action1100267027)
+            action("Preparatory Delivery")
             {
                 Caption = 'Preparatory Delivery';
                 Image = Print;
@@ -258,7 +253,7 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
                 var
                     SalesHeader: Record "Sales Header";
                 begin
-                    //  DocPrint.PrintSalesOrder(Rec,Usage::"Work Order");
+                    DocPrint.PrintSalesOrder(Rec, Usage::"Work Order");
                     SalesHeader := Rec;
                     SalesHeader.SETRECFILTER();
                     REPORT.RUNMODAL(50011, true, false, SalesHeader);
@@ -298,14 +293,15 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
 
     var
         DocPrint: Codeunit "Document-Print";
+        Usage: Option "Order Confirmation","Work Order","Pick Instruction";
 
-    LOCAL PROCEDURE GetRecordLinkExist();
-    VAR
+    local procedure GetRecordLinkExist();
+    var
         TxtCst001: Label 'Il existe des liens pour ce document.';
-    BEGIN
-        IF Rec.HASLINKS THEN
+    begin
+        if Rec.HASLINKS then
             MESSAGE(TxtCst001, Rec."No.");
-    END;
+    end;
 
     local procedure OpenComment();
     var

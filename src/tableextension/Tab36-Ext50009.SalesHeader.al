@@ -56,7 +56,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
         {
             trigger OnAfterValidate()
             var
-                RecGContact: Record 5050;
+                RecGContact: Record Contact;
             begin
                 IF RecGContact.GET("Sell-to Contact No.") THEN BEGIN
                     "E-Mail" := RecGContact."E-Mail";

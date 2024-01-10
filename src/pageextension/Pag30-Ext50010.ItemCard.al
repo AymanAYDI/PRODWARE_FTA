@@ -275,9 +275,8 @@ pageextension 50010 ItemCard extends "Item Card" //30
         {
             action("Historique de l'article")
             {
-                //TODO: page SPE not migrated yet
-                // RunObject = Page 50023;
-                // RunPageLink = "Item No."=FIELD("No.");
+                RunObject = Page "Item Comment";
+                RunPageLink = "Item No." = field("No.");
                 Promoted = true;
                 PromotedIsBig = true;
                 Image = History;
@@ -291,19 +290,17 @@ pageextension 50010 ItemCard extends "Item Card" //30
             {
                 ApplicationArea = All;
                 ToolTip = 'Executes the Sales order archive action.';
-                //TODO: page SPE not migrated yet
-                // RunObject = Page 51009;
-                // RunPageView = sorting("Document Type", Type, "No.") order(descending);
-                // RunPageLink = "Document Type"=const(Order),Type=const(Item),"No."=field("No.");
+                RunObject = Page "Sales Archive";
+                RunPageView = sorting("Document Type", Type, "No.") order(descending);
+                RunPageLink = "Document Type" = const(Order), Type = const(Item), "No." = field("No.");
             }
             action("Sales quote archive")
             {
                 ApplicationArea = All;
                 ToolTip = 'Executes the Sales quote archive action.';
-                //TODO: page SPE not migrated yet
-                // RunObject = Page 51009;
-                // RunPageView = SORTING("Document Type", Type, "No.") ORDER(Descending);
-                // RunPageLink = "Document Type"=CONST(Quote),Type=CONST(Item),"No."=FIELD("No.");
+                RunObject = Page "Sales Archive";
+                RunPageView = sorting("Document Type", Type, "No.") order(descending);
+                RunPageLink = "Document Type" = const(Quote), Type = const(Item), "No." = field("No.");
             }
         }
         addafter("Item Tracing")
@@ -331,7 +328,7 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 begin
                     CLEAR(RecLItem);
                     RecLItem.SETRANGE("No.", rec."No.");
-                    REPORT.RUNMODAL(50007, true, false, RecLItem);
+                    REPORT.RUNMODAL(Report::"Calculate Unit Price Item", true, false, RecLItem);
                 end;
             }
             action("Calcul Prix Kit")
@@ -344,7 +341,7 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 begin
                     CLEAR(RecLItem);
                     RecLItem.SETRANGE("No.", rec."No.");
-                    REPORT.RUNMODAL(50008, true, false, RecLItem);
+                    REPORT.RUNMODAL(Report::"Calculate Kit Price Item", true, false, RecLItem);
                 end;
             }
             action("Calculer Co– Kit")

@@ -23,25 +23,25 @@ pageextension 50063 Reservation extends Reservation //498
             }
         }
     }
-    // TODO ReservEntry declared on standard 
+    // TODO ReservEntry variable global 
     // PROCEDURE GetReservEntry(VAR RecPReservEntry : Record "Reservation Entry");
     // BEGIN
     //     RecPReservEntry := ReservEntry;
     // END;
-    PROCEDURE FctSetBooResaFTA(BooPResaFTA: Boolean);
-    BEGIN
+    procedure FctSetBooResaFTA(BooPResaFTA: Boolean);
+    begin
         BooGResaFTA := BooPResaFTA;
-    END;
+    end;
 
-    PROCEDURE FctSetBooResaASSFTA(BooPResaAssFTA: Boolean);
-    BEGIN
+    procedure FctSetBooResaASSFTA(BooPResaAssFTA: Boolean);
+    begin
         BooGResaAssFTA := BooPResaAssFTA;
-    END;
+    end;
 
-    PROCEDURE ReturnRec(VAR pRec: Record "Entry Summary");
-    BEGIN
+    procedure ReturnRec(var pRec: Record "Entry Summary");
+    begin
         pRec := Rec;
-    END;
+    end;
 
     var
         RecGItem: Record Item;

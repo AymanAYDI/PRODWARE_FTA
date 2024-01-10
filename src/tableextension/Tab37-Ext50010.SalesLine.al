@@ -370,7 +370,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         GetSalesHeader();
         "Sell-to Customer No." := SalesHeader."Sell-to Customer No.";
     end;
-    //TODO: Verifier commit
+
     trigger OnAfterDelete()
     begin
         Commit();
@@ -447,6 +447,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         DecLQuantityRes: Decimal;
         FrmLAvailablePurchLines: Page "Available - Purchase Lines";
         DecPQtyToReservBase: Decimal;
+        FTAFunctions: Codeunit FTA_Functions;
     begin
         if (RecPSalesLine.Type <> RecPSalesLine.Type::Item) or (DecPQtyToReserv = 0) then
             exit;
@@ -989,35 +990,31 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                     RecLPurchLine.Validate("No.", RecLSalesLine."No.");
                     RecLPurchLine.Validate("Location Code", RecLSalesLine."Location Code");
                     if (RecLSalesLine."Requested Receipt Date" <> 0D) then begin
-                        //TODO: table Purchase line not migrated yet
-                        // RecLPurchLine.Validate("Date from Req. Delivery Date", true);
+                        RecLPurchLine.Validate("Date from Req. Delivery Date", true);
                         if (RecLPurchLine."Requested Receipt Date" = 0D) or
                           (RecLPurchLine."Requested Receipt Date" > RecLSalesLine."Requested Receipt Date") then
                             RecLPurchLine.Validate("Requested Receipt Date", RecLSalesLine."Requested Receipt Date");
                     end else
-                        //TODO: table Purchase line not migrated yet
-                        // if (RecLPurchLine."Date from Req. Delivery Date" = false) then
-                        //     if (RecLPurchLine."Requested Receipt Date" = 0D) or
-                        //       (RecLPurchLine."Requested Receipt Date" > RecLSalesLine."Requested Delivery Date") then
-                        //         RecLPurchLine.Validate("Requested Receipt Date", RecLSalesLine."Requested Delivery Date");
+                        if (RecLPurchLine."Date from Req. Delivery Date" = false) then
+                            if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                              (RecLPurchLine."Requested Receipt Date" > RecLSalesLine."Requested Delivery Date") then
+                                RecLPurchLine.Validate("Requested Receipt Date", RecLSalesLine."Requested Delivery Date");
 
                     RecLPurchLine.Insert();
                 end;
                 RecLPurchLine.Validate(Quantity, RecLPurchLine.Quantity + RecLSalesLine."Qty to be Ordered");
 
                 if (RecLSalesLine."Requested Receipt Date" <> 0D) then begin
-                    //TODO: table Purchase line not migrated yet
-                    // RecLPurchLine.Validate("Date from Req. Delivery Date", true);
+                    RecLPurchLine.Validate("Date from Req. Delivery Date", true);
                     if (RecLPurchLine."Requested Receipt Date" = 0D) or
                       (RecLPurchLine."Requested Receipt Date" > RecLSalesLine."Requested Receipt Date") then
                         RecLPurchLine.Validate("Requested Receipt Date", RecLSalesLine."Requested Receipt Date");
                 end else
-                    //TODO: table Purchase line not migrated yet
-                    // if (RecLPurchLine."Date from Req. Delivery Date" = false) then
-                    //     if (RecLPurchLine."Requested Receipt Date" = 0D) or
-                    //       (RecLPurchLine."Requested Receipt Date" > RecLSalesLine."Requested Delivery Date") then
-                    //         RecLPurchLine.Validate("Requested Receipt Date", RecLSalesLine."Requested Delivery Date");
-                    RecLPurchLine.MODIFY();
+                    if (RecLPurchLine."Date from Req. Delivery Date" = false) then
+                        if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                          (RecLPurchLine."Requested Receipt Date" > RecLSalesLine."Requested Delivery Date") then
+                            RecLPurchLine.Validate("Requested Receipt Date", RecLSalesLine."Requested Delivery Date");
+                RecLPurchLine.MODIFY();
                 RecLSalesLine.CALCFIELDS("Reserved Quantity");
                 if ((RecLSalesLine."Outstanding Quantity" - RecLSalesLine."Reserved Quantity") <= RecLSalesLine."Qty to be Ordered") then
                     DecLQtyToReserve := RecLSalesLine."Outstanding Quantity" - RecLSalesLine."Reserved Quantity"
@@ -1073,57 +1070,56 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecLPurchLine.SetRange("Document Type", RecLPurchLine."Document Type"::Order);
         RecLPurchLine.SetRange("Document No.", CodPDocNo);
         RecLPurchLine.SetRange(Type, RecLPurchLine.Type::Item);
-        //TODO: table assembly line not migrated yet
-        // RecGKitSalesLine.SetCurrentKey("Vendor No.", "No.", "Location Code");
-        // RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
-        // RecGKitSalesLine.SetRange("Vendor No.", RecGPurchHeader."Buy-from Vendor No.");
-        // RecGKitSalesLine.SetRange("Selected for Order", true);
-        // RecGKitSalesLine.SetRange("Internal field", true);
+        RecGKitSalesLine.SetCurrentKey("Vendor No.", "No.", "Location Code");
+        RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
+        RecGKitSalesLine.SetRange("Vendor No.", RecGPurchHeader."Buy-from Vendor No.");
+        RecGKitSalesLine.SetRange("Selected for Order", true);
+        RecGKitSalesLine.SetRange("Internal field", true);
 
         if RecLPurchLine.FindSet() then
-            // repeat
-            //     RecGKitSalesLine.SetRange("No.", RecLPurchLine."No.");
-            //     if not RecGKitSalesLine.IsEmpty then begin
-            //         RecGKitSalesLine.FindSet();
-            //         repeat
-            //             RecLPurchLine.Validate(Quantity, RecLPurchLine.Quantity + RecGKitSalesLine."Qty to be Ordered");
-            //             if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
-            //                 RecLPurchLine.Validate("Date from Req. Delivery Date", true);
-            //                 if (RecLPurchLine."Requested Receipt Date" = 0D) or
-            //                   (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Receipt Date") then
-            //                     RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Receipt Date");
-            //             end else
-            //                 if (RecLPurchLine."Date from Req. Delivery Date" = false) then
-            //                     if (RecLPurchLine."Requested Receipt Date" = 0D) or
-            //                       (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
-            //                         RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
-            //             RecLPurchLine.MODIFY;
-            //             RecGKitSalesLine.CALCFIELDS("Reserved Quantity");
-            //             if ((RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity") <=
-            //                      RecGKitSalesLine."Qty to be Ordered") then
-            //                 DecLQtyToReserve := RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity"
-            //             else
-            //                 DecLQtyToReserve := RecGKitSalesLine."Qty to be Ordered";
+            repeat
+                RecGKitSalesLine.SetRange("No.", RecLPurchLine."No.");
+                if not RecGKitSalesLine.IsEmpty then begin
+                    RecGKitSalesLine.FindSet();
+                    repeat
+                        RecLPurchLine.Validate(Quantity, RecLPurchLine.Quantity + RecGKitSalesLine."Qty to be Ordered");
+                        if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
+                            RecLPurchLine.Validate("Date from Req. Delivery Date", true);
+                            if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                              (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Receipt Date") then
+                                RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Receipt Date");
+                        end else
+                            if (RecLPurchLine."Date from Req. Delivery Date" = false) then
+                                if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                                  (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
+                                    RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
+                        RecLPurchLine.MODIFY();
+                        RecGKitSalesLine.CALCFIELDS("Reserved Quantity");
+                        if ((RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity") <=
+                                 RecGKitSalesLine."Qty to be Ordered") then
+                            DecLQtyToReserve := RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity"
+                        else
+                            DecLQtyToReserve := RecGKitSalesLine."Qty to be Ordered";
 
-            //             DecLQtyToReserveBase := DecLQtyToReserve * RecGKitSalesLine."Qty. per Unit of Measure";
-            //             RecGKitSalesLine."Selected for Order" := false;
-            //             RecGKitSalesLine.MODIFY;
-            //             Clear(Reservation);
-            //             Reservation.SetAssemblyLine(RecGKitSalesLine);
-            //             Reservation.GetReservEntry(RecLReservEntry);
-            //             ReservMgt.SetAssemblyLine(RecGKitSalesLine);
-            //             if RecLPurchLine."Requested Receipt Date" <> 0D then
-            //                 ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Requested Receipt Date")
-            //             else
-            //                 if RecLPurchLine."Expected Receipt Date" <> 0D then
-            //                     ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Expected Receipt Date")
-            //                 else
-            //                     ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLReservEntry."Shipment Date");
-            //             if RecAssemlyOrder.Get(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.") then;
-            //             FctMAJPreparationType(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.", RecAssemlyOrder."Document Line No.");
-            //         until RecGKitSalesLine.NEXT = 0;
-            //     end;
-            // until RecLPurchLine.NEXT = 0;
+                        DecLQtyToReserveBase := DecLQtyToReserve * RecGKitSalesLine."Qty. per Unit of Measure";
+                        RecGKitSalesLine."Selected for Order" := false;
+                        RecGKitSalesLine.MODIFY;
+                        Clear(Reservation);
+                        // Reservation.SetAssemblyLine(RecGKitSalesLine);
+                        // Reservation.GetReservEntry(RecLReservEntry);
+                        // ReservMgt.SetAssemblyLine(RecGKitSalesLine);
+                        if RecLPurchLine."Requested Receipt Date" <> 0D then
+                            ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Requested Receipt Date")
+                        else
+                            if RecLPurchLine."Expected Receipt Date" <> 0D then
+                                ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Expected Receipt Date")
+                            else
+                                ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLReservEntry."Shipment Date");
+                        if RecAssemlyOrder.Get(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.") then;
+                        FctMAJPreparationType(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.", RecAssemlyOrder."Document Line No.");
+                    until RecGKitSalesLine.NEXT() = 0;
+                end;
+            until RecLPurchLine.NEXT() = 0;
         CodLxItemNo := '';
         CodLxLocationCode := '';
         RecGKitSalesLine.SetRange("No.");
@@ -1145,42 +1141,42 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                     RecLPurchLine.Validate(Type, RecLPurchLine.Type::Item);
                     RecLPurchLine.Validate("No.", RecGKitSalesLine."No.");
                     RecLPurchLine.Validate("Location Code", RecGKitSalesLine."Location Code");
-                    // if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
-                    //     RecLPurchLine.Validate("Date from Req. Delivery Date", true);
-                    //     if (RecLPurchLine."Requested Receipt Date" = 0D) or
-                    //       (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Receipt Date") then
-                    //         RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Receipt Date");
-                    // end else
-                    //     if (RecLPurchLine."Date from Req. Delivery Date" = false) then
-                    //         if (RecLPurchLine."Requested Receipt Date" = 0D) or
-                    //           (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
-                    //             RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
+                    if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
+                        RecLPurchLine.Validate("Date from Req. Delivery Date", true);
+                        if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                          (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Receipt Date") then
+                            RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Receipt Date");
+                    end else
+                        if (RecLPurchLine."Date from Req. Delivery Date" = false) then
+                            if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                              (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
+                                RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
 
                     RecLPurchLine.Insert();
                 end;
-                //RecLPurchLine.Validate(Quantity, RecLPurchLine.Quantity + RecGKitSalesLine."Qty to be Ordered");
-                // if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
-                //     RecLPurchLine.Validate("Date from Req. Delivery Date", true);
-                //     if (RecLPurchLine."Requested Receipt Date" = 0D) or
-                //       (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Receipt Date") then
-                //         RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Receipt Date");
-                // end else
-                //     if (RecLPurchLine."Date from Req. Delivery Date" = false) then
-                //         if (RecLPurchLine."Requested Receipt Date" = 0D) or
-                //           (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
-                //             RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
+                RecLPurchLine.Validate(Quantity, RecLPurchLine.Quantity + RecGKitSalesLine."Qty to be Ordered");
+                if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
+                    RecLPurchLine.Validate("Date from Req. Delivery Date", true);
+                    if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                      (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Receipt Date") then
+                        RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Receipt Date");
+                end else
+                    if (RecLPurchLine."Date from Req. Delivery Date" = false) then
+                        if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                          (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
+                            RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
                 RecLPurchLine.MODIFY();
                 RecGKitSalesLine.CALCFIELDS("Reserved Quantity");
-                // if ((RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity") <=
-                //          RecGKitSalesLine."Qty to be Ordered") then
-                //     DecLQtyToReserve := RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity"
-                // else
-                //     DecLQtyToReserve := RecGKitSalesLine."Qty to be Ordered";
+                if ((RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity") <=
+                         RecGKitSalesLine."Qty to be Ordered") then
+                    DecLQtyToReserve := RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity"
+                else
+                    DecLQtyToReserve := RecGKitSalesLine."Qty to be Ordered";
 
-                // DecLQtyToReserveBase := DecLQtyToReserve * RecGKitSalesLine."Qty. per Unit of Measure";
-                // RecGKitSalesLine.Validate("Selected for Order", false);
-                // RecGKitSalesLine.MODIFY;
-                // Clear(Reservation);
+                DecLQtyToReserveBase := DecLQtyToReserve * RecGKitSalesLine."Qty. per Unit of Measure";
+                RecGKitSalesLine.Validate("Selected for Order", false);
+                RecGKitSalesLine.MODIFY();
+                Clear(Reservation);
                 // Reservation.SetAssemblyLine(RecGKitSalesLine);
                 // Reservation.GetReservEntry(RecLReservEntry);
                 // ReservMgt.SetAssemblyLine(RecGKitSalesLine);
@@ -1211,95 +1207,95 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         DecLQtyToReserve: Decimal;
         DecLQtyToReserveBase: Decimal;
     begin
-        // RecGKitSalesLine.SetCurrentKey("Vendor No.", "No.", "Location Code");
-        // RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
-        // RecGKitSalesLine.SetRange("Selected for Order", true);
-        // if RecPSalesLine.GETFILTER("Vendor No.") <> '' then
-        //     RecGKitSalesLine.SetFilter("Vendor No.", RecPSalesLine.GETFILTER("Vendor No."))
-        // else
-        //     RecGKitSalesLine.SetFilter("Vendor No.", '<>%1', '');
-        // RecGKitSalesLine.SetRange("Internal field", true);
-        // CodLxVendorNo := '';
-        // CodLxItemNo := '';
-        // CodLxLocationCode := '';
-        // if not RecGKitSalesLine.IsEmpty then begin
-        //     RecGKitSalesLine.FindSet;
-        //     repeat
-        //         if (RecGKitSalesLine."Vendor No." <> CodLxVendorNo) then begin
-        //             FctCreatePurchaseOrderHeader(RecGKitSalesLine."Vendor No.");
-        //             IntGCountOrder += 1;
-        //         end;
-        //         if (RecGKitSalesLine."Vendor No." <> CodLxVendorNo) or
-        //            (RecGKitSalesLine."No." <> CodLxItemNo) or
-        //            (RecGKitSalesLine."Location Code" <> CodLxLocationCode) then begin
-        //             RecLPurchLine.Init;
-        //             RecLPurchLine."Document Type" := RecGPurchHeader."Document Type";
-        //             RecLPurchLine."Document No." := RecGPurchHeader."No.";
-        //             RecLPurchLine2.SetRange("Document Type", RecLPurchLine."Document Type"::Order);
-        //             RecLPurchLine2.SetRange("Document No.", RecGPurchHeader."No.");
-        //             if RecLPurchLine2.FindLast then
-        //                 IntLLineNo := RecLPurchLine2."Line No." + 10000
-        //             else
-        //                 IntLLineNo := 10000;
-        //             RecLPurchLine."Line No." := IntLLineNo;
-        //             RecLPurchLine.Validate(Type, RecLPurchLine.Type::Item);
-        //             RecLPurchLine.Validate("No.", RecGKitSalesLine."No.");
-        //             RecLPurchLine.Validate("Location Code", RecGKitSalesLine."Location Code");
-        //             if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
-        //                 RecLPurchLine.Validate("Date from Req. Delivery Date", true);
-        //                 if (RecLPurchLine."Requested Receipt Date" = 0D) or
-        //                   (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Receipt Date") then
-        //                     RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Receipt Date");
-        //             end else
-        //                 if (RecLPurchLine."Date from Req. Delivery Date" = false) then
-        //                     if (RecLPurchLine."Requested Receipt Date" = 0D) or
-        //                       (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
-        //                         RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
+        RecGKitSalesLine.SetCurrentKey("Vendor No.", "No.", "Location Code");
+        RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
+        RecGKitSalesLine.SetRange("Selected for Order", true);
+        if RecPSalesLine.GETFILTER("Vendor No.") <> '' then
+            RecGKitSalesLine.SetFilter("Vendor No.", RecPSalesLine.GETFILTER("Vendor No."))
+        else
+            RecGKitSalesLine.SetFilter("Vendor No.", '<>%1', '');
+        RecGKitSalesLine.SetRange("Internal field", true);
+        CodLxVendorNo := '';
+        CodLxItemNo := '';
+        CodLxLocationCode := '';
+        if not RecGKitSalesLine.IsEmpty then begin
+            RecGKitSalesLine.FindSet;
+            repeat
+                if (RecGKitSalesLine."Vendor No." <> CodLxVendorNo) then begin
+                    FctCreatePurchaseOrderHeader(RecGKitSalesLine."Vendor No.");
+                    IntGCountOrder += 1;
+                end;
+                if (RecGKitSalesLine."Vendor No." <> CodLxVendorNo) or
+                   (RecGKitSalesLine."No." <> CodLxItemNo) or
+                   (RecGKitSalesLine."Location Code" <> CodLxLocationCode) then begin
+                    RecLPurchLine.Init;
+                    RecLPurchLine."Document Type" := RecGPurchHeader."Document Type";
+                    RecLPurchLine."Document No." := RecGPurchHeader."No.";
+                    RecLPurchLine2.SetRange("Document Type", RecLPurchLine."Document Type"::Order);
+                    RecLPurchLine2.SetRange("Document No.", RecGPurchHeader."No.");
+                    if RecLPurchLine2.FindLast then
+                        IntLLineNo := RecLPurchLine2."Line No." + 10000
+                    else
+                        IntLLineNo := 10000;
+                    RecLPurchLine."Line No." := IntLLineNo;
+                    RecLPurchLine.Validate(Type, RecLPurchLine.Type::Item);
+                    RecLPurchLine.Validate("No.", RecGKitSalesLine."No.");
+                    RecLPurchLine.Validate("Location Code", RecGKitSalesLine."Location Code");
+                    if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
+                        RecLPurchLine.Validate("Date from Req. Delivery Date", true);
+                        if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                          (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Receipt Date") then
+                            RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Receipt Date");
+                    end else
+                        if (RecLPurchLine."Date from Req. Delivery Date" = false) then
+                            if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                              (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
+                                RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
 
-        //             RecLPurchLine.Insert;
-        //         end;
-        //         RecLPurchLine.Validate(Quantity, RecLPurchLine.Quantity + RecGKitSalesLine."Qty to be Ordered");
-        //         if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
-        //             RecLPurchLine.Validate("Date from Req. Delivery Date", true);
-        //             if (RecLPurchLine."Requested Receipt Date" = 0D) or
-        //               (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Receipt Date") then
-        //                 RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Receipt Date");
-        //         end else
-        //             if (RecLPurchLine."Date from Req. Delivery Date" = false) then
-        //                 if (RecLPurchLine."Requested Receipt Date" = 0D) or
-        //                   (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
-        //                     RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
-        //         RecLPurchLine.MODIFY;
-        //         RecGKitSalesLine.CALCFIELDS("Reserved Quantity");
+                    RecLPurchLine.Insert;
+                end;
+                RecLPurchLine.Validate(Quantity, RecLPurchLine.Quantity + RecGKitSalesLine."Qty to be Ordered");
+                if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
+                    RecLPurchLine.Validate("Date from Req. Delivery Date", true);
+                    if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                      (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Receipt Date") then
+                        RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Receipt Date");
+                end else
+                    if (RecLPurchLine."Date from Req. Delivery Date" = false) then
+                        if (RecLPurchLine."Requested Receipt Date" = 0D) or
+                          (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
+                            RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
+                RecLPurchLine.MODIFY;
+                RecGKitSalesLine.CALCFIELDS("Reserved Quantity");
 
-        //         if ((RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity") <=
-        //                  RecGKitSalesLine."Qty to be Ordered") then
-        //             DecLQtyToReserve := RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity"
-        //         else
-        //             DecLQtyToReserve := RecGKitSalesLine."Qty to be Ordered";
+                if ((RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity") <=
+                         RecGKitSalesLine."Qty to be Ordered") then
+                    DecLQtyToReserve := RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity"
+                else
+                    DecLQtyToReserve := RecGKitSalesLine."Qty to be Ordered";
 
-        //         DecLQtyToReserveBase := DecLQtyToReserve * RecGKitSalesLine."Qty. per Unit of Measure";
+                DecLQtyToReserveBase := DecLQtyToReserve * RecGKitSalesLine."Qty. per Unit of Measure";
 
-        //         RecGKitSalesLine."Selected for Order" := false;
-        //         RecGKitSalesLine.MODIFY;
-        //         Clear(Reservation);
-        //         Reservation.SetAssemblyLine(RecGKitSalesLine);
-        //         Reservation.GetReservEntry(RecLReservEntry);
-        //         ReservMgt.SetAssemblyLine(RecGKitSalesLine);
-        //         if RecLPurchLine."Requested Receipt Date" <> 0D then
-        //             ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Requested Receipt Date")
-        //         else
-        //             if RecLPurchLine."Expected Receipt Date" <> 0D then
-        //                 ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Expected Receipt Date")
-        //             else
-        //                 ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLReservEntry."Shipment Date");
-        //         RecAssemlyOrder.Get(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.");
-        //         FctMAJPreparationType(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.", RecAssemlyOrder."Document Line No.");
-        //         CodLxItemNo := RecGKitSalesLine."No.";
-        //         CodLxLocationCode := RecGKitSalesLine."Location Code";
-        //         CodLxVendorNo := RecGKitSalesLine."Vendor No.";
-        //     until RecGKitSalesLine.NEXT = 0;
-        //end;
+                RecGKitSalesLine."Selected for Order" := false;
+                RecGKitSalesLine.MODIFY();
+                Clear(Reservation);
+                // Reservation.SetAssemblyLine(RecGKitSalesLine);
+                // Reservation.GetReservEntry(RecLReservEntry);
+                // ReservMgt.SetAssemblyLine(RecGKitSalesLine);
+                if RecLPurchLine."Requested Receipt Date" <> 0D then
+                    ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Requested Receipt Date")
+                else
+                    if RecLPurchLine."Expected Receipt Date" <> 0D then
+                        ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Expected Receipt Date")
+                    else
+                        ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLReservEntry."Shipment Date");
+                RecAssemlyOrder.Get(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.");
+                FctMAJPreparationType(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.", RecAssemlyOrder."Document Line No.");
+                CodLxItemNo := RecGKitSalesLine."No.";
+                CodLxLocationCode := RecGKitSalesLine."Location Code";
+                CodLxVendorNo := RecGKitSalesLine."Vendor No.";
+            until RecGKitSalesLine.NEXT() = 0;
+        end;
     end;
 
     procedure FctMAJPreparationType(OptPDocType: Option Quote,"Order",Invoice,"Credit Memo","Blanket Order","Return Order"; CodPDocNo: Code[20]; IntPLineNo: Integer)
@@ -1438,9 +1434,9 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             if not RecLAssemblyLine.IsEmpty then begin
                 RecLAssemblyLine.FindSet();
                 repeat
-                // if BooGResaAssFTA then
-                //     RecLAssemblyLine.FctSetBooResaAssFTA(true);
-                // RecLAssemblyLine.FctAutoReserveFTA;
+                    if BooGResaAssFTA then
+                        RecLAssemblyLine.FctSetBooResaAssFTA(true);
+                    RecLAssemblyLine.FctAutoReserveFTA();
                 until RecLAssemblyLine.NEXT() = 0;
             end;
         end;
@@ -1530,7 +1526,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             end;
     end;
 
-    local procedure UpdatePurchaseBasePrice()
+    procedure UpdatePurchaseBasePrice()
     var
         Item: Record Item;
     begin
@@ -1572,7 +1568,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         ReservEngineMgt: Codeunit "Reservation Engine Mgt.";
         ReservEntry: Record "Reservation Entry";
         ReserveSalesLine: Codeunit "Sales Line-Reserve";
-        //  FrmTransitoryItem : Page 50005;     
+        FrmTransitoryItem: Page 50005;
         "Item Ledger Entry": Record "Item Ledger Entry";
 }
 

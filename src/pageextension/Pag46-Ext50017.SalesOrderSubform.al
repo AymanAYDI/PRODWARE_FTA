@@ -206,16 +206,13 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
                 end;
             }
         }
-        //TODO: function FctSetBooResaFTA not found
-        // modify("Reserve")
-        // {
-        //     trigger OnBeforeAction()
-        //     var
-        //         myInt: Integer;
-        //     begin
-        //         FctSetBooResaFTA(TRUE);
-        //     end;
-        // }
+        modify("Reserve")
+        {
+            trigger OnBeforeAction()
+            begin
+                rec.FctSetBooResaFTA(true);
+            end;
+        }
     }
     var
         SalesInfoPaneMgt: codeunit "Sales Info-Pane Management";
@@ -229,13 +226,22 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
         PrepareOnlyFilter();
     end;
 
-    LOCAL PROCEDURE PrepareOnlyFilter();
-    VAR
+    local procedure PrepareOnlyFilter();
+    var
         UserSetup: Record "User Setup";
-    BEGIN
-        IF UserSetup.GET(USERID) THEN
-            IF UserSetup."Prepared Only" THEN
-                rec.SETRANGE(rec.Prepare, TRUE);
-    END;
-    //TODO: i can't find event in OnAfterGetRecord
+    begin
+        if UserSetup.GET(USERID) then
+            if UserSetup."Prepared Only" then
+                rec.SETRANGE(rec.Prepare, true);
+    end;
+
+    trigger OnAfterGetRecord()
+    var
+        UserSetup: Record "User Setup";
+    begin
+        BooGOK := rec.FctctrlKitReservation(Rec);
+        PrepareEnable := true;
+        if UserSetup.GET(USERID) then
+            PrepareEnable := not UserSetup."Prepared Only";
+    end;
 }

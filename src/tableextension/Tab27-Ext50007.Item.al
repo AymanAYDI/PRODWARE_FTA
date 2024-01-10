@@ -14,6 +14,8 @@ using Microsoft.Purchases.History;
 using Microsoft.Manufacturing.ProductionBOM;
 using System.IO;
 using Microsoft.Inventory.BOM;
+using Microsoft.Foundation.UOM;
+using Microsoft.Integration.Dataverse;
 tableextension 50007 Item extends Item //27
 {
     fields
@@ -715,6 +717,30 @@ tableextension 50007 Item extends Item //27
             InventorySetup.Get();
             HasInvtSetup := true;
         end;
+    end;
+
+    procedure UpdateItemUnitGroup()
+    var
+#if not CLEAN21
+#pragma warning disable AL0432
+#endif
+        UnitGroup: Record "Unit Group";
+#if not CLEAN21
+#pragma warning restore AL0432
+#endif
+        CRMIntegrationManagement: Codeunit FTA_Functions;
+    begin
+        if CRMIntegrationManagement.IsIntegrationEnabled() then begin
+            UnitGroup.SetRange("Source Id", Rec.SystemId);
+            UnitGroup.SetRange("Source Type", UnitGroup."Source Type"::Item);
+            if UnitGroup.IsEmpty() then begin
+                UnitGroup.Init();
+                UnitGroup."Source Id" := Rec.SystemId;
+                UnitGroup."Source No." := Rec."No.";
+                UnitGroup."Source Type" := UnitGroup."Source Type"::Item;
+                UnitGroup.Insert();
+            end;
+        end
     end;
 
 

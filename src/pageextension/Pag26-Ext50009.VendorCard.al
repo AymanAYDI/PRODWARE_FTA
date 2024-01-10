@@ -63,10 +63,9 @@ pageextension 50009 VendorCard extends "Vendor Card" //26
             {
                 ApplicationArea = All;
                 ToolTip = 'Executes the Tarif transporteur action.';
-                //TODO: page 51026 not migrated yet
-                // RunObject = Page 51026;
-                // RunPageView = sorting("Shipping Agent", "Country Code", "Departement Code", "Post Code", "Pallet Nb", "Beginning Date", "Currency Code");
-                // RunPageLink = "Shipping Agent" = FIELD("No.");
+                RunObject = Page "Shipping agent prices";
+                RunPageView = sorting("Shipping Agent", "Country Code", "Departement Code", "Post Code", "Pallet Nb", "Beginning Date", "Currency Code");
+                RunPageLink = "Shipping Agent" = FIELD("No.");
             }
         }
     }

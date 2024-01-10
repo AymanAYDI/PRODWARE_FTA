@@ -1,8 +1,7 @@
 table 50005 "Work Time"
 {
-    //TODO: page 50015 Not migrated yet
-    // DrillDownPageID = 50015;
-    // LookupPageID = 50015;
+    DrillDownPageID = "Work Time";
+    LookupPageID = "Work Time";
 
     fields
     {
