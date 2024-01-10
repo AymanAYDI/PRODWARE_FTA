@@ -90,7 +90,8 @@ page 50012 "Kit Sales Lines Temp"
                     ToolTip = 'Specifies the value of the Avail. Warning field.';
                     trigger OnDrillDown()
                     begin
-                        Rec.ShowAvailabilityWarning();
+                        //Rec.ShowAvailabilityWarning();
+                        ShowAvailabilityWarning2();
                     end;
                 }
                 field(Type; Rec.Type)
@@ -413,11 +414,13 @@ page 50012 "Kit Sales Lines Temp"
                 ToolTip = 'Executes the Show Warning action.';
                 trigger OnAction()
                 begin
-                    Rec.ShowAvailabilityWarning();
+                    // Rec.ShowAvailabilityWarning();
+                    ShowAvailabilityWarning2();
                 end;
             }
         }
     }
+
 
     trigger OnAfterGetRecord()
     var
@@ -478,6 +481,26 @@ page 50012 "Kit Sales Lines Temp"
             Description := AsmHeader.Description;
         end;
         exit(STRSUBSTNO(Text001, SourceTableName, SourceFilter, Description));
+    end;
+
+
+    procedure ShowAvailabilityWarning2()
+    var
+        AssemblyHeader: Record "Assembly Header";
+        ItemCheckAvail: Codeunit "Item-Check Avail.";
+    begin
+        Rec.TestField(Type, Rec.Type::Item);
+
+        if Rec."Due Date" = 0D then begin
+            Rec.GetHeader();
+            AssemblyHeader.Get(Rec."Document Type", Rec."Document No.");
+            if AssemblyHeader."Due Date" <> 0D then
+                Rec.Validate("Due Date", AssemblyHeader."Due Date")
+            else
+                Rec.Validate("Due Date", WorkDate());
+        end;
+
+        ItemCheckAvail.AssemblyLineCheck(Rec);
     end;
 }
 

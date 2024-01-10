@@ -24,7 +24,7 @@ pageextension 50054 ItemAvailabilityLines extends "Item Availability Lines" //35
         }
         modify(PlannedOrderRcpt)
         {
-            Visible = FALSE;
+            Visible = false;
         }
     }
     procedure ShowItemLedgerEntries(NetChange: Boolean)
@@ -40,16 +40,16 @@ pageextension 50054 ItemAvailabilityLines extends "Item Availability Lines" //35
         ItemLedgerEntry.SETFILTER("Location Code", Item.GETFILTER("Location Filter"));
         ItemLedgerEntry.SETFILTER("Global Dimension 1 Code", Item.GETFILTER("Global Dimension 1 Filter"));
         ItemLedgerEntry.SETFILTER("Global Dimension 2 Code", Item.GETFILTER("Global Dimension 2 Filter"));
-        IF NetChange THEN
+        if NetChange then
             ItemLedgerEntry.SETFILTER("Posting Date", Item.GETFILTER("Date Filter"));
         PAGE.RUN(0, ItemLedgerEntry);
     end;
 
     local procedure SetItemFilter()
     begin
-        IF AmountType = AmountType::"Net Change" THEN
+        if AmountType = AmountType::"Net Change" then
             Item.SETRANGE("Date Filter", Rec."Period Start", Rec."Period End")
-        ELSE
+        else
             Item.SETRANGE("Date Filter", 0D, Rec."Period End");
     end;
 

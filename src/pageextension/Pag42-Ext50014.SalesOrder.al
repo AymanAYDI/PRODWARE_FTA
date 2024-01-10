@@ -274,7 +274,7 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
                     RecLOrder.RESET();
                     RecLOrder := Rec;
                     RecLOrder.SETRECFILTER();
-                    REPORT.RUNMODAL(50080, true, false, RecLOrder);
+                    REPORT.RUNMODAL(Report::"Sales - PROFORMA FTA", true, false, RecLOrder);
                 end;
             }
         }

@@ -44,9 +44,9 @@ pageextension 50023 "PurchaseList" extends "Purchase List"//53
     var
         "Purchase Header": Record "Purchase Header";
     begin
-        IF rec."Order Type" = rec."Order Type"::Transport THEN
-            BooGTransportType := TRUE;
-    END;
+        if rec."Order Type" = rec."Order Type"::Transport then
+            BooGTransportType := true;
+    end;
 
     var
 

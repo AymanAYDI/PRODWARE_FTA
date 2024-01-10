@@ -68,7 +68,7 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
         }
         modify(Control53)
         {
-            Visible = FALSE;
+            Visible = false;
         }
     }
     actions

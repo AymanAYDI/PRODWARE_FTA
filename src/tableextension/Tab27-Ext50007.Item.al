@@ -597,7 +597,7 @@ tableextension 50007 Item extends Item //27
             CduLTemplateMgt.UpdateRecord(RecLTemplateHeader, RecRef);
         end;
         if "Item Base" = "Item Base"::"Transitory Kit" then begin
-            GetInvtSetup;
+            GetInvtSetup();
             RecRef.GetTable(Rec);
             InvtSetup.TESTFIELD("Template Item Trans. Kit Code");
             RecLTemplateHeader.Get(InvtSetup."Template Item Trans. Kit Code");

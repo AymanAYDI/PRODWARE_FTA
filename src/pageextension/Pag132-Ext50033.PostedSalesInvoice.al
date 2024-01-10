@@ -72,34 +72,34 @@ pageextension 50033 "PostedSalesInvoice" extends "Posted Sales Invoice" //132
                         PgeLInvoicePurchHeader: Page "Posted Purchase Invoice";
                         TextCdeTransport001: Label 'FRA=Il n''y a pas de Commande d''achat Transport.';
                         "Sales Invoice Header": Record "Sales Invoice Header";
-                    BEGIN
+                    begin
 
 
-                        IF rec."Shipping Order No." <> '' THEN BEGIN
+                        if rec."Shipping Order No." <> '' then begin
                             RecLPurchHeader.RESET();
                             RecLPurchHeader.SETRANGE("Document Type", RecLPurchHeader."Document Type"::Order);
                             RecLPurchHeader.SETRANGE("No.", rec."Shipping Order No.");
-                            IF RecLPurchHeader.FINDFIRST() THEN BEGIN //Commande achat
+                            if RecLPurchHeader.FINDFIRST() then begin //Commande achat
                                 RecLPurchHeader.FILTERGROUP(2);
                                 PgeLPurchaseOrder.SETTABLEVIEW(RecLPurchHeader);
                                 PgeLPurchaseOrder.RUNMODAL();
-                            END
-                            ELSE BEGIN //Facture achat
+                            end
+                            else begin //Facture achat
                                 RecLInvoicePurchHeader.RESET();
                                 RecLInvoicePurchHeader.SETCURRENTKEY("Order No.");
                                 RecLInvoicePurchHeader.SETRANGE("Order No.", rec."Shipping Order No.");
-                                IF RecLInvoicePurchHeader.FINDFIRST() THEN BEGIN
+                                if RecLInvoicePurchHeader.FINDFIRST() then begin
                                     RecLInvoicePurchHeader.FILTERGROUP(2);
                                     PgeLInvoicePurchHeader.SETTABLEVIEW(RecLInvoicePurchHeader);
                                     PgeLInvoicePurchHeader.RUNMODAL();
-                                END
-                                ELSE
+                                end
+                                else
                                     ERROR(TextCdeTransport001);
-                            END;
-                        END
-                        ELSE
+                            end;
+                        end
+                        else
                             ERROR(TextCdeTransport001);
-                    END;
+                    end;
                 }
 
             }

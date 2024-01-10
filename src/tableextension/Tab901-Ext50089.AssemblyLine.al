@@ -37,18 +37,15 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
             var
                 CstL001: Label '%1 impossible';
             begin
-                CASE "Kit Action" OF
+                case "Kit Action" of
                     "Kit Action"::Assembly:
-                        BEGIN
-                            IF "Quantity per" <> 0 THEN
-                                ERROR(CstL001, FORMAT("Kit Action"));
-                        END;
+
+                        if "Quantity per" <> 0 then
+                            ERROR(CstL001, FORMAT("Kit Action"));
                     "Kit Action"::Disassembly:
-                        BEGIN
-                            IF "x Quantity per" <> 0 THEN
-                                ERROR(CstL001, FORMAT("Kit Action"));
-                        END;
-                END;
+                        if "x Quantity per" <> 0 then
+                            ERROR(CstL001, FORMAT("Kit Action"));
+                end;
             end;
         }
         field(50003; "x Quantity per"; Decimal)
@@ -99,7 +96,7 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         {
 
             FieldClass = FlowField;
-            CalcFormula = Exist("BOM Component" WHERE("Parent Item No." = FIELD("No.")));
+            CalcFormula = exist("BOM Component" where("Parent Item No." = field("No.")));
             Caption = 'Kit';
             Description = 'FTA1.00';
             Editable = false;
@@ -108,8 +105,8 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         field(50010; "Sell-to Customer No."; Code[20])
         {
             FieldClass = FlowField;
-            CalcFormula = Lookup("Sales Line"."Sell-to Customer No." WHERE("Document Type" = FIELD("Document Type"),
-                                                                           "Document No." = FIELD("Document No.")));
+            CalcFormula = lookup("Sales Line"."Sell-to Customer No." where("Document Type" = field("Document Type"),
+                                                                           "Document No." = field("Document No.")));
             Caption = 'Sell-to Customer No.';
             Description = 'FTA1.00';
             Editable = false;
@@ -118,7 +115,7 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         field(50011; "Sell-to Customer Name"; Text[50])
         {
             FieldClass = FlowField;
-            CalcFormula = Lookup(Customer.Name WHERE("No." = FIELD("Sell-to Customer No.")));
+            CalcFormula = lookup(Customer.Name where("No." = field("Sell-to Customer No.")));
             Caption = 'Sell-to Customer Name';
             Description = 'FTA1.00';
             Editable = false;
@@ -131,11 +128,11 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
 
             trigger OnValidate()
             begin
-                IF "Selected for Order" AND ("Qty to be Ordered" = 0) THEN BEGIN
+                if "Selected for Order" and ("Qty to be Ordered" = 0) then begin
                     CALCFIELDS("Reserved Quantity");
                     "Qty to be Ordered" := "Remaining Quantity" - "Reserved Quantity";
-                END;
-                IF NOT "Selected for Order" THEN
+                end;
+                if not "Selected for Order" then
                     "Qty to be Ordered" := 0;
             end;
         }
@@ -149,11 +146,11 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
             var
                 CstL001: Label 'The quantity to be ordered %1 is greater to the need %2';
             begin
-                IF ("Qty to be Ordered" <> 0) THEN BEGIN
+                if ("Qty to be Ordered" <> 0) then begin
                     CALCFIELDS("Reserved Quantity");
-                    IF "Qty to be Ordered" > "Remaining Quantity" - "Reserved Quantity" THEN;
+                    if "Qty to be Ordered" > "Remaining Quantity" - "Reserved Quantity" then;
                     //ERROR(CstL001,"Qty to be Ordered","Outstanding Quantity" - "Reserved Quantity");
-                END;
+                end;
             end;
         }
         field(50014; "Vendor No."; Code[20])
@@ -165,8 +162,8 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         field(50016; "Requested Delivery Date"; Date)
         {
             FieldClass = FlowField;
-            CalcFormula = Lookup("Sales Line"."Requested Delivery Date" WHERE("Document Type" = FIELD("Document Type"),
-                                                                               "Document No." = FIELD("Document No.")));
+            CalcFormula = lookup("Sales Line"."Requested Delivery Date" where("Document Type" = field("Document Type"),
+                                                                               "Document No." = field("Document No.")));
             Caption = 'Requested Delivery Date';
             Description = 'FTA1.00';
             Editable = false;
@@ -175,8 +172,8 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         field(50017; "Promised Delivery Date"; Date)
         {
             FieldClass = FlowField;
-            CalcFormula = Lookup("Sales Line"."Promised Delivery Date" WHERE("Document Type" = FIELD("Document Type"),
-                                                                             "Document No." = FIELD("Document No.")));
+            CalcFormula = lookup("Sales Line"."Promised Delivery Date" where("Document Type" = field("Document Type"),
+                                                                             "Document No." = field("Document No.")));
             Caption = 'Promised Delivery Date';
             Description = 'FTA1.00';
             Editable = false;
@@ -197,7 +194,7 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         field(50024; "Inventory Value Zero"; Boolean)
         {
             FieldClass = FlowField;
-            CalcFormula = Lookup(Item."Inventory Value Zero" WHERE("No." = FIELD("No.")));
+            CalcFormula = lookup(Item."Inventory Value Zero" where("No." = field("No.")));
             Caption = 'enu=Inventory Value Zero;fra=Exclure évaluation stock';
             Description = 'FTA1.00';
 
@@ -205,7 +202,7 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         field(50030; "Item No. 2"; Code[20])
         {
             FieldClass = FlowField;
-            CalcFormula = Lookup(Item."No. 2" WHERE("No." = FIELD("No.")));
+            CalcFormula = lookup(Item."No. 2" where("No." = field("No.")));
             Caption = 'Item No. 2';
             Description = 'FTA1.00';
             Editable = false;
@@ -221,8 +218,8 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         {
 
             FieldClass = FlowField;
-            CalcFormula = Lookup("Sales Line"."Preparation Type" WHERE("Document Type" = FIELD("Document Type"),
-                                                                      "Document No." = FIELD("Document No.")));
+            CalcFormula = lookup("Sales Line"."Preparation Type" where("Document Type" = field("Document Type"),
+                                                                      "Document No." = field("Document No.")));
             Caption = 'Preparation Type';
             Description = 'FTA1.00';
 
@@ -245,14 +242,14 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
             AccessByPermission = TableData "Item Substitution" = R;
             Caption = 'Originally Ordered No.';
             Description = 'FTA1.02';
-            TableRelation = IF (Type = CONST(Item)) Item;
+            TableRelation = if (Type = const(Item)) Item;
         }
         field(50044; "Originally Ordered Var. Code"; Code[10])
         {
             AccessByPermission = TableData "Item Substitution" = R;
             Caption = 'Originally Ordered Var. Code';
             Description = 'FTA1.02';
-            TableRelation = IF (Type = CONST(Item)) "Item Variant".Code WHERE("Item No." = FIELD("Originally Ordered No."));
+            TableRelation = if (Type = const(Item)) "Item Variant".Code where("Item No." = field("Originally Ordered No."));
         }
         field(50045; "Level  NO."; integer)
 
@@ -293,26 +290,26 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
 
     procedure FctSelectRecForOrder(var RecPKitSalesLine: Record "901")
     begin
-        WITH RecPKitSalesLine DO BEGIN
-            RESET;
+        with RecPKitSalesLine do begin
+            RESET();
             SETCURRENTKEY("Document Type", "Document No.", Type, "Quantity per");
             SETFILTER("Document Type", '%1', "Document Type"::Order);
             SETRANGE(Type, Type::Item);
             SETFILTER("Quantity per", '<>0');
 
-            IF FINDSET THEN
-                REPEAT
+            if FINDSET then
+                repeat
                     CALCFIELDS("Reserved Qty. (Base)");
-                    IF "Remaining Quantity (Base)" > "Reserved Qty. (Base)" THEN BEGIN
-                        "Internal field" := TRUE;
-                        IF ("Qty to be Ordered" = 0) AND "Selected for Order" THEN
-                            VALIDATE("Selected for Order", TRUE);
-                    END ELSE
-                        "Internal field" := FALSE;
+                    if "Remaining Quantity (Base)" > "Reserved Qty. (Base)" then begin
+                        "Internal field" := true;
+                        if ("Qty to be Ordered" = 0) and "Selected for Order" then
+                            VALIDATE("Selected for Order", true);
+                    end else
+                        "Internal field" := false;
                     MODIFY();
-                UNTIL NEXT = 0;
-            SETRANGE("Internal field", TRUE);
-        END;
+                until NEXT = 0;
+            SETRANGE("Internal field", true);
+        end;
     end;
 
     procedure FCtAutoReserveFTA()
@@ -322,63 +319,54 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         Text001: Label 'Automatic reservation is not possible.\Do you want to reserve items manually?';
     // todo a verifier
     begin
-        IF Type <> Type::Item THEN
-            EXIT;
+        if Type <> Type::Item then
+            exit;
 
         TESTFIELD("No.");
 
         //IF Reserve <> Reserve::Always THEN
         //  EXIT;
 
-        IF "Remaining Quantity (Base)" <> 0 THEN BEGIN
-            IF "Quantity per" <> 0 THEN BEGIN
+        if "Remaining Quantity (Base)" <> 0 then begin
+            if "Quantity per" <> 0 then
                 TESTFIELD("Due Date");
 
-                // ReservMgt.SetAssemblyLine(Rec);
-
-
-                // ReservMgt.FctSetBooResaAssFTA(TRUE);  
-                // TODO deux fonction a trouver
-                //verifuir reservMGT
-
-
-                ReservMgt.AutoReserve(FullAutoReservation, '', "Due Date", "Remaining Quantity", "Remaining Quantity (Base)");
-                FIND;
-                IF NOT FullAutoReservation AND (CurrFieldNo <> 0) THEN
-                    IF CONFIRM(Text001, TRUE) THEN BEGIN
-                        COMMIT();
-                        ShowReservation();
-                        FIND();
-                    END;
-            END;
-        END;
-    end;
-
-    local procedure "------support optimisation ---------"()
-    begin
+            ReservMgt.SetAssemblyLine(Rec);
+            // ReservMgt.FctSetBooResaAssFTA(TRUE);  
+            // TODO deux fonction a trouver
+            //verifuir reservMGT
+            ReservMgt.AutoReserve(FullAutoReservation, '', "Due Date", "Remaining Quantity", "Remaining Quantity (Base)");
+            FIND;
+            if not FullAutoReservation and (CurrFieldNo <> 0) then
+                if CONFIRM(Text001, true) then begin
+                    COMMIT();
+                    ShowReservation();
+                    FIND();
+                end;
+        end;
     end;
 
     procedure FctSelectRecForOrder2(var recKitLine: Record "901")
     begin
-        WITH recKitLine DO BEGIN
+        with recKitLine do begin
             SETCURRENTKEY("Document Type", "Document No.", Type, "Quantity per");
             SETFILTER("Document Type", '%1', "Document Type"::Order);
             SETRANGE(Type, Type::Item);
             SETFILTER("Quantity per", '<>0');
             SETFILTER("Remaining Quantity", '<>0');
-            IF FINDFIRST THEN
-                REPEAT
+            if FINDFIRST then
+                repeat
                     CALCFIELDS("Reserved Qty. (Base)");
-                    IF "Remaining Quantity (Base)" > "Reserved Qty. (Base)" THEN BEGIN
-                        "Internal field" := TRUE;
-                        IF ("Qty to be Ordered" = 0) AND "Selected for Order" THEN
-                            VALIDATE("Selected for Order", TRUE);
-                    END ELSE
-                        "Internal field" := FALSE;
+                    if "Remaining Quantity (Base)" > "Reserved Qty. (Base)" then begin
+                        "Internal field" := true;
+                        if ("Qty to be Ordered" = 0) and "Selected for Order" then
+                            VALIDATE("Selected for Order", true);
+                    end else
+                        "Internal field" := false;
                     MODIFY;
-                UNTIL NEXT = 0;
-            SETRANGE("Internal field", TRUE);
-        END;
+                until NEXT = 0;
+            SETRANGE("Internal field", true);
+        end;
     end;
 
     procedure ExplodeAndReserveAssemblyList()
@@ -411,11 +399,11 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
     trigger OnAfterModify()
     begin
         IntGNumber := FIELDNO("Internal field");
-        IF (IntGNumber <> 50031) AND
-           (IntGNumber <> 50013) AND
-           (IntGNumber <> 50014) THEN BEGIN
+        if (IntGNumber <> 50031) and
+           (IntGNumber <> 50013) and
+           (IntGNumber <> 50014) then begin
 
-        END;
+        end;
 
     end;
 
@@ -423,7 +411,7 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         "**FTA1.00": Integer;
         IntGNumber: Integer;
         "--FTA": Integer;
-        RecLItem: Record "27";
+        RecLItem: Record Item;
         RecLProductionBOMLine: Record "90";
         BoolFirstRead: Boolean;
         DecLAvailibityNoReserved: Decimal;

@@ -2,6 +2,7 @@ namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
 using Microsoft.Purchases.Vendor;
+using Microsoft.Inventory.Item;
 page 50007 "Assignment of the remainders"
 {
     // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -177,28 +178,28 @@ page 50007 "Assignment of the remainders"
                     CurrPage.KitLines.PAGE.FctShowDocKit();
                 end;
             }
-            // action("Generate Purchase Order") //TODO require report 50005
-            // {
-            //     Caption = 'Generate Purchase Order';
-            //     Image = Purchasing;
-            //     Promoted = true;
-            //     PromotedCategory = Process;
+            action("Generate Purchase Order")
+            {
+                Caption = 'Generate Purchase Order';
+                Image = Purchasing;
+                Promoted = true;
+                PromotedCategory = Process;
 
-            //     trigger OnAction()
-            //     var
-            //         RecPSalesLine: Record "Sales Line";
-            //         RecLItem: Record "Item";
-            //         RptPGeneratePurchaseOrder: Report "Generate Purchase Order";
-            //     begin
+                trigger OnAction()
+                var
+                    RecPSalesLine: Record "Sales Line";
+                    RecLItem: Record "Item";
+                    RptPGeneratePurchaseOrder: Report "Generate Purchase Order";
+                begin
 
-            //         CLEAR(RptPGeneratePurchaseOrder);
-            //         IF CodGVendorNo <> '' THEN
-            //             RecPSalesLine.SETFILTER("Vendor No.", CodGVendorNo);
-            //         RptPGeneratePurchaseOrder.SETTABLEVIEW(RecPSalesLine);
-            //         RptPGeneratePurchaseOrder.RUNMODAL;
-            //         CurrPage.UPDATE(FALSE);
-            //     end;
-            // }
+                    CLEAR(RptPGeneratePurchaseOrder);
+                    IF CodGVendorNo <> '' THEN
+                        RecPSalesLine.SETFILTER("Vendor No.", CodGVendorNo);
+                    RptPGeneratePurchaseOrder.SETTABLEVIEW(RecPSalesLine);
+                    RptPGeneratePurchaseOrder.RUNMODAL();
+                    CurrPage.UPDATE(FALSE);
+                end;
+            }
         }
     }
 

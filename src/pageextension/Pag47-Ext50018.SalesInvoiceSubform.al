@@ -14,7 +14,7 @@ pageextension 50018 SalesInvoiceSubform extends "Sales Invoice Subform" //47
 
     layout
     {
-        Addafter("IC Partner Code")
+        addafter("IC Partner Code")
         {
             field("Promised Delivery Date"; Rec."Promised Delivery Date")
             {

@@ -30,24 +30,24 @@ pageextension 50011 WhereUsedList extends "Where-Used List" //37
     var
         Item: Record "Item";
     begin
-        IF Item.GET(ItemNo) THEN BEGIN
+        if Item.GET(ItemNo) then begin
             Item.CALCFIELDS(Inventory);
-            EXIT(Item.Inventory);
-        END;
+            exit(Item.Inventory);
+        end;
 
-        EXIT(0);
+        exit(0);
     end;
 
     local procedure CalcAvailableInvt(ItemNo: Code[20]): Decimal
     var
         Item: Record Item;
     begin
-        IF Item.GET(ItemNo) THEN BEGIN
+        if Item.GET(ItemNo) then begin
             Item.CALCFIELDS(Inventory, "Qty. on Sales Order", "Reserved Qty. on Purch. Orders", "Qty. on Asm. Component");
-            EXIT(Item.Inventory - (Item."Qty. on Sales Order" + Item."Qty. on Asm. Component") + Item."Reserved Qty. on Purch. Orders");
-        END;
+            exit(Item.Inventory - (Item."Qty. on Sales Order" + Item."Qty. on Asm. Component") + Item."Reserved Qty. on Purch. Orders");
+        end;
 
-        EXIT(0);
+        exit(0);
     end;
 }
 

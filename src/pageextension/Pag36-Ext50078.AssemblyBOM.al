@@ -11,8 +11,8 @@ pageextension 50078 "AssemblyBOM" extends "Assembly BOM"//36
             action("Copy BOM")
             {
 
-                Promoted = TRUE;
-                PromotedIsBig = TRUE;
+                Promoted = true;
+                PromotedIsBig = true;
                 Image = CopyBOM;
                 PromotedCategory = Process;
                 ApplicationArea = All;
@@ -24,9 +24,9 @@ pageextension 50078 "AssemblyBOM" extends "Assembly BOM"//36
                 begin
 
                     rec.TestField(rec."Parent Item No.");
-                    RecLItem.SETRANGE(RecLItem."Assembly BOM", TRUE);
+                    RecLItem.SETRANGE(RecLItem."Assembly BOM", true);
 
-                    IF page.RUNMODAL(0, RecLItem) = ACTION::LookupOK THEN
+                    if page.RUNMODAL(0, RecLItem) = ACTION::LookupOK then
                         rec.CopyBOM(RecLItem."No.", rec."Parent Item No.");
                 end;
 
@@ -38,21 +38,21 @@ pageextension 50078 "AssemblyBOM" extends "Assembly BOM"//36
     trigger OnClosePage()
     var
         RecLItem: Record Item;
-    BEGIN
-        IF (rec.GETFILTER(rec."Parent Item No.") <> '') THEN BEGIN
+    begin
+        if (rec.GETFILTER(rec."Parent Item No.") <> '') then begin
             RecLItem.GET(rec."Parent Item No.");
-            IF rec.FINDFIRST() THEN BEGIN
-                IF RecLItem."Replenishment System" <> RecLItem."Replenishment System"::Assembly THEN BEGIN
+            if rec.FINDFIRST() then begin
+                if RecLItem."Replenishment System" <> RecLItem."Replenishment System"::Assembly then begin
                     RecLItem."Replenishment System" := RecLItem."Replenishment System"::Assembly;
                     RecLItem.MODIFY();
-                END;
-            END
-            ELSE
-                IF RecLItem."Replenishment System" = RecLItem."Replenishment System"::Assembly THEN BEGIN
+                end;
+            end
+            else
+                if RecLItem."Replenishment System" = RecLItem."Replenishment System"::Assembly then begin
                     RecLItem."Replenishment System" := RecLItem."Replenishment System"::Purchase;
                     RecLItem.MODIFY();
-                END;
-        END;
-    END;
+                end;
+        end;
+    end;
 
 }

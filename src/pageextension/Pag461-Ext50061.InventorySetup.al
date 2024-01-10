@@ -42,7 +42,7 @@ pageextension 50061 "InventorySetup" extends "Inventory Setup" //461
                 ToolTip = 'Specifies the value of the Bored blocks Item Nos.. field.';
             }
         }
-        addAfter(Numbering)
+        addafter(Numbering)
         {
             group(Montage)
             {

@@ -72,21 +72,23 @@ pageextension 50024 PurchaseOrderSubform extends "Purchase Order Subform" //54
             Visible = false;
         }
     }
-    // trigger OnDeleteRecord(): Boolean
-    // var
+
+    trigger OnDeleteRecord(): Boolean //TODO
+    var
     //     ReservePurchLine: Codeunit "Purch. Line-Reserve";
-    // begin
-    //>>FED_20090415:PA
-    // Rec.CALCFIELDS("Reserved Quantity");
-    // Rec.TESTFIELD("Reserved Quantity", 0);
-    //>>FED_20090415:PA
-    // DocumentTotals.PurchaseDocTotalsNotUpToDate();
-    // if (Rec.Quantity <> 0) and Rec.ItemExists(Rec."No.") then begin
-    //     COMMIT();
-    //     if not ReservePurchLine.DeleteLineConfirm(Rec) then
-    //         exit(false);
-    //     ReservePurchLine.DeleteLine(Rec);
-    // end;
-    // end;
+    //     DocumentTotals: Codeunit 57;
+    begin
+        //     // >>FED_20090415:PA
+        Rec.CALCFIELDS("Reserved Quantity");
+        Rec.TESTFIELD("Reserved Quantity", 0);
+        //     // >>FED_20090415:PA
+        //     DocumentTotals.PurchaseDocTotalsNotUpToDate();
+        //     if (Rec.Quantity <> 0) and Rec.ItemExists(Rec."No.") then begin
+        //              COMMIT();
+        //         if not ReservePurchLine.DeleteLineConfirm(Rec) then
+        //             exit(false);
+        //         ReservePurchLine.DeleteLine(Rec);
+        //     end;
+    end;
 }
 
