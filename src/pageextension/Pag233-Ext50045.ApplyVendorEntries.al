@@ -42,14 +42,14 @@ pageextension 50045 ApplyVendorEntries extends "Apply Vendor Entries" //233
         RecLVendorLedgEntry: Record "Vendor Ledger Entry";
         TxtErrorPostingGroup001: Label 'Posting Group must be identical by Applies-to ID.\You cannot select a Ledger Entry with a Posting Group %1.';
     begin
-        IF (CodLPostingGroup <> '') THEN
-            IF CodLAppliesID <> '' THEN BEGIN
+        if (CodLPostingGroup <> '') then
+            if CodLAppliesID <> '' then begin
                 RecLVendorLedgEntry.RESET();
                 RecLVendorLedgEntry.SETCURRENTKEY("Applies-to ID");
                 RecLVendorLedgEntry.SETRANGE("Applies-to ID", CodLAppliesID);
                 RecLVendorLedgEntry.SETFILTER("Vendor Posting Group", '<>%1', CodLPostingGroup);
-                IF RecLVendorLedgEntry.FINDFIRST() THEN ERROR(STRSUBSTNO(TxtErrorPostingGroup001, CodLPostingGroup));
-            END;
+                if RecLVendorLedgEntry.FINDFIRST() then ERROR(STRSUBSTNO(TxtErrorPostingGroup001, CodLPostingGroup));
+            end;
     end;
 }
 

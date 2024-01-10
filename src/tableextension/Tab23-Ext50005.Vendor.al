@@ -46,48 +46,48 @@ tableextension 50005 Vendor extends Vendor //23
                 TextCdeTransp001: Label 'You cannot modify Vendor type because there is Sales Header with the Shipping agent code %1 !!';
                 TextCdeTransp002: Label 'You cannot modify Vendor type because there is Purchase Header with the Shipping agent code %1 !!';
             begin
-                IF "Vendor Type" = "Vendor Type"::Transport THEN
-                    IF NOT RecLShippingAgent.GET("No.") THEN BEGIN
+                if "Vendor Type" = "Vendor Type"::Transport then
+                    if not RecLShippingAgent.GET("No.") then begin
                         RecLShippingAgent.INIT();
                         RecLShippingAgent.Code := "No."[20];
                         RecLShippingAgent.Name := Name[20];
                         RecLShippingAgent."Internet Address" := "Home Page";
-                        RecLShippingAgent.INSERT(TRUE);
+                        RecLShippingAgent.INSERT(true);
                         VALIDATE("Shipping Agent Code", RecLShippingAgent.Code);
                         MODIFY();
-                    END ELSE BEGIN
+                    end else begin
                         RecLShippingAgent.Name := Name[20];
                         RecLShippingAgent."Internet Address" := "Home Page";
                         RecLShippingAgent.MODIFY();
-                    END;
-                IF (xRec."Vendor Type" = xRec."Vendor Type"::Transport) AND ("Vendor Type" <> "Vendor Type"::Transport) THEN BEGIN
+                    end;
+                if (xRec."Vendor Type" = xRec."Vendor Type"::Transport) and ("Vendor Type" <> "Vendor Type"::Transport) then begin
 
                     //Verification dans les commandes ventes
                     RecLSalesHeader.RESET();
                     RecLSalesHeader.SETCURRENTKEY("Shipping Agent Code");
                     RecLSalesHeader.SETRANGE("Shipping Agent Code", "No.");
-                    IF RecLSalesHeader.FINDFIRST() THEN BEGIN
+                    if RecLSalesHeader.FINDFIRST() then begin
                         "Vendor Type" := "Vendor Type"::Transport;
                         MODIFY();
                         ERROR(STRSUBSTNO(TextCdeTransp001, "No."));
-                    END;
+                    end;
                     //Verification dans les commandes achats
                     RecLPurchHeader.RESET();
                     RecLPurchHeader.SETCURRENTKEY("Shipping Agent Code");
                     RecLPurchHeader.SETRANGE("Shipping Agent Code", "No.");
-                    IF RecLPurchHeader.FINDFIRST() THEN BEGIN
+                    if RecLPurchHeader.FINDFIRST() then begin
                         "Vendor Type" := "Vendor Type"::Transport;
                         MODIFY();
                         ERROR(STRSUBSTNO(TextCdeTransp002, "No."));
-                    END;
+                    end;
 
                     //Suppression du code transporteur
-                    IF RecLShippingAgent.GET("No.") THEN
-                        IF RecLShippingAgent.DELETE() THEN
+                    if RecLShippingAgent.GET("No.") then
+                        if RecLShippingAgent.DELETE() then
                             VALIDATE("Shipping Agent Code", '');
                     MODIFY();
-                END;
-            END;
+                end;
+            end;
 
         }
         field(51100; "Transaction Type"; Code[10])
@@ -128,33 +128,33 @@ tableextension 50005 Vendor extends Vendor //23
         RecLSalesHeader: Record "Sales Header";
         RecLPurchHeader: Record "Purchase Header";
     begin
-        IF ("Vendor Type" = "Vendor Type"::Transport) THEN BEGIN
+        if ("Vendor Type" = "Vendor Type"::Transport) then begin
 
             //Verification dans les commandes ventes
             RecLSalesHeader.RESET();
             RecLSalesHeader.SETCURRENTKEY("Shipping Agent Code");
             RecLSalesHeader.SETRANGE("Shipping Agent Code", "No.");
-            IF RecLSalesHeader.FINDFIRST() THEN
+            if RecLSalesHeader.FINDFIRST() then
                 ERROR(STRSUBSTNO(TextCdeTransp001, "No."));
-        END;
+        end;
         //Verification dans les commandes achats
         RecLPurchHeader.RESET();
         RecLPurchHeader.SETCURRENTKEY("Shipping Agent Code");
         RecLPurchHeader.SETRANGE(RecLPurchHeader."Shipping Agent Code", "No.");
-        IF RecLPurchHeader.FINDFIRST() THEN
+        if RecLPurchHeader.FINDFIRST() then
             ERROR(STRSUBSTNO(TextCdeTransp002, "No."));
         ;
 
         //Suppression du code transporteur
-        IF ShippingAgent.GET("No.") THEN ShippingAgent.DELETE();
+        if ShippingAgent.GET("No.") then ShippingAgent.DELETE();
     end;
 
     trigger OnAfterRename()
     var
         RecLShippingAgent: Record "Shipping Agent";
     begin
-        IF "Vendor Type" = "Vendor Type"::Transport THEN
-            IF RecLShippingAgent.GET(xRec."No.") THEN
+        if "Vendor Type" = "Vendor Type"::Transport then
+            if RecLShippingAgent.GET(xRec."No.") then
                 RecLShippingAgent.RENAME("No.");
     end;
 
@@ -178,14 +178,14 @@ tableextension 50005 Vendor extends Vendor //23
     var
         RecLShippingAgent: Record "Shipping Agent";
     begin
-        IF (Name <> xRec.Name) OR
-      ("Home Page" <> xRec."Home Page") THEN
-            IF "Vendor Type" = "Vendor Type"::Transport THEN
-                IF RecLShippingAgent.GET("No.") THEN BEGIN
+        if (Name <> xRec.Name) or
+      ("Home Page" <> xRec."Home Page") then
+            if "Vendor Type" = "Vendor Type"::Transport then
+                if RecLShippingAgent.GET("No.") then begin
                     RecLShippingAgent.Name := Name[20];
                     RecLShippingAgent."Internet Address" := "Home Page";
                     RecLShippingAgent.MODIFY();
-                END;
+                end;
 
     end;
 

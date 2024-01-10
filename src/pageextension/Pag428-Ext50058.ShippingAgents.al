@@ -6,7 +6,7 @@ pageextension 50058 "ShippingAgents" extends "Shipping Agents"  //428
 {
     layout
     {
-        addaFter("Account No.")
+        addafter("Account No.")
         {
             field("Shipping Costs"; rec."Shipping Costs")
             {

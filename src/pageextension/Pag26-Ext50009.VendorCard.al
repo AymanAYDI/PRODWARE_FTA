@@ -5,7 +5,7 @@ pageextension 50009 VendorCard extends "Vendor Card" //26
 {
     layout
     {
-        addAfter("Currency Code")
+        addafter("Currency Code")
         {
             field("Transaction Type"; Rec."Transaction Type")
             {
@@ -63,9 +63,10 @@ pageextension 50009 VendorCard extends "Vendor Card" //26
             {
                 ApplicationArea = All;
                 ToolTip = 'Executes the Tarif transporteur action.';
-                RunObject = Page "Shipping agent prices";
-                RunPageView = sorting("Shipping Agent", "Country Code", "Departement Code", "Post Code", "Pallet Nb", "Beginning Date", "Currency Code");
-                RunPageLink = "Shipping Agent" = FIELD("No.");
+                //TODO: page 51026 not migrated yet
+                // RunObject = Page 51026;
+                // RunPageView = sorting("Shipping Agent", "Country Code", "Departement Code", "Post Code", "Pallet Nb", "Beginning Date", "Currency Code");
+                // RunPageLink = "Shipping Agent" = FIELD("No.");
             }
         }
     }

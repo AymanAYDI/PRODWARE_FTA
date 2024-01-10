@@ -31,8 +31,8 @@ pageextension 50069 "AssemblyLines" extends "Assembly Lines"//903
         {
             action("Show Sales Documen")
             {
-                Promoted = TRUE;
-                PromotedIsBig = TRUE;
+                Promoted = true;
+                PromotedIsBig = true;
                 Image = View;
                 PromotedCategory = Process;
                 trigger OnAction()
@@ -43,11 +43,11 @@ pageextension 50069 "AssemblyLines" extends "Assembly Lines"//903
                 begin
 
                     //>>MIGR NAV 2015
-                    IF RecGAssToOrder."Document Type" = RecGAssToOrder."Document Type"::Order THEN
+                    if RecGAssToOrder."Document Type" = RecGAssToOrder."Document Type"::Order then
                         SalesHeader.GET(RecGAssToOrder."Document Type", RecGAssToOrder."Document No.");
                     PAGE.RUN(PAGE::"Sales Order", SalesHeader);
 
-                END;
+                end;
             }
         }
 
@@ -55,15 +55,15 @@ pageextension 50069 "AssemblyLines" extends "Assembly Lines"//903
 
 
     trigger OnAfterGetRecord()
-    BEGIN
+    begin
 
-        IF NOT RecGAssToOrder.GET(rec."Document Type", rec."Document No.") THEN
+        if not RecGAssToOrder.GET(rec."Document Type", rec."Document No.") then
             RecGAssToOrder.INIT();
 
-    END;
+    end;
 
     VAR
-        RecGAssToOrder: Record "Assemble-to-Order Link";
+        RecGAssToOrder: Record 904;
 
 }
 

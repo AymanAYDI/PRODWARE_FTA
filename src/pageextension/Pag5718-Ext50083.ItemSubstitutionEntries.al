@@ -10,7 +10,7 @@ pageextension 50083 "ItemSubstitutionEntries" extends "Item Substitution Entries
             {
                 ToolTip = 'Avaibility no reserved';
                 ApplicationArea = All;
-                Visible = FALSe;
+                Visible = false;
             }
         }
 

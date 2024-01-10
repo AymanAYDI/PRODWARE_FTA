@@ -53,9 +53,9 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
     }
     trigger OnOpenPage()
     begin
-        IF rec.GETFILTER("Vendor Posting Group") <> '' THEN
+        if rec.GETFILTER("Vendor Posting Group") <> '' then
             CodGPostGrpFilter := rec.GETFILTER("Vendor Posting Group")
-        ELSE
+        else
             CodGPostGrpFilter := '';
     end;
 
@@ -70,37 +70,37 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
         TxtGBalAccName: Text[50];
         DecGBalance: Decimal;
 
-    LOCAL PROCEDURE UpdateLineInfo(RecLVendEntry: Record "Vendor Ledger Entry");
-    BEGIN
-        WITH RecLVendEntry DO BEGIN
+    local procedure UpdateLineInfo(RecLVendEntry: Record "Vendor Ledger Entry");
+    begin
+        with RecLVendEntry do begin
             CodGAccName := "Vendor No.";
             TxtGBalAccName := Description;
-        END;
-    END;
+        end;
+    end;
 
-    LOCAL PROCEDURE ApplyFilters();
-    BEGIN
-        IF CodGPostGrpFilter <> '' THEN
+    local procedure ApplyFilters();
+    begin
+        if CodGPostGrpFilter <> '' then
             rec.SETFILTER("Vendor Posting Group", CodGPostGrpFilter)
-        ELSE
+        else
             rec.SETFILTER("Vendor Posting Group", '');
 
-        CurrPage.UPDATE(FALSE)
-    END;
+        CurrPage.UPDATE(false)
+    end;
 
-    LOCAL PROCEDURE CalcRecBalance(): Decimal;
-    VAR
+    local procedure CalcRecBalance(): Decimal;
+    var
         RecLVendEntry: Record "Vendor Ledger Entry";
         DecLAmount: Decimal;
-    BEGIN
+    begin
         RecLVendEntry.COPY(Rec);
-        IF RecLVendEntry.FIND('-') THEN
-            REPEAT
+        if RecLVendEntry.FIND('-') then
+            repeat
 
                 RecLVendEntry.CALCFIELDS("Remaining Amt. (LCY)");
                 DecLAmount += RecLVendEntry."Remaining Amt. (LCY)";
-            UNTIL RecLVendEntry.NEXT() = 0;
+            until RecLVendEntry.NEXT() = 0;
 
-        EXIT(DecLAmount);
-    END;
+        exit(DecLAmount);
+    end;
 }

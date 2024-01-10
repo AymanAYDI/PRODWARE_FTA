@@ -136,7 +136,6 @@ page 50003 "Assignment Item"
                     ToolTip = 'Specifies the value of the Purchase not Reserved field.';
                     trigger OnLookup(var Text: Text): Boolean
                     var
-                    //SalesLineSV: Record "Sales LineSV";
                     begin
                         RecGPurchLine.RESET();
                         RecGPurchLine.SETRANGE(Type, Rec.Type::Item);
@@ -161,7 +160,7 @@ page 50003 "Assignment Item"
                         //<<NDBI
 
                         Rec.ShowReservation();
-                        SalesLineSV."Preparation Type" := SalesLineSV."Preparation Type"::Purchase;
+                        Rec."Preparation Type" := Rec."Preparation Type"::Purchase;
                         Rec.MODIFY(false);
                         //<<JEPE 27052019
                     end;
@@ -313,7 +312,6 @@ page 50003 "Assignment Item"
     }
 
     var
-        SalesLineSV: Record "Sales LineSV";
         RecGSalesLine: Record "Sales Line";
         RecGItem: Record "Item";
         DecGQtyStock: Decimal;
@@ -329,6 +327,7 @@ page 50003 "Assignment Item"
         DecGDisposalQtyKit: Decimal;
         DecGDisposalQtyPurchOrder: Decimal;
         RecGPurchLine: Record "Purchase Line";
+        FTAFunctions: Codeunit "FTA_Functions";
         CstG001: Label 'Quantity %1 %2 greater from the disposal quantity %3. Please correct tha data.';
         CstG002: Label 'Quantity %1 %2 greater from the quantity %3. Please correct tha data.';
         CstG010: Label 'Assignment on stock';
@@ -366,7 +365,6 @@ page 50003 "Assignment Item"
         RecLAsmHeader: Record "Assembly Header";
         RecLAsmLine: Record "Assembly Line";
         TempLAsmLine: Record "Assembly Line" temporary;
-        SalesLineSV: Record "Sales LineSV";
         AssLineMgt: Codeunit "Assembly Line Management";
     begin
         RecGItem.RESET();
@@ -420,7 +418,7 @@ page 50003 "Assignment Item"
                         TempLAsmLine.COPY(RecLAsmLine);
                         TempLAsmLine.INSERT();
                     until RecLAsmLine.NEXT() = 0;
-                    DecGDisposalQtyKit := AssLineMgt.FctCountKitDisposalToBuild(RecLAsmHeader, TempLAsmLine);
+                    DecGDisposalQtyKit := FTAFunctions.FctCountKitDisposalToBuild(RecLAsmHeader, TempLAsmLine);
                     //TODO -> FctCountKitDisposalToBuild Specifique
                 end;
             end;
@@ -444,7 +442,7 @@ page 50003 "Assignment Item"
 
         if DecGQtyStock = Rec.Quantity then
             BooGAssignOnStock := true;
-        if SalesLineSV."Item Base" = SalesLineSV."Item Base"::"Transitory Kit" then begin
+        if Rec."Item Base" = Rec."Item Base"::"Transitory Kit" then begin
             BooGAssemblyKit := true;
             DecGQtyKit := Rec.Quantity;
             FctCalcQtyKit();
@@ -456,7 +454,6 @@ page 50003 "Assignment Item"
     procedure FctButtonOK()
     var
         RecLSalesLine: Record "Sales Line";
-        SalesLineSV: record "Sales LineSV";
         RecLATOLink: Record "Assemble-to-Order Link";
         SalesLine: Record "Sales Line";
         IntLLineNo: Integer;
@@ -583,7 +580,7 @@ page 50003 "Assignment Item"
                 */
                 Rec.VALIDATE(Rec."Qty. to Assemble to Order", 0);
                 //<<MIG NAV 2015 : Update OLD Code
-                SalesLineSV."Preparation Type" := SalesLineSV."Preparation Type"::Remainder;
+                Rec."Preparation Type" := Rec."Preparation Type"::Remainder;
                 Rec.MODIFY();
             end;
 
