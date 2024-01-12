@@ -1,3 +1,4 @@
+namespace Prodware.FTA;
 table 60007 "Rep Obs Art"
 {
 

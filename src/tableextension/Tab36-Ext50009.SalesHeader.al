@@ -131,7 +131,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
             Editable = false;
 
         }
-        field(50001; "Desc. Shipment Method"; Text[50])
+        field(50001; "Desc. Shipment Method"; Text[100])
         {
             CalcFormula = lookup("Shipment Method".Description where(Code = field("Shipment Method Code")));
             Caption = 'Shipment Method Desc.';
@@ -197,11 +197,11 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
                     if Cont.GET("Sell-to Contact No.") then
                         Cont.SETRANGE("Company No.", Cont."Company No.")
                     else begin
-                        ContBusinessRelation.RESET;
+                        ContBusinessRelation.RESET();
                         ContBusinessRelation.SETCURRENTKEY("Link to Table", "No.");
                         ContBusinessRelation.SETRANGE("Link to Table", ContBusinessRelation."Link to Table"::Customer);
                         ContBusinessRelation.SETRANGE("No.", "Sell-to Customer No.");
-                        if ContBusinessRelation.FINDFIRST then
+                        if ContBusinessRelation.FINDFIRST() then
                             Cont.SETRANGE("Company No.", ContBusinessRelation."Contact No.")
                         else
                             Cont.SETRANGE("No.", '');
@@ -214,7 +214,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
                 ContactListPage.SETRECORD(Cont);
                 ContactListPage.LOOKUPMODE(true);
                 ContactListPage.EDITABLE(false);
-                if ContactListPage.RUNMODAL = ACTION::LookupOK then begin
+                if ContactListPage.RUNMODAL() = ACTION::LookupOK then begin
                     // IF PAGE.RUNMODAL(0,Cont) = ACTION::LookupOK THEN BEGIN
                     // xRec := Rec;
                     ContactListPage.GETRECORD(Cont);
@@ -445,7 +445,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
 
             SalesLine.SETRANGE("No.", ShippingCostsCarrier."Item No.");
             SalesLine.SETFILTER("Outstanding Quantity", '<>%1', 0);
-            if SalesLine.FINDFIRST then begin
+            if SalesLine.FINDFIRST() then begin
                 // TODO CODE UNIT SEPC  ReleaseSalesDoc.PerformManualReopen(Rec);
                 SalesLine.Quantity := 1;
                 SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
@@ -461,7 +461,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
                 SalesLine.VALIDATE(Quantity, 1);
                 SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
                 // TODO field spec  SalesLine."Shipping Costs" := TRUE;
-                SalesLine.INSERT;
+                SalesLine.INSERT();
             end;
         end;
 
@@ -486,7 +486,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
         end;
 
         if "Sell-to Country/Region Code" <> 'FR' then begin
-            DeleteOpenShipCostLine;
+            DeleteOpenShipCostLine();
             MESSAGE('Livraison à l''etrangé, veuillez ajouter manuellement les frais de port.');
             exit(true);
         end;

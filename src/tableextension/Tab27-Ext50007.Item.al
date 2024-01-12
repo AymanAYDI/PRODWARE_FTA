@@ -462,15 +462,15 @@ tableextension 50007 Item extends Item //27
     }
     procedure FctCalcPurchasePriceFTA(var RecPItem: Record Item)
     var
-        RecLPurchPrice: Record "Purchase Price";
-        RecLPurchLineDisc: Record "Purchase Line Discount";
-        RecLProductionBOMLine: Record "Production BOM Line";
         ItemProductionCost: Record "Item Production Cost";
-        DecLQty: Decimal;
+        RecLProductionBOMLine: Record "Production BOM Line";
+        RecLPurchLineDisc: Record "Purchase Line Discount";
+        RecLPurchPrice: Record "Purchase Price";
         BooLQtyFound: Boolean;
-        DecLCost: Decimal;
         BooLRecOK: Boolean;
+        DecLCost: Decimal;
         DecLDisc: Decimal;
+        DecLQty: Decimal;
 
     begin
         with RecPItem do begin
@@ -568,13 +568,12 @@ tableextension 50007 Item extends Item //27
 
     procedure FctCreateFromTemplate()
     var
-        CduLTemplateMgt: Codeunit "Config. Template Management";
-        RecRef: RecordRef;
+        InvtSetup: Record "Inventory Setup";
+        RecLItemUnitofMeasure: Record "Item Unit of Measure";
         RecLTemplateHeader: Record "Config. Template Header";
         RecLTemplateLine: Record "Config. Template Line";
-        RecLItemUnitofMeasure: Record "Item Unit of Measure";
-        RecItem: Record Item;
-        InvtSetup: Record "Inventory Setup";
+        CduLTemplateMgt: Codeunit "Config. Template Management";
+        RecRef: RecordRef;
     begin
         if "Item Base" = "Item Base"::Transitory then begin
             GetInvtSetup();
@@ -632,10 +631,9 @@ tableextension 50007 Item extends Item //27
 
     procedure FctBOM(var RecPItem: Record Item)
     var
-        RecLProdBOMHeader: Record "Production BOM Header";
-        CstL001: Label 'This item does not have a BOM, do you want to create one?';
-        FrmLKitBOM: Page "Assembly BOM";
         RecLBOMComponent: Record "BOM Component";
+        FrmLKitBOM: Page "Assembly BOM";
+        CstL001: Label 'This item does not have a BOM, do you want to create one?';
     begin
         RecPItem.CALCFIELDS("Assembly BOM");
         if not RecPItem."Assembly BOM" then
@@ -652,15 +650,6 @@ tableextension 50007 Item extends Item //27
     end;
 
     procedure FctCalcSalesPriceFTA(var RecPItem: Record Item)
-    var
-        RecLPurchPrice: Record "Purchase Price";
-        RecLPurchLineDisc: Record "Purchase Line Discount";
-        DecLQty: Decimal;
-        BooLQtyFound: Boolean;
-        DecLCost: Decimal;
-        BooLRecOK: Boolean;
-        DecLDisc: Decimal;
-        RecLProductionBOMLine: Record "Production BOM Line";
     begin
         with RecPItem do begin
 
@@ -677,10 +666,10 @@ tableextension 50007 Item extends Item //27
 
     local procedure RollUpPriceFTA(var RecPItem: Record Item; var BooPMonoLevel: Boolean)
     var
+        GLSetup: Record "General Ledger Setup";
+        RecLItem: Record Item;
         RecLProductionBOMLine: Record "BOM Component";
         DecLComponentPrice: Decimal;
-        RecLItem: Record Item;
-        GLSetup: Record "General Ledger Setup";
     begin
         DecLComponentPrice := 0;
         RecLProductionBOMLine.Reset();

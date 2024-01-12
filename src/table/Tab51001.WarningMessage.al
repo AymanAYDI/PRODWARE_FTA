@@ -1,3 +1,4 @@
+namespace Prodware.FTA;
 table 51001 "Warning Message"
 {
     Caption = 'Warning Message';

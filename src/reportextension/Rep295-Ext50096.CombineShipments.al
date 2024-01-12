@@ -11,16 +11,16 @@ reportextension 50096 "CombineShipments" extends "Combine Shipments"//295
             begin
 
 
-                IF SalesOrderHeader."Combine Shipments" = FALSE THEN
-                    BoolGCreateNewInvoice := TRUE
-                ELSE
-                    IF NOT RecGSalesHeader."Combine Shipments" THEN
-                        BoolGCreateNewInvoice := TRUE
-                    ELSE
-                        IF (RecGSalesHeader."Bill-to Customer No." <> SalesOrderHeader."Bill-to Customer No.") OR
-                           (RecGSalesHeader."Currency Code" <> SalesOrderHeader."Currency Code") OR
-                           ((RecGSalesHeader."Bill-to Customer No." = SalesOrderHeader."Bill-to Customer No.") AND (BoolGSkip)) THEN
-                            BoolGCreateNewInvoice := TRUE;
+                if SalesOrderHeader."Combine Shipments" = false then
+                    BoolGCreateNewInvoice := true
+                else
+                    if not RecGSalesHeader."Combine Shipments" then
+                        BoolGCreateNewInvoice := true
+                    else
+                        if (RecGSalesHeader."Bill-to Customer No." <> SalesOrderHeader."Bill-to Customer No.") or
+                           (RecGSalesHeader."Currency Code" <> SalesOrderHeader."Currency Code") or
+                           ((RecGSalesHeader."Bill-to Customer No." = SalesOrderHeader."Bill-to Customer No.") and (BoolGSkip)) then
+                            BoolGCreateNewInvoice := true;
 
 
 
@@ -31,28 +31,28 @@ reportextension 50096 "CombineShipments" extends "Combine Shipments"//295
             trigger OnAfterAfterGetRecord()
             begin
 
-                IF ("Qty. Shipped Not Invoiced" <> 0) OR (Type = 0) THEN BEGIN
+                if ("Qty. Shipped Not Invoiced" <> 0) or (Type = 0) then begin
 
 
-                    BoolGSkip := FALSE;
+                    BoolGSkip := false;
 
 
-                    IF (Type <> 0) AND ("Bill-to Customer No." <> '') THEN
-                        IF (SalesOrderHeader."Bill-to Customer No." <> SalesHeader."Bill-to Customer No.") OR
-                                         (SalesOrderHeader."Currency Code" <> SalesHeader."Currency Code") OR
-                                         (SalesOrderHeader."EU 3-Party Trade" <> SalesHeader."EU 3-Party Trade") OR
+                    if (Type <> 0) and ("Bill-to Customer No." <> '') then
+                        if (SalesOrderHeader."Bill-to Customer No." <> SalesHeader."Bill-to Customer No.") or
+                                         (SalesOrderHeader."Currency Code" <> SalesHeader."Currency Code") or
+                                         (SalesOrderHeader."EU 3-Party Trade" <> SalesHeader."EU 3-Party Trade") or
                                          (SalesOrderHeader."Dimension Set ID" <> SalesHeader."Dimension Set ID")
 
 
-                                         OR BoolGCreateNewInvoice
+                                         or BoolGCreateNewInvoice
                                then begin
-                            IF BoolGCreateNewInvoice THEN
+                            if BoolGCreateNewInvoice then
                                 SalesHeader.INIT();
 
-                        END ELSE
-                            BoolGSkip := TRUE;
+                        end else
+                            BoolGSkip := true;
 
-                    BoolGCreateNewInvoice := FALSE;
+                    BoolGCreateNewInvoice := false;
 
 
                 end;
@@ -69,10 +69,10 @@ reportextension 50096 "CombineShipments" extends "Combine Shipments"//295
     }
 
 
-    PROCEDURE Fct_FinalizeAdress();
-    BEGIN
+    procedure Fct_FinalizeAdress();
+    begin
 
-        WITH SalesHeader DO BEGIN
+        with SalesHeader do begin
             "Bill-to Name" := "Sales Shipment Header"."Bill-to Name";
             "Bill-to Name 2" := "Sales Shipment Header"."Bill-to Name 2";
             "Bill-to Address" := "Sales Shipment Header"."Bill-to Address";
@@ -96,8 +96,8 @@ reportextension 50096 "CombineShipments" extends "Combine Shipments"//295
             "Sell-to City" := "Sales Shipment Header"."Sell-to City";
             "Sell-to Contact" := "Sales Shipment Header"."Sell-to Contact";
             "Sell-to Post Code" := "Sales Shipment Header"."Sell-to Post Code";
-        END;
-    END;
+        end;
+    end;
 
     var
         RecGSalesHeader: Record "Sales Header";

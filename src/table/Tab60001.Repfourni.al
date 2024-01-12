@@ -1,3 +1,4 @@
+namespace Prodware.FTA;
 table 60001 "Rep fourni"
 {
 

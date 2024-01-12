@@ -1,3 +1,7 @@
+namespace Prodware.FTA;
+
+using Microsoft.Foundation.Shipping;
+using Microsoft.Inventory.Item;
 table 50007 "Shipping Costs Carrier"
 {
     Caption = 'Frais de port transporteur';

@@ -9,7 +9,13 @@ reportextension 50001 "CloseIncomeStatement" extends "Close Income Statement" //
         {
             trigger OnAfterPreDataItem()
             begin
-                //TODO : I can't find solution line 140
+                case true of
+                // ClosePerBusUnit and not (ClosePerGlobalDim1 or ClosePerGlobalDim2):
+                //     SETCURRENTKEY("G/L Account No.", "Business Unit Code",
+                //     "Posting Date", "Entry Type");
+                end;
+
+                //TODO : ClosePerBusUnit n'est pas initialisé tj false
             end;
         }
     }

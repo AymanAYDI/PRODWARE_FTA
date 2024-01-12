@@ -34,10 +34,10 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 StyleExpr = TxTGStyle;
                 trigger OnValidate()
                 var
+                    RecLATOLink: Record 904;
+                    BoolEndLoop: Boolean;
                     IntLDocumentLineNo: Integer;
                     IntLLineNo: Integer;
-                    BoolEndLoop: Boolean;
-                    RecLATOLink: Record 904;
                 begin
                     CurrPage.SAVERECORD();
                     IntLDocumentLineNo := rec."Line No.";
@@ -47,7 +47,7 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
 
                             if RecLATOLink.GET(rec."Document Type", rec."Document No.") then begin
                                 KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
-                                //  AsmLinMgt.FctRefreshTempSubKitSalesFTA(Rec);
+                                FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec);
                             end;
 
 
@@ -55,7 +55,7 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
 
                             if RecLATOLink.GET(rec."Document Type", rec."Document No.") then begin
                                 KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
-                                // AsmLinMgt.FctRefreshTempSubKitSalesFTA(Rec);
+                                FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec);
                             end;
 
                     end;
@@ -107,7 +107,6 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 DecimalPlaces = 0 : 2;
                 ToolTip = 'Specifies the value of the Disponibilité sur achat field.';
                 ApplicationArea = All;
-                // TODO->A verifier
                 trigger OnLookup(var myText: Text): Boolean
                 begin
                     LookUpAvailPurchase();
@@ -127,7 +126,6 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 Editable = false;
                 ToolTip = 'Specifies the value of the Disponibilité quantité non affectées field.';
                 ApplicationArea = All;
-                // TODO->A verifier
                 trigger OnLookup(var myText: Text): Boolean
                 begin
                     LookUpAvailPurchase();
@@ -211,11 +209,11 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 ApplicationArea = All;
                 trigger OnAction()
                 var
+                    AssemblyLine: Record "Assembly Line";
+                    EntrySummary: Record "Entry Summary" temporary;
+                    ItemLedgerEntry: Record "Item Ledger Entry";
                     RecL337: Record "Reservation Entry";
                     RecL337b: Record "Reservation Entry";
-                    EntrySummary: Record "Entry Summary" temporary;
-                    AssemblyLine: Record "Assembly Line";
-                    ItemLedgerEntry: Record "Item Ledger Entry";
                     ReservEngineMgt: Codeunit "Reservation Engine Mgt.";
                     ReservMgt: Codeunit "Reservation Management";
                     Reservation: Page Reservation;
@@ -257,8 +255,7 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                                                 ReservEngineMgt.CancelReservation(RecL337b);
 
                                                 CLEAR(ReservMgt);
-                                                //TODO : procedure replaced by SetSourceForAssemblyLine but it is local
-                                                //ReservMgt.SetAssemblyLine(AssemblyLine);
+                                                ReservMgt.SetReservSource(AssemblyLine);
                                                 ReservMgt.AutoReserve(FullAutoReservation, '', AssemblyLine."Due Date", AssemblyLine."Remaining Quantity", AssemblyLine."Remaining Quantity (Base)");
                                             end;
                                         end;
@@ -338,8 +335,8 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 begin
                     Rec.VALIDATE(rec."Kit Action", rec."Kit Action"::Disassembly);
                     Rec.MODIFY();
-                    // AsmLinMgt.SetAutoReserve;
-                    // AsmLinMgt.FctRefreshTempSubKitSalesFTA(Rec);
+                    FTA_Functions.SetAutoReserve();
+                    FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec);
                     CurrPage.UPDATE();
                 end;
             }
@@ -358,20 +355,19 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         }
     }
     var
-        RecGKitSalesLine: Record "Assembly Line";
         KitLine: Record "Sales Line";
-        AsmLinMgt: Codeunit "Assembly Line Management";
-        IntGColor: Integer;
+        RecGKitSalesLine: Record "Assembly Line";
+        FTA_Functions: Codeunit FTA_Functions;
         BooGAvailWithoutCurrentLine: Boolean;
-        DecGQtyKit: Decimal;
-        TxTGStyle: Text;
         DateFilter: Date;
+        DecGQtyKit: Decimal;
+        IntGColor: Integer;
+        TxTGStyle: Text;
 
     procedure FctSearchColor();
     var
         RecL337: Record "Reservation Entry";
         RecL337b: Record "Reservation Entry";
-        RecLATOLink: Record "Assemble-to-Order Link";
     begin
         rec.CALCFIELDS(rec."Reserved Quantity");
         IntGColor := 0;
@@ -485,8 +481,8 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
 
     local procedure GetAvailbilityPurchaseDate(): Date;
     var
-        AvailibilityQty: Decimal;
         PurchaseLine: Record "Purchase Line";
+        AvailibilityQty: Decimal;
     begin
         AvailibilityQty := 0;
 
@@ -522,7 +518,6 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
     trigger OnAfterGetRecord()
     var
         RecLItem: Record Item;
-        RecLATOLink: Record "Assemble-to-Order Link";
     begin
         if rec.Type = rec.Type::Item then
             if RecLItem.GET(rec."No.") then begin

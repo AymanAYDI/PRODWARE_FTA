@@ -1,3 +1,4 @@
+namespace Prodware.FTA;
 table 60013 "Rep Bal Fou"
 {
 

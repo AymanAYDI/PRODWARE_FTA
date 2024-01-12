@@ -418,7 +418,7 @@ page 50005 "Transitory Item Card"
                         ToolTip = 'Executes the &Value Entries action.';
                     }
                     action("Item &Tracking Entries")
-                    {  //TODO -> can't find CallItemTrackingEntryForm
+                    {  //TODO -> CallItemTrackingEntryForm replaced by ShowItemTrackingForEntity
                         Caption = 'Item &Tracking Entries';
                         Image = ItemTrackingLedger;
                         Visible = false;
@@ -428,7 +428,7 @@ page 50005 "Transitory Item Card"
                             ItemTrackingSetup: Record "Item Tracking Setup";
                             ItemTrackingDMgt: Codeunit "Item Tracking Doc. Management";
                         begin
-                            //CallItemTrackingEntryForm
+                            // CallItemTrackingEntryForm();
                             ItemTrackingDMgt.ShowItemTrackingForEntity(3, '', Rec."No.", '', '', ItemTrackingSetup);
                         end;
                     }

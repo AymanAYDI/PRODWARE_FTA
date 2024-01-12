@@ -852,7 +852,7 @@ page 50010 "Transitory Kit Item Card"
                 var
                     RecLProdBOMHeader: Record "Production BOM Header";
                 begin
-                    Rec.FctBOM(Rec);//TODO -> Specifique 
+                    Rec.FctBOM(Rec);
                     CurrPage.UPDATE(true);
                     //FctBOMtoValidate(Rec);
                 end;

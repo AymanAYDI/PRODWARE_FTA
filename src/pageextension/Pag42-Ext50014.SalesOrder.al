@@ -156,15 +156,10 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             part("Sales Order total"; "Sales Order total")
             {
                 SubPageLink = "Document Type" = field("Document Type"),
-                              "Document No." = field("No.");
-                //TODO : verifier 
-                // "Line No." = field("Line No.");
+                              "Document No." = field("No."),
+                "Line No." = field("Line No.");
                 Provider = SalesLines;
                 Visible = true;
-                //TODO : verifier 
-                // PagePartID=Page50014;
-                // PartType=Page
-
             }
         }
 
@@ -207,7 +202,7 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
                     SalesCommentLine.SETRANGE("Document Type", rec."Document Type");
                     SalesCommentLine.SETRANGE("No.", rec."No.");
                     SalesCommentLine.SETRANGE("Document Line No.", 0);
-                    //TODO: page Sales comment sheet not migrated yet
+                    //TODO: procedure AddNewComment removed ... maybe -> SetUpNewLine
                     // SalesCommentSheet.AddNewComment(rec."Document Type", rec."No.");
                     SalesCommentSheet.SETTABLEVIEW(SalesCommentLine);
                     SalesCommentSheet.RUN();

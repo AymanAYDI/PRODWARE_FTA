@@ -1,3 +1,6 @@
+namespace Prodware.FTA;
+
+using Microsoft.Foundation.ExtendedText;
 table 50021 "Customer Typology"
 {
     Caption = 'Customer Typology';

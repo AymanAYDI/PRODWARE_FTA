@@ -127,7 +127,7 @@ table 50001 "Purchase Discount Worksheet"
 
     procedure CalcCurrentPrice(var PriceAlreadyExists: Boolean)
     var
-        PurchLineDiscount: Record "7014";
+        PurchLineDiscount: Record "Purchase Line Discount";
     begin
         PurchLineDiscount.SETRANGE("Item No.", "Item No.");
         PurchLineDiscount.SETRANGE("Vendor No.", "Vendor No.");

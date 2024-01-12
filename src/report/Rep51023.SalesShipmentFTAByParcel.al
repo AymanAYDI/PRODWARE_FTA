@@ -851,7 +851,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                     ReferenceText := ''
                 else
                     ReferenceText := FIELDCAPTION("Your Reference");
-                //TODO : verifier CompanyAddr
+                //TODO : verifier i add CompanyAddr
                 FormatAddr.SalesShptBillTo(CompanyAddr, ShipToAddr, "Sales Shipment Header");
 
                 FormatAddr.SalesShptShipTo(CustAddr, "Sales Shipment Header");

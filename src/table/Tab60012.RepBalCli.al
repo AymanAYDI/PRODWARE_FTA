@@ -1,3 +1,4 @@
+namespace Prodware.FTA;
 table 60012 "Rep Bal Cli"
 {
 

@@ -419,7 +419,6 @@ page 50003 "Assignment Item"
                         TempLAsmLine.INSERT();
                     until RecLAsmLine.NEXT() = 0;
                     DecGDisposalQtyKit := FTAFunctions.FctCountKitDisposalToBuild(RecLAsmHeader, TempLAsmLine);
-                    //TODO -> FctCountKitDisposalToBuild Specifique
                 end;
             end;
 

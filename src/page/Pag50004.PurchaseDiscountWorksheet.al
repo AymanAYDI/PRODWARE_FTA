@@ -89,29 +89,28 @@ page 50004 "Purchase Discount Worksheet"
                         REPORT.RUNMODAL(REPORT::"Suggest Item Price on Wksh.", true, true);
                     end;
                 }
-                //TODO Rapport Specifique
-                // action("Suggest &Purchase Price on Wksh.")
-                // {
-                //     Caption = 'Suggest &Purchase Price on Wksh.';
-                //     Ellipsis = true;
-                //     Image = SuggestItemPrice;
+                action("Suggest &Purchase Price on Wksh.")
+                {
+                    Caption = 'Suggest &Purchase Price on Wksh.';
+                    Ellipsis = true;
+                    Image = SuggestItemPrice;
 
-                //     trigger OnAction()
-                //     begin
-                //         REPORT.RUNMODAL(REPORT::"Suggest Purch. Disc. on Wksh.", TRUE, TRUE);
-                //     end;
-                // }
-                // action("I&mplement Discount Change")
-                // {
-                //     Caption = 'I&mplement Discount Change';
-                //     Ellipsis = true;
-                //     Image = ImplementPriceChange;
+                    trigger OnAction()
+                    begin
+                        REPORT.RUNMODAL(REPORT::"Suggest Purch. Disc. on Wksh.", TRUE, TRUE);
+                    end;
+                }
+                action("I&mplement Discount Change")
+                {
+                    Caption = 'I&mplement Discount Change';
+                    Ellipsis = true;
+                    Image = ImplementPriceChange;
 
-                //     trigger OnAction()
-                //     begin
-                //         REPORT.RUNMODAL(REPORT::"Implement Purch. Disc. Change", TRUE, TRUE, Rec);
-                //     end;
-                // }
+                    trigger OnAction()
+                    begin
+                        REPORT.RUNMODAL(REPORT::"Implement Purch. Disc. Change", TRUE, TRUE, Rec);
+                    end;
+                }
             }
         }
     }

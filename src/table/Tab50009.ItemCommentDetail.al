@@ -1,3 +1,4 @@
+namespace Prodware.FTA;
 table 50009 "Item Comment Detail"
 {
     fields

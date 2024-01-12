@@ -9,8 +9,8 @@ table 50003 "Report Email By User"
         }
         field(2; "Report ID"; Integer)
         {
-            //TODO : Verifier table relation
-            //TableRelation = Object where(Type = const(Report));
+            //TODO : Scope OnPrem
+            // TableRelation = Object where(Type = const(Report));
         }
         field(3; Email; Boolean)
         {

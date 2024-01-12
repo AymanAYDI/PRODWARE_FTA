@@ -2,14 +2,10 @@ namespace Prodware.FTA;
 
 using Microsoft.Sales.Document;
 using Microsoft.Purchases.Vendor;
+using Microsoft.Inventory.Item;
 page 50020 "Assignment of the remainders v"
 {
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    // www.prodware.fr
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    // 
-    // //>>MODIFHL
-    // TI302489 DO.GEPO 15/12/2015 : modify OnOpenPage
+
 
     Caption = 'Assignment of the remainders';
     DeleteAllowed = false;
@@ -178,28 +174,28 @@ page 50020 "Assignment of the remainders v"
                     CurrPage.KitLines.PAGE.FctShowDocKit();
                 end;
             }
-            // action("Generate Purchase Order")
-            // {
-            //     Caption = 'Generate Purchase Order';
-            //     Image = Purchasing;
-            //     Promoted = true;
-            //     PromotedCategory = Process;
+            action("Generate Purchase Order")
+            {
+                Caption = 'Generate Purchase Order';
+                Image = Purchasing;
+                Promoted = true;
+                PromotedCategory = Process;
 
-            //     trigger OnAction()
-            //     var
-            //         RecPSalesLine: Record "Sales Line";
-            //         RecLItem: Record Item;
-            //         RptPGeneratePurchaseOrder: Report "50005";//TODO ->Report Specifique
-            //     begin
+                trigger OnAction()
+                var
+                    RecPSalesLine: Record "Sales Line";
+                    RecLItem: Record Item;
+                    RptPGeneratePurchaseOrder: Report "Generate Purchase Order";
+                begin
 
-            //         CLEAR(RptPGeneratePurchaseOrder);
-            //         IF CodGVendorNo <> '' THEN
-            //             RecPSalesLine.SETFILTER("Vendor No.", CodGVendorNo);
-            //         RptPGeneratePurchaseOrder.SETTABLEVIEW(RecPSalesLine);
-            //         RptPGeneratePurchaseOrder.RUNMODAL;
-            //         CurrPage.UPDATE(FALSE);
-            //     end;
-            // }
+                    CLEAR(RptPGeneratePurchaseOrder);
+                    if CodGVendorNo <> '' then
+                        RecPSalesLine.SETFILTER("Vendor No.", CodGVendorNo);
+                    RptPGeneratePurchaseOrder.SETTABLEVIEW(RecPSalesLine);
+                    RptPGeneratePurchaseOrder.RUNMODAL();
+                    CurrPage.UPDATE(false);
+                end;
+            }
         }
     }
 

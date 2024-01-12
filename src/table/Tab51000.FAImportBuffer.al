@@ -1,3 +1,4 @@
+namespace Prodware.FTA;
 table 51000 "FA Import Buffer"
 {
 
