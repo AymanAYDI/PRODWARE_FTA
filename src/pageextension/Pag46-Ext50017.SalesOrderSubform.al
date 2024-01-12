@@ -226,13 +226,22 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
         PrepareOnlyFilter();
     end;
 
-    LOCAL PROCEDURE PrepareOnlyFilter();
-    VAR
+    trigger OnAfterGetRecord()
+    var
+        UserSetup: Record 91;
+    begin
+        BooGOK := rec.FctctrlKitReservation(Rec);
+        PrepareEnable := true;
+        if UserSetup.GET(USERID) then
+            PrepareEnable := not UserSetup."Prepared Only";
+    end;
+
+    local procedure PrepareOnlyFilter();
+    var
         UserSetup: Record "User Setup";
-    BEGIN
-        IF UserSetup.GET(USERID) THEN
-            IF UserSetup."Prepared Only" THEN
-                rec.SETRANGE(rec.Prepare, TRUE);
-    END;
-    //TODO: i can't find event in OnAfterGetRecord
+    begin
+        if UserSetup.GET(USERID) then
+            if UserSetup."Prepared Only" then
+                rec.SETRANGE(rec.Prepare, true);
+    end;
 }

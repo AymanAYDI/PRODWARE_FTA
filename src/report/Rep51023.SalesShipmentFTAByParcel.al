@@ -668,14 +668,12 @@ report 51023 "Sales - Shipment FTA By Parcel"
 
                         trigger OnPostDataItem()
                         begin
-                            // Item Tracking:
-                            // TODO: i can't find procedures !!
-                            // if ShowLotSN then begin
-                            //     ItemTrackingMgt.SetRetrieveAsmItemTracking(true);
-                            //     TrackingSpecCount := ItemTrackingMgt.RetrieveDocumentItemTracking(TrackingSpecBuffer, "Sales Shipment Header"."No.",
-                            //         DATABASE::"Sales Shipment Header", 0);
-                            //     ItemTrackingMgt.SetRetrieveAsmItemTracking(false);
-                            // end;
+                            if ShowLotSN then begin
+                                ItemTrackingDocMgt.SetRetrieveAsmItemTracking(true);
+                                TrackingSpecCount := ItemTrackingDocMgt.RetrieveDocumentItemTracking(TrackingSpecBuffer, "Sales Shipment Header"."No.",
+                                    DATABASE::"Sales Shipment Header", 0);
+                                ItemTrackingDocMgt.SetRetrieveAsmItemTracking(false);
+                            end;
                         end;
 
                         trigger OnPreDataItem()
@@ -1034,6 +1032,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
         ShptCountPrinted: Codeunit "Sales Shpt.-Printed";
         SegManagement: Codeunit SegManagement;
         ItemTrackingMgt: Codeunit "Item Tracking Management";
+        ItemTrackingDocMgt: Codeunit "Item Tracking Doc. Management";
         CustAddr: array[8] of Text[50];
         ShipToAddr: array[8] of Text[50];
         CompanyAddr: array[8] of Text[50];
