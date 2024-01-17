@@ -360,8 +360,9 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         if "Remaining Quantity (Base)" <> 0 then begin
             if "Quantity per" <> 0 then
                 TESTFIELD("Due Date");
-            //TODO verifier,remplacer SetAssemblyLine par SetSourceForAssemblyLine & dupliquer SetSourceForAssemblyLine dans FTA functions
-            FTAFunctions.SetSourceForAssemblyLine();
+            ReservMgt.SetReservSource(Rec);
+            // ReservMgt.SetAssemblyLine(Rec);
+            //TODO : migration codeunit reservation management 
             // if BooGResaAssFTA then
             //     ReservMgt.FctSetBooResaAssFTA(true);
             ReservMgt.AutoReserve(FullAutoReservation, '', "Due Date", "Remaining Quantity", "Remaining Quantity (Base)");
