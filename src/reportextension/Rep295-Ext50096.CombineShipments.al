@@ -101,8 +101,8 @@ reportextension 50096 "CombineShipments" extends "Combine Shipments"//295
 
     var
         RecGSalesHeader: Record "Sales Header";
-        BoolGCreateNewInvoice: Boolean;
         BoolGCombineShipments: Boolean;
+        BoolGCreateNewInvoice: Boolean;
         BoolGSkip: Boolean;
 
 
