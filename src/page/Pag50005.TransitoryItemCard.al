@@ -418,7 +418,7 @@ page 50005 "Transitory Item Card"
                         ToolTip = 'Executes the &Value Entries action.';
                     }
                     action("Item &Tracking Entries")
-                    {  //TODO -> CallItemTrackingEntryForm replaced by ShowItemTrackingForEntity
+                    {  //TODO -> can't find CallItemTrackingEntryForm
                         Caption = 'Item &Tracking Entries';
                         Image = ItemTrackingLedger;
                         Visible = false;
@@ -428,7 +428,7 @@ page 50005 "Transitory Item Card"
                             ItemTrackingSetup: Record "Item Tracking Setup";
                             ItemTrackingDMgt: Codeunit "Item Tracking Doc. Management";
                         begin
-                            // CallItemTrackingEntryForm();
+                            //CallItemTrackingEntryForm
                             ItemTrackingDMgt.ShowItemTrackingForEntity(3, '', Rec."No.", '', '', ItemTrackingSetup);
                         end;
                     }
@@ -948,7 +948,7 @@ page 50005 "Transitory Item Card"
                         RecLItem.SETRANGE("No.", Rec."No.");
                         //Record.SETRECFILTER()
                         //Report.SETTABLEVIEW(Reclitem)
-                        REPORT.RUNMODAL(Report::"Calculate Unit Price Item", true, false, RecLItem)
+                        REPORT.RUNMODAL(50007, true, false, RecLItem)
                     end;
                 }
                 action("Calculation Kit Price")
@@ -963,7 +963,7 @@ page 50005 "Transitory Item Card"
                     begin
                         CLEAR(RecLItem);
                         RecLItem.SETRANGE("No.", Rec."No.");
-                        REPORT.RUNMODAL(Report::"Calculate Kit Price Item", true, false, RecLItem);
+                        REPORT.RUNMODAL(50008, true, false, RecLItem);
                     end;
                 }
                 action("Calc. Stan&dard Cost")
