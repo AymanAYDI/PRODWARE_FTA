@@ -37,8 +37,8 @@ report 50011 "Preparatory delivery FTA"
         dataitem("Sales Header"; "Sales Header")
         {
             CalcFields = "Shipping Agent Name";
-            DataItemTableView = SORTING("Document Type", "No.")
-                                WHERE("Document Type" = CONST(Order));
+            DataItemTableView = sorting("Document Type", "No.")
+                                where("Document Type" = const(Order));
             RequestFilterFields = "No.", "Sell-to Customer No.", "No. Printed";
             RequestFilterHeading = 'Sales Order';
             column(DocType_SalesHeader; "Document Type")
@@ -149,11 +149,11 @@ report 50011 "Preparatory delivery FTA"
             }
             dataitem(CopyLoop; Integer)
             {
-                DataItemTableView = SORTING(Number);
+                DataItemTableView = sorting(Number);
                 dataitem(PageLoop; Integer)
                 {
-                    DataItemTableView = SORTING(Number)
-                                        WHERE(Number = CONST(1));
+                    DataItemTableView = sorting(Number)
+                                        where(Number = const(1));
                     column(CompanyInfo2Picture; CompanyInfo2.Picture)
                     {
                     }
@@ -355,11 +355,11 @@ report 50011 "Preparatory delivery FTA"
                     }
                     dataitem("Sales Line"; "Sales Line")
                     {
-                        DataItemLink = "Document Type" = FIELD("Document Type"),
-                                       "Document No." = FIELD("No.");
+                        DataItemLink = "Document Type" = field("Document Type"),
+                                       "Document No." = field("No.");
                         DataItemLinkReference = "Sales Header";
-                        DataItemTableView = SORTING("Document Type", "Document No.", "Line No.")
-                                            WHERE("Attached to Line No." = FILTER(0));
+                        DataItemTableView = sorting("Document Type", "Document No.", "Line No.")
+                                            where("Attached to Line No." = filter(0));
                         column(SalesLineAmt; "Line Amount")
                         {
                             AutoFormatExpression = "Sales Header"."Currency Code";
@@ -461,8 +461,8 @@ report 50011 "Preparatory delivery FTA"
                         }
                         dataitem(DimensionLoop2; Integer)
                         {
-                            DataItemTableView = SORTING(Number)
-                                                WHERE(Number = FILTER(1 ..));
+                            DataItemTableView = sorting(Number)
+                                                where(Number = filter(1 ..));
                             column(DimText2; DimText)
                             {
                             }
@@ -472,30 +472,30 @@ report 50011 "Preparatory delivery FTA"
 
                             trigger OnAfterGetRecord()
                             begin
-                                IF Number = 1 THEN BEGIN
-                                    IF NOT DimSetEntry2.FINDSET() THEN
+                                if Number = 1 then begin
+                                    if not DimSetEntry2.FINDSET() then
                                         CurrReport.BREAK();
-                                END ELSE
-                                    IF NOT Continue THEN
+                                end else
+                                    if not Continue then
                                         CurrReport.BREAK();
 
                                 CLEAR(DimText);
-                                Continue := FALSE;
-                                REPEAT
+                                Continue := false;
+                                repeat
                                     OldDimText := DimText;
-                                    IF DimText = '' THEN
+                                    if DimText = '' then
                                         DimText := STRSUBSTNO('%1 %2', DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
-                                    ELSE
+                                    else
                                         DimText :=
                                           STRSUBSTNO(
                                             '%1, %2 %3', DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
-                                    IF STRLEN(DimText) > MAXSTRLEN(OldDimText) THEN BEGIN
+                                    if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
                                         DimText := OldDimText;
-                                        Continue := TRUE;
-                                        EXIT;
-                                    END;
-                                UNTIL DimSetEntry2.NEXT() = 0;
+                                        Continue := true;
+                                        exit;
+                                    end;
+                                until DimSetEntry2.NEXT() = 0;
                             end;
 
                             trigger OnPreDataItem()
@@ -507,8 +507,8 @@ report 50011 "Preparatory delivery FTA"
                         }
                         dataitem("Extended Text Line"; "Extended Text Line")
                         {
-                            DataItemLink = "No." = FIELD("No.");
-                            DataItemTableView = SORTING("Table Name", "No.", "Language Code", "Text No.", "Line No.");
+                            DataItemLink = "No." = field("No.");
+                            DataItemTableView = sorting("Table Name", "No.", "Language Code", "Text No.", "Line No.");
                             column(ExtendedLine_Text; "Extended Text Line".Text)
                             {
                             }
@@ -528,7 +528,7 @@ report 50011 "Preparatory delivery FTA"
                         }
                         dataitem(AsmLoop; Integer)
                         {
-                            DataItemTableView = SORTING(Number);
+                            DataItemTableView = sorting(Number);
                             column(AsmLineLevel; AsmLine."Level No.")
                             {
                             }
@@ -565,37 +565,37 @@ report 50011 "Preparatory delivery FTA"
 
                             trigger OnAfterGetRecord()
                             begin
-                                IF Number = 1 THEN
+                                if Number = 1 then
                                     AsmLine.FINDSET()
-                                ELSE
+                                else
                                     AsmLine.NEXT();
 
 
 
-                                IF (AsmLine.Type = AsmLine.Type::Item) AND (AsmLine."No." <> '') THEN BEGIN
+                                if (AsmLine.Type = AsmLine.Type::Item) and (AsmLine."No." <> '') then begin
                                     RecGItem2.GET(AsmLine."No.");
 
-                                END ELSE BEGIN
+                                end else begin
                                     RecGItem2.INIT();
-                                END;
+                                end;
 
 
                                 CLEAR(TxtGAsmCommentLine);
                                 RecGCommentLine.SETRANGE("Table Name", RecGCommentLine."Table Name"::Item);
                                 RecGCommentLine.SETRANGE("No.", AsmLine."No.");
-                                IF RecGCommentLine.FINDFIRST() THEN BEGIN
-                                    REPEAT
+                                if RecGCommentLine.FINDFIRST() then begin
+                                    repeat
                                         TxtGAsmCommentLine += FORMAT(Enter) + RecGCommentLine.Comment;
-                                    UNTIL RecGCommentLine.NEXT() = 0;
+                                    until RecGCommentLine.NEXT() = 0;
                                     TxtGAsmCommentLine := COPYSTR(TxtGAsmCommentLine, 2, STRLEN(TxtGAsmCommentLine));
-                                END;
+                                end;
 
 
                             end;
 
                             trigger OnPreDataItem()
                             begin
-                                IF NOT AsmInfoExistsForLine THEN
+                                if not AsmInfoExistsForLine then
                                     CurrReport.BREAK();
                                 AsmLine.SETRANGE("Document Type", AsmHeader."Document Type");
                                 AsmLine.SETRANGE("Document No.", AsmHeader."No.");
@@ -609,34 +609,34 @@ report 50011 "Preparatory delivery FTA"
                             AsmInfoExistsForLine := AsmToOrderExists(AsmHeader);
 
 
-                            IF ("Sales Line".Type = "Sales Line".Type::Item) AND ("Sales Line"."No." <> '') THEN BEGIN
+                            if ("Sales Line".Type = "Sales Line".Type::Item) and ("Sales Line"."No." <> '') then begin
                                 RecGItem.GET("Sales Line"."No.");
-                            END ELSE BEGIN
+                            end else begin
                                 RecGItem.INIT();
-                            END;
+                            end;
 
-                            BooGAdditionalInfoVisible := FALSE;
+                            BooGAdditionalInfoVisible := false;
 
-                            IF ("Sales Line".Type = "Sales Line".Type::Item) AND ("Sales Line"."No." <> '') THEN BEGIN
-                                IF RecGItem."Automatic Ext. Texts" THEN
-                                    BooGAdditionalInfoVisible := TRUE;
-                            END;
+                            if ("Sales Line".Type = "Sales Line".Type::Item) and ("Sales Line"."No." <> '') then begin
+                                if RecGItem."Automatic Ext. Texts" then
+                                    BooGAdditionalInfoVisible := true;
+                            end;
 
 
                             CLEAR(TxtGCommentLine);
                             RecGCommentLine.SETRANGE("Table Name", RecGCommentLine."Table Name"::Item);
                             RecGCommentLine.SETRANGE("No.", "No.");
-                            IF RecGCommentLine.FINDFIRST() THEN BEGIN
-                                REPEAT
+                            if RecGCommentLine.FINDFIRST() then begin
+                                repeat
                                     TxtGCommentLine += FORMAT(Enter) + RecGCommentLine.Comment;
-                                UNTIL RecGCommentLine.NEXT() = 0;
+                                until RecGCommentLine.NEXT() = 0;
                                 TxtGCommentLine := COPYSTR(TxtGCommentLine, 2, STRLEN(TxtGCommentLine));
-                            END;
+                            end;
 
-                            IF Type = Type::Item THEN BEGIN
+                            if Type = Type::Item then begin
                                 EVALUATE(IntGPreparationType, FORMAT("Sales Line"."Preparation Type", 0, '<Number>'));
                                 CodGShelfNo := RecGItem."Shelf No.";
-                            END;
+                            end;
 
                             //<<NDBI
                         end;
@@ -646,13 +646,13 @@ report 50011 "Preparatory delivery FTA"
                             Enter := 10;
 
 
-                            SETRANGE("Sales Line".Prepare, TRUE);
+                            SETRANGE("Sales Line".Prepare, true);
                         end;
                     }
                     dataitem(Total2; Integer)
                     {
-                        DataItemTableView = SORTING(Number)
-                                            WHERE(Number = CONST(1));
+                        DataItemTableView = sorting(Number)
+                                            where(Number = const(1));
                         column(SelltoCustNo_SalesHeader; "Sales Header"."Sell-to Customer No.")
                         {
                         }
@@ -692,14 +692,14 @@ report 50011 "Preparatory delivery FTA"
                 trigger OnAfterGetRecord()
                 var
                     PrepmtSalesLine: Record "Sales Line" temporary;
-                    SalesPost: Codeunit "Sales-Post";
                     TempSalesLine: Record "Sales Line" temporary;
+                    SalesPost: Codeunit "Sales-Post";
                 begin
 
-                    IF Number > 1 THEN BEGIN
+                    if Number > 1 then begin
                         CopyText := Text003;
                         OutputNo += 1;
-                    END;
+                    end;
                     CurrReport.PAGENO := 1;
                 end;
 
@@ -714,60 +714,60 @@ report 50011 "Preparatory delivery FTA"
 
             trigger OnAfterGetRecord()
             var
-                "-PW-": Integer;
                 RecLCurrency: Record Currency;
+                "-PW-": Integer;
             begin
                 CompanyInfo.GET();
                 CurrReport.LANGUAGE := Language.GetLanguageIdOrDefault("Language Code");
 
-                IF RespCenter.GET("Responsibility Center") THEN BEGIN
+                if RespCenter.GET("Responsibility Center") then begin
                     FormatAddr.RespCenter(CompanyAddr, RespCenter);
                     CompanyInfo."Phone No." := RespCenter."Phone No.";
                     CompanyInfo."Fax No." := RespCenter."Fax No.";
-                END ELSE
+                end else
                     FormatAddr.Company(CompanyAddr, CompanyInfo);
 
 
-                IF "Salesperson Code" = '' THEN BEGIN
+                if "Salesperson Code" = '' then begin
                     CLEAR(SalesPurchPerson);
                     SalesPersonText := '';
-                END ELSE BEGIN
+                end else begin
 
-                    IF SalesPurchPerson.GET("Salesperson Code") THEN
+                    if SalesPurchPerson.GET("Salesperson Code") then
                         SalesPersonText := Text000
-                    ELSE
+                    else
                         SalesPersonText := '';
 
-                END;
-                IF "Your Reference" = '' THEN
+                end;
+                if "Your Reference" = '' then
                     ReferenceText := ''
-                ELSE
+                else
                     ReferenceText := FIELDCAPTION("Your Reference");
-                IF "VAT Registration No." = '' THEN
+                if "VAT Registration No." = '' then
                     VATNoText := ''
-                ELSE
+                else
                     VATNoText := FIELDCAPTION("VAT Registration No.");
 
 
-                IF "Payment Terms Code" = '' THEN
+                if "Payment Terms Code" = '' then
                     PaymentTerms.INIT()
-                ELSE BEGIN
+                else begin
                     PaymentTerms.GET("Payment Terms Code");
                     PaymentTerms.TranslateDescription(PaymentTerms, "Language Code");
-                END;
+                end;
 
-                IF "Shipment Method Code" = '' THEN
+                if "Shipment Method Code" = '' then
                     ShipmentMethod.INIT()
-                ELSE BEGIN
+                else begin
                     ShipmentMethod.GET("Shipment Method Code");
                     ShipmentMethod.TranslateDescription(ShipmentMethod, "Language Code");
-                END;
+                end;
 
                 FormatAddr.SalesHeaderShipTo(CustAddr, ShipToAddr, "Sales Header");
 
                 RecGCustomer.GET("Sell-to Customer No.");
 
-                IF NOT RecGContact.GET("Sales Header"."Sell-to Contact No.") THEN
+                if not RecGContact.GET("Sales Header"."Sell-to Contact No.") then
                     CLEAR(RecGContact);
 
 
@@ -775,13 +775,13 @@ report 50011 "Preparatory delivery FTA"
                 //IF "Sales Header"."Payment Method Code" <> '' THEN RecGPaymentMethod.GET("Payment Method Code");
 
                 TxtGOurReferences := "Sell-to Customer No.";
-                IF "Sell-to Customer No." <> "Bill-to Customer No." THEN
+                if "Sell-to Customer No." <> "Bill-to Customer No." then
                     TxtGOurReferences := TxtGOurReferences + ' / ' + "Bill-to Customer No.";
             end;
 
             trigger OnPreDataItem()
             begin
-                AsmInfoExistsForLine := FALSE;
+                AsmInfoExistsForLine := false;
             end;
         }
     }
@@ -824,137 +824,137 @@ report 50011 "Preparatory delivery FTA"
 
         SalesSetup.GET();
 
-        CASE SalesSetup."Logo Position on Documents" OF
+        case SalesSetup."Logo Position on Documents" of
             SalesSetup."Logo Position on Documents"::"No Logo":
                 ;
             SalesSetup."Logo Position on Documents"::Left:
-                BEGIN
+                begin
                     CompanyInfo3.GET();
                     CompanyInfo3.CALCFIELDS(Picture);
-                END;
+                end;
             SalesSetup."Logo Position on Documents"::Center:
-                BEGIN
+                begin
                     CompanyInfo1.GET();
                     CompanyInfo1.CALCFIELDS(Picture);
-                END;
+                end;
             SalesSetup."Logo Position on Documents"::Right:
-                BEGIN
+                begin
                     CompanyInfo2.GET();
                     CompanyInfo2.CALCFIELDS(Picture);
-                END;
-        END;
+                end;
+        end;
     end;
 
     var
-        Text000: Label 'Salesperson:';
-        Text003: Label 'COPY';
-        Text004: Label 'Work Order \Order No. %2 from %2.';
-        PageCaptionCap: Label 'Page %1 of %2';
-        GLSetup: Record "General Ledger Setup";
-        ShipmentMethod: Record "Shipment Method";
-        PaymentTerms: Record "Payment Terms";
-        PrepmtPaymentTerms: Record "Payment Terms";
-        SalesPurchPerson: Record "Payment Terms";
-        SalesPurchPersons: Record "Salesperson/Purchaser";
+        AsmHeader: Record "Assembly Header";
+        AsmLine: Record "Assembly Line";
+        RecGCommentLine: Record "Comment Line";
         CompanyInfo: Record "Company Information";
         CompanyInfo1: Record "Company Information";
         CompanyInfo2: Record "Company Information";
         CompanyInfo3: Record "Company Information";
-        SalesSetup: Record "Sales & Receivables Setup";
+        RecGContact: Record Contact;
+        RecGCustomer: Record Customer;
         DimSetEntry2: Record "Dimension Set Entry";
+        GLSetup: Record "General Ledger Setup";
+        RecGItem: Record Item;
+        RecGItem2: Record Item;
+        RecGPaymentMethod: Record "Payment Method";
+        PaymentTerms: Record "Payment Terms";
+        PrepmtPaymentTerms: Record "Payment Terms";
+        SalesPurchPerson: Record "Payment Terms";
         RespCenter: Record "Responsibility Center";
-        Language: Codeunit Language;
-        AsmHeader: Record "Assembly Header";
-        AsmLine: Record "Assembly Line";
-        FormatAddr: Codeunit "Format Address";
+        SalesSetup: Record "Sales & Receivables Setup";
+        SalesPurchPersons: Record "Salesperson/Purchaser";
+        ShipmentMethod: Record "Shipment Method";
         DimMgt: Codeunit DimensionManagement;
-        CustAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
-        CompanyAddr: array[8] of Text[50];
-        SalesPersonText: Text[30];
-        VATNoText: Text[80];
-        ReferenceText: Text[80];
+        FormatAddr: Codeunit "Format Address";
+        Language: Codeunit Language;
+        AsmInfoExistsForLine: Boolean;
+        [InDataSet]
+        BooGAdditionalInfoVisible: Boolean;
+        Continue: Boolean;
+        ShowInternalInfo: Boolean;
+        Enter: Char;
+        CodGShelfNo: Code[20];
+        "----- NDBI -----": Integer;
+        "- FTA1.00 -": Integer;
+        "-PW-": Integer;
+        i: Integer;
+        IntGPreparationType: Integer;
         NoOfCopies: Integer;
         NoOfLoops: Integer;
-        CopyText: Text[30];
-        Continue: Boolean;
-        i: Integer;
-        DimText: Text[120];
-        OldDimText: Text[75];
-        ShowInternalInfo: Boolean;
         OutputNo: Integer;
-        AsmInfoExistsForLine: Boolean;
-        VATRegNoCaptionLbl: Label 'VAT Registration No.';
-        GiroNoCaptionLbl: Label 'Giro No.';
-        BankCaptionLbl: Label 'Bank';
         AccountNoCaptionLbl: Label 'Account No.';
-        OrderNoCaptionLbl: Label 'Order No.';
-        HomePageCaptionCap: Label 'Home Page';
-        EmailCaptionLbl: Label 'E-Mail';
-        ShipmentDateCaptionLbl: Label 'Shipment Date';
-        LineDimCaptionLbl: Label 'Line Dimensions';
-        ShiptoAddrCaptionLbl: Label 'Ship-to Address';
-        DescriptionCaptionLbl: Label 'Description';
-        PhoneNoCaptionLbl: Label 'Phone No.';
         AmountCaptionLbl: Label 'Amount';
-        UnitPriceCaptionLbl: Label 'Unit Price';
-        PaymentTermsCaptionLbl: Label 'Payment Terms';
-        ShipmentMethodCaptionLbl: Label 'Shipment Method';
-        DocumentDateCaptionLbl: Label 'Document Date';
+        BankCaptionLbl: Label 'Bank';
 
         CstG001: Label ' with a capital of ';
-        "-PW-": Integer;
-        RecGCustomer: Record Customer;
-        RecGContact: Record Contact;
-        RecGPaymentMethod: Record "Payment Method";
-        TxtGOurReferences: Text[100];
-        LblBIC: Label 'SWIFT :';
-        LblIBAN: Label 'IBAN :';
-        LblVATRegistrationNo: Label 'VAT Registration No. :';
-        LblAPE: Label 'APE Code :';
-        LblVAT: Label 'VAT N° : ';
-        LblInvoicingAddress: Label 'Invoicing address';
-        LblPAGE: Label 'Page';
-        LblPhoneNo: Label 'Phone No.';
-        LblFaxNo: Label 'Fax No.';
-        LblYourReference: Label 'Your Reference';
-        LblSalesperson: Label 'Salesperson';
-        LblDocumentDate: Label 'Document date';
-        LblTermsOfSale: Label 'Shipping Conditions :';
-        LblTermsOfPayment: Label 'Terms of payment';
-        LblContact: Label 'Contact';
-        LblOurReferences: Label 'Your customer No.';
-        LblUnitOfMeasure: Label 'Unit of Measure';
-        LblQuantity: Label 'Quantity to prepare';
-        LblDescription: Label 'Vendor code';
-        LblNo: Label 'Description';
-        "- FTA1.00 -": Integer;
-        RecGItem: Record Item;
-
-        LblRefInt: Label 'NAV code';
-        LblPlannedDeliveryDate: Label 'Planned Delivery Date';
         CstG002: Label 'Work Order';
         CstG003: Label 'Order No. %2 from %2.';
-        LblQuantityAsm: Label 'Quantity Totol';
-        LblQtyUse: Label 'Quantity Used';
         CstG004: Label 'Kit Quantity %1 to setup';
-        RecGItem2: Record Item;
-        RecGCommentLine: Record "Comment Line";
-        TxtGCommentLine: Text[1024];
-        Enter: Char;
-        LblShelfNo: Label 'Shelf No';
         CstG005: Label 'Work Order \Order No. %1';
         CstG006: Label 'Printed Date';
         CstG007: Label 'Transporter';
+        DescriptionCaptionLbl: Label 'Description';
+        DocumentDateCaptionLbl: Label 'Document Date';
+        EmailCaptionLbl: Label 'E-Mail';
+        GiroNoCaptionLbl: Label 'Giro No.';
+        HomePageCaptionCap: Label 'Home Page';
+        LblAPE: Label 'APE Code :';
+        LblBIC: Label 'SWIFT :';
+        LblContact: Label 'Contact';
         LblCustomerCode: Label 'Customer code';
-        "----- NDBI -----": Integer;
-        TxtGAsmCommentLine: Text[1024];
-        IntGPreparationType: Integer;
-        CodGShelfNo: Code[20];
         LblCustomerNb: Label 'Customer No.';
+        LblDescription: Label 'Vendor code';
+        LblDocumentDate: Label 'Document date';
+        LblFaxNo: Label 'Fax No.';
+        LblIBAN: Label 'IBAN :';
+        LblInvoicingAddress: Label 'Invoicing address';
+        LblNo: Label 'Description';
+        LblOurReferences: Label 'Your customer No.';
+        LblPAGE: Label 'Page';
+        LblPhoneNo: Label 'Phone No.';
+        LblPlannedDeliveryDate: Label 'Planned Delivery Date';
+        LblQtyUse: Label 'Quantity Used';
+        LblQuantity: Label 'Quantity to prepare';
+        LblQuantityAsm: Label 'Quantity Totol';
+
+        LblRefInt: Label 'NAV code';
+        LblSalesperson: Label 'Salesperson';
+        LblShelfNo: Label 'Shelf No';
+        LblTermsOfPayment: Label 'Terms of payment';
+        LblTermsOfSale: Label 'Shipping Conditions :';
+        LblUnitOfMeasure: Label 'Unit of Measure';
+        LblVAT: Label 'VAT N° : ';
+        LblVATRegistrationNo: Label 'VAT Registration No. :';
         LblWeight: Label 'Weight';
-        [InDataSet]
-        BooGAdditionalInfoVisible: Boolean;
+        LblYourReference: Label 'Your Reference';
+        LineDimCaptionLbl: Label 'Line Dimensions';
+        OrderNoCaptionLbl: Label 'Order No.';
+        PageCaptionCap: Label 'Page %1 of %2';
+        PaymentTermsCaptionLbl: Label 'Payment Terms';
+        PhoneNoCaptionLbl: Label 'Phone No.';
+        ShipmentDateCaptionLbl: Label 'Shipment Date';
+        ShipmentMethodCaptionLbl: Label 'Shipment Method';
+        ShiptoAddrCaptionLbl: Label 'Ship-to Address';
+        Text000: Label 'Salesperson:';
+        Text003: Label 'COPY';
+        Text004: Label 'Work Order \Order No. %2 from %2.';
+        UnitPriceCaptionLbl: Label 'Unit Price';
+        VATRegNoCaptionLbl: Label 'VAT Registration No.';
+        CopyText: Text[30];
+        SalesPersonText: Text[30];
+        CompanyAddr: array[8] of Text[50];
+        CustAddr: array[8] of Text[50];
+        ShipToAddr: array[8] of Text[50];
+        OldDimText: Text[75];
+        ReferenceText: Text[80];
+        VATNoText: Text[80];
+        TxtGOurReferences: Text[100];
+        DimText: Text[120];
+        TxtGAsmCommentLine: Text[1024];
+        TxtGCommentLine: Text[1024];
 
     [Scope('Internal')]
     procedure InitializeRequest(NoOfCopiesFrom: Integer; ShowInternalInfoFrom: Boolean; ArchiveDocumentFrom: Boolean; LogInteractionFrom: Boolean; PrintFrom: Boolean; DisplayAsmInfo: Boolean)
@@ -967,15 +967,15 @@ report 50011 "Preparatory delivery FTA"
     var
         UnitOfMeasure: Record "Unit of Measure";
     begin
-        IF NOT UnitOfMeasure.GET(UOMCode) THEN
-            EXIT(UOMCode);
-        EXIT(UnitOfMeasure.Description);
+        if not UnitOfMeasure.GET(UOMCode) then
+            exit(UOMCode);
+        exit(UnitOfMeasure.Description);
     end;
 
 
     procedure BlanksForIndent(): Text[10]
     begin
-        EXIT(PADSTR('', 2, ' '));
+        exit(PADSTR('', 2, ' '));
     end;
 }
 
