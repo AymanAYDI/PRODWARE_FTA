@@ -147,7 +147,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
 
             trigger OnValidate()
             begin
-                //>>FTA:AM  31.03.2023
+
                 if ("Total weight" <> 0) and ("Total Parcels" <> 0) then
                     CreateShipCosts();
 
@@ -164,13 +164,13 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
 
             trigger OnValidate()
             begin
-                //>>FTA:AM  31.03.2023
+
                 if ("Total weight" <> 0) and ("Total Parcels" <> 0) then
                     CreateShipCosts();
 
                 if ("Total weight" = 0) or ("Total Parcels" = 0) then
                     DeleteOpenShipCostLine();
-                //<<FTA:AM  31.03.2023
+
             end;
         }
         field(50005; "Fax No."; Text[30])
@@ -189,7 +189,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
                 ContBusinessRelation: Record "Contact Business Relation";
                 ContactListPage: Page "Contact List";
             begin
-                //>> FTA1.02
+
                 if not ("Document Type" in ["Document Type"::Quote, "Document Type"::Order]) then
                     exit;
 
@@ -354,8 +354,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
 
 
     local procedure CalcShipment(): Boolean
-    var
-        ShippingAgent: Record "Shipping Agent";
+
     begin
         if ShippingAgent.GET("Shipping Agent Code") then
             case ShippingAgent."Shipping Costs" of
@@ -391,9 +390,9 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
     local procedure TotalSalesLineAmountPrepare(): Decimal
     var
         LRecSalesLine: Record "Sales Line";
-        TotAmount: Decimal;
+
     begin
-        TotAmount := 0;
+
 
         LRecSalesLine.RESET();
         LRecSalesLine.SETRANGE("Document Type", Rec."Document Type");
@@ -420,10 +419,10 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
     local procedure InsertShipLineToOrder()
 
     var
-        ShippingCostsCarrier: Record "Shipping Costs Carrier";
         SalesLine: Record "Sales Line";
-        LineNo: Integer;
+        ShippingCostsCarrier: Record "Shipping Costs Carrier";
         ReleaseSalesDoc: Codeunit "Release Sales Document";
+        LineNo: Integer;
 
     begin
 
@@ -446,12 +445,12 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
             SalesLine.SETRANGE("No.", ShippingCostsCarrier."Item No.");
             SalesLine.SETFILTER("Outstanding Quantity", '<>%1', 0);
             if SalesLine.FINDFIRST() then begin
-                // TODO CODE UNIT SEPC  ReleaseSalesDoc.PerformManualReopen(Rec);
+                ReleaseSalesDoc.PerformManualReopen(Rec);
                 SalesLine.Quantity := 1;
                 SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
                 SalesLine.MODIFY();
             end else begin
-                // TODO CODE UNIT SEPC  ReleaseSalesDoc.PerformManualReopen(Rec);
+                ReleaseSalesDoc.PerformManualReopen(Rec);
                 SalesLine.INIT();
                 SalesLine."Document Type" := Rec."Document Type";
                 SalesLine."Document No." := Rec."No.";
@@ -460,7 +459,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
                 SalesLine.VALIDATE("No.", ShippingCostsCarrier."Item No.");
                 SalesLine.VALIDATE(Quantity, 1);
                 SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
-                // TODO field spec  SalesLine."Shipping Costs" := TRUE;
+                SalesLine."Shipping Costs" := TRUE;
                 SalesLine.INSERT();
             end;
         end;
@@ -538,9 +537,9 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
 
     trigger OnDelete()
     var
+        RecLPurchHeader: Record "Purchase Header";
         //"--NAVEASY.001  Integer ;
         TextCdeTransp002: label 'ENU=There is a Shipping Purchase order linked (Order %1), do you want to delete this order?;FRA=Il existe une commande d''achat tranport li‚e (Commande %1), voulez-vous supprimer cette commande?';
-        RecLPurchHeader: Record "Purchase Header";
     begin
 
         if "Shipping Order No." <> '' then
@@ -550,26 +549,24 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
     end;
 
     var
-        "-NAVEASY.001-": Integer;
+        RecGCommentLine: Record "Comment Line";
+        RecGContact: Record Contact;
         RecGCustomer: Record Customer;
         RecGParamNavi: Record "NavEasy Setup";
-        RecGCommentLine: Record "Comment Line";
-        specFrmGLignesCommentaires: Page "Comment Sheet";
-        ShippingAgent: Record "Shipping Agent";
-        "//PWD 02/02/2010": Integer;
-        RecGContact: Record Contact;
 
-
-        TextCdeTransp003: Label 'You cannot modify Shipping Code agent because there is a Shipping Purchase Order linked (Order %1) !!';
+        RecLPurchHeader: Record "Purchase Header";
 
 
         RecLSalesLine: Record "Sales Line";
+        ShippingAgent: Record "Shipping Agent";
+        specFrmGLignesCommentaires: Page "Comment Sheet";
+
+
         CstL001: Label 'This change can delete the reservation of the lines : do want to continue?';
         CstL002: Label 'Canceled operation';
 
-        "--NAVEASY.001--": Integer;
 
-        RecLPurchHeader: Record "Purchase Header";
+        TextCdeTransp003: Label 'You cannot modify Shipping Code agent because there is a Shipping Purchase Order linked (Order %1) !!';
 
 
 
