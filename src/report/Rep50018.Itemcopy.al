@@ -10,6 +10,8 @@ using Microsoft.Foundation.ExtendedText;
 using Microsoft.Inventory.BOM;
 using Microsoft.Sales.Pricing;
 using Microsoft.Purchases.Pricing;
+using System.Environment;
+using System.Utilities;
 using Microsoft.Inventory.Location;
 using Microsoft.Manufacturing.ProductionBOM;
 using Microsoft.Inventory.Item.Picture;
@@ -27,251 +29,272 @@ report 50018 "Item copy"
     {
         dataitem(Item; Item)
         {
-            DataItemTableView = SORTING("No.");
+            DataItemTableView = sorting("No.");
 
             trigger OnAfterGetRecord()
+            var
+                tenantMedia: Record "Tenant Media";
+                filename: Text;
             begin
                 //Nouvelle référence remplace l'ancienne
-                IF NvRefRemplaceAnc = TRUE THEN BEGIN
+                if NvRefRemplaceAnc = true then begin
                     TSubstituttionRemp.INIT();
                     TSubstituttionRemp."No." := Item."No.";
                     TSubstituttionRemp."Substitute No." := NvNo;
                     TSubstituttionRemp.INSERT();
-                END;
+                end;
 
                 //Article
                 Article.INIT();
-                Article.TRANSFERFIELDS(Item, TRUE);
+                Article.TRANSFERFIELDS(Item, true);
                 Article."No." := NvNo;
-                IF CodGSeriesNo <> '' THEN
+                if CodGSeriesNo <> '' then
                     Article."No. Series" := CodGSeriesNo;
-                BooGCreate := TRUE;
+                BooGCreate := true;
 
                 Article."Creation Date" := WORKDATE();
 
 
                 Article.INSERT();
 
-                IF CreerPtStMag = TRUE THEN BEGIN
+                if CreerPtStMag = true then begin
 
 
                     StockkeepingUnit.RESET();
                     StockkeepingUnit.SETRANGE("Item No.", Item."No.");
-                    IF StockkeepingUnit.FIND('-') THEN
-                        REPEAT
+                    if StockkeepingUnit.FIND('-') then
+                        repeat
                             StockkeepingUnitNew := StockkeepingUnit;
                             StockkeepingUnitNew.VALIDATE("Item No.", NvNo);
                             StockkeepingUnitNew."Unit Cost" := 0;
                             StockkeepingUnitNew."Standard Cost" := 0;
                             StockkeepingUnitNew."Last Direct Cost" := 0;
                             StockkeepingUnitNew.INSERT();
-                        UNTIL StockkeepingUnit.NEXT() = 0;
+                        until StockkeepingUnit.NEXT() = 0;
 
-                END;
+                end;
 
 
 
                 //Image
-                //todo   Item.CALCFIELDS(Picture);
+                //Item.CALCFIELDS(Picture);
 
-                //todo  IF Image AND Item.Picture.HASVALUE THEN
-                //todo  BEGIN
-                //todo      Article.Picture.CREATEOUTSTREAM(OutS);
-                //todo    Item.Picture.CREATEINSTREAM(InS);
-                //todo     COPYSTREAM(OutS, InS);
-                //todo    END;
+                //     IF Image AND (Item.Picture.Count <> 0) THEN BEGIN
+                //         Article.Picture.CREATEOUTSTREAM(OutS);
+                //         Item.Picture.CREATEINSTREAM(InS);
+                //         COPYSTREAM(OutS, InS);
 
-                Article.MODIFY();
+
+                //         Article.Picture.ImportStream()
+                //    Item.Picture.CREATEINSTREAM(InS);
+                //         COPYSTREAM(OutS, InS);
+                //     END;
+
+
+                if Image and tenantMedia.Get(Item.Picture.MediaId) then begin
+                    tenantMedia.CalcFields(Content);
+                    if tenantMedia.Content.HasValue then begin
+                        tenantMedia.Content.CreateInStream(InS);
+                        Article.Picture.Importstream(InS, '', '');
+                        Article.Modify(true)
+                    end;
+                end;
+
+
+
+
+
+
 
 
                 TUniteMesure.SETRANGE(TUniteMesure."Item No.", Item."No.");
-                IF TUniteMesure.FIND('-') THEN
-                    REPEAT
+                if TUniteMesure.FIND('-') then
+                    repeat
                         TUniteMesureNew.INIT();
-                        TUniteMesureNew.TRANSFERFIELDS(TUniteMesure, TRUE);
+                        TUniteMesureNew.TRANSFERFIELDS(TUniteMesure, true);
                         TUniteMesureNew."Item No." := NvNo;
                         TUniteMesureNew.INSERT();
-                    UNTIL TUniteMesure.NEXT() = 0;
+                    until TUniteMesure.NEXT() = 0;
 
 
 
 
                 //Prix d'achats
-                IF PrixAchat = TRUE THEN BEGIN
+                if PrixAchat = true then begin
                     TPrixAchats.SETRANGE(TPrixAchats."Item No.", Item."No.");
-                    IF TPrixAchats.FIND('-') THEN
-                        REPEAT
+                    if TPrixAchats.FIND('-') then
+                        repeat
                             TPrixAchatsNew.INIT();
-                            TPrixAchatsNew.TRANSFERFIELDS(TPrixAchats, TRUE);
+                            TPrixAchatsNew.TRANSFERFIELDS(TPrixAchats, true);
                             TPrixAchatsNew."Item No." := NvNo;
                             TPrixAchatsNew.INSERT();
-                        UNTIL TPrixAchats.NEXT() = 0;
-                END;
+                        until TPrixAchats.NEXT() = 0;
+                end;
 
 
                 //Prix de ventes
-                IF PrixVentes = TRUE THEN BEGIN
+                if PrixVentes = true then begin
                     TPrixVentes.SETRANGE(TPrixVentes."Item No.", Item."No.");
-                    IF TPrixVentes.FIND('-') THEN
-                        REPEAT
+                    if TPrixVentes.FIND('-') then
+                        repeat
                             TPrixVentesNew.INIT();
-                            TPrixVentesNew.TRANSFERFIELDS(TPrixVentes, TRUE);
+                            TPrixVentesNew.TRANSFERFIELDS(TPrixVentes, true);
                             TPrixVentesNew."Item No." := NvNo;
                             TPrixVentesNew.INSERT();
-                        UNTIL TPrixVentes.NEXT() = 0;
-                END;
+                        until TPrixVentes.NEXT() = 0;
+                end;
 
                 //Remises ventes
-                IF RemisesVentes = TRUE THEN BEGIN
+                if RemisesVentes = true then begin
                     TRemisesVentes.SETRANGE(TRemisesVentes.Code, Item."No.");
-                    IF TRemisesVentes.FIND('-') THEN
-                        REPEAT
+                    if TRemisesVentes.FIND('-') then
+                        repeat
                             TRemisesVentesNew.INIT();
-                            TRemisesVentesNew.TRANSFERFIELDS(TRemisesVentes, TRUE);
+                            TRemisesVentesNew.TRANSFERFIELDS(TRemisesVentes, true);
                             TRemisesVentesNew.Code := NvNo;
                             TRemisesVentesNew.INSERT();
-                        UNTIL TRemisesVentes.NEXT() = 0;
-                END;
+                        until TRemisesVentes.NEXT() = 0;
+                end;
 
 
                 //Remises achats
-                IF RemisesAchats = TRUE THEN BEGIN
+                if RemisesAchats = true then begin
                     TRemisesAchats.SETRANGE(TRemisesAchats."Item No.", Item."No.");
-                    IF TRemisesAchats.FIND('-') THEN
-                        REPEAT
+                    if TRemisesAchats.FIND('-') then
+                        repeat
                             TRemisesAchatsNew.INIT();
-                            TRemisesAchatsNew.TRANSFERFIELDS(TRemisesAchats, TRUE);
+                            TRemisesAchatsNew.TRANSFERFIELDS(TRemisesAchats, true);
                             TRemisesAchatsNew."Item No." := NvNo;
                             TRemisesAchatsNew.INSERT();
-                        UNTIL TRemisesAchats.NEXT() = 0;
-                END;
+                        until TRemisesAchats.NEXT() = 0;
+                end;
 
                 //Catalogue Fournisseur
-                IF CatalogueFour = TRUE THEN BEGIN
+                if CatalogueFour = true then begin
                     TCataFour.SETRANGE(TCataFour."Item No.", Item."No.");
-                    IF TCataFour.FIND('-') THEN
-                        REPEAT
+                    if TCataFour.FIND('-') then
+                        repeat
                             TCataFourNew.INIT();
-                            TCataFourNew.TRANSFERFIELDS(TCataFour, TRUE);
+                            TCataFourNew.TRANSFERFIELDS(TCataFour, true);
                             TCataFourNew."Item No." := NvNo;
                             TCataFourNew.INSERT();
-                        UNTIL TCataFour.NEXT() = 0;
-                END;
+                        until TCataFour.NEXT() = 0;
+                end;
 
 
 
                 Item.CALCFIELDS("Assembly BOM");
-                IF NomenclatureAssemblage AND Item."Assembly BOM" THEN BEGIN
+                if NomenclatureAssemblage and Item."Assembly BOM" then begin
                     TNomenclature.SETRANGE("Parent Item No.", Item."No.");
-                    IF TNomenclature.FINDSET() THEN
-                        REPEAT
+                    if TNomenclature.FINDSET() then
+                        repeat
                             TNomenclatureNew.INIT();
-                            TNomenclatureNew.TRANSFERFIELDS(TNomenclature, TRUE);
+                            TNomenclatureNew.TRANSFERFIELDS(TNomenclature, true);
                             TNomenclatureNew."Parent Item No." := NvNo;
                             TNomenclatureNew.INSERT();
-                        UNTIL TNomenclature.NEXT() = 0;
-                END;
+                        until TNomenclature.NEXT() = 0;
+                end;
 
 
-                IF Substitution = TRUE THEN BEGIN
+                if Substitution = true then begin
                     TSubstituttion.SETRANGE("No.", Item."No.");
-                    IF TSubstituttion.FIND('-') THEN
-                        REPEAT
+                    if TSubstituttion.FIND('-') then
+                        repeat
                             TSubstituttionNew.INIT();
-                            TSubstituttionNew.TRANSFERFIELDS(TSubstituttion, TRUE);
+                            TSubstituttionNew.TRANSFERFIELDS(TSubstituttion, true);
                             TSubstituttionNew."No." := NvNo;
 
                             TSubstituttionNew."Substitute No." := '';
 
                             TSubstituttionNew.INSERT();
-                        UNTIL TSubstituttion.NEXT() = 0;
-                END;
+                        until TSubstituttion.NEXT() = 0;
+                end;
 
 
 
-                IF Traductions = TRUE THEN BEGIN
+                if Traductions = true then begin
                     TTraductions.SETRANGE(TTraductions."Item No.", Item."No.");
-                    IF TTraductions.FIND('-') THEN
-                        REPEAT
+                    if TTraductions.FIND('-') then
+                        repeat
                             TTraductionsNew.INIT();
-                            TTraductionsNew.TRANSFERFIELDS(TTraductions, TRUE);
+                            TTraductionsNew.TRANSFERFIELDS(TTraductions, true);
                             TTraductionsNew."Item No." := NvNo;
                             TTraductionsNew.INSERT();
-                        UNTIL TTraductions.NEXT() = 0;
-                END;
+                        until TTraductions.NEXT() = 0;
+                end;
 
-                IF RéférencesEx = TRUE THEN BEGIN
+                if RéférencesEx = true then begin
                     TRefExterne.SETRANGE(TRefExterne."Item No.", Item."No.");
-                    IF TRefExterne.FIND('-') THEN
-                        REPEAT
+                    if TRefExterne.FIND('-') then
+                        repeat
                             TRefExterneNew.INIT();
-                            TRefExterneNew.TRANSFERFIELDS(TRefExterne, TRUE);
+                            TRefExterneNew.TRANSFERFIELDS(TRefExterne, true);
                             TRefExterneNew."Item No." := NvNo;
                             TRefExterneNew.INSERT();
-                        UNTIL TRefExterne.NEXT() = 0;
-                END;
+                        until TRefExterne.NEXT() = 0;
+                end;
 
 
-                IF Variantes = TRUE THEN BEGIN
+                if Variantes = true then begin
                     TVariantes.SETRANGE(TVariantes."Item No.", Item."No.");
-                    IF TVariantes.FIND('-') THEN
-                        REPEAT
+                    if TVariantes.FIND('-') then
+                        repeat
                             TVariantesNew.INIT();
-                            TVariantesNew.TRANSFERFIELDS(TVariantes, TRUE);
+                            TVariantesNew.TRANSFERFIELDS(TVariantes, true);
                             TVariantesNew."Item No." := NvNo;
                             TVariantesNew.INSERT();
-                        UNTIL TVariantes.NEXT() = 0;
-                END;
+                        until TVariantes.NEXT() = 0;
+                end;
 
 
-                IF Commentaires = TRUE THEN BEGIN
+                if Commentaires = true then begin
                     TComment.SETRANGE(TComment."Table Name", TComment."Table Name"::Item);
                     TComment.SETRANGE(TComment."No.", Item."No.");
-                    IF TComment.FIND('-') THEN
-                        REPEAT
+                    if TComment.FIND('-') then
+                        repeat
                             TCommentNew.INIT();
-                            TCommentNew.TRANSFERFIELDS(TComment, TRUE);
+                            TCommentNew.TRANSFERFIELDS(TComment, true);
                             TCommentNew."No." := NvNo;
                             TCommentNew.INSERT();
-                        UNTIL TComment.NEXT() = 0;
-                END;
+                        until TComment.NEXT() = 0;
+                end;
 
 
-                IF AxesAnalytiques = TRUE THEN BEGIN
+                if AxesAnalytiques = true then begin
                     TAxesAnaly.SETRANGE(TAxesAnaly."Table ID", 27);
                     TAxesAnaly.SETRANGE(TAxesAnaly."No.", Item."No.");
-                    IF TAxesAnaly.FIND('-') THEN
-                        REPEAT
+                    if TAxesAnaly.FIND('-') then
+                        repeat
                             TAxesAnalyNew.INIT();
-                            TAxesAnalyNew.TRANSFERFIELDS(TAxesAnaly, TRUE);
+                            TAxesAnalyNew.TRANSFERFIELDS(TAxesAnaly, true);
                             TAxesAnalyNew."No." := NvNo;
                             TAxesAnalyNew.INSERT();
-                        UNTIL TAxesAnaly.NEXT() = 0;
-                END;
+                        until TAxesAnaly.NEXT() = 0;
+                end;
 
-                IF TextGen = TRUE THEN BEGIN
+                if TextGen = true then begin
                     TTextGenEntete.SETRANGE(TTextGenEntete."Table Name", TTextGenEntete."Table Name"::Item);
                     TTextGenEntete.SETRANGE(TTextGenEntete."No.", Item."No.");
-                    IF TTextGenEntete.FIND('-') THEN
-                        REPEAT
+                    if TTextGenEntete.FIND('-') then
+                        repeat
                             TTextGenEnteteNew.INIT();
-                            TTextGenEnteteNew.TRANSFERFIELDS(TTextGenEntete, TRUE);
+                            TTextGenEnteteNew.TRANSFERFIELDS(TTextGenEntete, true);
                             TTextGenEnteteNew."No." := NvNo;
                             TTextGenEnteteNew.INSERT();
-                        UNTIL TTextGenEntete.NEXT() = 0;
-                END;
+                        until TTextGenEntete.NEXT() = 0;
+                end;
 
-                IF TextGen = TRUE THEN BEGIN
+                if TextGen = true then begin
                     TTextGenLigne.SETRANGE(TTextGenLigne."Table Name", TTextGenLigne."Table Name"::Item);
                     TTextGenLigne.SETRANGE(TTextGenLigne."No.", Item."No.");
-                    IF TTextGenLigne.FIND('-') THEN
-                        REPEAT
+                    if TTextGenLigne.FIND('-') then
+                        repeat
                             TTextGenLigneNew.INIT();
-                            TTextGenLigneNew.TRANSFERFIELDS(TTextGenLigne, TRUE);
+                            TTextGenLigneNew.TRANSFERFIELDS(TTextGenLigne, true);
                             TTextGenLigneNew."No." := NvNo;
                             TTextGenLigneNew.INSERT();
-                        UNTIL TTextGenLigne.NEXT() = 0;
-                END;
+                        until TTextGenLigne.NEXT() = 0;
+                end;
 
 
 
@@ -401,79 +424,81 @@ report 50018 "Item copy"
     var
         RecLItem: Record "27";
     begin
-        IF BooGCreate THEN BEGIN
+        if BooGCreate then begin
             COMMIT();
             RecLItem.SETRANGE("No.", NvNo);
             PAGE.RUNMODAL(Page::"Item Card", RecLItem);
-        END;
+        end;
     end;
 
     var
-        AncienNo: Code[20];
-        Article: Record "27";
-        NvNo: Code[20];
-        CreerPtStMag: Boolean;
-        NvRefRemplaceAnc: Boolean;
-        Substitution: Boolean;
-        AxesAnalytiques: Boolean;
-        Image: Boolean;
-        Commentaires: Boolean;
-        Variantes: Boolean;
-        "RéférencesEx": Boolean;
-        Traductions: Boolean;
-        TextGen: Boolean;
-        TextVentes: Boolean;
-        TextAchats: Boolean;
-        NomenclatureAssemblage: Boolean;
-        PrixVentes: Boolean;
-        RemisesVentes: Boolean;
-        CatalogueFour: Boolean;
-        PrixAchat: Boolean;
-        RemisesAchats: Boolean;
-        CopieArticleTexte01: Label 'Numéro d''aticle %1 n''existe pas';
-        CopieArticleTexte02: Label 'Numéro d''aticle %1 existe déjà';
-        TUniteMesure: Record "Item Unit of Measure";
-        TUniteMesureNew: Record "Item Unit of Measure";
-        TSubstituttion: Record "Item Substitution";
-        TSubstituttionNew: Record "Item Substitution";
-        TSubstituttionRemp: Record "Item Substitution";
-        TAxesAnaly: Record "Default Dimension";
-        TAxesAnalyNew: Record "Default Dimension";
+
+
+        Article: Record Item;
+        TNomenclature: Record "BOM Component";
+        TNomenclatureNew: Record "BOM Component";
         TComment: Record "Comment Line";
         TCommentNew: Record "Comment Line";
-        TVariantes: Record "Item Variant";
-        TVariantesNew: Record "Item Variant";
-        TRefExterne: Record "Item reference";
-        TRefExterneNew: Record "Item reference";
-        TTraductions: Record "Item Translation";
-        TTraductionsNew: Record "Item Translation";
+        TAxesAnaly: Record "Default Dimension";
+        TAxesAnalyNew: Record "Default Dimension";
         TTextGenEntete: Record "Extended Text Header";
         TTextGenEnteteNew: Record "Extended Text Header";
         TTextGenLigne: Record "Extended Text Line";
         TTextGenLigneNew: Record "Extended Text Line";
-        TNomenclature: Record "BOM Component";
-        TNomenclatureNew: Record "BOM Component";
-        TPrixVentes: Record "Sales Price";
-        TPrixVentesNew: Record "Sales Price";
-        TRemisesVentes: Record "Sales Line Discount";
-        TRemisesVentesNew: Record "Sales Line Discount";
+        ItemNew: Record Item;
+        TRefExterne: Record "Item reference";
+        TRefExterneNew: Record "Item reference";
+        TSubstituttion: Record "Item Substitution";
+        TSubstituttionNew: Record "Item Substitution";
+        TSubstituttionRemp: Record "Item Substitution";
+        TTraductions: Record "Item Translation";
+        TTraductionsNew: Record "Item Translation";
+        TUniteMesure: Record "Item Unit of Measure";
+        TUniteMesureNew: Record "Item Unit of Measure";
+        TVariantes: Record "Item Variant";
+        TVariantesNew: Record "Item Variant";
         TCataFour: Record "Item Vendor";
         TCataFourNew: Record "Item Vendor";
-        TPrixAchats: Record "Purchase Price";
-        TPrixAchatsNew: Record "Purchase Price";
         TRemisesAchats: Record "Purchase Line Discount";
         TRemisesAchatsNew: Record "Purchase Line Discount";
-        InS: InStream;
-        OutS: OutStream;
-        "--NSC1.07--": Integer;
-        ItemNew: Record Item;
-        "--NSC1.11--": Integer;
+        TPrixAchats: Record "Purchase Price";
+        TPrixAchatsNew: Record "Purchase Price";
+        TRemisesVentes: Record "Sales Line Discount";
+        TRemisesVentesNew: Record "Sales Line Discount";
+        TPrixVentes: Record "Sales Price";
+        TPrixVentesNew: Record "Sales Price";
         StockkeepingUnit: Record "Stockkeeping Unit";
         StockkeepingUnitNew: Record "Stockkeeping Unit";
         ProdBOMCopy: Codeunit "Production BOM-Copy";
-        CodGSeriesNo: Code[20];
-        BooGCreate: Boolean;
         iheb: Page "Item Picture";
+        AxesAnalytiques: Boolean;
+        BooGCreate: Boolean;
+        CatalogueFour: Boolean;
+        Commentaires: Boolean;
+        CreerPtStMag: Boolean;
+        Image: Boolean;
+        NomenclatureAssemblage: Boolean;
+        NvRefRemplaceAnc: Boolean;
+        PrixAchat: Boolean;
+        PrixVentes: Boolean;
+        "RéférencesEx": Boolean;
+        RemisesAchats: Boolean;
+        RemisesVentes: Boolean;
+        Substitution: Boolean;
+        TextAchats: Boolean;
+        TextGen: Boolean;
+        TextVentes: Boolean;
+        Traductions: Boolean;
+        Variantes: Boolean;
+        AncienNo: Code[20];
+        CodGSeriesNo: Code[20];
+        NvNo: Code[20];
+        InS: InStream;
+        "--NSC1.07--": Integer;
+        "--NSC1.11--": Integer;
+        CopieArticleTexte01: Label 'Numéro d''aticle %1 n''existe pas';
+        CopieArticleTexte02: Label 'Numéro d''aticle %1 existe déjà';
+        OutS: OutStream;
 
     [Scope('Internal')]
     procedure "FTA1.00"()
@@ -486,13 +511,13 @@ report 50018 "Item copy"
         InvtSetup: Record "Inventory Setup";
         NoSeriesMgt: Codeunit NoSeriesManagement;
     begin
-        IF NvNo = '' THEN BEGIN
+        if NvNo = '' then begin
             InvtSetup.GET();
 
             // GetInvtSetup;
             InvtSetup.TESTFIELD("Item Nos.");
             NoSeriesMgt.InitSeries(InvtSetup."Item Nos.", '', 0D, NvNo, CodGSeriesNo);
-        END;
+        end;
     end;
 }
 
