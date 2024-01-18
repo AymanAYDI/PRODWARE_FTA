@@ -15,7 +15,7 @@ reportextension 50007 "PhysInventoryList" extends "Phys. Inventory List" //722
             begin
                 if not ItemCard.GET("Item Journal Line"."Item No.") then;
             end;
-            //TODO: cannot find solution BinCode_ItemJournalLine line 150
+
         }
         add("Item Journal Line")
         {
@@ -26,6 +26,12 @@ reportextension 50007 "PhysInventoryList" extends "Phys. Inventory List" //722
             column(ItemCardNO2; ItemCard."No. 2")
             {
 
+            }
+            //TODO : verifier line 150
+            column(BinCode_ItemJournalLinespe; ItemCard."Shelf No.")
+            {
+                IncludeCaption = true;
+                Caption = 'Shelf No.';
             }
         }
     }
