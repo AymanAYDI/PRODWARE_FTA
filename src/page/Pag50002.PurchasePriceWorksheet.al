@@ -89,26 +89,27 @@ page 50002 "Purchase Price Worksheet"
                         REPORT.RUNMODAL(REPORT::"Suggest Item Price on Wksh.", true, true);
                     end;
                 }
-                action("Suggest &Purchase Price on Wksh.")
-                {
-                    Caption = 'Suggest &Purchase Price on Wksh.';
-                    Ellipsis = true;
-                    ToolTip = 'Executes the Suggest &Purchase Price on Wksh. action.';
-                    trigger OnAction()
-                    begin
-                        REPORT.RUNMODAL(REPORT::"Suggest Purch. Price on Wksh.", true, true);
-                    end;
-                }
-                action("I&mplement Price Change")
-                {
-                    Caption = 'I&mplement Price Change';
-                    Ellipsis = true;
-                    ToolTip = 'Executes the I&mplement Price Change action.';
-                    trigger OnAction()
-                    begin
-                        REPORT.RUNMODAL(REPORT::"Implement Purch. Price Change", TRUE, TRUE, Rec);
-                    end;
-                }
+                //TODO-> Reports Specifiques
+                // action("Suggest &Purchase Price on Wksh.")
+                // {
+                //     Caption = 'Suggest &Purchase Price on Wksh.';
+                //     Ellipsis = true;
+                //     ToolTip = 'Executes the Suggest &Purchase Price on Wksh. action.';
+                //     trigger OnAction()
+                //     begin
+                //         REPORT.RUNMODAL(REPORT::"Suggest Purch. Price on Wksh.", TRUE, TRUE);
+                //     end;
+                // }
+                // action("I&mplement Price Change")
+                // {
+                //     Caption = 'I&mplement Price Change';
+                //     Ellipsis = true;
+                //     ToolTip = 'Executes the I&mplement Price Change action.';
+                //     trigger OnAction()
+                //     begin
+                //         REPORT.RUNMODAL(REPORT::"Implement Purch. Price Change", TRUE, TRUE, Rec);
+                //     end;
+                // }
             }
         }
     }

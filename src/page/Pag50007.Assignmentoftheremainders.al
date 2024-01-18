@@ -193,11 +193,11 @@ page 50007 "Assignment of the remainders"
                 begin
 
                     CLEAR(RptPGeneratePurchaseOrder);
-                    IF CodGVendorNo <> '' THEN
+                    if CodGVendorNo <> '' then
                         RecPSalesLine.SETFILTER("Vendor No.", CodGVendorNo);
                     RptPGeneratePurchaseOrder.SETTABLEVIEW(RecPSalesLine);
                     RptPGeneratePurchaseOrder.RUNMODAL();
-                    CurrPage.UPDATE(FALSE);
+                    CurrPage.UPDATE(false);
                 end;
             }
         }

@@ -80,7 +80,7 @@ page 60003 "Assignment ItemSV"
                     if Rec."Shipment Date" <> 0D then
                         RecGPurchLine.SETFILTER("Promised Receipt Date", '..%1', Rec."Shipment Date");
                     RecGPurchLine.SETFILTER("Drop Shipment", FORMAT(false));
-                    //PAGE.RUNMODAL(Page::"Purchase Lines", RecGPurchLine); //TODO -> Require Page "Purchase Lines"
+                    PAGE.RUNMODAL(Page::"Purchase Lines", RecGPurchLine);
                 end;
             }
             field(EcrQtyKit; DecGQtyKit)
@@ -273,69 +273,6 @@ page 60003 "Assignment ItemSV"
         OptGxPreparationType: Option " ",Stock,Assembly,Purchase,Remainder;
         Text19028226: Label 'Total';
 
-
-    procedure FctGetParm(RecLSaleLine: Record "Sales Line"; var DecPxQuantity: Decimal; var OptPxPreparationType: Option " ",Stock,Assembly,Purchase,Remainder)
-    begin
-        RecGSalesLine := RecLSaleLine;
-        DecGxQuantity := DecPxQuantity;
-        OptGxPreparationType := OptPxPreparationType;
-        //MESSAGE(FORMAT(DecGxQuantity));
-
-        Rec := RecGSalesLine;
-        FctCalcInformation();
-    end;
-
-
-    procedure FctCalcInformation()
-    begin
-        //>>MIG NAV 2015 : Not Supported
-        /*
-        RecGItem.RESET;
-        IF "Location Code" <> '' THEN
-           RecGItem.SETFILTER("Location Filter","Location Code");
-        IF "Shipment Date" <> 0D THEN
-           RecGItem.SETFILTER("Date Filter",'..%1',"Shipment Date");
-        RecGItem.SETFILTER("Drop Shipment Filter",FORMAT(FALSE));
-        RecGItem.GET("No.");
-        IF RecGItem."Kit BOM No." = '' THEN
-        BEGIN
-          CurrForm.ShowComponents.VISIBLE(FALSE);
-          CurrForm.EcrQtyKit.EDITABLE(FALSE);
-          CurrForm.EcrAssKit.EDITABLE(FALSE);
-        END ELSE BEGIN
-          CurrForm.ShowComponents.VISIBLE(TRUE);
-          CurrForm.EcrQtyKit.EDITABLE(TRUE);
-          CurrForm.EcrAssKit.EDITABLE(TRUE);
-        END;
-        RecGItem.CALCFIELDS(Inventory,"Reserved Qty. on Inventory","Qty. on Purch. Order","Reserved Qty. on Purch. Orders");
-        DecGDisposalQtyStock := RecGItem.Inventory - RecGItem."Reserved Qty. on Inventory";
-        DecGDisposalQtyPurchOrder := RecGItem."Qty. on Purch. Order" - RecGItem."Reserved Qty. on Purch. Orders" ;
-        //KIT
-        TempKitSalesLine.DELETEALL;
-        CLEAR(DecGDisposalQtyKit);
-        CheckKitItemAvail.SalesLineShowWarning(Rec,TempKitSalesLine);
-        DecGDisposalQtyKit := CheckKitItemAvail.FctCountKitDisposalToBuild;
-        
-        IF DecGDisposalQtyStock < Quantity THEN
-          DecGQtyStock := DecGDisposalQtyStock
-        ELSE
-           DecGQtyStock := Quantity;
-        IF DecGDisposalQtyPurchOrder < Quantity THEN
-          DecGQtyPurchOrder := DecGDisposalQtyPurchOrder
-        ELSE
-          DecGQtyPurchOrder := Quantity;
-        IF DecGDisposalQtyKit < Quantity THEN
-          DecGQtyKit := DecGDisposalQtyKit
-        ELSE
-          DecGQtyKit := Quantity;
-        DecGQtyRemainder := Quantity;
-        FctCalcTotal;
-        */
-        //<<MIG NAV 2015 : Not Supported
-
-    end;
-
-
     procedure FctButtonOK()
     var
         RecLSalesLine: Record "Sales Line";
@@ -392,7 +329,6 @@ page 60003 "Assignment ItemSV"
             end;
             BooGLineToBeCreate := true;
         end;
-        //DecGQtyRemainder := Quantity - (DecGQtyStock+DecGQtyKit+DecGQtyPurchOrder);
         if DecGQtyRemainder > 0 then begin
             if DecGQtyRemainder > Rec.Quantity then
                 ERROR(CstG001, DecGQtyRemainder, CstG013, Rec.Quantity);

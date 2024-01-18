@@ -107,14 +107,14 @@ report 50010 "Correct Reservation Entry"
     }
 
     var
-        RecGSalesHeader: Record "Sales Header";
-        RecGPurchHeader: Record "Purchase Header";
-        RecG337SV: Record "Reservation EntryFTA";
-        RecG337: Record "Reservation Entry";
+        RecGAssembletoOrderLink: Record "Assemble-to-Order Link";
         RecGKitSalesLine: Record "Assembly Line";
+        RecGPurchHeader: Record "Purchase Header";
+        RecG337: Record "Reservation Entry";
+        RecG337SV: Record "Reservation EntryFTA";
+        RecGSalesHeader: Record "Sales Header";
         IntGCpt: Integer;
         CstG001: Label 'Nombre d''erreur trouvé : %1 (voir la table %2)';
         CstG002: Label 'Pas d''erreur trouvée';
-        RecGAssembletoOrderLink: Record "Assemble-to-Order Link";
 }
 

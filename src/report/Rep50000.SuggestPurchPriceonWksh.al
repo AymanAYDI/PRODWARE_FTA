@@ -279,39 +279,39 @@ report 50000 "Suggest Purch. Price on Wksh."
     end;
 
     var
-        Text001: Label 'Processing items  #1##########';
-        PurchPrice2: Record "Purchase Price";
-        PurchPriceWksh2: Record "Purchase Price Worksheet";
-        PurchPriceWksh: Record "Purchase Price Worksheet";
-        ToVend: Record Vendor;
-        ToCustPriceGr: Record "Customer Price Group";
         ToCampaign: Record Campaign;
-        ToUnitOfMeasure: Record "Unit of Measure";
-        ItemUnitOfMeasure: Record "Item Unit of Measure";
-        ToCurrency: Record Currency;
-        FromCurrency: Record Currency;
         Currency2: Record Currency;
+        FromCurrency: Record Currency;
+        ToCurrency: Record Currency;
         CurrExchRate: Record "Currency Exchange Rate";
-        RoundingMethod: Record "Rounding Method";
+        ToCustPriceGr: Record "Customer Price Group";
         Item: Record Item;
+        ItemUnitOfMeasure: Record "Item Unit of Measure";
+        PurchPrice2: Record "Purchase Price";
+        PurchPriceWksh: Record "Purchase Price Worksheet";
+        PurchPriceWksh2: Record "Purchase Price Worksheet";
+        RoundingMethod: Record "Rounding Method";
+        ToUnitOfMeasure: Record "Unit of Measure";
+        ToVend: Record Vendor;
         UOMMgt: Codeunit "Unit of Measure Management";
-        Window: Dialog;
-        PriceAlreadyExists: Boolean;
-        CreateNewPrices: Boolean;
-        UnitPriceFactor: Decimal;
-        PriceLowerLimit: Decimal;
-        ToSalesType: Option Vendor;
-        ToSalesCode: Code[20];
-        ToStartDate: Date;
-        ToEndDate: Date;
-        ReplaceSalesCode: Boolean;
-        ReplaceUnitOfMeasure: Boolean;
-        ReplaceCurrency: Boolean;
-        ReplaceStartingDate: Boolean;
-        ReplaceEndingDate: Boolean;
-        Text002: Label 'Sales Code must be specified when copying from %1 to All Customers.';
         [InDataSet]
         BooGEnableSalesCodeCtrl: Boolean;
+        CreateNewPrices: Boolean;
+        PriceAlreadyExists: Boolean;
+        ReplaceCurrency: Boolean;
+        ReplaceEndingDate: Boolean;
+        ReplaceSalesCode: Boolean;
+        ReplaceStartingDate: Boolean;
+        ReplaceUnitOfMeasure: Boolean;
+        ToSalesCode: Code[20];
+        ToEndDate: Date;
+        ToStartDate: Date;
+        PriceLowerLimit: Decimal;
+        UnitPriceFactor: Decimal;
+        Window: Dialog;
+        Text001: Label 'Processing items  #1##########';
+        Text002: Label 'Sales Code must be specified when copying from %1 to All Customers.';
+        ToSalesType: Option Vendor;
 
     [Scope('Internal')]
     procedure InitializeRequest(NewToSalesType: Option Customer,"Customer Price Group",Campaign,"All CUstomers"; NewToSalesCode: Code[20]; NewToStartDate: Date; NewToEndDate: Date; NewToCurrCode: Code[10]; NewToUOMCode: Code[10]; NewCreateNewPrices: Boolean)

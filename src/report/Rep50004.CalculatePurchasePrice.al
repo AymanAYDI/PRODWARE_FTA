@@ -20,7 +20,7 @@ report 50004 "Calculate Purchase Price"
                 Window.UPDATE(1, "No.");
 
                 FctCalcPurchasePriceFTA(Item);
-                MODIFY(TRUE);
+                MODIFY(true);
             end;
 
             trigger OnPreDataItem()
@@ -49,6 +49,9 @@ report 50004 "Calculate Purchase Price"
     }
 
     var
+        PurchasePrice: Record "Purchase Price";
+        DeleteWhstLine: Boolean;
+        Window: Dialog;
         Text000: Label 'Updating Unit Prices...\\';
         Text005: Label 'The item prices have now been updated in accordance with the suggested price changes.\\Do you want to delete the suggested price changes?';
         Text007: Label 'Item No.               #1##########\';
@@ -56,8 +59,5 @@ report 50004 "Calculate Purchase Price"
         Text009: Label 'Sales Code             #3##########\';
         Text010: Label 'Currency Code          #3##########\';
         Text011: Label 'Starting Date          #4######';
-        PurchasePrice: Record "Purchase Price";
-        Window: Dialog;
-        DeleteWhstLine: Boolean;
 }
 

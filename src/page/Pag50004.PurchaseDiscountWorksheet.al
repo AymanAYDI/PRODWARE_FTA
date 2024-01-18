@@ -110,9 +110,9 @@ page 50004 "Purchase Discount Worksheet"
                     begin
                         REPORT.RUNMODAL(REPORT::"Implement Purch. Disc. Change", TRUE, TRUE, Rec);
                     end;
+
                 }
             }
         }
     }
 }
-
