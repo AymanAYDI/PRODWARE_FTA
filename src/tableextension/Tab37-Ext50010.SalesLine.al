@@ -378,11 +378,11 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctReserveOnStock(RecPSalesLine: Record "Sales Line"; DecPQtyToReserv: Decimal; var RemainingQtyToReserveBase: Decimal)
     var
-        RecLSalesLine: Record "Sales Line";
-        RecLReservEntry: Record "Reservation Entry";
-        RecLLocation: Record Location;
-        RecLItemLedgerEntry: Record "Item Ledger Entry";
         RecLEntrySummary: Record "Entry Summary" temporary;
+        RecLItemLedgerEntry: Record "Item Ledger Entry";
+        RecLLocation: Record Location;
+        RecLReservEntry: Record "Reservation Entry";
+        RecLSalesLine: Record "Sales Line";
         CduLCreatePick: Codeunit "Create Pick";
         ReservMgt: Codeunit "Reservation Management";
         FrmLAvailableItemLedgEntries: page "Available - Item Ledg. Entries";
@@ -412,8 +412,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecLSalesLine.TESTFIELD(Type, Type::Item);
         RecLSalesLine.TESTFIELD("No.");
         Clear(Reservation);
-        //TODO: procedure SetSalesLine not found in page Reservation
         Reservation.SetReservSource(RecLSalesLine);
+        ReservMgt.SetReservSource(RecLSalesLine);
         // Reservation.SetSalesLine(RecLSalesLine);
         // ReservMgt.SetSalesLine(RecLSalesLine);
         ReservMgt.AutoReserveOneLine(
@@ -435,19 +435,19 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctReserveOnPurchLine(RecPSalesLine: Record "Sales Line"; DecPQtyToReserv: Decimal)
     var
-        DecLOriginQuantity: Decimal;
-        RecLSalesLine: Record "Sales Line";
-        RecLReservEntry: Record "Reservation Entry";
-        RecLLocation: Record Location;
-        FrmLAvailableItemLedgEntries: page "Available - Item Ledg. Entries";
         RecLItemLedgerEntry: Record "Item Ledger Entry";
-        CduLCreatePick: Codeunit "Create Pick";
-        DecLWorkQty: Decimal;
+        RecLLocation: Record Location;
         RecLPurchLine: Record "Purchase Line";
-        DecLQuantityRes: Decimal;
-        FrmLAvailablePurchLines: Page "Available - Purchase Lines";
-        DecPQtyToReservBase: Decimal;
+        RecLReservEntry: Record "Reservation Entry";
+        RecLSalesLine: Record "Sales Line";
+        CduLCreatePick: Codeunit "Create Pick";
         FTAFunctions: Codeunit FTA_Functions;
+        FrmLAvailableItemLedgEntries: page "Available - Item Ledg. Entries";
+        FrmLAvailablePurchLines: Page "Available - Purchase Lines";
+        DecLOriginQuantity: Decimal;
+        DecLQuantityRes: Decimal;
+        DecLWorkQty: Decimal;
+        DecPQtyToReservBase: Decimal;
     begin
         if (RecPSalesLine.Type <> RecPSalesLine.Type::Item) or (DecPQtyToReserv = 0) then
             exit;
@@ -469,11 +469,11 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecLSalesLine.TESTFIELD(Type, Type::Item);
         RecLSalesLine.TESTFIELD("No.");
         Clear(Reservation);
-        //TODO: procedure SetSalesLine not found in page Reservation
+        Reservation.SetReservSource(RecLSalesLine);
         // Reservation.SetSalesLine(RecLSalesLine);
-        // Reservation.GetReservEntry(RecLReservEntry);
+        Reservation.GetReservEntry(RecLReservEntry);
         DecPQtyToReservBase := DecPQtyToReserv * RecPSalesLine."Qty. per Unit of Measure";
-        //TODO: procedure SetSalesLine not found in page Reservation
+        ReservMgt.SetReservSource(RecLSalesLine);
         //ReservMgt.SetSalesLine(RecLSalesLine);
         //TODO: codeunit Reservation management not migrated yet
         // if BooGResaFTA then
@@ -491,7 +491,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Purchase;
         Validate("Qty. to Assemble to Order", 0);
 
-        RecLSalesLine.MODIFY;
+        RecLSalesLine.MODIFY();
 
         if Type = Type::Item then
             ATOLink.DeleteAsmFromSalesLine(Rec);
@@ -501,18 +501,18 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctReserveOnKit(RecPSalesLine: Record "Sales Line"; DecPQtyToReserv: Decimal)
     var
-        DecLOriginQuantity: Decimal;
-        RecLSalesLine: Record "Sales Line";
-        RecLReservEntry: Record "Reservation Entry";
-        RecLLocation: Record Location;
-        FrmLAvailableItemLedgEntries: page "Available - Item Ledg. Entries";
+        RecLEntrySummary: Record "Entry Summary" temporary;
         RecLItemLedgerEntry: Record "Item Ledger Entry";
+        RecLLocation: Record Location;
+        RecLReservEntry: Record "Reservation Entry";
+        RecLSalesLine: Record "Sales Line";
         CduLCreatePick: Codeunit "Create Pick";
+        ReservMgt: Codeunit "Reservation Management";
+        FrmLAvailableItemLedgEntries: page "Available - Item Ledg. Entries";
+        DecLLineDisc: Decimal;
+        DecLOriginQuantity: Decimal;
         DecLWorkQty: Decimal;
         "**PAMO": Integer;
-        ReservMgt: Codeunit "Reservation Management";
-        RecLEntrySummary: Record "Entry Summary" temporary;
-        DecLLineDisc: Decimal;
     begin
         if (RecPSalesLine.Type <> RecPSalesLine.Type::Item) or (DecPQtyToReserv = 0) then
             exit;
@@ -546,7 +546,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             RecLSalesLine.Validate("Line Discount %", DecLLineDisc);
         RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Assembly;
 
-        RecLSalesLine.MODIFY;
+        RecLSalesLine.MODIFY();
 
         Item.CALCFIELDS("Assembly BOM");
         if Item."Assembly BOM" = false then
@@ -559,17 +559,17 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctNotReserv(RecPSalesLine: Record "Sales Line"; DecPQtyToReserv: Decimal)
     var
-        DecLOriginQuantity: Decimal;
-        RecLSalesLine: Record "Sales Line";
-        RecLReservEntry: Record "Reservation Entry";
-        RecLLocation: Record Location;
-        FrmLAvailableItemLedgEntries: page "Available - Item Ledg. Entries";
+        RecLEntrySummary: Record "Entry Summary" temporary;
         RecLItemLedgerEntry: Record "Item Ledger Entry";
+        RecLLocation: Record Location;
+        RecLReservEntry: Record "Reservation Entry";
+        RecLSalesLine: Record "Sales Line";
         CduLCreatePick: Codeunit "Create Pick";
+        ReservMgt: Codeunit "Reservation Management";
+        FrmLAvailableItemLedgEntries: page "Available - Item Ledg. Entries";
+        DecLOriginQuantity: Decimal;
         DecLWorkQty: Decimal;
         "**PAMO": Integer;
-        ReservMgt: Codeunit "Reservation Management";
-        RecLEntrySummary: Record "Entry Summary" temporary;
     begin
         if (RecPSalesLine.Type <> RecPSalesLine.Type::Item) or (DecPQtyToReserv = 0) then
             exit;
@@ -609,8 +609,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctCreateSalesLine(var RecPSalesLine: Record "Sales Line"; DecPWorkQty: Decimal; var IntPLineNo: Integer)
     var
-        RecLSalesLine: Record "Sales Line";
         RecLSalesLine2: Record "Sales Line";
+        RecLSalesLine: Record "Sales Line";
         BooLOk: Boolean;
     begin
         RecLSalesLine.Init();
@@ -667,7 +667,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             exit;
 
         ReservEngineMgt.InitFilterAndSortingLookupFor(ReservEntry, true);
-        //TODO: Procedure FilterReservFor not found 
+        Rec.SetReservationFilters(ReservEntry);
         //ReserveSalesLine.FilterReservFor(ReservEntry, Rec);
 
 
@@ -675,13 +675,13 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             repeat
                 Clear(ReservEntry2);
                 ReservEntry2 := ReservEntry;
-                //TODO : Codeunit Reservetion management not migrated yet
+                ReservEntry2.SetPointerFilter();
                 //ReservMgt.SetPointerFilter(ReservEntry2);
                 ReservEntry2.SetRange("Reservation Status", ReservEntry2."Reservation Status"::Reservation);
                 if ReservEntry2.Find('-') then
                     repeat
                         ReservEntry3.Get(ReservEntry2."Entry No.", not ReservEntry2.Positive);
-                    //TODO : Codeunit Reservetion Engine mgt not migrated yet
+                        "FTA_Functions".CloseReservEntry2(ReservEntry2);
                     // ReservEngineMgt.CloseReservEntry2(ReservEntry2);
                     until ReservEntry2.NEXT() = 0;
             until ReservEntry.NEXT() = 0;
@@ -707,8 +707,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctCalcQtyToSetOn()
     var
-        BooLFirstRec: Boolean;
         KitSalesLine: Record "Assembly Line";
+        BooLFirstRec: Boolean;
     begin
         "Kit Qty To Build Up" := 0;
         if not FctIsBuildKit(Rec) then
@@ -733,14 +733,16 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctTestNo()
     var
-        RecLStandardText: Record "Standard Text";
+        RecLFixedAsset: Record "Fixed Asset";
         RecLGLAcc: Record "G/L Account";
         RecLItem: Record Item;
-        RecLRes: Record Resource;
-        RecLFixedAsset: Record "Fixed Asset";
         RecLItemCharge: Record "Item Charge";
+        RecLRes: Record Resource;
+        RecLStandardText: Record "Standard Text";
         FrmTransitoryItem: page "50005";
         FrmTransitoryKitItem: Page "50010";
+        PagBoredBlocksItemCard: page "50017";
+        BooLItemNoFound: Boolean;
         CstL001: Label 'Do you want to create the %1 item %2? ';
         CstL002: Label 'Process cancelled';
         CstL003: Label 'Item No. %1 does not exist.';
@@ -749,8 +751,6 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         CstL006: Label 'Item Charge %1 does not exist.';
         CstL007: Label 'Fixed asset %1 does not exist.';
         CstL010: Label 'Item No. %1 created.';
-        PagBoredBlocksItemCard: page "50017";
-        BooLItemNoFound: Boolean;
     begin
         case Type of
             Type::" ":
@@ -920,9 +920,9 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctCreatePurchaseOrderHeader(CodPVendorNo: Code[20])
     var
-        NoSeriesManagement: codeunit NoSeriesManagement;
         RecLPurchLine: Record "Purchase Line";
         RecLPurchPayablesSetup: Record "Purchases & Payables Setup";
+        NoSeriesManagement: codeunit NoSeriesManagement;
     begin
         RecLPurchPayablesSetup.Get();
 
@@ -943,17 +943,17 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctCreatePurchaseOrderLine(var RecPSalesLine: Record "Sales Line"; var CodPDocNo: Code[20])
     var
-        RecLPurchLine: Record "Purchase Line";
         RecLPurchLine2: Record "Purchase Line";
-        IntLLineNo: Integer;
-        CodLxVendorNo: Code[20];
-        CodLxItemNo: Code[20];
-        CstL001: Label '%1 Purchase Order(s).';
-        CodLxLocationCode: Code[20];
+        RecLPurchLine: Record "Purchase Line";
         RecLReservEntry: Record "Reservation Entry";
         RecLSalesLine: Record "Sales Line";
+        CodLxItemNo: Code[20];
+        CodLxLocationCode: Code[20];
+        CodLxVendorNo: Code[20];
         DecLQtyToReserve: Decimal;
         DecLQtyToReserveBase: Decimal;
+        IntLLineNo: Integer;
+        CstL001: Label '%1 Purchase Order(s).';
     begin
         IntGCountOrder := 0;
         CodLxVendorNo := '';
@@ -1023,9 +1023,10 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 DecLQtyToReserveBase := DecLQtyToReserve * RecPSalesLine."Qty. per Unit of Measure";
 
                 Clear(Reservation);
-                //TODO: procedure SetSalesLine not found in page Reservation
+                Reservation.SetReservSource(RecLSalesLine);
                 // Reservation.SetSalesLine(RecLSalesLine);
-                // Reservation.GetReservEntry(RecLReservEntry);
+                Reservation.GetReservEntry(RecLReservEntry);
+                ReservMgt.SetReservSource(RecLSalesLine);
                 // ReservMgt.SetSalesLine(RecLSalesLine);
                 if RecLPurchLine."Requested Receipt Date" <> 0D then
                     ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Requested Receipt Date")
@@ -1055,15 +1056,15 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctAddKitLines(var CodPDocNo: Code[20]; var CodPVendor: Code[20])
     var
-        RecLPurchLine: Record "Purchase Line";
         RecLPurchLine2: Record "Purchase Line";
+        RecLPurchLine: Record "Purchase Line";
         RecLReservEntry: Record "Reservation Entry";
-        IntLLineNo: Integer;
-        CodLxVendorNo: Code[20];
         CodLxItemNo: Code[20];
         CodLxLocationCode: Code[20];
+        CodLxVendorNo: Code[20];
         DecLQtyToReserve: Decimal;
         DecLQtyToReserveBase: Decimal;
+        IntLLineNo: Integer;
     begin
         if CodPDocNo = '' then
             exit;
@@ -1103,10 +1104,12 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
                         DecLQtyToReserveBase := DecLQtyToReserve * RecGKitSalesLine."Qty. per Unit of Measure";
                         RecGKitSalesLine."Selected for Order" := false;
-                        RecGKitSalesLine.MODIFY;
+                        RecGKitSalesLine.MODIFY();
                         Clear(Reservation);
+                        Reservation.SetReservSource(RecGKitSalesLine);
                         // Reservation.SetAssemblyLine(RecGKitSalesLine);
-                        // Reservation.GetReservEntry(RecLReservEntry);
+                        Reservation.GetReservEntry(RecLReservEntry);
+                        ReservMgt.SetReservSource(RecGKitSalesLine);
                         // ReservMgt.SetAssemblyLine(RecGKitSalesLine);
                         if RecLPurchLine."Requested Receipt Date" <> 0D then
                             ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Requested Receipt Date")
@@ -1177,8 +1180,10 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 RecGKitSalesLine.Validate("Selected for Order", false);
                 RecGKitSalesLine.MODIFY();
                 Clear(Reservation);
+                Reservation.SetReservSource(RecGKitSalesLine);
                 // Reservation.SetAssemblyLine(RecGKitSalesLine);
-                // Reservation.GetReservEntry(RecLReservEntry);
+                Reservation.GetReservEntry(RecLReservEntry);
+                ReservMgt.SetReservSource(RecGKitSalesLine);
                 // ReservMgt.SetAssemblyLine(RecGKitSalesLine);
                 if RecLPurchLine."Requested Receipt Date" <> 0D then
                     ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Requested Receipt Date")
@@ -1197,15 +1202,15 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctAddKitLinesAndHeader(var RecPSalesLine: Record "Sales Line")
     var
-        RecLPurchLine: Record "Purchase Line";
         RecLPurchLine2: Record "Purchase Line";
+        RecLPurchLine: Record "Purchase Line";
         RecLReservEntry: Record "Reservation Entry";
-        IntLLineNo: Integer;
-        CodLxVendorNo: Code[20];
         CodLxItemNo: Code[20];
         CodLxLocationCode: Code[20];
+        CodLxVendorNo: Code[20];
         DecLQtyToReserve: Decimal;
         DecLQtyToReserveBase: Decimal;
+        IntLLineNo: Integer;
     begin
         RecGKitSalesLine.SetCurrentKey("Vendor No.", "No.", "Location Code");
         RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
@@ -1219,7 +1224,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         CodLxItemNo := '';
         CodLxLocationCode := '';
         if not RecGKitSalesLine.IsEmpty then begin
-            RecGKitSalesLine.FindSet;
+            RecGKitSalesLine.FindSet();
             repeat
                 if (RecGKitSalesLine."Vendor No." <> CodLxVendorNo) then begin
                     FctCreatePurchaseOrderHeader(RecGKitSalesLine."Vendor No.");
@@ -1228,12 +1233,12 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 if (RecGKitSalesLine."Vendor No." <> CodLxVendorNo) or
                    (RecGKitSalesLine."No." <> CodLxItemNo) or
                    (RecGKitSalesLine."Location Code" <> CodLxLocationCode) then begin
-                    RecLPurchLine.Init;
+                    RecLPurchLine.Init();
                     RecLPurchLine."Document Type" := RecGPurchHeader."Document Type";
                     RecLPurchLine."Document No." := RecGPurchHeader."No.";
                     RecLPurchLine2.SetRange("Document Type", RecLPurchLine."Document Type"::Order);
                     RecLPurchLine2.SetRange("Document No.", RecGPurchHeader."No.");
-                    if RecLPurchLine2.FindLast then
+                    if RecLPurchLine2.FindLast() then
                         IntLLineNo := RecLPurchLine2."Line No." + 10000
                     else
                         IntLLineNo := 10000;
@@ -1252,7 +1257,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                               (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
                                 RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
 
-                    RecLPurchLine.Insert;
+                    RecLPurchLine.Insert();
                 end;
                 RecLPurchLine.Validate(Quantity, RecLPurchLine.Quantity + RecGKitSalesLine."Qty to be Ordered");
                 if (RecGKitSalesLine."Requested Receipt Date" <> 0D) then begin
@@ -1265,7 +1270,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                         if (RecLPurchLine."Requested Receipt Date" = 0D) or
                           (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
                             RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
-                RecLPurchLine.MODIFY;
+                RecLPurchLine.MODIFY();
                 RecGKitSalesLine.CALCFIELDS("Reserved Quantity");
 
                 if ((RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity") <=
@@ -1279,8 +1284,10 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 RecGKitSalesLine."Selected for Order" := false;
                 RecGKitSalesLine.MODIFY();
                 Clear(Reservation);
+                Reservation.SetReservSource(RecGKitSalesLine);
                 // Reservation.SetAssemblyLine(RecGKitSalesLine);
-                // Reservation.GetReservEntry(RecLReservEntry);
+                Reservation.GetReservEntry(RecLReservEntry);
+                ReservMgt.SetReservSource(RecGKitSalesLine);
                 // ReservMgt.SetAssemblyLine(RecGKitSalesLine);
                 if RecLPurchLine."Requested Receipt Date" <> 0D then
                     ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLPurchLine."Requested Receipt Date")
@@ -1333,10 +1340,10 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     procedure FctctrlKitReservation(RecPSalesLine: Record "Sales Line") BooLOK: Boolean
     var
-        RecLKitSalesLine: Record "Assembly Line";
         RecL337: Record "Reservation Entry";
         RecL337b: Record "Reservation Entry";
         RecLATOLink: Record "Assemble-to-Order Link";
+        RecLKitSalesLine: Record "Assembly Line";
     begin
         BooLOK := false;
         RecPSalesLine.CALCFIELDS("Reserved Quantity");
@@ -1402,8 +1409,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
     local procedure FctIsBuildKit(RecPSalesLine: Record "Sales Line"): Boolean
     var
-        RecLSalesLine: Record "Sales Line";
         RecLAssembletoOrderLink: Record "Assemble-to-Order Link";
+        RecLSalesLine: Record "Sales Line";
     begin
         RecLAssembletoOrderLink.Reset();
         RecLAssembletoOrderLink.SetRange("Document Type", RecPSalesLine."Document Type");
@@ -1527,8 +1534,6 @@ tableextension 50010 SalesLine extends "Sales Line" //37
     end;
 
     procedure UpdatePurchaseBasePrice()
-    var
-        Item: Record Item;
     begin
         if Item.Get("No.") then begin
             if ("Item Base" = "Item Base"::"Bored blocks") and (Quantity <> 0) then
@@ -1548,27 +1553,22 @@ tableextension 50010 SalesLine extends "Sales Line" //37
     end;
 
     var
-        CstL001: Label 'Assignment on stock, mono and multilevel Assembly, Assignment on order purchase, remainder Generation';
-        RecLItem: Record Item;
-        NewShipmentDate: Date;
-        RecGPurchHeader: Record "Purchase Header";
-        IntGCountOrder: Integer;
-        BooGParmFromCompileBL: Boolean;
-        RecGKitSalesLine: Record "Assembly Line";
+        ATOLink: Record "Assemble-to-Order Link";
+        Currency: Record Currency;
+        Item: Record Item;
         RecAssemlyOrder: Record "Assemble-to-Order Link";
         RecGATOLinkToSalesLine: Record "Assemble-to-Order Link";
-        BooGResaFTA: Boolean;
-        BooGResaAssFTA: Boolean;
-        SalesHeader: Record "Sales Header";
-        Currency: Record Currency;
-        ATOLink: Record "Assemble-to-Order Link";
-        Reservation: Page Reservation;
-        ReservMgt: Codeunit "Reservation Management";
-        Item: Record Item;
-        ReservEngineMgt: Codeunit "Reservation Engine Mgt.";
+        RecGKitSalesLine: Record "Assembly Line";
+        RecGPurchHeader: Record "Purchase Header";
         ReservEntry: Record "Reservation Entry";
-        ReserveSalesLine: Codeunit "Sales Line-Reserve";
-        FrmTransitoryItem: Page 50005;
-        "Item Ledger Entry": Record "Item Ledger Entry";
+        SalesHeader: Record "Sales Header";
+        "FTA_Functions": Codeunit "FTA_Functions";
+        ReservEngineMgt: Codeunit "Reservation Engine Mgt.";
+        ReservMgt: Codeunit "Reservation Management";
+        Reservation: Page Reservation;
+        BooGParmFromCompileBL: Boolean;
+        BooGResaAssFTA: Boolean;
+        BooGResaFTA: Boolean;
+        IntGCountOrder: Integer;
 }
 

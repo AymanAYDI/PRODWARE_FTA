@@ -1,17 +1,10 @@
 namespace Prodware.FTA;
 
 using Microsoft.Finance.GeneralLedger.Journal;
+using Microsoft.Purchases.Payables;
 
 pageextension 50050 PaymentJournal extends "Payment Journal" //256
 {
-    // ------------------------------------------------------------------------
-    // Prodware - www.prodware.fr
-    // ------------------------------------------------------------------------
-    // //>>EASY1.00
-    // NAVEASY:MA 25/06/2008 [Multi_Collectif]
-    //                         - Add field "Posting Group"
-    // ------------------------------------------------------------------------
-
     layout
     {
         addafter(Description)
@@ -20,6 +13,35 @@ pageextension 50050 PaymentJournal extends "Payment Journal" //256
             {
             }
 
+        }
+    }
+    actions
+    {
+        modify(SuggestVendorPayments)
+        {
+            Visible = false;
+        }
+        addafter(SuggestVendorPayments)
+        {
+            action(SuggestVendorPaymentsSPE)
+            {
+                ApplicationArea = Basic, Suite;
+                Caption = 'Suggest Vendor Payments';
+                Ellipsis = true;
+                Image = SuggestVendorPayments;
+                ToolTip = 'Create payment suggestions as lines in the payment journal.';
+
+                trigger OnAction()
+                var
+                    //SuggestVendorPayments --> SuggestVendorPaymentsSPEC
+                    SuggestVendorPaymentsSPEC: Report "Suggest Vendor PaymentsSPEC";
+                // SuggestVendorPayments: Report "Suggest Vendor Payments";
+                begin
+                    Clear(SuggestVendorPaymentsSPEC);
+                    SuggestVendorPaymentsSPEC.SetGenJnlLine(Rec);
+                    SuggestVendorPaymentsSPEC.RunModal();
+                end;
+            }
         }
     }
 }
