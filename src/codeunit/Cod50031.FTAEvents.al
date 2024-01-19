@@ -1636,13 +1636,14 @@ codeunit 50031 "FTA_Events"
 
     local procedure OnAfterCopySalesDocument(FromDocumentType: Option; FromDocumentNo: Code[20]; var ToSalesHeader: Record "Sales Header"; FromDocOccurenceNo: Integer; FromDocVersionNo: Integer; IncludeHeader: Boolean; RecalculateLines: Boolean; MoveNegLines: Boolean)
     var
-    FrmLAssignmentItem : Page "Assignment Item";
-    RecLInventorySetup : Record 313;
         //todo a verifier sales line line variable
         ToSalesLine: Record "Sales Line";
-        RecLItem : Record Item;
-        BoopF12 : Boolean;
+        FrmLAssignmentItem: Page "Assignment Item";
+        RecLInventorySetup: Record 313;
+        RecLItem: Record Item;
+        BoopF12: Boolean;
     begin
+        //>>FED_20090415:PA 15/04/2009
         COMMIT();
         RecLInventorySetup.GET();
         if RecLInventorySetup."Reservation FTA" and

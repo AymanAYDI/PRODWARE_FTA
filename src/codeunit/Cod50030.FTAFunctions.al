@@ -1328,7 +1328,7 @@ codeunit 50030 "FTA_Functions"
                 ATOLink.RollUpCost(SalesLine);
             until SalesLine.NEXT() = 0;
     end;
-    //**************************************************************************************
+    //****************************************************************************************
     var
         ShipInvoiceFromWhseQst: Label '&Ship,Ship &and Invoice';
         ReceiveInvoiceFromWhseQst: Label '&Receive,Receive &and Invoice';
