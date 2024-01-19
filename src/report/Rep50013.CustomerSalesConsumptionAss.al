@@ -235,16 +235,31 @@ report 50013 "Customer Sales ConsumptionAss"
     end;
 
     var
-        Vendor: Record Vendor;
-        ItemFilterRec: Record Item;
-        ValueEntryBuffer: Record "Value Entry" temporary;
-        ValueEntryBuffer2: Record "Value Entry" temporary;
+        AssEntry: Record "Item Ledger Entry";
+        ConsumptionAssEntry: Record "Item Ledger Entry";
         ExcelBuf: Record "Excel Buffer" temporary;
+        ItemFilterRec: Record Item;
+        ValueEntryBuffer2: Record "Value Entry" temporary;
+        ValueEntryBuffer2Purch: Record "Value Entry" temporary;
+        ValueEntryBuffer: Record "Value Entry" temporary;
+        ValueEntryBufferPurch: Record "Value Entry" temporary;
+        Vendor: Record Vendor;
+        Window: Dialog;
+        BooGViewPurchases: Boolean;
+        ByCust: Boolean;
+        PrintToExcel: Boolean;
+        EndingDate: Date;
+        PeriodEndingDate: array[12] of Date;
+        PeriodStartingDate: array[12] of Date;
+        StartingDate: Date;
+        i: Integer;
+        NextEntryNo2: Integer;
+        NextEntryNo: Integer;
         CustFilterTxt: Text;
         ItemFilterTxt: Text;
         ItemLedgEntryFilterTxt: Text;
+        PeriodName: array[12] of Text;
         PeriodText: Text[30];
-        NextEntryNo: Integer;
         Text001: Label 'Data';
         Text002: Label 'Customer/Item Sales And Consumptions';
         Text003: Label 'Company Name';
@@ -254,26 +269,11 @@ report 50013 "Customer Sales ConsumptionAss"
         Text007: Label 'Date';
         Text008: Label 'Customer Filters';
         Text009: Label 'Entry Filters';
-        NextEntryNo2: Integer;
-        PrintToExcel: Boolean;
-        AssEntry: Record "Item Ledger Entry";
-        ConsumptionAssEntry: Record "Item Ledger Entry";
-        i: Integer;
-        PeriodStartingDate: array[12] of Date;
-        PeriodEndingDate: array[12] of Date;
-        StartingDate: Date;
-        EndingDate: Date;
-        PeriodName: array[12] of Text;
         Text010: Label 'Quantity';
         Text011: Label 'Average Quantity';
-        Window: Dialog;
-        Text100: Label 'Analysis Sales And Consumption...';
         Text012: Label 'Ending Date';
         Text013: Label 'Item Filters';
-        ByCust: Boolean;
-        ValueEntryBufferPurch: Record "Value Entry" temporary;
-        ValueEntryBuffer2Purch: Record "Value Entry" temporary;
-        BooGViewPurchases: Boolean;
+        Text100: Label 'Analysis Sales And Consumption...';
 
     procedure MakeExcelInfo()
     begin
@@ -352,8 +352,11 @@ report 50013 "Customer Sales ConsumptionAss"
 
     procedure CreateExcelbook()
     begin
-        //TODO : verifier i add Text005
-        ExcelBuf.CreateBookAndOpenExcel(Text001, Text002, Text005, COMPANYNAME, USERID);
+        // ExcelBuf.CreateBookAndOpenExcel(Text001, Text002, Text005, COMPANYNAME, USERID);
+        ExcelBuf.CreateNewBook('Customers');
+        ExcelBuf.WriteSheet('Customers Details', COMPANYNAME, USERID);
+        ExcelBuf.CloseBook();
+        ExcelBuf.OpenExcel();
         ERROR('');
     end;
 
@@ -381,9 +384,9 @@ report 50013 "Customer Sales ConsumptionAss"
     local procedure CalcDates()
     var
         DateRec: Record Date;
-        PeriodLength: Option Day,Week,Month,Quarter,Year;
-        i: Integer;
         PeriodFormMngt: codeunit PeriodPageManagement;
+        i: Integer;
+        PeriodLength: Option Day,Week,Month,Quarter,Year;
     begin
         CLEAR(PeriodName);
         if (EndingDate <> 0D) then begin

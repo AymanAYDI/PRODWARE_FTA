@@ -53,7 +53,6 @@ reportextension 50008 Journals extends Journals //10801
                         RecGLEntryTEMP.INIT();
                         RecGLEntryTEMP := "G/L Entry";
                         RecGLEntryTEMP.INSERT();
-
                     end
             end;
 

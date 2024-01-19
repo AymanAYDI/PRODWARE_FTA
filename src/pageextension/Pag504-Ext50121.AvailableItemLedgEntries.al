@@ -2,7 +2,7 @@ namespace Prodware.FTA;
 
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
-pageextension 10878 AvailableItemLedgEntries extends "Available - Item Ledg. Entries"//504
+pageextension 50121 AvailableItemLedgEntries extends "Available - Item Ledg. Entries"//504
 {
     var
         NewQtyReservedThisLineBase: Decimal;

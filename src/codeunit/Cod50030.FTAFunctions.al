@@ -8,16 +8,16 @@ codeunit 50030 "FTA_Functions"
     //<<Migration Codeunit 229 2/1/2024>>
     local procedure DoPrintPurchHeader(PurchHeader: Record "Purchase Header"; SendAsEmail: Boolean);
     var
-        ReportSelection: Record "Report Selections";
-        DocumentMailing: Codeunit "Document-Mailing";
-        AttachmentFilePath: Text[250];
-        BooLLogo: Boolean;
-        RecLReportUser: Record "Report Email By User";
-        SalesSetup: Record "Sales & Receivables Setup";
-        PurchSetup: Record "Purchases & Payables Setup";
-        SalesLine: Record "Sales Line";
         PurchLine: Record "Purchase Line";
+        PurchSetup: Record "Purchases & Payables Setup";
+        RecLReportUser: Record "Report Email By User";
+        ReportSelection: Record "Report Selections";
+        SalesSetup: Record "Sales & Receivables Setup";
+        SalesLine: Record "Sales Line";
+        DocumentMailing: Codeunit "Document-Mailing";
         PurchCalcDisc: Codeunit "Purch.-Calc.Discount";
+        BooLLogo: Boolean;
+        AttachmentFilePath: Text[250];
     begin
         PurchHeader.SETRANGE("No.", PurchHeader."No.");
         PurchSetup.GET();
@@ -49,7 +49,7 @@ codeunit 50030 "FTA_Functions"
         repeat
             if not RecLReportUser.GET(USERID, ReportSelection."Report ID") then begin
                 RecLReportUser.INIT();
-                RecLReportUser.UserID := USERID;
+                RecLReportUser.UserID := USERID();
                 RecLReportUser."Report ID" := ReportSelection."Report ID";
                 RecLReportUser.INSERT();
             end;
@@ -67,20 +67,20 @@ codeunit 50030 "FTA_Functions"
     end;
     //<<Migration Codeunit 229 2/1/2024>>
     //todo: Scope OnPrem
-    // local procedure SavePurchHeaderReportAsPdf(var PurchHeader: Record "Purchase Header"; ReportId: Integer): Text[250];
-    // var
-    //     FileManagement: Codeunit "File Management";
-    //     ServerAttachmentFilePath: Text;
-    //     ServerSaveAsPdfFailedErr: Label 'Cannot open the document because it is empty or cannot be created.';
-    // begin
-    //     ServerAttachmentFilePath := FileManagement.ServerTempFileName('pdf');
+    procedure SavePurchHeaderReportAsPdf(var PurchHeader: Record "Purchase Header"; ReportId: Integer): Text[250];
+    var
+        FileManagement: Codeunit "File Management";
+        ServerAttachmentFilePath: Text;
+        ServerSaveAsPdfFailedErr: Label 'Cannot open the document because it is empty or cannot be created.';
+    begin
+        // ServerAttachmentFilePath := FileManagement.ServerTempFileName('pdf');
 
-    //     REPORT.SAVEASPDF(ReportId, ServerAttachmentFilePath, PurchHeader);
-    //     if not EXISTS(ServerAttachmentFilePath) then
-    //         ERROR(ServerSaveAsPdfFailedErr);
+        // REPORT.SAVEASPDF(ReportId, ServerAttachmentFilePath, PurchHeader);
+        // if not EXISTS(ServerAttachmentFilePath) then
+        //     ERROR(ServerSaveAsPdfFailedErr);
 
-    //     exit(ServerAttachmentFilePath);
-    // end;
+        // exit(ServerAttachmentFilePath);
+    end;
     //<<Migration Codeunit 260 2/1/2024>>
     procedure EmailFileFromPurchHeader(PurchHeader: Record "Purchase Header"; AttachmentFilePath: Text[250]);
     begin
@@ -94,15 +94,15 @@ codeunit 50030 "FTA_Functions"
     procedure EmailFileVendor(AttachmentFilePath: Text[250]; PostedDocNo: Code[20]; SendEmaillToCustNo: Code[20]; SendEmaillToCustName: Text[50]; EmailDocName: Text[50]);
     var
         TempEmailItem: Record "Email Item" temporary;
+        DocMailing: Codeunit "Document-Mailing";
         AttachmentFileName: Text[250];
-        ReportAsPdfFileNameMsg2: Label '@@@="%1 = Document Type %2 = Invoice No.";Purchases %1 %2.pdf';
         EmailSubjectCapTxt: Label '@@@="%1 = Customer Name. %2 = Document Type %3 = Invoice No.";%1 - %2 %3';
+        ReportAsPdfFileNameMsg2: Label '@@@="%1 = Document Type %2 = Invoice No.";Purchases %1 %2.pdf';
     begin
         AttachmentFileName := STRSUBSTNO(ReportAsPdfFileNameMsg2, EmailDocName, PostedDocNo);
 
         with TempEmailItem do begin
-            //TODO : procedure not found
-            // "Send to" := GetToAddressFromCustomer(SendEmaillToCustNo);
+            "Send to" := DocMailing.GetToAddressFromCustomer(SendEmaillToCustNo);
             Subject := COPYSTR(
                 STRSUBSTNO(
                   EmailSubjectCapTxt, SendEmaillToCustName, EmailDocName, PostedDocNo), 1,
@@ -127,24 +127,24 @@ codeunit 50030 "FTA_Functions"
     var
         TempEmailItem: Record "Email Item" temporary;
         AttachmentFileName: Text[250];
+        EmailSubjectCapTxt: Label '%1 - %2 %3', Comment = '%1 = Customer Name. %2 = Document Type %3 = Invoice No.';
         ReportAsPdfFileNameMsg: Label '@@@="%1 = Document Type %2 = Invoice No."; Sales %1 %2.pdf';
     begin
         AttachmentFileName := STRSUBSTNO(ReportAsPdfFileNameMsg, EmailDocName, PostedDocNo);
 
         with TempEmailItem do begin
             "Send to" := EmailSendTo;
-            //TODO : EmailSubjectCapTxt not found
-            //     if EmailSubject = '' then
-            //         Subject :=
-            //           COPYSTR(
-            //               STRSUBSTNO(
-            //                 EmailSubjectCapTxt, SendEmaillToVendName, EmailDocName, PostedDocNo), 1,
-            //               MAXSTRLEN(Subject))
-            //     else
-            //         Subject := EmailSubject;
-            //     "Attachment File Path" := AttachmentFilePath;
-            //     "Attachment Name" := AttachmentFileName;
-            //     Send(false);
+            if EmailSubject = '' then
+                Subject :=
+                  COPYSTR(
+                      STRSUBSTNO(
+                        EmailSubjectCapTxt, SendEmaillToVendName, EmailDocName, PostedDocNo), 1,
+                      MAXSTRLEN(Subject))
+            else
+                Subject := EmailSubject;
+            "Attachment File Path" := AttachmentFilePath;
+            "Attachment Name" := AttachmentFileName;
+            Send(false);
         end;
     end;
     //<<Migration codeunit 0099000831>>
@@ -152,8 +152,8 @@ codeunit 50030 "FTA_Functions"
     var
         ReservEntry3: Record "Reservation Entry";
         TempSurplusEntry: Record "Reservation Entry" temporary;
-        LastEntryNo: Integer;
         ResEngineMgt: Codeunit "Reservation Engine Mgt.";
+        LastEntryNo: Integer;
     begin
         ReservEntry.TESTFIELD("Reservation Status", ReservEntry."Reservation Status"::Reservation);
 
@@ -171,39 +171,49 @@ codeunit 50030 "FTA_Functions"
             ReservEntry3."Entry No." := LastEntryNo + 1;
             ReservEntry3.INSERT();
             TempSurplusEntry.DELETEALL();
-            //TODO : not found
-            // ResEngineMgt.UpdateTempSurplusEntry(ReservEntry);
-            // ResEngineMgt.UpdateTempSurplusEntry(ReservEntry3);
+            UpdateTempSurplusEntry(ReservEntry);
+            UpdateTempSurplusEntry(ReservEntry3);
             ResEngineMgt.UpdateOrderTracking(TempSurplusEntry);
         end else
             ResEngineMgt.CloseReservEntry(ReservEntry, true, false);
     end;
-
-
+    //<<Duplication Procedure UpdateTempSurplusEntry from codeunit 260>> 
+    procedure UpdateTempSurplusEntry(var ReservEntry: Record "Reservation Entry")
+    var
+        TempSurplusEntry: Record "Reservation Entry" temporary;
+    begin
+        if ReservEntry."Reservation Status" <> ReservEntry."Reservation Status"::Surplus then
+            exit;
+        if ReservEntry."Quantity (Base)" = 0 then
+            exit;
+        TempSurplusEntry := ReservEntry;
+        if not TempSurplusEntry.Insert() then
+            TempSurplusEntry.Modify();
+    end;
     //<<Migration codeunit 5701>> 
 
     procedure ExplodeItemAssemblySubst(var AssemblyLine: Record "Assembly Line"; OnlyAvailableQty: Boolean; RemplaceOk: Boolean);
     var
         TempAssemblyLine: Record "Assembly Line" temporary;
         ToAssemblyLine: Record "Assembly Line";
-        NoOfItemSubsLines: Integer;
+        Item: Record Item;
+        ItemSubstitution: Record "Item Substitution";
+        TempItemSubstitution: Record "Item Substitution" temporary;
+        AutoReserveOk: Boolean;
+        DeleteOriginalAssLineOk: Boolean;
+        ErrorOk: Boolean;
+        OnlyOneSubstOk: Boolean;
+        OldSalesUOM: Code[10];
+        SaveLocation: Code[10];
+        SaveVariantCode: Code[10];
+        SaveItemNo: Code[20];
+        ReqBaseQty: Decimal;
+        SaveQty: Decimal;
         LineSpacing: Integer;
         NextLineNo: Integer;
-        TempItemSubstitution: Record "Item Substitution" temporary;
-        ReqBaseQty: Decimal;
-        ErrorOk: Boolean;
-        DeleteOriginalAssLineOk: Boolean;
-        OnlyOneSubstOk: Boolean;
-        AutoReserveOk: Boolean;
-        SaveItemNo: Code[20];
-        SaveVariantCode: Code[10];
-        Item: Record Item;
-        OldSalesUOM: Code[10];
-        ItemSubstitution: Record "Item Substitution";
+        NoOfItemSubsLines: Integer;
         Text002: Label 'An Item Substitution does not exist for Item No. ''%1''';
         Text003: Label 'There is not enough space to explode the Substitution.';
-        SaveQty: Decimal;
-        SaveLocation: Code[10];
     begin
         TempItemSubstitution.RESET();
         TempItemSubstitution.DELETEALL();
@@ -357,7 +367,7 @@ codeunit 50030 "FTA_Functions"
 
     procedure CheckCustPostGroup(RecNewCVLedgEntryBuf: Record "CV Ledger Entry Buffer"; RecOldCustLedgEntry: Record "Cust. Ledger Entry");
     var
-        CodLPostingGroup: Code[20];
+        //CodLPostingGroup: Code[20];
         CstL001: Label 'Posting group values not corresponding between selected entries.';
     begin
         //Check if all entries have same posting group
@@ -365,10 +375,11 @@ codeunit 50030 "FTA_Functions"
             ERROR(CstL001);
     end;//Codeunit 12
 
+    //Codeunit 12
     procedure CheckHeaderNo(): Boolean;
     var
-        PaymentLine: Record "Payment Line";
         GenJnlLine: Record "Gen. Journal Line";
+        PaymentLine: Record "Payment Line";
     begin
         PaymentLine.SETRANGE("No.", GenJnlLine."Document No.");
         if PaymentLine.FINDFIRST() then
@@ -376,12 +387,12 @@ codeunit 50030 "FTA_Functions"
         else
             exit(false);
 
-    end;//Codeunit 12
+    end;
 
     procedure CheckVendPostGroup(RecNewCVLedgEntryBuf: Record "CV Ledger Entry Buffer"; RecOldVendLedgEntry: Record "Vendor Ledger Entry");
     var
-        CodLPostingGroup: Code[20];
-        CstL001: Label 'ENU=Posting group values not corresponding between selected entries.';
+        //CodLPostingGroup: Code[20];
+        CstL001: Label 'Posting group values not corresponding between selected entries.';
     begin
         //Check if all entries have same posting group
         if RecOldVendLedgEntry."Vendor Posting Group" <> RecNewCVLedgEntryBuf."CV Posting Group" then
@@ -398,9 +409,9 @@ codeunit 50030 "FTA_Functions"
     //CodeUnit 246
     procedure OnRunDisAssembly(var Rec: Record "Item Journal Line");
     var
-        ToItemJnlLine: Record "Item Journal Line";
         FromBOMComp: Record "BOM Component";
         Item: Record Item;
+        ToItemJnlLine: Record "Item Journal Line";
         ItemCheckAvail: Codeunit "Item-Check Avail.";
         UOMMgt: Codeunit "Unit of Measure Management";
         LineSpacing: Integer;
@@ -511,9 +522,9 @@ codeunit 50030 "FTA_Functions"
     procedure OnRunAssembly(var Rec: Record "Item Journal Line");
     var
 
-        ToItemJnlLine: Record "Item Journal Line";
         FromBOMComp: Record "BOM Component";
         Item: Record Item;
+        ToItemJnlLine: Record "Item Journal Line";
         ItemCheckAvail: Codeunit "Item-Check Avail.";
         UOMMgt: Codeunit "Unit of Measure Management";
         LineSpacing: Integer;
@@ -628,21 +639,21 @@ codeunit 50030 "FTA_Functions"
     // codeunit 905
     procedure FctRefreshTempSubKitSalesFTA(var AsmLine: Record "Assembly Line");
     var
-        RecLReservEntry: Record "Reservation Entry";
         AssemblyHeader: Record "Assembly Header";
-        FromBOMComp: Record "BOM Component";
-        ToAssemblyLine: Record "Assembly Line";
         RecLAsmLine: Record "Assembly Line";
         TempAssemblyLine: Record "Assembly Line" temporary;
-        CduLReservEngineMgt: Codeunit "Reservation Engine Mgt.";
+        ToAssemblyLine: Record "Assembly Line";
+        FromBOMComp: Record "BOM Component";
+        RecLReservEntry: Record "Reservation Entry";
         AssemblyLineMgt: Codeunit "Assembly Line Management";
-        NoOfBOMCompLines: Integer;
-        LineSpacing: Integer;
-        NextLineNo: Integer;
+        CduLReservEngineMgt: Codeunit "Reservation Engine Mgt.";
+        BooLEndLoop: Boolean;
         DueDateBeforeWorkDate: Boolean;
         NewLineDueDate: Date;
         IntLAfterCompLineNo: Integer;
-        BooLEndLoop: Boolean;
+        LineSpacing: Integer;
+        NextLineNo: Integer;
+        NoOfBOMCompLines: Integer;
         Text006: Label 'Item %1 is not a BOM.';
         Text007: Label 'There is not enough space to explode the BOM.';
     begin
@@ -699,7 +710,7 @@ codeunit 50030 "FTA_Functions"
                 //Delete reservation
                 if RecLReservEntry.FINDFIRST() then
                     repeat
-                        CduLReservEngineMgt.CloseReservEntry2(RecLReservEntry);
+                        CloseReservEntry2(RecLReservEntry);
                     until RecLReservEntry.NEXT() = 0;
 
 
@@ -712,7 +723,7 @@ codeunit 50030 "FTA_Functions"
                     NextLineNo := NextLineNo + LineSpacing;
                     TempAssemblyLine."Line No." := NextLineNo;
                     TempAssemblyLine.INSERT(true);
-                    AddBOMLine2(AssemblyHeader, TempAssemblyLine, true, FromBOMComp, false);
+                    AssemblyLineMgt.AddBOMLine(AssemblyHeader, TempAssemblyLine, true, FromBOMComp, false, "Qty. per Unit of Measure");//TODO Verif
                     TempAssemblyLine.Quantity := TempAssemblyLine.Quantity * "Quantity per" * "Qty. per Unit of Measure";
                     TempAssemblyLine."Quantity (Base)" := TempAssemblyLine."Quantity (Base)" * "Quantity per" * "Qty. per Unit of Measure";
                     TempAssemblyLine."Quantity per" := TempAssemblyLine."Quantity per" * "Quantity per" * "Qty. per Unit of Measure";
@@ -748,8 +759,8 @@ codeunit 50030 "FTA_Functions"
                     end;
 
                     //>> FTA1.02
-                    if AutoReserveOk then
-                        ToAssemblyLine.FctAutoReserveFTA();
+                    // if AutoReserveOk then //TODO -> possibly not needed
+                    ToAssemblyLine.FctAutoReserveFTA();
                     //<< FTA1.02
 
                 end;
@@ -797,29 +808,29 @@ codeunit 50030 "FTA_Functions"
         //<<MIGR NAV 2015
     end;
 
+    //Codeunit 905 Used in Page 50003
     procedure FctCountKitDisposalToBuild(var TmpAssemblyHeader: Record "Assembly Header"; var TempAssemblyLine: Record "Assembly Line" temporary): Decimal;
     var
-        Item: Record Item;
         TempAssemblyLine2: Record "Assembly Line" temporary;
         AssemblySetup: Record "Assembly Setup";
-        ItemCheckAvail: Codeunit "Item-Check Avail.";
+        Item: Record Item;
         AssemblyLineManagement: Codeunit "Assembly Line Management";
+        ItemCheckAvail: Codeunit "Item-Check Avail.";
         AssemblyAvailability: Page "Assembly Availability";
-        Inventory: Decimal;
+        QtyAvailTooLow: Boolean;
+        EarliestAvailableDateX: Date;
         GrossRequirement: Decimal;
+        Inventory: Decimal;
+        QtyAvailToMake: Decimal;
+        ReservedReceipts: Decimal;
         ReservedRequirement: Decimal;
         ScheduledReceipts: Decimal;
-        ReservedReceipts: Decimal;
-        EarliestAvailableDateX: Date;
-        QtyAvailToMake: Decimal;
-        QtyAvailTooLow: Boolean;
     begin
         //>>MIGR NAV 2015
-        AssemblySetup.GET;
+        AssemblySetup.GET();
         if not GUIALLOWED or
            TempAssemblyLine.ISEMPTY or
-           (not AssemblySetup."Stockout Warning") or
-           not GetWarningMode
+           (not AssemblySetup."Stockout Warning") //or not AssemblyLineManagement.GetWarningMode
         then
             exit(0);
         TmpAssemblyHeader.TESTFIELD("Item No.");
@@ -832,22 +843,98 @@ codeunit 50030 "FTA_Functions"
         exit(QtyAvailToMake);
         //<<MIGR NAV 2015
     end;
+    // Duplicate
+    //***********************************************************
+    procedure AvailToPromise(AsmHeader: Record "Assembly Header"; var AssemblyLine: Record "Assembly Line"; var OrderAbleToAssemble: Decimal; var EarliestDueDate: Date)
+    var
+        EarliestStartingDate: Date;
+        LineAvailabilityDate: Date;
+        LineStartingDate: Date;
+        LineAbleToAssemble: Decimal;
+    begin
+        SetLinkToItemLines(AsmHeader, AssemblyLine);
+        AssemblyLine.SetFilter("No.", '<>%1', '');
+        AssemblyLine.SetFilter("Quantity per", '<>%1', 0);
+        OrderAbleToAssemble := AsmHeader."Remaining Quantity";
+        EarliestStartingDate := 0D;
+        if AssemblyLine.FindSet() then
+            repeat
+                LineAbleToAssemble := CalcAvailToAssemble(AssemblyLine, AsmHeader, LineAvailabilityDate);
+
+                if LineAbleToAssemble < OrderAbleToAssemble then
+                    OrderAbleToAssemble := LineAbleToAssemble;
+
+                if LineAvailabilityDate > 0D then begin
+                    LineStartingDate := CalcDate(AssemblyLine."Lead-Time Offset", LineAvailabilityDate);
+                    if LineStartingDate > EarliestStartingDate then
+                        EarliestStartingDate := LineStartingDate; // latest of all line starting dates
+                end;
+            until AssemblyLine.Next() = 0;
+
+        EarliestDueDate := CalcEarliestDueDate(AsmHeader, EarliestStartingDate);
+    end;
+
+    procedure SetLinkToItemLines(AsmHeader: Record "Assembly Header"; var AssemblyLine: Record "Assembly Line")
+    begin
+        SetLinkToLines(AsmHeader, AssemblyLine);
+        AssemblyLine.SetRange(Type, AssemblyLine.Type::Item);
+    end;
+
+    procedure SetLinkToLines(AsmHeader: Record "Assembly Header"; var AssemblyLine: Record "Assembly Line")
+    begin
+        AssemblyLine.SetRange("Document Type", AsmHeader."Document Type");
+        AssemblyLine.SetRange("Document No.", AsmHeader."No.");
+    end;
+
+    procedure CalcAvailToAssemble(AssemblyLine: Record "Assembly Line"; AsmHeader: Record "Assembly Header"; var LineAvailabilityDate: Date) LineAbleToAssemble: Decimal
+    var
+        Item: Record Item;
+        ExpectedInventory: Decimal;
+        GrossRequirement: Decimal;
+        LineInventory: Decimal;
+        ScheduledRcpt: Decimal;
+    begin
+        AssemblyLine.CalcAvailToAssemble(
+          AsmHeader, Item, GrossRequirement, ScheduledRcpt, ExpectedInventory, LineInventory,
+          LineAvailabilityDate, LineAbleToAssemble);
+    end;
+
+    procedure CalcEarliestDueDate(AsmHeader: Record "Assembly Header"; EarliestStartingDate: Date) EarliestDueDate: Date
+    var
+        ReqLine: Record "Requisition Line";
+        LeadTimeMgt: Codeunit "Lead-Time Management";
+        EarliestEndingDate: Date;
+    begin
+        with AsmHeader do begin
+            EarliestDueDate := 0D;
+            if EarliestStartingDate > 0D then begin
+                EarliestEndingDate := // earliest starting date + lead time calculation
+                  LeadTimeMgt.PlannedEndingDate("Item No.", "Location Code", "Variant Code",
+                    '', LeadTimeMgt.ManufacturingLeadTime("Item No.", "Location Code", "Variant Code"),
+                    ReqLine."Ref. Order Type"::Assembly, EarliestStartingDate);
+                EarliestDueDate := // earliest ending date + (default) safety lead time
+                  LeadTimeMgt.PlannedDueDate("Item No.", "Location Code", "Variant Code",
+                    EarliestEndingDate, '', ReqLine."Ref. Order Type"::Assembly);
+            end;
+        end;
+    end;
+    //***********************************************************
 
     procedure SetAutoReserve();
     begin
         //>> FTA1.02
-        AutoReserveOk := true;
+        // AutoReserveOk := true;
     end;
 
 
     //Codeunit 7000
     procedure Fct_GetDiscforAll(SalesHeader: Record "Sales Header"; var SalesLine: Record "Sales Line");
     var
-        RecLSalesReceivablesSetup: Record "Sales & Receivables Setup";
-        RecLSalesLineDisc: Record "Sales Line Discount";
         Item: Record Item;
-        DatLWorkDate: Date;
+        RecLSalesReceivablesSetup: Record "Sales & Receivables Setup";
+        RecLSalesLineDisc: Record "Sales Line Discount";//"Price List Line";//
         BooLRecOK: Boolean;
+        DatLWorkDate: Date;
     begin
         //>>FED_20090415:PA 15/04/2009
 
@@ -896,8 +983,8 @@ codeunit 50030 "FTA_Functions"
     //Codeunit 7171
     procedure FctCalcPrepa(var RecPSalesLine: Record "Sales Line") DecPAmount: Decimal;
     var
-        RecLSalesLine: Record "Sales Line";
         RecLKitSalesLine: Record "Assembly Line";
+        RecLSalesLine: Record "Sales Line";
     begin
         //>>TI040889.001
         RecLSalesLine.RESET();
@@ -926,7 +1013,7 @@ codeunit 50030 "FTA_Functions"
             until RecLKitSalesLine.NEXT() = 0;
     end;
     //Codeunit 7171
-    procedure FctLookupPrepa(var RecPSalesLine: Record "Sales Line");
+    procedure FctLookupPrepa(var RecPSalesLine: Record "Sales Line")
     var
         RecLSalesLine: Record "Sales Line";
         FrmLSalesLines: Page "Sales Lines";
@@ -1036,6 +1123,232 @@ codeunit 50030 "FTA_Functions"
             end;
         //<<FED_20090415:PA 15/04/2009
     end;
+
+    //Codeunit 92 Dupliquate
+    //**************************************************************************************
+    procedure ConfirmPostPurchaseDocument(var PurchaseHeaderToPost: Record "Purchase Header"; DefaultOption: Integer; WithPrint: Boolean; WithEmail: Boolean) Result: Boolean
+    var
+        PurchaseHeader: Record "Purchase Header";
+        UserSetupManagement: Codeunit "User Setup Management";
+        ConfirmManagement: Codeunit "Confirm Management";
+        PostingSelectionManagement: Codeunit "Posting Selection Management";
+        Selection: Integer;
+
+    begin
+        if DefaultOption > 3 then
+            DefaultOption := 3;
+        if DefaultOption <= 0 then
+            DefaultOption := 1;
+
+        PurchaseHeader.Copy(PurchaseHeaderToPost);
+
+        case PurchaseHeader."Document Type" of
+            PurchaseHeader."Document Type"::Order:
+                begin
+                    UserSetupManagement.GetPurchaseInvoicePostingPolicy(PurchaseHeader.Receive, PurchaseHeader.Invoice);
+                    case true of
+                        not PurchaseHeader.Receive and not PurchaseHeader.Invoice:
+                            begin
+                                Selection := StrMenu(ReceiveInvoiceOptionsQst, DefaultOption);
+                                if Selection = 0 then
+                                    exit(false);
+                                PurchaseHeader.Receive := Selection in [1, 3];
+                                PurchaseHeader.Invoice := Selection in [2, 3];
+                            end;
+                        PurchaseHeader.Receive and not PurchaseHeader.Invoice:
+                            if not ConfirmManagement.GetResponseOrDefault(ReceiveConfirmQst, true) then
+                                exit(false);
+                        PurchaseHeader.Receive and PurchaseHeader.Invoice:
+                            if not ConfirmManagement.GetResponseOrDefault(ReceiveInvoiceConfirmQst, true) then
+                                exit(false);
+                    end;
+                end;
+            PurchaseHeader."Document Type"::"Return Order":
+                begin
+                    UserSetupManagement.GetPurchaseInvoicePostingPolicy(PurchaseHeader.Ship, PurchaseHeader.Invoice);
+                    case true of
+                        not PurchaseHeader.Ship and not PurchaseHeader.Invoice:
+                            begin
+                                Selection := StrMenu(ShipInvoiceOptionsQst, DefaultOption);
+                                if Selection = 0 then
+                                    exit(false);
+                                PurchaseHeader.Ship := Selection in [1, 3];
+                                PurchaseHeader.Invoice := Selection in [2, 3];
+                            end;
+                        PurchaseHeader.Ship and not PurchaseHeader.Invoice:
+                            if not ConfirmManagement.GetResponseOrDefault(ShipConfirmQst, true) then
+                                exit(false);
+                        PurchaseHeader.Ship and PurchaseHeader.Invoice:
+                            if not ConfirmManagement.GetResponseOrDefault(ShipInvoiceConfirmQst, true) then
+                                exit(false);
+                    end;
+                end;
+            PurchaseHeader."Document Type"::Invoice, PurchaseHeader."Document Type"::"Credit Memo":
+                begin
+                    PostingSelectionManagement.CheckUserCanInvoicePurchase();
+                    if not ConfirmManagement.GetResponseOrDefault(
+                            GetPostConfirmationMessage(PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Invoice, WithPrint, WithEmail), true)
+                    then
+                        exit(false);
+                end;
+            else
+                if not ConfirmManagement.GetResponseOrDefault(
+                        GetPostConfirmationMessage(Format(PurchaseHeader."Document Type"), WithPrint, WithEmail), true)
+                then
+                    exit(false);
+        end;
+
+        PurchaseHeaderToPost.Copy(PurchaseHeader);
+        exit(true);
+    end;
+
+    procedure GetPostConfirmationMessage(What: Text; WithPrint: Boolean; WithEmail: Boolean): Text
+    begin
+        if WithPrint then
+            exit(StrSubstNo(PostAndPrintConfirmQst, What));
+
+        if WithEmail then
+            exit(StrSubstNo(PostAndEmailConfirmQst, What));
+
+        exit(StrSubstNo(PostDocConfirmQst, What));
+    end;
+
+    local procedure GetPostConfirmationMessage(IsInvoice: Boolean; WithPrint: Boolean; WithEmail: Boolean): Text
+    begin
+        if IsInvoice then begin
+            if WithPrint then
+                exit(PrintInvoiceConfirmQst);
+
+            if WithEmail then
+                exit(EmailInvoiceConfirmQst);
+
+            exit(InvoiceConfirmQst);
+        end else begin
+            if WithPrint then
+                exit(PrintCreditMemoConfirmQst);
+
+            if WithEmail then
+                exit(EmailCreditMemoConfirmQst);
+
+            exit(CreditMemoConfirmQst);
+        end;
+    end;
+
+    local procedure OnInsertShipmentLineOnAfterInitQuantityFields(var SalesLine: Record "Sales Line"; var xSalesLine: Record "Sales Line"; var SalesShptLine: Record "Sales Shipment Line")
+    begin
+        SalesShptLine."Qty. Ordered" := SalesLine.Quantity;
+        SalesShptLine."Qty Shipped on Order" := SalesLine."Quantity Shipped";
+    end;
+    // codeunit 6620 "Copy Document Mgt."
+
+    local procedure RecalculateSalesLine(var ToSalesHeader: Record "Sales Header"; var ToSalesLine: Record "Sales Line"; var FromSalesHeader: Record "Sales Header"; var FromSalesLine: Record "Sales Line"; var CopyThisLine: Boolean)
+    var
+        GLAcc: Record "G/L Account";
+        IsHandled: Boolean;
+    begin
+        IsHandled := true;
+        if not IsHandled then begin
+            ToSalesLine.Validate(Type, FromSalesLine.Type);
+            ToSalesLine.Description := FromSalesLine.Description;
+            ToSalesLine.Validate("Description 2", FromSalesLine."Description 2");
+
+            if (FromSalesLine.Type <> FromSalesLine.Type::" ") and (FromSalesLine."No." <> '') then begin
+                if ToSalesLine.Type = ToSalesLine.Type::"G/L Account" then begin
+                    ToSalesLine."No." := FromSalesLine."No.";
+                    GLAcc.Get(FromSalesLine."No.");
+                    CopyThisLine := GLAcc."Direct Posting";
+
+                    if CopyThisLine then
+                        ToSalesLine.Validate("No.", FromSalesLine."No.");
+                end else
+                    if CopyThisLine then begin
+                        ToSalesLine.VALIDATE("Item Base", FromSalesLine."Item Base");
+                        ToSalesLine.VALIDATE("No.", FromSalesLine."No.");
+                    end
+            end else begin
+                ToSalesLine.VALIDATE("Item Base", FromSalesLine."Item Base");
+                ToSalesLine.Validate("No.", FromSalesLine."No.");
+            end;
+
+            ToSalesLine.Validate("Variant Code", FromSalesLine."Variant Code");
+
+            IsHandled := false;
+
+            if not IsHandled then
+                ToSalesLine.Validate("Location Code", FromSalesLine."Location Code");
+
+            ToSalesLine.Validate("Unit of Measure", FromSalesLine."Unit of Measure");
+            ToSalesLine.Validate("Unit of Measure Code", FromSalesLine."Unit of Measure Code");
+            ToSalesLine.Validate(Quantity, FromSalesLine.Quantity);
+
+            if not (FromSalesLine.Type in [FromSalesLine.Type::Item, FromSalesLine.Type::Resource]) then begin
+                if (FromSalesHeader."Currency Code" <> ToSalesHeader."Currency Code") or
+                   (FromSalesHeader."Prices Including VAT" <> ToSalesHeader."Prices Including VAT")
+                then begin
+                    ToSalesLine."Unit Price" := 0;
+                    ToSalesLine."Line Discount %" := 0;
+                end else begin
+                    ToSalesLine.Validate("Unit Price", FromSalesLine."Unit Price");
+                    ToSalesLine.Validate("Line Discount %", FromSalesLine."Line Discount %");
+                end;
+                if ToSalesLine.Quantity <> 0 then
+                    ToSalesLine.Validate("Line Discount Amount", FromSalesLine."Line Discount Amount");
+            end;
+
+            ToSalesLine.Validate("Work Type Code", FromSalesLine."Work Type Code");
+            if (ToSalesLine."Document Type" = ToSalesLine."Document Type"::Order) and
+               (FromSalesLine."Purchasing Code" <> '')
+            then
+                ToSalesLine.Validate("Purchasing Code", FromSalesLine."Purchasing Code");
+        end;
+        if (FromSalesLine.Type = FromSalesLine.Type::" ") and (FromSalesLine."No." <> '') then
+            ToSalesLine.Validate("No.", FromSalesLine."No.");
+    end;
+
+    local procedure IsCreatedFromJob(var SalesLine: Record "Sales Line"): Boolean
+    begin
+        if (SalesLine."Job No." <> '') and (SalesLine."Job Task No." <> '') and (SalesLine."Job Contract Entry No." <> 0) then
+            exit(true);
+    end;
+
+    procedure "FTA.UPDATECOST"(SalesHeader: Record "Sales Header");
+    var
+        ATOLink: Record "Assemble-to-Order Link";
+        SalesLine: Record "Sales Line";
+    begin
+        SalesLine.SETRANGE("Document Type", SalesHeader."Document Type");
+        SalesLine.SETRANGE("Document No.", SalesHeader."No.");
+        SalesLine.SETFILTER(Type, '>0');
+        SalesLine.SETFILTER(Quantity, '<>0');
+
+        SalesLine.SETFILTER(SalesLine."Qty. to Assemble to Order", '<>0');
+
+        if SalesLine.FINDSET() then
+            repeat
+                ATOLink.RollUpCost(SalesLine);
+            until SalesLine.NEXT() = 0;
+    end;
+    //**************************************************************************************
+    var
+        ShipInvoiceFromWhseQst: Label '&Ship,Ship &and Invoice';
+        ReceiveInvoiceFromWhseQst: Label '&Receive,Receive &and Invoice';
+        PostWhseAndDocConfirmQst: Label 'Do you want to post the %1 and %2?', Comment = '%1 = Activity Type, %2 = Document Type';
+        InvoiceConfirmQst: Label 'Do you want to post the invoice?';
+        CreditMemoConfirmQst: Label 'Do you want to post the credit memo?';
+        PrintInvoiceConfirmQst: Label 'Do you want to post and print the invoice?';
+        PrintCreditMemoConfirmQst: Label 'Do you want to post and print the credit memo?';
+        EmailInvoiceConfirmQst: Label 'Do you want to post and email the invoice?';
+        EmailCreditMemoConfirmQst: Label 'Do you want to post and email the credit memo?';
+        ShipConfirmQst: Label 'Do you want to post the shipment?';
+        ShipInvoiceConfirmQst: Label 'Do you want to post the shipment and invoice?';
+        ReceiveConfirmQst: Label 'Do you want to post the receipt?';
+        ReceiveInvoiceConfirmQst: Label 'Do you want to post the receipt and invoice?';
+        PostingInvoiceProhibitedErr: Label 'You cannot post the invoice because %1 is %2 in %3.', Comment = '%1 = Invoice Posting Policy, %2 = Prohibited, %3 = User Setup';
+        PostAndPrintConfirmQst: Label 'Do you want to post and print the %1?', Comment = '%1 = Document Type';
+        PostAndEmailConfirmQst: Label 'Do you want to post and email the %1?', Comment = '%1 = Document Type';
+        PostDocConfirmQst: Label 'Do you want to post the %1?', Comment = '%1 = Document Type';
+        ReceiveInvoiceOptionsQst: Label '&Receive,&Invoice,Receive &and Invoice';
+        ShipInvoiceOptionsQst: Label '&Ship,&Invoice,Ship &and Invoice';
 
 
 

@@ -1,11 +1,11 @@
 codeunit 50031 "FTA_Events"
 {
     SingleInstance = true;
-
+    //<<<<<<<<<<<<<<<<<<<<<Partie Hadil >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     var
         BooGOpenDialogueBox: Boolean;
         BooGMultiLevel: Boolean;
-
+    //Record 27
     [EventSubscriber(ObjectType::Table, Database::Item, 'OnBeforeOnInsert', '', false, false)]
     local procedure OnBeforeOnInsert(var Item: Record Item; var IsHandled: Boolean; xRecItem: Record Item)
     var
@@ -54,7 +54,7 @@ codeunit 50031 "FTA_Events"
         Item.UpdateItemUnitGroup();
         IsHandled := true;
     end;
-
+    //Record 36
     [EventSubscriber(ObjectType::Table, Database::Item, 'OnBeforeValidateNo', '', false, false)]
     local procedure OnBeforeValidateNo(var IsHandled: Boolean; var Item: Record Item; xItem: Record Item; InventorySetup: Record "Inventory Setup"; var NoSeriesMgt: Codeunit NoSeriesManagement)
     begin
@@ -65,26 +65,26 @@ codeunit 50031 "FTA_Events"
             Item."Item Base" := Item."Item Base"::Transitory;
         end;
     end;
-
+    //Record 36
     [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterValidateEvent', 'Description', false, false)]
     local procedure OnAfterValidateEvent(CurrFieldNo: Integer; var Rec: Record Item; var xRec: Record Item)
     begin
         Rec.Get(CurrFieldNo);
         Rec."Search Description" := DELCHR(Rec."Search Description", '=', '/,- +-#*.\{}><[]()@":=');
     end;
-
+    //Record 37
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", 'OnAfterUpdateAmountsDone', '', false, false)]
     local procedure OnAfterUpdateAmountsDone(var SalesLine: Record "Sales Line"; var xSalesLine: Record "Sales Line"; CurrentFieldNo: Integer)
     begin
         SalesLine.UpdatePurchaseBasePrice();
     end;
-
+    //Record 37
     [EventSubscriber(ObjectType::Table, Database::"Sales Line", 'OnValidateNoOnCopyFromTempSalesLine', '', false, false)]
     local procedure OnValidateNoOnCopyFromTempSalesLine(var SalesLine: Record "Sales Line"; var TempSalesLine: Record "Sales Line" temporary; xSalesLine: Record "Sales Line"; CurrentFieldNo: Integer)
     begin
         SalesLine."Item Base" := TempSalesLine."Item Base";
     end;
-
+    //Record 38
     [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnAfterTransferSavedFields', '', false, false)]
     local procedure OnAfterTransferSavedFields(var DestinationPurchaseLine: Record "Purchase Line"; SourcePurchaseLine: Record "Purchase Line")
     begin
@@ -92,7 +92,7 @@ codeunit 50031 "FTA_Events"
         DestinationPurchaseLine."Special Order Sales Line No." := SourcePurchaseLine."Special Order Sales Line No.";
         DestinationPurchaseLine."Special Order" := SourcePurchaseLine."Special Order Sales Line No." <> 0;
     end;
-
+    //Record 38
     [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnBeforeValidatePromisedReceiptDate', '', false, false)]
     local procedure OnBeforeValidatePromisedReceiptDate(var PurchaseHeader: Record "Purchase Header"; xPurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean; CUrrentFieldNo: Integer)
     var
@@ -125,7 +125,7 @@ codeunit 50031 "FTA_Events"
                 PurchaseHeader."Planned Receipt Date" := CALCDATE(PurchaseHeader."Lead Time Calculation", PurchaseHeader."Requested Receipt Date");
         IsHandled := true;
     end;
-
+    //Record 38
     [EventSubscriber(ObjectType::table, Database::"Purchase Header", 'OnAfterCopyBuyFromVendorFieldsFromVendor', '', false, false)]
     local procedure OnAfterCopyBuyFromVendorFieldsFromVendor(var PurchaseHeader: Record "Purchase Header"; Vendor: Record Vendor; xPurchaseHeader: Record "Purchase Header")
     begin
@@ -136,7 +136,7 @@ codeunit 50031 "FTA_Events"
         PurchaseHeader.Area := Vendor.Area;
         PurchaseHeader."Posting Description" := Vendor.Name;
     end;
-
+    //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnAfterAccountNoOnValidateGetGLAccount', '', false, false)]
     local procedure OnAfterAccountNoOnValidateGetGLAccount(var GenJournalLine: Record "Gen. Journal Line"; var GLAccount: Record "G/L Account"; CallingFieldNo: Integer)
     begin
@@ -144,25 +144,25 @@ codeunit 50031 "FTA_Events"
            [GenJournalLine."Bal. Account Type"::"G/L Account", GenJournalLine."Bal. Account Type"::"Bank Account"]) then
             GenJournalLine."Mobile Salesperson Code" := '';
     end;
-
+    //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnAfterAccountNoOnValidateGetCustomerAccount', '', false, false)]
     local procedure OnAfterAccountNoOnValidateGetCustomerAccount(var GenJournalLine: Record "Gen. Journal Line"; var Customer: Record Customer; CallingFieldNo: Integer)
     begin
         GenJournalLine."Mobile Salesperson Code" := Customer."Mobile Salesperson Code";
     end;
-
+    //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnAfterAccountNoOnValidateGetVendorAccount', '', false, false)]
     local procedure OnAfterAccountNoOnValidateGetVendorAccount(var GenJournalLine: Record "Gen. Journal Line"; var Vendor: Record Vendor; CallingFieldNo: Integer)
     begin
         GenJournalLine."Mobile Salesperson Code" := '';
     end;
-
+    //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnAfterAccountNoOnValidateGetBankAccount', '', false, false)]
     local procedure OnAfterAccountNoOnValidateGetBankAccount(var GenJournalLine: Record "Gen. Journal Line"; var BankAccount: Record "Bank Account"; CallingFieldNo: Integer)
     begin
         GenJournalLine."Mobile Salesperson Code" := '';
     end;
-
+    //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnGetGLBalAccountOnAfterSetDescription', '', false, false)]
     local procedure OnGetGLBalAccountOnAfterSetDescription(var GenJournalLine: Record "Gen. Journal Line"; GLAcc: Record "G/L Account")
     begin
@@ -172,19 +172,19 @@ codeunit 50031 "FTA_Events"
         then
             GenJournalLine."Mobile Salesperson Code" := '';
     end;
-
+    //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnGetCustomerBalAccountOnAfterCustGet', '', false, false)]
     local procedure OnGetCustomerBalAccountOnAfterCustGet(var GenJournalLine: Record "Gen. Journal Line"; var Customer: Record Customer; CallingFieldNo: Integer)
     begin
         GenJournalLine."Mobile Salesperson Code" := Customer."Mobile Salesperson Code";
     end;
-
+    //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnAfterAccountNoOnValidateGetVendorBalAccount', '', false, false)]
     local procedure OnAfterAccountNoOnValidateGetVendorBalAccount(var GenJournalLine: Record "Gen. Journal Line"; var Vendor: Record Vendor; CallingFieldNo: Integer)
     begin
         GenJournalLine."Mobile Salesperson Code" := '';
     end;
-
+    //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnAfterAccountNoOnValidateGetBankBalAccount', '', false, false)]
     local procedure OnAfterAccountNoOnValidateGetBankBalAccount(var GenJournalLine: Record "Gen. Journal Line"; var BankAccount: Record "Bank Account"; CallingFieldNo: Integer)
     begin
@@ -194,19 +194,19 @@ codeunit 50031 "FTA_Events"
       then
             GenJournalLine."Mobile Salesperson Code" := '';
     end;
-
+    //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnLookUpAppliesToDocCustOnAfterUpdateDocumentTypeAndAppliesTo', '', false, false)]
     local procedure OnLookUpAppliesToDocCustOnAfterUpdateDocumentTypeAndAppliesTo(var GenJournalLine: Record "Gen. Journal Line"; CustLedgerEntry: Record "Cust. Ledger Entry")
     begin
         GenJournalLine."Posting Group" := CustLedgerEntry."Customer Posting Group";
     end;
-
+    //Record 81
     [EventSubscriber(ObjectType::table, Database::"Gen. Journal Line", 'OnAfterLookUpAppliesToDocVend', '', false, false)]
     local procedure OnAfterLookUpAppliesToDocVend(var GenJournalLine: Record "Gen. Journal Line"; VendLedgEntry: Record "Vendor Ledger Entry"; CustLedgerEntry: Record "Cust. Ledger Entry"; ApplyVendorEntries: page "Apply Vendor Entries")
     begin
         GenJournalLine."Posting Group" := VendLedgEntry."Vendor Posting Group";
     end;
-
+    //Record 751
     [EventSubscriber(ObjectType::table, Database::"Standard General Journal Line", 'OnAfterGetGLAccount', '', false, false)]
     local procedure OnAfterGetGLAccount(var StandardGenJournalLine: Record "Standard General Journal Line"; GLAcc: Record "G/L Account")
     begin
@@ -216,7 +216,7 @@ codeunit 50031 "FTA_Events"
        then
             StandardGenJournalLine."Mobile Salesperson Code" := '';
     end;
-
+    //Record 904
     [EventSubscriber(ObjectType::table, Database::"Assemble-to-Order Link", 'OnBeforeShowAsmToOrderLines', '', false, false)]
     local procedure OnBeforeShowAsmToOrderLines(SalesLine: Record "Sales Line"; var IsHandled: Boolean)
     var
@@ -245,6 +245,7 @@ codeunit 50031 "FTA_Events"
     //     if (SalesLine."Item Base" = SalesLine."Item Base"::Transitory) then
     //         CurrPage.UPDATE;
     // end;
+    //Page 46
     [EventSubscriber(ObjectType::Page, Page::"Sales Order Subform", 'OnBeforeQuantityOnAfterValidate', '', false, false)]
     local procedure OnBeforeQuantityOnAfterValidate(var SalesLine: Record "Sales Line"; var xSalesLine: Record "Sales Line")
     var
@@ -253,27 +254,28 @@ codeunit 50031 "FTA_Events"
         RecLItem: Record Item;
         PgeLAssignmentItem: Page 50003;
         RecGInventorySetup: Record "Inventory Setup";
-        DecGxQuantity: Decimal;
     begin
         RecGInventorySetup.GET();
-        if RecGInventorySetup."Reservation FTA" then begin
-            if SalesLine.Quantity > DecGxQuantity then
+        if RecGInventorySetup."Reservation FTA" then
+            // IF Quantity > DecGxQuantity THEN BEGIN
+            if SalesLine.Quantity > xSalesLine.Quantity then begin
                 if RecLItem.GET(SalesLine."No.") then;
-            if (SalesLine.Quantity <> 0) and (SalesLine."Reserved Quantity" <> SalesLine.Quantity) and
+                if (SalesLine.Quantity <> 0) and (SalesLine."Reserved Quantity" <> SalesLine.Quantity) and
                 (SalesLine.Type = Type::Item) and (SalesLine."Document Type" <> "Document Type"::Quote) and not (RecLItem."Inventory Value Zero") then begin
-                //TODO : CurrPage not exist in the current context 
-                //CurrPage.SAVERECORD;
+                    //TODO : CurrPage not exist in the current context 
+                    //CurrPage.SAVERECORD;
 
-                CLEAR(PgeLAssignmentItem);
-                BoopF12 := false;
-                PgeLAssignmentItem.FctGetParm(SalesLine, DecGxQuantity, xSalesLine."Preparation Type");
-                PgeLAssignmentItem.SETTABLEVIEW(SalesLine);
-                PgeLAssignmentItem.SETRECORD(SalesLine);
-                PgeLAssignmentItem.RUN();
+                    CLEAR(PgeLAssignmentItem);
+                    BoopF12 := false;
+                    PgeLAssignmentItem.FctGetParm(SalesLine, xSalesLine.Quantity, xSalesLine."Preparation Type");
+                    PgeLAssignmentItem.SETTABLEVIEW(SalesLine);
+                    PgeLAssignmentItem.SETRECORD(SalesLine);
+                    PgeLAssignmentItem.RUN();
+                end;
             end;
-        end;
-    end;
 
+    end;
+    //Page 232
     [EventSubscriber(ObjectType::Page, Page::"Apply Customer Entries", 'OnSetCustApplIdAfterCheckAgainstApplnCurrency', '', false, false)]
     local procedure OnSetCustApplIdAfterCheckAgainstApplnCurrency(var CustLedgerEntry: Record "Cust. Ledger Entry"; CalcType: Option; var GenJnlLine: Record "Gen. Journal Line"; SalesHeader: Record "Sales Header"; ServHeader: Record "Service Header"; ApplyingCustLedgEntry: Record "Cust. Ledger Entry")
     var
@@ -281,7 +283,7 @@ codeunit 50031 "FTA_Events"
     begin
         ApplyCustomerEntries.VerifPostingGroup(CustLedgerEntry."Applies-to ID", CustLedgerEntry."Customer Posting Group");
     end;
-
+    //CodeUnit 22
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnCodeOnBeforeTestOrder', '', false, false)]
     local procedure OnCodeOnBeforeTestOrder(ItemJnlLine: Record "Item Journal Line"; var IsHandled: Boolean)
     begin
@@ -290,7 +292,7 @@ codeunit 50031 "FTA_Events"
                 ItemJnlLine.TestField("Order Line No.", 0);
         IsHandled := true;
     end;
-
+    //CodeUnit 22
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnItemQtyPostingOnBeforeApplyItemLedgEntry', '', false, false)]
     local procedure OnItemQtyPostingOnBeforeApplyItemLedgEntry(var ItemJournalLine: Record "Item Journal Line"; var ItemLedgerEntry: Record "Item Ledger Entry")
     var
@@ -333,19 +335,19 @@ codeunit 50031 "FTA_Events"
                 ERROR(CstL001, ItemJournalLine.Quantity, DecPQtyAvailable, ItemJournalLine."Journal Batch Name", ItemJournalLine."Line No.");
         end;
     end;
-
+    //CodeUnit 22
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnBeforeInsertPhysInvtLedgEntry', '', false, false)]
     local procedure OnBeforeInsertPhysInvtLedgEntry(var PhysInventoryLedgerEntry: Record "Phys. Inventory Ledger Entry"; ItemJournalLine: Record "Item Journal Line"; LastSplitItemJournalLine: Record "Item Journal Line")
     begin
         PhysInventoryLedgerEntry."Mobile Salesperson Code" := ItemJournalLine."Mobile Salesperson Code";
     end;
-
+    //CodeUnit 22
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnInitValueEntryOnBeforeRoundAmtValueEntry', '', false, false)]
     local procedure OnInitValueEntryOnBeforeRoundAmtValueEntry(var ValueEntry: Record "Value Entry"; ItemJnlLine: Record "Item Journal Line")
     begin
         ValueEntry."Mobile Salesperson Code" := ItemJnlLine."Mobile Salesperson Code";
     end;
-
+    //CodeUnit 22
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnBeforeGetProdOrderLine', '', false, false)]
     local procedure OnBeforeGetProdOrderLine(var ProdOrderLine: Record "Prod. Order Line"; OrderNo: Code[20]; OrderLineNo: Integer; var IsHandled: Boolean)
     begin
@@ -353,7 +355,7 @@ codeunit 50031 "FTA_Events"
             ProdOrderLine.GET(ProdOrderLine.Status::Finished, OrderNo, OrderLineNo);
         IsHandled := true;
     end;
-
+    //CodeUnit 82
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post + Print", 'OnBeforeConfirmPost', '', false, false)]
     local procedure OnBeforeConfirmPost(var SalesHeader: Record "Sales Header"; var HideDialog: Boolean; var IsHandled: Boolean; var SendReportAsEmail: Boolean; var DefaultOption: Integer)
     var
@@ -363,9 +365,9 @@ codeunit 50031 "FTA_Events"
         if RecLSalesReceivablesSetup."Default Posting Date" = RecLSalesReceivablesSetup."Default Posting Date"::"Work Date" then
             SalesHeader.VALIDATE(SalesHeader."Posting Date", WORKDATE());
     end;
-
+    //CodeUnit 82
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post + Print", 'OnAfterConfirmPost', '', false, false)]
-    local procedure OnAfterConfirmPost(var SalesHeader: Record "Sales Header")
+    local procedure OnAfterConfirmPost_PP(var SalesHeader: Record "Sales Header")
     var
         RecGPurchHeader: Record "Purchase Header";
         CuGPurchPost: Codeunit "Purch.-Post";
@@ -383,19 +385,19 @@ codeunit 50031 "FTA_Events"
                 end;
             end;
     end;
-
+    //CodeUnit 90
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePostPurchaseDoc', '', false, false)]
     local procedure OnBeforePostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; CommitIsSupressed: Boolean; var HideProgressWindow: Boolean; var ItemJnlPostLine: Codeunit "Item Jnl.-Post Line"; var IsHandled: Boolean)
     begin
         PurchaseHeader.CALCFIELDS("Order Type");
     end;
-
+    //CodeUnit 90
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnRunOnAfterFillTempLines', '', false, false)]
     local procedure OnRunOnAfterFillTempLines(var PurchHeader: Record "Purchase Header")
     begin
         PurchHeader.CALCFIELDS("Order Type");
     end;
-
+    //CodeUnit 90
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeCheckHeaderPostingType', '', false, false)]
     local procedure OnBeforeCheckHeaderPostingType(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
     var
@@ -412,26 +414,26 @@ codeunit 50031 "FTA_Events"
         end;
         IsHandled := true;
     end;
-
+    //CodeUnit 90
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePurchRcptHeaderInsert', '', false, false)]
     local procedure OnBeforePurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header"; CommitIsSupressed: Boolean; WarehouseReceiptHeader: Record "Warehouse Receipt Header"; WhseReceive: Boolean; WarehouseShipmentHeader: Record "Warehouse Shipment Header"; WhseShip: Boolean)
     begin
         PurchRcptHeader."Order Type" := PurchaseHeader."Order Type";
     end;
-
+    //CodeUnit 90
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePurchInvHeaderInsert', '', false, false)]
     local procedure OnBeforePurchInvHeaderInsert(var PurchInvHeader: Record "Purch. Inv. Header"; var PurchHeader: Record "Purchase Header"; CommitIsSupressed: Boolean)
     begin
         PurchInvHeader."Order Type" := PurchHeader."Order Type";
     end;
-
+    //CodeUnit 90
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeInitGenJnlLineAmountFieldsFromTotalPurchLine', '', false, false)]
     local procedure OnBeforeInitGenJnlLineAmountFieldsFromTotalPurchLine(var GenJnlLine: Record "Gen. Journal Line"; var PurchHeader: Record "Purchase Header"; var TotalPurchLine2: Record "Purchase Line"; var TotalPurchLineLCY2: Record "Purchase Line"; var IsHandled: Boolean)
     begin
         GenJnlLine."Posting Group" := PurchHeader."Vendor Posting Group";
         GenJnlLine."Payment Method Code" := PurchHeader."Payment Method Code";
     end;
-
+    //CodeUnit 90
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostPurchaseDoc', '', false, false)]
     local procedure OnAfterPostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line"; PurchRcpHdrNo: Code[20]; RetShptHdrNo: Code[20]; PurchInvHdrNo: Code[20]; PurchCrMemoHdrNo: Code[20]; CommitIsSupressed: Boolean)
     var
@@ -440,6 +442,7 @@ codeunit 50031 "FTA_Events"
         if PurchaseHeader.Invoice and (PurchInvHdrNo <> '') then
             MESSAGE(CstL001, PurchInvHdrNo);
     end;
+    //CodeUnit 225
     //Todo : verifier
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Apply", 'OnApplyCustomerLedgerEntryOnBeforeModify', '', false, false)]
     local procedure OnApplyCustomerLedgerEntryOnBeforeModify(var GenJnlLine: Record "Gen. Journal Line"; CustLedgerEntry: Record "Cust. Ledger Entry")
@@ -447,13 +450,14 @@ codeunit 50031 "FTA_Events"
         GenJnlLine."Posting Group" := CustLedgerEntry."Customer Posting Group";
 
     end;
-
+    //CodeUnit 225
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Apply", 'OnApplyVendorLedgerEntryOnBeforeModify', '', false, false)]
     local procedure OnApplyVendorLedgerEntryOnBeforeModify(var GenJournalLine: Record "Gen. Journal Line"; VendorLedgerEntry: Record "Vendor Ledger Entry"; VendorLedgerEntryLocal: Record "Vendor Ledger Entry")
     begin
         GenJournalLine."Posting Group" := VendorLedgerEntry."Vendor Posting Group";
 
     end;
+    //CodeUnit 229
     //TODO : a verifier !!!!!!!!!!!!!!!!!
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Print", 'OnBeforeDoPrintSalesHeader', '', false, false)]
     local procedure OnBeforeDoPrintSalesHeader(var SalesHeader: Record "Sales Header"; ReportUsage: Integer; SendAsEmail: Boolean; var IsPrinted: Boolean)
@@ -482,6 +486,7 @@ codeunit 50031 "FTA_Events"
             ReportSelections.PrintForCust(ReportUsage, SalesHeader, SalesHeader.FieldNo("Bill-to Customer No."));
         IsPrinted := true;
     end;
+    //CodeUnit 229
     //TODO : a verifier !!!!!!!!!!!!!!!!!
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Print", 'OnBeforeDoPrintPurchHeader', '', false, false)]
     local procedure OnBeforeDoPrintPurchHeader(var PurchHeader: Record "Purchase Header"; ReportUsage: Integer; var IsPrinted: Boolean)
@@ -507,6 +512,7 @@ codeunit 50031 "FTA_Events"
 
         IsPrinted := true;
     end;
+    //CodeUnit 229
     //TODO : a verifier !!!!!!!!!!!!!!!!!
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Print", 'OnBeforePrintSalesOrder', '', false, false)]
     local procedure OnBeforePrintSalesOrder(var SalesHeader: Record "Sales Header"; ReportUsage: Integer; var IsPrinted: Boolean)
@@ -533,7 +539,7 @@ codeunit 50031 "FTA_Events"
 
         IsPrinted := true;
     end;
-
+    //CodeUnit 5804
     [EventSubscriber(ObjectType::Codeunit, Codeunit::ItemCostManagement, 'OnUpdateStdCostSharesOnAfterCopyCosts', '', false, false)]
     local procedure OnUpdateStdCostSharesOnAfterCopyCosts(var Item: Record Item; FromItem: Record Item)
     begin
@@ -542,7 +548,7 @@ codeunit 50031 "FTA_Events"
             Item.VALIDATE("Unit Price", Item."Kit - Sales Price");
         end;
     end;
-
+    //Record 27
     [EventSubscriber(ObjectType::Table, Database::Item, 'OnAfterIsMfgItem', '', false, false)]
     local procedure OnAfterIsMfgItem(Item: Record Item; var Result: Boolean)
     begin
@@ -554,7 +560,7 @@ codeunit 50031 "FTA_Events"
         BooGOpenDialogueBox := BooPOpenDialogueBox;
         BooGMultiLevel := BooPMultiLevel;
     end;
-
+    //CodeUnit 5812
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Calculate Standard Cost", 'OnCalcItemOnBeforeShowStrMenu', '', false, false)]
     local procedure OnCalcItemOnBeforeShowStrMenu(var Item: Record Item; var ShowStrMenu: Boolean; var NewCalcMultiLevel: Boolean)
     begin
@@ -564,7 +570,7 @@ codeunit 50031 "FTA_Events"
                 ShowStrMenu := false;
             end;
     end;
-
+    //CodeUnit 5812
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Calculate Standard Cost", 'OnCalcAssemblyItemOnAfterCalcItemCost', '', false, false)]
     local procedure OnCalcAssemblyItemOnAfterCalcItemCost(var Item: Record Item; CompItem: Record Item; BOMComponent: Record "BOM Component"; ComponentQuantity: Decimal)
     begin
@@ -578,24 +584,37 @@ codeunit 50031 "FTA_Events"
                 Item."Single-Level Material Cost" += ComponentQuantity * CompItem."Purchase Price Base";
             end
     end;
-
+    //CodeUnit 5812
     //TODO : I cant find solution line 606
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Calculate Standard Cost", 'OnCalcProdBOMCostOnAfterCalcCompItemQtyBase', '', false, false)]
-    local procedure OnCalcProdBOMCostOnAfterCalcCompItemQtyBase(CalculationDate: Date; MfgItem: Record Item; MfgItemQtyBase: Decimal; IsTypeItem: Boolean; var ProdBOMLine: Record "Production BOM Line"; var CompItemQtyBase: Decimal; RtngNo: Code[20]; UOMFactor: Decimal)
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Calculate Standard Cost", 'OnCalcProdBOMCostOnAfterCalcAnyItem', '', false, false)]
+    local procedure OnCalcProdBOMCostOnAfterCalcAnyItem(var ProductionBOMLine: Record "Production BOM Line"; MfgItem: Record Item; MfgItemQtyBase: Decimal; CompItem: Record Item; CompItemQtyBase: Decimal; Level: Integer; IsTypeItem: Boolean; UOMFactor: Decimal; var SLMat: Decimal; var RUMat: Decimal; var RUCap: Decimal; var RUSub: Decimal; var RUCapOvhd: Decimal; var RUMfgOvhd: Decimal)
     begin
-
-
+        // GetItem(ProductionBOMLine."No.", CompItem);
+        // if CompItem.IsInventoriableType() then
+        //     if CompItem.IsMfgItem() or CompItem.IsAssemblyItem() then begin
+        //         CalcMfgItem(ProductionBOMLine."No.", CompItem, Level + 1);
+        //         IncrCost(SLMat, CompItem."Standard Cost", CompItemQtyBase);
+        //         IncrCost(RUMat, CompItem."Rolled-up Material Cost", CompItemQtyBase);
+        //         IncrCost(RUCap, CompItem."Rolled-up Capacity Cost", CompItemQtyBase);
+        //         IncrCost(RUSub, CompItem."Rolled-up Subcontracted Cost", CompItemQtyBase);
+        //         IncrCost(RUCapOvhd, CompItem."Rolled-up Cap. Overhead Cost", CompItemQtyBase);
+        //         IncrCost(RUMfgOvhd, CompItem."Rolled-up Mfg. Ovhd Cost", CompItemQtyBase);
+        //     end else begin
+        //         IncrCost(SLMat, CompItem."Unit Cost", CompItemQtyBase);
+        //         IncrCost(RUMat, CompItem."Unit Cost", CompItemQtyBase);
+        //     end;
     end;
-    //TODO: verifier 
+    //CodeUnit 10860
+    //TODO: i can't find solution line 263..264
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Payment Management", 'OnCopyLigBorOnBeforeToPaymentLineInsert', '', false, false)]
     local procedure OnCopyLigBorOnBeforeToPaymentLineInsert(var ToPaymentLine: Record "Payment Line"; var Process: Record "Payment Class")
     var
         tempPyamentLine: Record "Payment Line";
     begin
-        tempPyamentLine.Get(ToPaymentLine."No.");
-        ToPaymentLine."Created from No." := tempPyamentLine."Document No.";
+        // tempPyamentLine.Get(ToPaymentLine."No.");
+        // ToPaymentLine."Created from No." := tempPyamentLine."Document No.";
     end;
-
+    //CodeUnit 10860
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Payment Management", 'OnPostInvPostingBufferOnBeforeGenJnlPostLineRunWithCheck', '', false, false)]
     local procedure OnPostInvPostingBufferOnBeforeGenJnlPostLineRunWithCheck(var GenJnlLine: Record "Gen. Journal Line"; var PaymentHeader: Record "Payment Header"; var PaymentClass: Record "Payment Class")
     var
@@ -604,7 +623,7 @@ codeunit 50031 "FTA_Events"
         //TODO : procedure not migrated yet
         //GenJnlPostLine.FctFromPaymentMgt(true);
     end;
-
+    //CodeUnit 99000831
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reservation Engine Mgt.", 'OnBeforeCloseReservEntry', '', false, false)]
     local procedure OnBeforeCloseReservEntry(var ReservEntry: Record "Reservation Entry"; var ReTrack: Boolean; DeleteAll: Boolean; var SkipDeleteReservEntry: Boolean)
     var
@@ -646,7 +665,7 @@ codeunit 50031 "FTA_Events"
             end;
         end;
     end;
-
+    //CodeUnit 81
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post (Yes/No)", 'OnBeforeConfirmSalesPost', '', false, false)]
     local procedure OnBeforeConfirmSalesPost(var SalesHeader: Record "Sales Header"; var HideDialog: Boolean; var IsHandled: Boolean; var DefaultOption: Integer; var PostAndSend: Boolean)
     var
@@ -658,7 +677,7 @@ codeunit 50031 "FTA_Events"
             SalesHeader.Validate("Posting Date", WorkDate());
 
     end;
-
+    //CodeUnit 81
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post (Yes/No)", 'OnAfterConfirmPost', '', false, false)]
     local procedure OnAfterConfirmPost_YN(var SalesHeader: Record "Sales Header")
     var
@@ -686,7 +705,7 @@ codeunit 50031 "FTA_Events"
         PurchaseLine.CALCFIELDS("Reserved Quantity");
         PurchaseLine.TESTFIELD("Reserved Quantity", 0);
     end;
-
+    //Table Purchase Line 39
     [EventSubscriber(ObjectType::Table, Database::"Purchase Line", 'OnAfterUpdateWithWarehouseReceive', '', false, false)]
     local procedure OnAfterUpdateWithWarehouseReceive(PurchaseHeader: Record "Purchase Header"; var PurchaseLine: Record "Purchase Line")
     begin
@@ -699,34 +718,114 @@ codeunit 50031 "FTA_Events"
         GenJnlLine."Mobile Salesperson Code" := SalesHeader."Mobile Salesperson Code";
     end;
     //Table 60111
-    [EventSubscriber(ObjectType::Table, Database::"Sales Shipment Line", 'OnBeforeInsertInvLineFromShptLineBeforeInsertTextLine', '', false, false)]
-    local procedure OnBeforeInsertInvLineFromShptLineBeforeInsertTextLine(var SalesShptLine: Record "Sales Shipment Line"; var SalesLine: Record "Sales Line"; var NextLineNo: Integer; var Handled: Boolean; TempSalesLine: Record "Sales Line" temporary; SalesInvHeader: Record "Sales Header")
+    // [EventSubscriber(ObjectType::Table, Database::"Sales Shipment Line", 'OnBeforeInsertInvLineFromShptLineBeforeInsertTextLine', '', false, false)]
+    // local procedure OnBeforeInsertInvLineFromShptLineBeforeInsertTextLine(var SalesShptLine: Record "Sales Shipment Line"; var SalesLine: Record "Sales Line"; var NextLineNo: Integer; var Handled: Boolean; TempSalesLine: Record "Sales Line" temporary; SalesInvHeader: Record "Sales Header")
+    // var
+    //     CstG0001: Label 'No %1|Your Ref: %2|Order FTA %3';
+
+    //     "---FTA1.00---": Integer;
+    //     RecGSalesShipHeader: Record "110";
+    //     CstG0002: Label 'No %1|Your Ref: %2';
+    //     TxtGText: Text[250];
+    //     CstG0003: Label '===================== ';
+
+
+    // begin
+    //     SalesLine.INSERT();
+    //     NextLineNo := NextLineNo + 10000;
+    //     SalesLine."Line No." := NextLineNo;
+    //     SalesLine."Document Type" := TempSalesLine."Document Type";
+    //     SalesLine."Document No." := TempSalesLine."Document No.";
+    //     RecGSalesShipHeader.GET(SalesShptLine."Document No.");
+    //     if STRLEN(STRSUBSTNO(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.", RecGSalesShipHeader."Order No."))
+    //            <= 50 then
+    //         SalesLine.Description := COPYSTR(STRSUBSTNO(SalesShptLine.CstG0001, SalesShptLine."Document No.", SalesShptLine.RecGSalesShipHeader."External Document No.",
+    //         RecGSalesShipHeader."Order No."), 1, 50)
+    //     else
+    //         SalesLine.Description := COPYSTR(STRSUBSTNO(CstG0002, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No."), 1, 50);
+    // end;
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reservation Management", 'OnBeforeAutoReservePurchLine', '', false, false)]
+    local procedure OnBeforeAutoReservePurchLine(ReservSummEntryNo: Integer; var RemainingQtyToReserve: Decimal; var RemainingQtyToReserveBase: Decimal; Description: Text[100]; AvailabilityDate: Date; var IsReserved: Boolean; var Search: Text[1]; var NextStep: Integer; CalcReservEntry: Record "Reservation Entry")
     var
-        CstG0001: Label 'No %1|Your Ref: %2|Order FTA %3';
-
-        "---FTA1.00---": Integer;
-        RecGSalesShipHeader: Record "110";
-        CstG0002: Label 'No %1|Your Ref: %2';
-        TxtGText: Text[250];
-        CstG0003: Label '===================== ';
-
-
+        PurchLine: Record "Purchase Line";
     begin
-        SalesLine.INSERT();
-        NextLineNo := NextLineNo + 10000;
-        SalesLine."Line No." := NextLineNo;
-        SalesLine."Document Type" := TempSalesLine."Document Type";
-        SalesLine."Document No." := TempSalesLine."Document No.";
-        RecGSalesShipHeader.GET(SalesShptLine."Document No.");
-        if STRLEN(STRSUBSTNO(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.", RecGSalesShipHeader."Order No."))
-               <= 50 then
-            SalesLine.Description := COPYSTR(STRSUBSTNO(SalesShptLine.CstG0001, SalesShptLine."Document No.", SalesShptLine.RecGSalesShipHeader."External Document No.",
-            RecGSalesShipHeader."Order No."), 1, 50)
-        else
-            SalesLine.Description := COPYSTR(STRSUBSTNO(CstG0002, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No."), 1, 50);
+        // PurchLine.FilterLinesForReservation(
+        //  CalcReservEntry, Enum::"Purchase Document Type".FromInteger(ReservSummEntryNo - Enum::"Reservation Summary Type"::"Purchase Quote".AsInteger()),
+        //  GetAvailabilityFilter(AvailabilityDate), Positive);
+        //todo : Ican't find solution
     end;
 
-
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reservation Management", 'OnBeforeSetValueArray', '', false, false)]
+    local procedure OnBeforeSetValueArray(EntryStatus: Option; var ValueArray: array[30] of Integer; var ArrayCounter: Integer; var IsHandled: Boolean)
+    begin
+        Clear(ValueArray);
+        case EntryStatus of
+            0:
+                begin // Reservation
+                    ValueArray[1] := Enum::"Reservation Summary Type"::"Item Ledger Entry".AsInteger();
+                    ValueArray[2] := Enum::"Reservation Summary Type"::"Sales Order".AsInteger();
+                    //    TODO : variable globale
+                    // if BooGResaAssFTA then begin
+                    //     ValueArray[1] := 12;
+                    //     ValueArray[2] := 1;
+                    // end;
+                    ValueArray[3] := Enum::"Reservation Summary Type"::"Sales Return Order".AsInteger();
+                    ValueArray[4] := Enum::"Reservation Summary Type"::"Purchase Order".AsInteger();
+                    ValueArray[5] := Enum::"Reservation Summary Type"::"Purchase Return Order".AsInteger();
+                    ValueArray[6] := Enum::"Reservation Summary Type"::"Firm Planned Production Order".AsInteger();
+                    ValueArray[7] := Enum::"Reservation Summary Type"::"Released Production Order".AsInteger();
+                    ValueArray[8] := Enum::"Reservation Summary Type"::"Firm Planned Prod. Order Comp.".AsInteger();
+                    ValueArray[9] := Enum::"Reservation Summary Type"::"Released Prod. Order Comp.".AsInteger();
+                    ValueArray[10] := Enum::"Reservation Summary Type"::"Transfer Shipment".AsInteger();
+                    ValueArray[11] := Enum::"Reservation Summary Type"::"Transfer Receipt".AsInteger();
+                    ValueArray[12] := Enum::"Reservation Summary Type"::"Service Order".AsInteger();
+                    ValueArray[13] := Enum::"Reservation Summary Type"::"Job Planning Order".AsInteger();
+                    ValueArray[14] := Enum::"Reservation Summary Type"::"Assembly Order Header".AsInteger();
+                    ValueArray[15] := Enum::"Reservation Summary Type"::"Assembly Order Line".AsInteger();
+                    ValueArray[16] := Enum::"Reservation Summary Type"::"Inventory Receipt".AsInteger();
+                    ValueArray[17] := Enum::"Reservation Summary Type"::"Inventory Shipment".AsInteger();
+                    ArrayCounter := 17;
+                end;
+            1:
+                begin // Order Tracking
+                    ValueArray[1] := Enum::"Reservation Summary Type"::"Item Ledger Entry".AsInteger();
+                    ValueArray[2] := Enum::"Reservation Summary Type"::"Sales Order".AsInteger();
+                    ValueArray[3] := Enum::"Reservation Summary Type"::"Sales Return Order".AsInteger();
+                    ValueArray[4] := Enum::"Reservation Summary Type"::"Requisition Line".AsInteger();
+                    ValueArray[5] := Enum::"Reservation Summary Type"::"Purchase Order".AsInteger();
+                    ValueArray[6] := Enum::"Reservation Summary Type"::"Purchase Return Order".AsInteger();
+                    ValueArray[7] := Enum::"Reservation Summary Type"::"Planned Production Order".AsInteger();
+                    ValueArray[8] := Enum::"Reservation Summary Type"::"Firm Planned Production Order".AsInteger();
+                    ValueArray[9] := Enum::"Reservation Summary Type"::"Released Production Order".AsInteger();
+                    ValueArray[10] := Enum::"Reservation Summary Type"::"Planned Prod. Order Comp.".AsInteger();
+                    ValueArray[11] := Enum::"Reservation Summary Type"::"Firm Planned Prod. Order Comp.".AsInteger();
+                    ValueArray[12] := Enum::"Reservation Summary Type"::"Released Prod. Order Comp.".AsInteger();
+                    ValueArray[13] := Enum::"Reservation Summary Type"::"Transfer Shipment".AsInteger();
+                    ValueArray[14] := Enum::"Reservation Summary Type"::"Transfer Receipt".AsInteger();
+                    ValueArray[15] := Enum::"Reservation Summary Type"::"Service Order".AsInteger();
+                    ValueArray[16] := Enum::"Reservation Summary Type"::"Job Planning Order".AsInteger();
+                    ValueArray[17] := Enum::"Reservation Summary Type"::"Assembly Order Header".AsInteger();
+                    ValueArray[18] := Enum::"Reservation Summary Type"::"Assembly Order Line".AsInteger();
+                    ValueArray[19] := Enum::"Reservation Summary Type"::"Inventory Receipt".AsInteger();
+                    ValueArray[20] := Enum::"Reservation Summary Type"::"Inventory Shipment".AsInteger();
+                    ArrayCounter := 20;
+                end;
+            2:
+                begin // Simulation order tracking
+                    ValueArray[1] := Enum::"Reservation Summary Type"::"Sales Quote".AsInteger();
+                    ValueArray[2] := Enum::"Reservation Summary Type"::"Simulated Production Order".AsInteger();
+                    ValueArray[3] := Enum::"Reservation Summary Type"::"Simulated Prod. Order Comp.".AsInteger();
+                    ArrayCounter := 3;
+                end;
+            3:
+                begin // Item Tracking
+                    ValueArray[1] := Enum::"Reservation Summary Type"::"Item Ledger Entry".AsInteger();
+                    ValueArray[2] := Enum::"Reservation Summary Type"::"Item Tracking Line".AsInteger();
+                    ArrayCounter := 2;
+                end;
+        end;
+        IsHandled := true;
+    end;
     //<<<<<<<<<<<<<<<<<<Partie Mortadha >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     //Codeunit 12 Line 811
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnPostCustOnBeforeResetCustLedgerEntryAppliesToFields', '', false, false)]
@@ -740,7 +839,6 @@ codeunit 50031 "FTA_Events"
         CustLedgEntry."Applies-to ID" := '';
         CustLedgEntry."Payment Method Code" := GenJournalLine."Payment Method Code";
         CustLedgEntry."Payment Terms Code" := GenJournalLine."Payment Terms Code";
-
     end;
 
     //Codeunit 12 Line 819
@@ -753,14 +851,14 @@ codeunit 50031 "FTA_Events"
         CduGPropagation."GenJnlLine->DCustLedgEntryBuf"(GenJournalLine, TempDtldCVLedgEntryBuf);
     end;
 
-    //Codeunit 12 Line
+    //Codeunit 12 Line 900
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnBeforeVendLedgEntryInsert', '', false, false)]
     local procedure OnBeforeVendLedgEntryInsert(var VendorLedgerEntry: Record "Vendor Ledger Entry"; var GenJournalLine: Record "Gen. Journal Line"; GLRegister: Record "G/L Register")
     begin
         VendorLedgerEntry."Payment Method Code" := GenJournalLine."Payment Method Code";
         VendorLedgerEntry."Payment Terms Code" := GenJournalLine."Payment Terms Code";
     end;
-    //Codeunit 12 Line
+    //Codeunit 12 Line 908
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnAfterVendLedgEntryInsertInclPreviewMode', '', true, false)]
     local procedure OnAfterVendLedgEntryInsertInclPreviewMode(var VendorLedgerEntry: Record "Vendor Ledger Entry"; GenJournalLine: Record "Gen. Journal Line"; var DtldLedgEntryInserted: Boolean; PreviewMode: Boolean)
     var
@@ -774,11 +872,12 @@ codeunit 50031 "FTA_Events"
     local procedure OnApplyCustLedgEntryOnBeforeTempOldCustLedgEntryDelete(var TempOldCustLedgEntry: Record "Cust. Ledger Entry" temporary; var NewCVLedgEntryBuf: Record "CV Ledger Entry Buffer"; var GenJnlLine: Record "Gen. Journal Line"; var Cust: Record Customer; NextEntryNo: Integer; GLReg: Record "G/L Register"; AppliedAmount: Decimal; var OldCVLedgEntryBuf: Record "CV Ledger Entry Buffer")
     var
         FTAfct: Codeunit "FTA_Functions";
+        BooGPaymentMgt: Boolean;
     begin
+        BooGPaymentMgt := true;
         if not BooGPaymentMgt then
             //<<MIG NAV 2015 : Update Code
             FTAfct.CheckCustPostGroup(NewCVLedgEntryBuf, TempOldCustLedgEntry);
-
     end;
     //Codeunit 12 Line 2957
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Line", 'OnApplyVendLedgEntryOnBeforeTempOldVendLedgEntryDelete', '', true, false)]
@@ -786,40 +885,33 @@ codeunit 50031 "FTA_Events"
     var
         TempOldVendLedgEntry: Record "Vendor Ledger Entry" temporary;
         FTAfct: Codeunit "FTA_Functions";
+        BooGPaymentMgt: Boolean;
     begin
+        BooGPaymentMgt := true;
         TempOldVendLedgEntry.DELETE();
-
         if not BooGPaymentMgt then
             FTAfct.CheckVendPostGroup(NewCVLedgEntryBuf, TempOldVendLedgEntry);
-    end; //TODO
+    end; //TODO-> Verif
 
-    procedure FctFromPaymentMgt(BooPPaymentMgt: Boolean);
-    var
-    begin
-        BooGPaymentMgt := BooPPaymentMgt;
-    end;//Codeunit 12
-        //COdeUnit 86 Line 49
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order", 'OnAfterInsertSalesOrderHeader', '', false, false)]
-    local procedure OnAfterInsertSalesOrderHeader(var SalesOrderHeader: Record "Sales Header"; SalesQuoteHeader: Record "Sales Header")
-    begin
-        CodLSalesOrderNo := SalesOrderHeader."No.";
-    end;
-
-
+    // procedure FctFromPaymentMgt(BooPPaymentMgt: Boolean);
+    // var
+    // begin
+    //     BooGPaymentMgt := BooPPaymentMgt;
+    // end;//Codeunit 12 line 5270 //TODO possible not needed 
     //COdeUnit 86 Line 149
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order", 'OnAfterOnRun', '', false, false)]
     local procedure OnAfterOnRun(var SalesHeader: Record "Sales Header"; var SalesOrderHeader: Record "Sales Header")
     var
-        SalesOrderLine: Record "Sales Line";
         RecLInventorySetup: Record "Inventory Setup";
         RecLItem: Record Item;
+        SalesOrderLine: Record "Sales Line";
         FrmLAssignmentItem: Page "Assignment Item";
     begin
         RecLInventorySetup.GET();
         if RecLInventorySetup."Reservation FTA" then begin
             SalesOrderLine.RESET();
             SalesOrderLine.SETRANGE("Document Type", SalesOrderLine."Document Type"::Order);
-            SalesOrderLine.SETRANGE("Document No.", CodLSalesOrderNo);
+            SalesOrderLine.SETRANGE("Document No.", SalesOrderHeader."No.");//CodLSalesOrderNo
             SalesOrderLine.SETRANGE(Type, SalesOrderLine.Type::Item);
             SalesOrderLine.SETRANGE("Preparation Type", SalesOrderLine."Preparation Type"::" ");
             if SalesOrderLine.FINDSET() then
@@ -844,10 +936,10 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order", 'OnBeforeTransferQuoteLineToOrderLineLoop', '', false, false)]
     local procedure OnBeforeTransferQuoteLineToOrderLineLoop(var SalesQuoteLine: Record "Sales Line"; var SalesQuoteHeader: Record "Sales Header"; var SalesOrderHeader: Record "Sales Header"; var IsHandled: Boolean)
     var
-        SalesOrderLine: Record "Sales Line";
+        ATOLink: Record "Assemble-to-Order Link";
         Customer: Record Customer;
         RecLItem: Record Item;
-        ATOLink: Record "Assemble-to-Order Link";
+        SalesOrderLine: Record "Sales Line";
         PrepmtMgt: Codeunit "Prepayment Mgt.";
         ReserveSalesLine: Codeunit "Sales Line-Reserve";
     begin
@@ -880,7 +972,7 @@ codeunit 50031 "FTA_Events"
             RecLItem.MODIFY();
         end;
     end;
-    //codeunit 92
+    //codeunit 92 Line 109
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post + Print", 'OnAfterPost', '', false, false)]
     local procedure OnAfterPost(var PurchaseHeader: Record "Purchase Header")
     var
@@ -888,16 +980,16 @@ codeunit 50031 "FTA_Events"
         RecGPurchLine: Record "Purchase Line";
         CuGPurchPost: Codeunit "Purch.-Post";
         CuGReleasePurchaseDoc: Codeunit "Release Purchase Document";
+        BooGARefermer: Boolean;
         CodGNumDoc: Code[20];
         CodGNumDocMarchandise: Code[20];
-        BooGARefermer: Boolean;
         DecGQty: Decimal;
     begin
         CodGNumDoc := PurchaseHeader."Shipping Order No.";
         CodGNumDocMarchandise := PurchaseHeader."No.";
         //>>NAVEASY.001 [Cde_Transport] la Cde achat marchandise est livr‚e et
         //est li‚e … une cde achat transport alors il y a validation en R‚ception de la cde achat transport
-        if (PurchaseHeader."Document Type" = "Document Type"::Order) and
+        if (PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order) and
            (PurchaseHeader.Receive) and
            (CodGNumDoc <> '') then
             if (RecGPurchHeader.GET(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
@@ -957,10 +1049,10 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", 'OnAfterReleaseATOs', '', false, false)]
     local procedure OnAfterReleaseATOs(var SalesHeader: Record "Sales Header"; var SalesLine: Record "Sales Line"; PreviewMode: Boolean)
     var
-        RecLItem: Record Item;
         RecLCust: Record Customer;
-        DecLAmount: Decimal;
+        RecLItem: Record Item;
         BooLNegMargin: Boolean;
+        DecLAmount: Decimal;
         CstL001: Label 'The franco amount%1  is not enought (%2), do you want to add some additionals charges?';
         CstL002: Label 'Please add delivery charge';
         CstL003: Label 'This document has some having a negative margin (example line no. %1 item %2), do you want to modfy what you have entered?';
@@ -989,7 +1081,7 @@ codeunit 50031 "FTA_Events"
             if DecLAmount < RecLCust."Franco Amount" then
                 if CONFIRM(STRSUBSTNO(CstL001, FORMAT(RecLCust."Franco Amount"), FORMAT(DecLAmount))) then
                     ERROR(CstL002);
-        if SalesHeader."Document Type" = "Document Type"::Order then begin
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
             SalesLine.SETRANGE("Document Type", SalesHeader."Document Type");
             SalesLine.SETRANGE("Document No.", SalesHeader."No.");
             SalesLine.SETRANGE(Type, SalesLine.Type::Item);
@@ -1013,6 +1105,7 @@ codeunit 50031 "FTA_Events"
 
         //<<FED_20090415:PA 15/04/2009
     end;
+
     //Codeunit 905
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Assembly Line Management", 'OnExplodeAsmListOnAfterToAssemblyLineInsert', '', false, false)]
     local procedure OnExplodeAsmListOnAfterToAssemblyLineInsert(var FromAssemblyLine: Record "Assembly Line"; var ToAssemblyLine: Record "Assembly Line")
@@ -1020,11 +1113,13 @@ codeunit 50031 "FTA_Events"
         FTAfct: Codeunit "FTA_Functions";
     begin
         //>> FTA1.02
-        if AutoReserveOk then
-            ToAssemblyLine.FctAutoReserveFTA();
+        // if AutoReserveOk then  //TODO -> possibly not needed
+        ToAssemblyLine.FctAutoReserveFTA();
         //<< FTA1.02
     end;
-    //Codeunit 5895
+
+
+    //Codeunit 5895 Line 1660
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Inventory Adjustment", 'OnAfterInitAdjmtJnlLine', '', false, false)]
     local procedure OnAfterInitAdjmtJnlLine(var ItemJnlLine: Record "Item Journal Line"; OrigValueEntry: Record "Value Entry"; EntryType: Enum "Cost Entry Type"; VarianceType: Enum "Cost Variance Type"; InvoicedQty: Decimal)
     begin
@@ -1041,8 +1136,6 @@ codeunit 50031 "FTA_Events"
     begin
         FTAfct.Fct_GetDiscforAll(SalesHeader, SalesLine);
     end;
-
-
     //Codeunit 7171 line 325
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Info-Pane Management", 'OnBeforeLookupItem', '', false, false)]
     local procedure OnBeforeLookupItem(var SalesLine: Record "Sales Line"; Item: Record Item; var IsHandled: Boolean)
@@ -1079,14 +1172,17 @@ codeunit 50031 "FTA_Events"
         PAGE.RunModal(PAGE::"Item Card", Item);
         IsHandled := true;
     end;
-    //Codeunit 10861
+
+    //Codeunit 10861 //TODO Verifier
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Payment-Apply", 'OnAfterApply', '', false, false)]
     local procedure OnAfterApply(GenJnlLine: Record "Gen. Journal Line")
     var
         CustLedgEntry: Record "Cust. Ledger Entry";
+        PaymentLine: Record "Payment Line";
         VendLedgEntry: Record "Vendor Ledger Entry";
-        AccType: Enum "Gen. Journal Account Type";
+        CodLPostingGroup: Code[10];
         accNo: Code[20];
+        AccType: Enum "Gen. Journal Account Type";
     begin
         //AccType := GenJnlLine."Account Type";
         accNo := GenJnlLine."Account No.";
@@ -1098,7 +1194,7 @@ codeunit 50031 "FTA_Events"
                     CustLedgEntry.SETRANGE("Customer No.", AccNo);
                     CustLedgEntry.SETRANGE(Open, true);
                     CustLedgEntry.SetRange("Applies-to ID", GenJnlLine."Applies-to ID");
-                    "Posting Group" := CustLedgEntry."Customer Posting Group";
+                    CodLPostingGroup := CustLedgEntry."Customer Posting Group";
                 end;
             AccType::Vendor:
                 begin
@@ -1107,46 +1203,91 @@ codeunit 50031 "FTA_Events"
                     VendLedgEntry.SetRange("Vendor No.", AccNo);
                     VendLedgEntry.SetRange(Open, true);
                     VendLedgEntry.SetRange("Applies-to ID", GenJnlLine."Applies-to ID");
-                    "Posting Group" := VendLedgEntry."Vendor Posting Group";
-
+                    CodLPostingGroup := VendLedgEntry."Vendor Posting Group";
                 end;
         end;
+
+        //"Posting Group" := CodLPostingGroup;
+        PaymentLine.SetRange("Account Type", GenJnlLine."Account Type");
+        PaymentLine.SetRange("Account No.", GenJnlLine."Account No.");
+        PaymentLine.SetRange(Amount, GenJnlLine.Amount);
+        PaymentLine.SetRange("Amount (LCY)", GenJnlLine."Amount (LCY)");
+        PaymentLine.SetRange("Currency Code", GenJnlLine."Currency Code");
+        PaymentLine.SetRange("Applies-to ID", GenJnlLine."Applies-to ID");
+        PaymentLine.SetRange("Applies-to Doc. No.", GenJnlLine."Applies-to Doc. No.");
+        PaymentLine.SetRange("Applies-to Doc. Type", GenJnlLine."Applies-to Doc. Type");
+
+        PaymentLine."Posting Group" := CodLPostingGroup;
+        PaymentLine.Modify();
+
     end;
 
     //codeunit 99000830
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Create Reserv. Entry", 'OnTransferReservEntryOnAfterTransferFields', '', false, false)]
     local procedure OnTransferReservEntryOnAfterTransferFields(var NewReservationEntry: Record "Reservation Entry"; var OldReservationEntry: Record "Reservation Entry"; var UseQtyToHandle: Boolean; var UseQtyToInvoice: Boolean; var CurrSignFactor: Integer)
     var
-        RecLxOldReservEntry: Record "Reservation Entry" temporary;
+        ItemJournalLine: Record "Item Journal Line";
         RecLReservEntry: Record "Reservation Entry";
+        RecLxOldReservEntry: Record "Reservation Entry" temporary;
         RecLSalesLine: Record "Sales Line";
-    // CreateReservEntry:Codeunit "Create Reserv. Entry";
-    // TransferQty:Decimal;
-    // QtyToHandleThisLine: Decimal;
-    // QtyToInvoiceThisLine: Decimal;
-    // xTransferQty:Decimal;
+        RecLSalesLine2: Record "Sales Line";
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        QtyToHandleThisLine: Decimal;
+        QtyToInvoiceThisLine: Decimal;
+        TransferQty: Decimal;
+        xTransferQty: Decimal;
 
     begin
+
         RecLxOldReservEntry.TRANSFERFIELDS(OldReservationEntry);
 
-        // UseQtyToHandle := OldReservationEntry.TrackingExists() and false;
 
-        // CurrSignFactor := CreateReservEntry.SignFactor(OldReservationEntry);
-        // TransferQty := TransferQty * CurrSignFactor;
-        // xTransferQty := TransferQty;
+        /*******************/
+        case OldReservationEntry."Source Type" of
+            Database::"Sales Line":
+                begin
+                    UseQtyToHandle := OldReservationEntry.TrackingExists();
+                    RecLSalesLine2.get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
+                    TransferQty := RecLSalesLine2."Outstanding Qty. (Base)";
+                    CurrSignFactor := CreateReservEntry.SignFactor(OldReservationEntry);
+                    TransferQty := TransferQty * CurrSignFactor;
+                    xTransferQty := TransferQty;
 
-        // if UseQtyToHandle then begin // Used when handling Item Tracking
-        //     QtyToHandleThisLine := OldReservationEntry."Qty. to Handle (Base)";
-        //     QtyToInvoiceThisLine := OldReservationEntry."Qty. to Invoice (Base)";
-        //     if Abs(TransferQty) > Abs(QtyToHandleThisLine) then
-        //         TransferQty := QtyToHandleThisLine;
-        //     if UseQtyToInvoice then // Used when posting sales and purchase
-        //         if Abs(TransferQty) > Abs(QtyToInvoiceThisLine) then
-        //             TransferQty := QtyToInvoiceThisLine;
-        // end else
-        //     QtyToHandleThisLine := OldReservationEntry."Quantity (Base)";
-        //>>FE-DIVERS 18/09/2009
-        //TransferQty := RecLxOldReservEntry."Quantity (Base)";
+                    if UseQtyToHandle then begin // Used when handling Item Tracking
+                        QtyToHandleThisLine := OldReservationEntry."Qty. to Handle (Base)";
+                        QtyToInvoiceThisLine := OldReservationEntry."Qty. to Invoice (Base)";
+                        if Abs(TransferQty) > Abs(QtyToHandleThisLine) then
+                            TransferQty := QtyToHandleThisLine;
+                        if UseQtyToInvoice then // Used when posting sales and purchase
+                            if Abs(TransferQty) > Abs(QtyToInvoiceThisLine) then
+                                TransferQty := QtyToInvoiceThisLine;
+                    end else
+                        QtyToHandleThisLine := OldReservationEntry."Quantity (Base)";
+                end;
+            Database::"Item Journal Line":
+                begin
+                    UseQtyToHandle := OldReservationEntry.TrackingExists();
+                    ItemJournalLine.get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
+                    //TransferQty := ItemJournalLine."Outstanding Qty. (Base)";//QtyToBeShippedBase("Quanity (Base)")
+                    CurrSignFactor := CreateReservEntry.SignFactor(OldReservationEntry);
+                    TransferQty := TransferQty * CurrSignFactor;
+                    xTransferQty := TransferQty;
+
+                    if UseQtyToHandle then begin // Used when handling Item Tracking
+                        QtyToHandleThisLine := OldReservationEntry."Qty. to Handle (Base)";
+                        QtyToInvoiceThisLine := OldReservationEntry."Qty. to Invoice (Base)";
+                        if Abs(TransferQty) > Abs(QtyToHandleThisLine) then
+                            TransferQty := QtyToHandleThisLine;
+                        if UseQtyToInvoice then // Used when posting sales and purchase
+                            if Abs(TransferQty) > Abs(QtyToInvoiceThisLine) then
+                                TransferQty := QtyToInvoiceThisLine;
+                    end else
+                        QtyToHandleThisLine := OldReservationEntry."Quantity (Base)";
+                end;
+        end;
+        /*************************/
+
+
         if (TransferQty <> 0) and (RecLxOldReservEntry."Source Type" = 39) then begin
             RecLReservEntry.SETRANGE("Entry No.", RecLxOldReservEntry."Entry No.");
             RecLReservEntry.SETRANGE("Source Type", 37);
@@ -1185,21 +1326,8 @@ codeunit 50031 "FTA_Events"
         //<<FE-DIVERS 18/09/2009
     end;
 
+
     //<<<<<<<<<<<<<<<<<<Partie Iheb >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    //Report 10862
-    [EventSubscriber(ObjectType::Report, report::"Suggest Vendor Payments", 'OnAfterIncludeVendor', '', false, false)]
-
-    local procedure OnAfterIncludeVendor(Vendor: Record Vendor; VendorBalance: Decimal; var Result: Boolean)
-    begin
-        //>>NAVEASY.001 [Multi_Collectif]
-        //STD GetVendLedgEntries(TRUE,FALSE);
-        //STD GetVendLedgEntries(FALSE,FALSE);
-        if BooGCheckPostGroup then begin
-            GetVendLedgEntries2(true, false);
-            GetVendLedgEntries2(false, false);
-        end
-
-    end;
     //Report 295
     [EventSubscriber(ObjectType::Report, report::"Combine Shipments", 'OnBeforeSalesInvHeaderModify', '', false, false)]
 
@@ -1219,7 +1347,115 @@ codeunit 50031 "FTA_Events"
 
 
             //<<FE VTE_REGROUPEMENT_BL: SOBI 25/07/2011
-            Fct_FinalizeAdress.Fct_FinalizeAdress;
+            Fct_FinalizeAdress.Fct_FinalizeAdress();
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnAfterPost', '', false, false)]
+    local procedure OnAfterPost_CU91(var PurchaseHeader: Record "Purchase Header")
+    var
+        RecGPurchHeader: Record "Purchase Header";
+        RecGPurchLine: Record "Purchase Line";
+        CuGPurchPost: Codeunit "Purch.-Post";
+        CuGReleasePurchaseDoc: Codeunit "Release Purchase Document";
+        BooGARefermer: Boolean;
+        CodGNumDoc: Code[20];
+        CodGNumDocMarchandise: Code[20];
+        DecGQty: Decimal;
+    begin
+        CodGNumDoc := PurchaseHeader."Shipping Order No.";
+        CodGNumDocMarchandise := PurchaseHeader."No.";
+
+        if (PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order) and
+           (PurchaseHeader.Receive) and
+           (CodGNumDoc <> '') then
+            if (RecGPurchHeader.GET(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
+                RecGPurchHeader.CALCFIELDS("Order Type");
+                if (RecGPurchHeader."Order Type" = RecGPurchHeader."Order Type"::Transport) then begin
+
+                    if (RecGPurchHeader."Initial Order No." <> '') and
+                       (RecGPurchHeader."Initial Order Type" <> RecGPurchHeader."Initial Order Type"::" ") then begin
+                        RecGPurchHeader.Receive := true;
+                        CuGPurchPost.RUN(RecGPurchHeader);
+                    end;
+
+                    BooGARefermer := false;
+                    if (RecGPurchHeader."Initial Order No." = '') and
+                       (RecGPurchHeader."Initial Order Type" = RecGPurchHeader."Initial Order Type"::" ") then begin
+
+                        if RecGPurchHeader.Status = RecGPurchHeader.Status::Released then begin
+                            BooGARefermer := true;
+                            CuGReleasePurchaseDoc.Reopen(RecGPurchHeader);
+                        end;
+
+                        RecGPurchLine.RESET();
+                        RecGPurchLine.SETRANGE("Document Type", RecGPurchHeader."Document Type");
+                        RecGPurchLine.SETRANGE("Document No.", RecGPurchHeader."No.");
+                        if RecGPurchLine.FINDSET(true, false) then
+                            repeat
+                                if RecGPurchLine."Initial Order No." = CodGNumDocMarchandise then begin
+                                    DecGQty := RecGPurchLine.Quantity;
+                                    RecGPurchLine.VALIDATE(Quantity, DecGQty);
+                                end;
+
+                                if RecGPurchLine."Initial Order No." <> CodGNumDocMarchandise then
+                                    RecGPurchLine.VALIDATE("Qty. to Receive", 0);
+
+                                RecGPurchLine.MODIFY();
+                            until RecGPurchLine.NEXT() = 0;
+
+                        if BooGARefermer then
+                            CuGReleasePurchaseDoc.RUN(RecGPurchHeader);
+
+                        RecGPurchHeader.Receive := true;
+                        CuGPurchPost.RUN(RecGPurchHeader);
+                    end;
+                end;
+            end;
+    end;
+    //Page 233
+    [EventSubscriber(ObjectType::Page, Page::"Apply Vendor Entries", 'OnBeforeCallVendEntrySetApplIDSetApplId', '', true, false)]
+    local procedure OnBeforeCallVendEntrySetApplIDSetApplId(VendEntrySetApplID: Codeunit "Vend. Entry-SetAppl.ID"; var VendorLedgerEntry: Record "Vendor Ledger Entry"; var TempApplyingVendLedgEntry: Record "Vendor Ledger Entry"; var IsHandled: Boolean)
+    var
+        AppVendEntries: Page "Apply Vendor Entries";
+    begin
+        AppVendEntries.VerifPostingGroup(VendorLedgerEntry."Applies-to ID", VendorLedgerEntry."Vendor Posting Group");
+    end;
+    //Codeunit 86 Line 126 //TODO A verifier
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order", 'OnBeforeDeleteSalesQuote', '', false, false)]
+    local procedure OnBeforeDeleteSalesQuote(var QuoteSalesHeader: Record "Sales Header"; var OrderSalesHeader: Record "Sales Header"; var IsHandled: Boolean; var SalesQuoteLine: Record "Sales Line")
+    var
+        RecGParmNavi: Record "NavEasy Setup";
+        RecGArchiveManagement: Codeunit ArchiveManagement;
+    begin
+        if RecGParmNavi.GET() then
+            if RecGParmNavi."Filing Sales Quotes" then begin
+                QuoteSalesHeader."Cause filing" := QuoteSalesHeader."Cause filing"::"Change in Order";
+                QuoteSalesHeader.MODIFY();
+                RecGArchiveManagement.StoreSalesDocument(QuoteSalesHeader, false);
+            end;
+    end;
+    //Codeunit 92 Line 65
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post + Print", 'OnBeforeSelectPostOrderOption', '', false, false)]
+    local procedure OnBeforeSelectPostOrderOption(var PurchaseHeader: Record "Purchase Header"; DefaultOption: Integer; var Result: Boolean; var IsHandled: Boolean)
+    var
+        FTAfct: Codeunit "FTA_Functions";
+    begin
+        Result := FTAfct.ConfirmPostPurchaseDocument(PurchaseHeader, DefaultOption, false, false);
+        IsHandled := true;
+    end;
+    //Page 54 Line 35
+    [EventSubscriber(ObjectType::Page, Page::"Purchase order Subform", 'OnBeforeOnDeleteRecord', '', false, false)]
+    local procedure OnBeforeOnDeleteRecord(var PurchaseLine: Record "Purchase Line"; var Result: Boolean; var IsHandled: Boolean)
+    begin
+        PurchaseLine.CALCFIELDS("Reserved Quantity");
+        PurchaseLine.TESTFIELD("Reserved Quantity", 0);
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reporting Triggers", 'SubstituteReport', '', false, false)]
+    local procedure SubstituteReport(ReportId: Integer; RunMode: Option Normal,ParametersOnly,Execute,Print,SaveAs,RunModal; RequestPageXml: Text; RecordRef: RecordRef; var NewReportId: Integer)
+    begin
+        if ReportId = Report::"Batch Post Sales Orders" then
+            NewReportId := Report::"Batch.Post.Sales.Orders";
     end;
     //Table 21
     [EventSubscriber(ObjectType::Table, Database::"Cust. Ledger Entry", 'OnAfterCopyCustLedgerEntryFromGenJnlLine', '', false, false)]
@@ -1233,35 +1469,30 @@ codeunit 50031 "FTA_Events"
     local procedure OnBeforeShowPostedDocsToPrintCreatedMsg(var ShowPostedDocsToPrint: Boolean)
     var
         RecLPurchHeader: Record "Purchase Header";
+        SalesHeader: Record "Sales Header";//TODO A verifier
         TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
 
     begin
-        if "Shipping Order No." <> '' then
-            if CONFIRM(STRSUBSTNO(TextCdeTransp002, "Shipping Order No.")) then begin
-                if RecLPurchHeader.GET(RecLPurchHeader."Document Type"::Order, "Shipping Order No.") then RecLPurchHeader.DELETE(true);
-            end;
+        if SalesHeader."Shipping Order No." <> '' then
+            if CONFIRM(STRSUBSTNO(TextCdeTransp002, SalesHeader."Shipping Order No.")) then
+                if RecLPurchHeader.GET(RecLPurchHeader."Document Type"::Order, SalesHeader."Shipping Order No.") then RecLPurchHeader.DELETE(true);
     end;
     //Codeunit 80
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnAfterCheckMandatoryFields', '', false, false)]
 
-
     local procedure OnAfterCheckMandatoryFields(var SalesHeader: Record "Sales Header"; CommitIsSuppressed: Boolean)
     var
+        function: Codeunit FTA_Functions;
 
     begin
 
-        " FTA.UPDATECOSTc"(SalesHeader);
+        function."FTA.UPDATECOST"(SalesHeader);
 
-        if SalesHeader."Document Type" = "Document Type"::Order then begin
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
             SalesHeader.TESTFIELD(Preparer);
             SalesHeader.TESTFIELD(Assembler);
             SalesHeader.TESTFIELD(Packer);
         end;
-
-
-
-
-        //<<NDBI
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeCheckPostingFlags', '', false, false)]
@@ -1294,18 +1525,22 @@ codeunit 50031 "FTA_Events"
     end; //TODO
          //Codeunit 80
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeArchiveUnpostedOrder', '', false, false)]
+
     local procedure OnBeforeArchiveUnpostedOrder(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean; PreviewMode: Boolean; var OrderArchived: Boolean)
     var
+        SalesSetup: Record "Sales & Receivables Setup";
+
         SalesLine: Record "Sales Line";
         ArchiveManagement: Codeunit ArchiveManagement;
-        " Sales-Post": Codeunit "Sales-Post";
 
     begin
-        IsHandled := true;
+        IsHandled := TRUE;
+        OnBeforeArchiveUnpostedOrder(SalesHeader, IsHandled, PreviewMode, OrderArchived);
         if IsHandled then
             exit;
 
-        //todo GetSalesSetup();
+        // todo a supprimer a verifeir  GetSalesSetup();
+        SalesSetup.Get();
         if not (SalesHeader."Document Type" in [SalesHeader."Document Type"::Order, SalesHeader."Document Type"::"Return Order"]) then
             exit;
         if (SalesHeader."Document Type" = SalesHeader."Document Type"::Order) and not SalesSetup."Archive Orders" then
@@ -1317,25 +1552,141 @@ codeunit 50031 "FTA_Events"
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         SalesLine.SetRange("Document No.", SalesHeader."No.");
         SalesLine.SetFilter(Quantity, '<>0');
+        IF SalesHeader."Document Type" = SalesHeader."Document Type"::Order THEN
+            SalesLine.SETRANGE(Prepare, TRUE);
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then
             SalesLine.SetFilter("Qty. to Ship", '<>0')
-
-
         else
             SalesLine.SetFilter("Return Qty. to Receive", '<>0');
         if not SalesLine.IsEmpty() and not PreviewMode then begin
             ArchiveManagement.RoundSalesDeferralsForArchive(SalesHeader, SalesLine);
             ArchiveManagement.ArchSalesDocumentNoConfirm(SalesHeader);
             OrderArchived := true;
-
-            if SalesHeader."Document Type" = "Document Type"::Order then begin
-
-                SalesLine.SETRANGE(Prepare, true);
-            end;
-
         end;
     end;
-    //todo a verifier 
+    //todo emplacement
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnPostSalesLineOnAfterSetEverythingInvoiced', '', false, false)]
+
+    local procedure OnPostSalesLineOnAfterSetEverythingInvoiced(SalesLine: Record "Sales Line"; var EverythingInvoiced: Boolean; var IsHandled: Boolean; SalesHeader: Record "Sales Header")
+    begin
+        //>>FTA 28.01.2022
+        IF SalesHeader.Ship AND (SalesLine.Type = SalesLine.Type::Item) AND (SalesHeader."Document Type" = SalesHeader."Document Type"::Order) THEN
+            SalesLine.TESTFIELD(Quantity);
+        //<<FTA 28.01.2022
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Copy Document Mgt.", 'OnBeforeRecalculateSalesLine', '', false, false)]
+    local procedure OnBeforeRecalculateSalesLine(var ToSalesHeader: Record "Sales Header"; var ToSalesLine: Record "Sales Line"; var FromSalesHeader: Record "Sales Header"; var FromSalesLine: Record "Sales Line"; var CopyThisLine: Boolean; var IsHandled: Boolean)
+    var
+        GLAcc: Record "G/L Account";
+    begin
+        ToSalesLine.Validate(Type, FromSalesLine.Type);
+        ToSalesLine.Description := FromSalesLine.Description;
+        ToSalesLine.Validate("Description 2", FromSalesLine."Description 2");
+
+        if (FromSalesLine.Type <> FromSalesLine.Type::" ") and (FromSalesLine."No." <> '') then begin
+            if ToSalesLine.Type = ToSalesLine.Type::"G/L Account" then begin
+                ToSalesLine."No." := FromSalesLine."No.";
+                GLAcc.Get(FromSalesLine."No.");
+                CopyThisLine := GLAcc."Direct Posting";
+                if CopyThisLine then begin
+                    ToSalesLine.VALIDATE("Item Base", FromSalesLine."Item Base");
+                    ToSalesLine.VALIDATE("No.", FromSalesLine."No.");
+                end
+            end else begin
+                ToSalesLine.VALIDATE("Item Base", FromSalesLine."Item Base");
+                ToSalesLine.Validate("No.", FromSalesLine."No.");
+            end;
+
+            ToSalesLine.Validate("Variant Code", FromSalesLine."Variant Code");
+
+            IsHandled := false;
+            if not IsHandled then
+                ToSalesLine.Validate("Location Code", FromSalesLine."Location Code");
+
+            ToSalesLine.Validate("Unit of Measure", FromSalesLine."Unit of Measure");
+            ToSalesLine.Validate("Unit of Measure Code", FromSalesLine."Unit of Measure Code");
+            ToSalesLine.Validate(Quantity, FromSalesLine.Quantity);
+
+            if not (FromSalesLine.Type in [FromSalesLine.Type::Item, FromSalesLine.Type::Resource]) then begin
+                if (FromSalesHeader."Currency Code" <> ToSalesHeader."Currency Code") or
+                   (FromSalesHeader."Prices Including VAT" <> ToSalesHeader."Prices Including VAT")
+                then begin
+                    ToSalesLine."Unit Price" := 0;
+                    ToSalesLine."Line Discount %" := 0;
+                end else begin
+                    ToSalesLine.Validate("Unit Price", FromSalesLine."Unit Price");
+                    ToSalesLine.Validate("Line Discount %", FromSalesLine."Line Discount %");
+                end;
+                if ToSalesLine.Quantity <> 0 then
+                    ToSalesLine.Validate("Line Discount Amount", FromSalesLine."Line Discount Amount");
+            end;
+
+            ToSalesLine.Validate("Work Type Code", FromSalesLine."Work Type Code");
+            if (ToSalesLine."Document Type" = ToSalesLine."Document Type"::Order) and
+               (FromSalesLine."Purchasing Code" <> '')
+            then
+                ToSalesLine.Validate("Purchasing Code", FromSalesLine."Purchasing Code");
+        end;
+        if (FromSalesLine.Type = FromSalesLine.Type::" ") and (FromSalesLine."No." <> '') then
+            ToSalesLine.Validate("No.", FromSalesLine."No.");
+    end;
+    //TODO : verifier ihab les variables
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Copy Document Mgt.", 'OnAfterCopySalesDocument', '', false, false)]
+
+    local procedure OnAfterCopySalesDocument(FromDocumentType: Option; FromDocumentNo: Code[20]; var ToSalesHeader: Record "Sales Header"; FromDocOccurenceNo: Integer; FromDocVersionNo: Integer; IncludeHeader: Boolean; RecalculateLines: Boolean; MoveNegLines: Boolean)
+    var
+    FrmLAssignmentItem : Page "Assignment Item";
+    RecLInventorySetup : Record 313;
+        //todo a verifier sales line line variable
+        ToSalesLine: Record "Sales Line";
+        RecLItem : Record Item;
+        BoopF12 : Boolean;
+    begin
+        COMMIT();
+        RecLInventorySetup.GET();
+        if RecLInventorySetup."Reservation FTA" and
+           (ToSalesHeader."Document Type" = ToSalesHeader."Document Type"::Order) then begin
+
+            ToSalesLine.RESET();
+            ToSalesLine.SETRANGE("Document Type", ToSalesLine."Document Type"::Order);
+            ToSalesLine.SETRANGE("Document No.", ToSalesHeader."No.");
+            ToSalesLine.SETRANGE(Type, ToSalesLine.Type::Item);
+            ToSalesLine.SETRANGE("Preparation Type", ToSalesLine."Preparation Type"::" ");
+            if ToSalesLine.FINDSET() then
+                repeat
+                    if RecLItem.GET(ToSalesLine."No.") then;
+                    if (ToSalesLine.Quantity <> 0) and (ToSalesLine."Reserved Quantity" <> ToSalesLine.Quantity) and
+                         not (RecLItem."Inventory Value Zero") then begin
+                        CLEAR(FrmLAssignmentItem);
+                        BoopF12 := false;
+                        FrmLAssignmentItem.FctGetParm(ToSalesLine, ToSalesLine.Quantity, ToSalesLine."Preparation Type");
+                        FrmLAssignmentItem.SETTABLEVIEW(ToSalesLine);
+                        FrmLAssignmentItem.SETRECORD(ToSalesLine);
+                        FrmLAssignmentItem.RUNMODAL();
+                    end;
+                until ToSalesLine.NEXT() = 0;
+        end;
+    end;
+    //todo a verifier
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromSalesHeader', '', false, false)]
+    local procedure OnAfterCopyGenJnlLineFromSalesHeader(SalesHeader: Record "Sales Header"; var GenJournalLine: Record "Gen. Journal Line")
+    begin
+
+        GenJournalLine."Posting Group" := SalesHeader."Customer Posting Group";
+
+        GenJournalLine."Payment Method Code" := SalesHeader."Payment Method Code";
+
+        GenJournalLine."Posting Group" := SalesHeader."Customer Posting Group";
+    end;
+    //Todo a verifier
+    // [EventSubscriber(ObjectType::Table, Database::"Invoice Posting Buffer", 'OnAfterCopyToGenJnlLine', '', false, false)]
+    // local procedure OnAfterCopyToGenJnlLine(var GenJnlLine: Record "Gen. Journal Line"; InvoicePostingBuffer: Record "Invoice Posting Buffer");
+    // begin
+    //     //>>REGLEMENT 01/08/2006 COR001 [13] Mise … jour du champ Mode de r‚glement de la feuille de saisie
+    //     GenJnlLine."Payment Method Code" := InvoicePostingBuffer."Payment Method Code";
+    //     //<<REGLEMENT 01/08/2006 COR001 [13] Mise … jour du champ Mode de r‚glement de la feuille de saisie
+    // end;
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforePostLines', '', false, false)]
     local procedure OnBeforePostLines(var SalesLine: Record "Sales Line"; SalesHeader: Record "Sales Header"; CommitIsSuppressed: Boolean; PreviewMode: Boolean; var TempWhseShptHeader: Record "Warehouse Shipment Header" temporary; var ItemJnlPostLine: Codeunit "Item Jnl.-Post Line")
     begin
@@ -1345,10 +1696,17 @@ codeunit 50031 "FTA_Events"
 
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnAfterFindNotShippedLines', '', false, false)]
 
+    local procedure OnAfterFindNotShippedLines(SalesHeader: Record "Sales Header"; var TempSalesLine: Record "Sales Line" temporary)
 
+    begin
+        IF SalesHeader."Document Type" = SalesHeader."Document Type"::Order THEN
+            //SalesLine.SETFILTER("Planned Delivery Date",'<=%1',TODAY);
+            TempSalesLine.SETRANGE(Prepare, TRUE);
+    end;
+    //todo a verifier emplcament
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnAfterUpdateLastPostingNos', '', false, false)]
-
     local procedure OnAfterUpdateLastPostingNos(var SalesHeader: Record "Sales Header")
     begin
 
@@ -1377,55 +1735,9 @@ codeunit 50031 "FTA_Events"
         RecGArchiveManagement: Codeunit 5063;
     begin
 
-        if RecGParmNavi.GET then
+        if RecGParmNavi.GET() then
             if RecGParmNavi."Filing Sales Orders" then
                 RecGArchiveManagement.StoreSalesDocument(SalesHeader, false);
-    end;
-    // local procedure OnBeforeSelectPostOrderOption(var PurchaseHeader: Record "Purchase Header"; DefaultOption: Integer; var Result: Boolean; var IsHandled: Boolean)
-    //     begin
-    //           //>>FE-DIVERS 21/09/2009
-    //               {STD Selection := STRMENU(Text000,3);     }
-    //               Selection := STRMENU(Text000,1);
-    //               //<<FE-DIVERS 21/09/2009
-
-    // end; 
-    //todo 
-
-    //todo a verifier  [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeSelectPostReturnOrderOption', '', false, false)]
-    local procedure OnBeforeSelectPostReturnOrderOption(var PurchaseHeader: Record "Purchase Header"; DefaultOption: Integer; var Result: Boolean; var IsHandled: Boolean)
-    var
-        RecLPurchReceivablesSetup: Record 312;
-        RecGPurchHeader: Record 38;
-    begin
-        //>>FE-DIVERS 18/09/2009
-        RecLPurchReceivablesSetup.GET();
-        if RecLPurchReceivablesSetup."Default Posting Date" = RecLPurchReceivablesSetup."Default Posting Date"::"Work Date" then
-            RecGPurchHeader.VALIDATE("Posting Date", WORKDATE());
-        //<<FE-DIVERS 18/09/2009
-
-    end;
-
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnAfterConfirmPost', '', false, false)]
-
-    local procedure OnAfterConfirmPost(var PurchaseHeader: Record "Purchase Header")
-    var
-
-        RecGPurchHeader: Record 38;
-        CodGNumDocMarchandise: Code[20];
-        CodGNumDoc: Code[20];
-
-
-
-        BooGARefermer@1100267001 : Boolean;
-        DecGQty@1100267000 : Decimal;
-
-    begin
-        //>>NAVEASY.001 [Cde_Transport] Ajout code pour R‚cup‚ration
-        //du Nø cde achat transport + Nø cde achat marchandise
-        CodGNumDoc := RecGPurchHeader."Shipping Order No.";
-        CodGNumDocMarchandise := RecGPurchHeader."No.";
-        //<<NAVEASY.001 [Cde_Transport] Ajout code pour R‚cup‚ration
-        //du Nø cde achat transport + Nø cde achat marchandise
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Shipment Header - Edit", 'OnBeforeSalesShptHeaderModify', '', false, false)]
@@ -1462,14 +1774,14 @@ codeunit 50031 "FTA_Events"
             RecLKitSalesShipLine.SETRANGE("Document Line No.", OldSalesShipmentLine."Line No.");
             if not RecLKitSalesShipLine.ISEMPTY then
                 ERROR(CstL001, OldSalesShipmentLine."Line No.");
-        until OldSalesShipmentLine.NEXT = 0;
+        until OldSalesShipmentLine.NEXT() = 0;
         //<<FTA_DIVERS.001
 
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnCopySellToCustomerAddressFieldsFromCustomerOnAfterAssignSellToCustomerAddress', '', false, false)]
 
-    procedure OnCopySellToCustomerAddressFieldsFromCustomerOnAfterAssignSellToCustomerAddress(var SalesHeader: Record "Sales Header"; Customer: Record Customer)
+    local procedure OnCopySellToCustomerAddressFieldsFromCustomerOnAfterAssignSellToCustomerAddress(var SalesHeader: Record "Sales Header"; Customer: Record Customer)
 
     begin
 
@@ -1539,7 +1851,7 @@ codeunit 50031 "FTA_Events"
                 if RecLSalesLine."Reserved Qty. (Base)" <> 0 then
                     if not CONFIRM(CstL001, false) then
                         ERROR(CstL002);
-            until (RecLSalesLine.NEXT = 0) or (RecLSalesLine."Reserved Qty. (Base)" <> 0);
+            until (RecLSalesLine.NEXT() = 0) or (RecLSalesLine."Reserved Qty. (Base)" <> 0);
         end;
         //<<FED_20090415:PA 15/04/2009
     end;
@@ -1565,7 +1877,7 @@ codeunit 50031 "FTA_Events"
                 if RecLSalesLine."Reserved Qty. (Base)" <> 0 then
                     if not CONFIRM(CstL001, false) then
                         ERROR(CstL002);
-            until (RecLSalesLine.NEXT = 0) or (RecLSalesLine."Reserved Qty. (Base)" <> 0);
+            until (RecLSalesLine.NEXT() = 0) or (RecLSalesLine."Reserved Qty. (Base)" <> 0);
         end;
         //<<FED_20090415:PA 15/04/2009
 
@@ -1614,9 +1926,6 @@ codeunit 50031 "FTA_Events"
     var
         //    todo verifier les variable se sont des varibale global
         RecLItem: Record 27;
-        "**FTA1.00": Integer;
-        IntGNumber: Integer;
-        "--FTA": Integer;
 
         RecLProductionBOMLine: Record 90;
         BoolFirstRead: Boolean;
@@ -1624,7 +1933,6 @@ codeunit 50031 "FTA_Events"
         DecGQtyKit: Decimal;
         RecGKitSalesLine: Record 901;
         RecGAssemLink: Record 904;
-        "---- NDBI ----": Integer;
         BooGResaAssFTA: Boolean;
     begin
 
@@ -1671,9 +1979,9 @@ codeunit 50031 "FTA_Events"
             else begin
                 AssemblyLine."Kit Qty Available by Assembly" := 0;
                 BoolFirstRead := false;
-                RecLProductionBOMLine.RESET;
+                RecLProductionBOMLine.RESET();
                 RecLProductionBOMLine.SETRANGE("Parent Item No.", RecLItem."No.");
-                if RecLProductionBOMLine.FINDSET then
+                if RecLProductionBOMLine.FINDSET() then
                     repeat
                         if (RecLProductionBOMLine.Type = RecLProductionBOMLine.Type::Item) then
                             if RecLItem.GET(RecLProductionBOMLine."No.") then begin
@@ -1716,10 +2024,243 @@ codeunit 50031 "FTA_Events"
                                         AssemblyLine."Kit Qty Available by Assembly" := ROUND(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<');
                                 BoolFirstRead := true;
                             end;
-                    until RecLProductionBOMLine.NEXT = 0;
+                    until RecLProductionBOMLine.NEXT() = 0;
             end;
         end;
         //<<FED_20090415:PA 15/04/2009
+    end;
+    //Table 901 ...  par hadil
+    [EventSubscriber(ObjectType::Table, Database::"Assembly Line", 'OnBeforeShowReservation', '', false, false)]
+    local procedure OnBeforeShowReservation(var AssemblyLine: Record "Assembly Line"; var IsHandled: Boolean)
+    var
+        Reservation: Page Reservation;
+    begin
+        if IsHandled then
+            exit;
+
+        if AssemblyLine.Type = Type::Item then begin
+            AssemblyLine.TestField("No.");
+            AssemblyLine.TestField(Reserve);
+            Clear(Reservation);
+            //TODO Global
+            // if BooGResaAssFTA then
+            //     Reservation.FctSetBooResaASSFTA(true);
+            Reservation.SetReservSource(AssemblyLine);
+            Reservation.RunModal();
+        end;
+        IsHandled := true;
+    end;
+    // Table 111 ajouté par hadil
+    [EventSubscriber(ObjectType::Table, Database::"Sales Shipment Line", 'OnBeforeInsertInvLineFromShptLineBeforeInsertTextLine', '', false, false)]
+    local procedure OnBeforeInsertInvLineFromShptLineBeforeInsertTextLine(var SalesShptLine: Record "Sales Shipment Line"; var SalesLine: Record "Sales Line"; var NextLineNo: Integer; var Handled: Boolean; TempSalesLine: Record "Sales Line" temporary; SalesInvHeader: Record "Sales Header")
+    var
+        CstG0003: Label '======================================================================================================';
+        RecGSalesShipHeader: Record 110;
+        CstG0001: Label 'No %1|Your Ref: %2|Order FTA %3';
+        CstG0002: Label 'No %1|Your Ref: %2';
+    begin
+        SalesLine.Description := COPYSTR(CstG0003, 1, 50);
+
+        SalesLine.INSERT();
+        NextLineNo := NextLineNo + 10000;
+        SalesLine."Line No." := NextLineNo;
+        SalesLine."Document Type" := TempSalesLine."Document Type";
+        SalesLine."Document No." := TempSalesLine."Document No.";
+
+        RecGSalesShipHeader.GET(SalesShptLine."Document No.");
+        IF STRLEN(STRSUBSTNO(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.", RecGSalesShipHeader."Order No."))
+               <= 50 THEN
+            SalesLine.Description := COPYSTR(STRSUBSTNO(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.",
+            RecGSalesShipHeader."Order No."), 1, 50)
+        ELSE
+            SalesLine.Description := COPYSTR(STRSUBSTNO(CstG0002, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No."), 1, 50);
+    end;
+    //Table 111 ajouté par hadil
+    [EventSubscriber(ObjectType::Table, Database::"Sales Shipment Line", 'OnInsertInvLineFromShptLineOnBeforeValidateQuantity', '', false, false)]
+    local procedure OnInsertInvLineFromShptLineOnBeforeValidateQuantity(SalesShipmentLine: Record "Sales Shipment Line"; var SalesLine: Record "Sales Line"; var IsHandled: Boolean; var SalesInvHeader: Record "Sales Header")
+    begin
+        SalesLine.FctParmFromCompileBL();
+    end;
+    //todo a verifier
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforePostCustomerEntry', '', false, false)]
+    local procedure OnBeforePostCustomerEntry2(var GenJnlLine: Record "Gen. Journal Line"; var SalesHeader: Record "Sales Header"; var TotalSalesLine: Record "Sales Line"; var TotalSalesLineLCY: Record "Sales Line"; CommitIsSuppressed: Boolean; PreviewMode: Boolean; var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line")
+    begin
+        GenJnlLine."Mobile Salesperson Code" := SalesHeader."Mobile Salesperson Code";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnPostBalancingEntryOnAfterInitNewLine', '', false, false)]
+
+    local procedure OnPostBalancingEntryOnAfterInitNewLine(SalesHeader: Record "Sales Header"; var GenJnlLine: Record "Gen. Journal Line")
+    begin
+
+        GenJnlLine."Mobile Salesperson Code" := SalesHeader."Mobile Salesperson Code";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Item Journal Line", 'OnAfterCopyItemJnlLineFromSalesHeader', '', false, false)]
+
+    local procedure OnAfterCopyItemJnlLineFromSalesHeader(var ItemJnlLine: Record "Item Journal Line"; SalesHeader: Record "Sales Header")
+    begin
+
+        ItemJnlLine."Mobile Salesperson Code" := SalesHeader."Mobile Salesperson Code";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnAfterUpdateAssosOrderPostingNos', '', false, false)]
+
+    local procedure OnAfterUpdateAssosOrderPostingNos(SalesHeader: Record "Sales Header"; var TempSalesLine: Record "Sales Line" temporary; var DropShipment: Boolean)
+    var
+        RecGParmNavi: Record "NavEasy Setup";
+        RecGArchiveManagement: Codeunit ArchiveManagement;
+
+    begin
+
+        IF RecGParmNavi.GET() THEN
+            IF RecGParmNavi."Filing Sales Orders" THEN
+                RecGArchiveManagement.StoreSalesDocument(SalesHeader, FALSE);
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnPostUpdateOrderLineOnBeforeGetQuantityShipped', '', false, false)]
+    local procedure OnPostUpdateOrderLineOnBeforeGetQuantityShipped(TempSalesLine: Record "Sales Line"; var IsHandled: Boolean; var SalesHeader: Record "Sales Header")
+    begin
+        if SalesHeader.Ship then begin
+            IsHandled := true;
+
+            if not IsHandled then begin
+
+                TempSalesLine.Prepare := FALSE;
+                TempSalesLine."Start Date" := TODAY;
+            end;
+        end;
+    end;
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Partie Chaima >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    // TODO Can not  find an event has SalesLine on parametre
+    // [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnAfterReserveFromCurrentLine', '', false, false)]
+    // local procedure OnAfterReserveFromCurrentLine(ReservEntry: Record "Reservation Entry")
+    // var
+    //     RecLSalesLine: Record "Sales Line";
+    //     RecLReservEntry: Record "Reservation Entry";
+    //     RecLReservEntry2: Record "Reservation Entry";
+    // begin
+    //     IF ReservEntry."Source Type" = DATABASE::"Sales Line" THEN BEGIN
+    //         IF "Table ID" = DATABASE::"Purchase Line" THEN
+    //             SalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
+    //         IF "Table ID" = DATABASE::"Item Ledger Entry" THEN
+    //             SalesLine."Preparation Type" := SalesLine."Preparation Type"::Stock;
+    //         SalesLine.MODIFY();
+    //     END ELSE
+    //         //>>TI298981
+    //         IF ReservEntry."Source Type" = DATABASE::"Purchase Line" THEN BEGIN
+    //             RecLReservEntry.RESET();
+    //             IF RecLReservEntry.FINDLAST() THEN
+    //                 IF RecLReservEntry2.GET(RecLReservEntry."Entry No.", FALSE) THEN
+    //                     IF RecLSalesLine.GET(RecLReservEntry2."Source Subtype", RecLReservEntry2."Source ID", RecLReservEntry2."Source Ref. No.") THEN BEGIN
+    //                         IF ReservEntry."Source Type" = DATABASE::"Purchase Line" THEN
+    //                             RecLSalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase
+    //                         ELSE
+    //                             IF "Table ID" = DATABASE::"Item Ledger Entry" THEN
+    //                                 RecLSalesLine."Preparation Type" := SalesLine."Preparation Type"::Stock;
+    //                         RecLSalesLine.MODIFY();
+    //                     END;
+    //         END;
+
+    //Page 498
+    // TODO CodeUnit ReservMgt
+    // [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnUpdateReservMgt', '', false, false)]
+    // local procedure OnUpdateReservMgt(var ReservationEntry: Record "Reservation Entry"; var ReservationManagement: Codeunit "Reservation Management")
+    // begin
+    //     //>>NDBI
+    //     IF BooGResaFTA THEN
+    //         ReservMgt.FctSetBooResaFTA(TRUE);
+    //     IF BooGResaAssFTA THEN
+    //         ReservMgt.FctSetBooResaAssFTA(TRUE);
+    //     //<<NDBI
+    // end;
+    // TODO Can not find event has RecGItem and ReserveEntry on parametre
+    // [EventSubscriber(ObjectType::Page, PAge::Reservation, 'OnAfterUpdateReservFrom', '', False, False)]
+    // local procedure OnAfterUpdateReservFrom(var EntrySummary: Record "Entry Summary")
+    // begin
+    //      //>>FED_20090415:PA
+    //   IF NOT RecGItem.GET(ReservEntry."Item No.") THEN
+    //     CLEAR(RecGItem);
+    //<<FED_20090415:PA
+    // end;
+
+    //Page 498
+    // TODO CodeUnit ReservMgt (est-ce qu'on peut utiliser la méme event sur 2 procédures différentes ?)
+    // [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnUpdateReservMgt', '', false, false)]
+    // local procedure OnUpdateReservMgt(var ReservationEntry: Record "Reservation Entry"; var ReservationManagement: Codeunit "Reservation Management")
+    // begin
+    //     //>>NDBI
+    //     IF BooGResaFTA THEN
+    //         ReservMgt.FctSetBooResaFTA(TRUE);
+    //     IF BooGResaAssFTA THEN
+    //         ReservMgt.FctSetBooResaAssFTA(TRUE);
+    //     //<<NDBI
+    // end;
+    // TODO CodeUnitReservMgt
+    //Page 498
+    // [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnBeforeAutoReserve', '', false, false)]
+    // local procedure OnBeforeAutoReserve(ReservEntry: Record "Reservation Entry"; var FullAutoReservation: Boolean; QtyToReserve: Decimal; QtyReserved: Decimal; QtyToReserveBase: Decimal; QtyReservedBase: Decimal; var IsHandled: Boolean)
+    // begin
+    //     //>>NDBI
+    //     IF BooGResaFTA THEN
+    //         ReservMgt.FctSetBooResaFTA(TRUE);
+    //     IF BooGResaAssFTA THEN
+    //         ReservMgt.FctSetBooResaAssFTA(TRUE);
+    //     //<<NDBI
+    // end;
+
+    //TODO Salesline and PurchLina are declared on global
+    // [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnAfterAutoReserve', '', false, false)]
+    // local procedure OnAfterAutoReserve(ReservEntry: Record "Reservation Entry")
+    // var
+    //     RecLReservEntry: Record "Reservation Entry";
+    //     RecLReservEntry2: Record "Reservation Entry";
+    //     RecLSalesLine: Record "Sales Line";
+    // begin
+    //     IF SalesLine."Document No." <> '' THEN BEGIN
+    //         RecLReservEntry.SETRANGE("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
+    //         RecLReservEntry.SETRANGE("Source Type", DATABASE::"Sales Line");
+    //         RecLReservEntry.SETRANGE("Source Subtype", SalesLine."Document Type");
+    //         RecLReservEntry.SETRANGE("Source ID", SalesLine."Document No.");
+    //         RecLReservEntry.SETRANGE("Source Ref. No.", SalesLine."Line No.");
+    //         IF RecLReservEntry.FINDLAST THEN BEGIN
+    //             IF RecLReservEntry2.GET(RecLReservEntry."Entry No.", TRUE) THEN BEGIN
+    //                 IF RecLReservEntry2."Source Type" = DATABASE::"Purchase Line" THEN
+    //                     SalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
+    //                 IF "Table ID" = DATABASE::"Item Ledger Entry" THEN
+    //                     SalesLine."Preparation Type" := SalesLine."Preparation Type"::Stock;
+    //                 SalesLine.MODIFY;
+    //             END;
+    //         END
+    //     END ELSE
+    //         IF PurchLine."Document No." <> '' THEN BEGIN
+    //             //>>TI298981
+    //             RecLReservEntry.SETRANGE("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
+    //             RecLReservEntry.SETRANGE("Source Type", DATABASE::"Purchase Line");
+    //             RecLReservEntry.SETRANGE("Source Subtype", PurchLine."Document Type");
+    //             RecLReservEntry.SETRANGE("Source ID", PurchLine."Document No.");
+    //             RecLReservEntry.SETRANGE("Source Ref. No.", PurchLine."Line No.");
+    //             IF RecLReservEntry.FINDLAST THEN
+    //                 IF RecLReservEntry2.GET(RecLReservEntry."Entry No.", FALSE) THEN
+    //                     IF RecLReservEntry2."Source Type" = DATABASE::"Sales Line" THEN
+    //                         IF RecLSalesLine.GET(RecLReservEntry2."Source Subtype", RecLReservEntry2."Source ID", RecLReservEntry2."Source Ref. No.") THEN BEGIN
+    //                             RecLSalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
+    //                             RecLSalesLine.MODIFY;
+    //                         END;
+    //         end;
+    // end;
+
+    //    TODO can't find event  on DrillDownTotalQuantity
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Posting Selection Management", 'OnConfirmPostSalesDocumentOnBeforeSalesOrderGetSalesInvoicePostingPolicy', '', False, False)]
+    local procedure OnConfirmPostSalesDocumentOnBeforeSalesOrderGetSalesInvoicePostingPolicy(var SalesHeader: Record "Sales Header")
+    var
+        RecLSalesReceivablesSetup: Record "Sales & Receivables Setup";
+    begin
+        RecLSalesReceivablesSetup.GET();
+        IF RecLSalesReceivablesSetup."Default Posting Date" = RecLSalesReceivablesSetup."Default Posting Date"::"Work Date" THEN
+            SalesHeader.VALIDATE("Posting Date", WORKDATE());
     end;
 
 }//

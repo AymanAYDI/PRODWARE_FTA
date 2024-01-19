@@ -12,6 +12,7 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
             {
                 field(CodGPostGrpFilter; CodGPostGrpFilter)
                 {
+                    Caption = 'Posting Group Filter';
                     TableRelation = "Customer Posting Group".Code;
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the CodGPostGrpFilter field.';
@@ -38,6 +39,7 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
             {
                 field(Balance; CalcRecBalance())
                 {
+                    Caption = 'Balance';
                     AutoFormatType = 1;
                     Editable = false;
                     ApplicationArea = All;
@@ -45,6 +47,7 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
                 }
                 field(CodGAccName; CodGAccName)
                 {
+                    Caption = 'Account No.';
                     Visible = false;
                     Editable = false;
                     ApplicationArea = All;
@@ -52,6 +55,7 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
                 }
                 field(TxtGBalAccName; TxtGBalAccName)
                 {
+                    Caption = 'Account Name';
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the TxtGBalAccName field.';
                 }
@@ -61,8 +65,8 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
     var
         CodGPostGrpFilter: Code[20];
         CodGAccName: Code[20];
-        TxtGBalAccName: Text[50];
-        DecGBalance: Integer;
+        TxtGBalAccName: Text[100];
+
 
     local procedure ApplyFilters();
     begin
