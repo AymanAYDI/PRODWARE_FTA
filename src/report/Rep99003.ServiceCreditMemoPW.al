@@ -31,7 +31,7 @@ report 99003 "Service - Credit Memo PW" //8044281
     {
         dataitem("Service Cr.Memo Header"; "Service Cr.Memo Header")
         {
-            DataItemTableView = SORTING("No.");
+            DataItemTableView = sorting("No.");
             RequestFilterFields = "No.", "Customer No.", "No. Printed";
             RequestFilterHeading = 'Posted Service Credit Memo';
             column(VATAmtLineVATAmtText; VATAmountLine.VATAmountText())
@@ -150,11 +150,11 @@ report 99003 "Service - Credit Memo PW" //8044281
             }
             dataitem(CopyLoop; Integer)
             {
-                DataItemTableView = SORTING(Number);
+                DataItemTableView = sorting(Number);
                 dataitem(PageLoop; Integer)
                 {
-                    DataItemTableView = SORTING(Number)
-                                        WHERE(Number = CONST(1));
+                    DataItemTableView = sorting(Number)
+                                        where(Number = const(1));
                     column(CompanyInfoPicture; CompanyInfo.Picture)
                     {
                     }
@@ -353,7 +353,7 @@ report 99003 "Service - Credit Memo PW" //8044281
                     dataitem(DimensionLoop1; Integer)
                     {
                         DataItemLinkReference = "Service Cr.Memo Header";
-                        DataItemTableView = SORTING(Number);
+                        DataItemTableView = sorting(Number);
                         column(DimText; DimText)
                         {
                         }
@@ -371,7 +371,7 @@ report 99003 "Service - Credit Memo PW" //8044281
 
                         trigger OnPreDataItem()
                         begin
-                            IF NOT ShowInternalInfo THEN
+                            if not ShowInternalInfo then
                                 CurrReport.BREAK();
                             FindDimTxt("Service Cr.Memo Header"."Dimension Set ID");
                             SETRANGE(Number, 1, DimTxtArrLength);
@@ -379,9 +379,9 @@ report 99003 "Service - Credit Memo PW" //8044281
                     }
                     dataitem("Service Cr.Memo Line"; "Service Cr.Memo Line")
                     {
-                        DataItemLink = "Document No." = FIELD("No.");
+                        DataItemLink = "Document No." = field("No.");
                         DataItemLinkReference = "Service Cr.Memo Header";
-                        DataItemTableView = SORTING("Document No.", "Line No.");
+                        DataItemTableView = sorting("Document No.", "Line No.");
                         column(TypeInt; TypeInt)
                         {
                         }
@@ -467,7 +467,7 @@ report 99003 "Service - Credit Memo PW" //8044281
                         }
                         dataitem("Service Shipment Buffer"; Integer)
                         {
-                            DataItemTableView = SORTING(Number);
+                            DataItemTableView = sorting(Number);
                             column(ServShptBuffPostingDate; FORMAT(ServiceShipmentBuffer."Posting Date"))
                             {
                             }
@@ -481,9 +481,9 @@ report 99003 "Service - Credit Memo PW" //8044281
 
                             trigger OnAfterGetRecord()
                             begin
-                                IF Number = 1 THEN
+                                if Number = 1 then
                                     ServiceShipmentBuffer.FIND('-')
-                                ELSE
+                                else
                                     ServiceShipmentBuffer.NEXT();
                             end;
 
@@ -494,7 +494,7 @@ report 99003 "Service - Credit Memo PW" //8044281
                         }
                         dataitem(DimensionLoop2; Integer)
                         {
-                            DataItemTableView = SORTING(Number);
+                            DataItemTableView = sorting(Number);
                             column(DimText1; DimText)
                             {
                             }
@@ -509,7 +509,7 @@ report 99003 "Service - Credit Memo PW" //8044281
 
                             trigger OnPreDataItem()
                             begin
-                                IF NOT ShowInternalInfo THEN
+                                if not ShowInternalInfo then
                                     CurrReport.BREAK();
 
                                 FindDimTxt("Service Cr.Memo Line"."Dimension Set ID");
@@ -521,10 +521,10 @@ report 99003 "Service - Credit Memo PW" //8044281
                         begin
                             ServiceShipmentBuffer.DELETEALL();
                             PostedReceiptDate := 0D;
-                            IF Quantity <> 0 THEN
+                            if Quantity <> 0 then
                                 PostedReceiptDate := FindPostedShipmentDate();
 
-                            IF (Type = Type::"G/L Account") AND NOT ShowInternalInfo THEN
+                            if (Type = Type::"G/L Account") and not ShowInternalInfo then
                                 "No." := '';
 
                             VATAmountLine.INIT();
@@ -535,7 +535,7 @@ report 99003 "Service - Credit Memo PW" //8044281
                             VATAmountLine."VAT Base" := Amount;
                             VATAmountLine."Amount Including VAT" := "Amount Including VAT";
                             VATAmountLine."Line Amount" := "Line Amount";
-                            IF "Allow Invoice Disc." THEN
+                            if "Allow Invoice Disc." then
                                 VATAmountLine."Inv. Disc. Base Amount" := "Line Amount";
                             VATAmountLine."Invoice Discount Amount" := "Inv. Discount Amount";
                             VATAmountLine."VAT Clause Code" := "VAT Clause Code";
@@ -555,9 +555,9 @@ report 99003 "Service - Credit Memo PW" //8044281
                             ServiceShipmentBuffer.DELETEALL();
                             FirstValueEntryNo := 0;
                             MoreLines := FIND('+');
-                            WHILE MoreLines AND (Description = '') AND ("No." = '') AND (Quantity = 0) AND (Amount = 0) DO
+                            while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
                                 MoreLines := NEXT(-1) <> 0;
-                            IF NOT MoreLines THEN
+                            if not MoreLines then
                                 CurrReport.BREAK();
                             SETRANGE("Line No.", 0, "Line No.");
                             // CurrReport.CREATETOTALS(Amount, "Amount Including VAT", "Inv. Discount Amount");
@@ -570,7 +570,7 @@ report 99003 "Service - Credit Memo PW" //8044281
                     }
                     dataitem(VATCounter; Integer)
                     {
-                        DataItemTableView = SORTING(Number);
+                        DataItemTableView = sorting(Number);
                         column(VATAmtLineVATBase; VATAmountLine."VAT Base")
                         {
                             AutoFormatExpression = "Service Cr.Memo Header"."Currency Code";
@@ -640,7 +640,7 @@ report 99003 "Service - Credit Memo PW" //8044281
                         trigger OnAfterGetRecord()
                         begin
                             VATAmountLine.GetLine(Number);
-                            IF NOT VATClause.GET(VATAmountLine."VAT Clause Code") THEN
+                            if not VATClause.GET(VATAmountLine."VAT Clause Code") then
                                 CurrReport.SKIP();
                             VATClause.TranslateDescription("Service Cr.Memo Header"."Language Code");
                         end;
@@ -655,7 +655,7 @@ report 99003 "Service - Credit Memo PW" //8044281
                     }
                     dataitem(VATClauseEntryCounter; Integer)
                     {
-                        DataItemTableView = SORTING(Number);
+                        DataItemTableView = sorting(Number);
                         column(VATClauseVATIdentifier; VATAmountLine."VAT Identifier")
                         {
                         }
@@ -697,13 +697,13 @@ report 99003 "Service - Credit Memo PW" //8044281
                     }
                     dataitem(Total; Integer)
                     {
-                        DataItemTableView = SORTING(Number)
-                                            WHERE(Number = CONST(1));
+                        DataItemTableView = sorting(Number)
+                                            where(Number = const(1));
                     }
                     dataitem(Total2; Integer)
                     {
-                        DataItemTableView = SORTING(Number)
-                                            WHERE(Number = CONST(1));
+                        DataItemTableView = sorting(Number)
+                                            where(Number = const(1));
                         column(Cust_ServCrMemoHeader; "Service Cr.Memo Header"."Customer No.")
                         {
                         }
@@ -748,15 +748,15 @@ report 99003 "Service - Credit Memo PW" //8044281
                 trigger OnAfterGetRecord()
                 begin
                     CurrReport.PAGENO := 1;
-                    IF Number > 1 THEN BEGIN
+                    if Number > 1 then begin
                         CopyText := Text004;
                         OutputNo += 1;
-                    END;
+                    end;
                 end;
 
                 trigger OnPostDataItem()
                 begin
-                    IF NOT CurrReport.PREVIEW THEN
+                    if not CurrReport.PREVIEW then
                         ServiceCrMemoCountPrinted.RUN("Service Cr.Memo Header");
                 end;
 
@@ -775,71 +775,71 @@ report 99003 "Service - Credit Memo PW" //8044281
             begin
                 CurrReport.LANGUAGE := Language.GetLanguageIdOrDefault("Language Code");
 
-                IF RespCenter.GET("Responsibility Center") THEN BEGIN
+                if RespCenter.GET("Responsibility Center") then begin
                     FormatAddr.RespCenter(CompanyAddr, RespCenter);
                     CompanyInfo."Phone No." := RespCenter."Phone No.";
                     CompanyInfo."Fax No." := RespCenter."Fax No.";
-                END ELSE
+                end else
                     FormatAddr.Company
                     (CompanyAddr, CompanyInfo);
 
-                IF "Salesperson Code" = '' THEN BEGIN
+                if "Salesperson Code" = '' then begin
                     SalesPurchPerson.INIT();
                     SalesPersonText := '';
-                END ELSE BEGIN
+                end else begin
                     SalesPurchPerson.GET("Salesperson Code");
                     SalesPersonText := Text000;
-                END;
-                IF "Your Reference" = '' THEN
+                end;
+                if "Your Reference" = '' then
                     ReferenceText := ''
-                ELSE
+                else
                     ReferenceText := FIELDCAPTION("Your Reference");
-                IF "VAT Registration No." = '' THEN
+                if "VAT Registration No." = '' then
                     VATNoText := ''
-                ELSE
+                else
                     VATNoText := FIELDCAPTION("VAT Registration No.");
-                IF "Currency Code" = '' THEN BEGIN
+                if "Currency Code" = '' then begin
                     GLSetup.TESTFIELD("LCY Code");
                     TotalText := STRSUBSTNO(Text001, GLSetup."LCY Code");
                     TotalInclVATText := STRSUBSTNO(Text002, GLSetup."LCY Code");
                     TotalExclVATText := STRSUBSTNO(Text007, GLSetup."LCY Code");
-                END ELSE BEGIN
+                end else begin
                     TotalText := STRSUBSTNO(Text001, "Currency Code");
                     TotalInclVATText := STRSUBSTNO(Text002, "Currency Code");
                     TotalExclVATText := STRSUBSTNO(Text007, "Currency Code");
-                END;
+                end;
                 FormatAddr.ServiceCrMemoBillTo(CustAddr, "Service Cr.Memo Header");
-                IF "Applies-to Doc. No." = '' THEN
+                if "Applies-to Doc. No." = '' then
                     AppliedToText := ''
-                ELSE
+                else
                     AppliedToText := STRSUBSTNO(Text003, "Applies-to Doc. Type", "Applies-to Doc. No.");
                 //Todo : verifier i add CustAddr
                 FormatAddr.ServiceCrMemoShipTo(ShipToAddr, CustAddr, "Service Cr.Memo Header");
                 TxtGOurReferences := "Customer No.";
-                IF "Customer No." <> "Bill-to Customer No." THEN
+                if "Customer No." <> "Bill-to Customer No." then
                     TxtGOurReferences := TxtGOurReferences + ' / ' + "Bill-to Customer No.";
 
                 RecGCustomer.GET("Customer No.");
 
                 CLEAR(RecGPaymentMethod);
-                IF "Payment Method Code" <> '' THEN RecGPaymentMethod.GET("Payment Method Code");
+                if "Payment Method Code" <> '' then RecGPaymentMethod.GET("Payment Method Code");
 
-                IF "Payment Terms Code" = '' THEN
+                if "Payment Terms Code" = '' then
                     RecGPaymentTerms.INIT()
-                ELSE BEGIN
+                else begin
                     RecGPaymentTerms.GET("Payment Terms Code");
                     RecGPaymentTerms.TranslateDescription(RecGPaymentTerms, "Language Code");
-                END;
+                end;
 
-                IF "Currency Code" = '' THEN
+                if "Currency Code" = '' then
                     TxtGCodeDevise := GLSetup."LCY Code"
-                ELSE
+                else
                     TxtGCodeDevise := "Currency Code";
 
-                IF RecLCurrency.GET(TxtGCodeDevise) THEN
+                if RecLCurrency.GET(TxtGCodeDevise) then
                     TxtGLibDevise := RecLCurrency.Description;
 
-                IF NOT RecGContact.GET("Contact No.") THEN
+                if not RecGContact.GET("Contact No.") then
                     CLEAR(RecGContact);
 
             end;
@@ -884,22 +884,22 @@ report 99003 "Service - Credit Memo PW" //8044281
         CompanyInfo.GET();
         ServiceSetup.GET();
 
-        CASE ServiceSetup."Logo Position on Documents" OF
+        case ServiceSetup."Logo Position on Documents" of
             ServiceSetup."Logo Position on Documents"::"No Logo":
                 ;
             ServiceSetup."Logo Position on Documents"::Left:
                 CompanyInfo.CALCFIELDS(Picture);
             ServiceSetup."Logo Position on Documents"::Center:
-                BEGIN
+                begin
                     CompanyInfo1.GET();
                     CompanyInfo1.CALCFIELDS(Picture);
-                END;
+                end;
             ServiceSetup."Logo Position on Documents"::Right:
-                BEGIN
+                begin
                     CompanyInfo2.GET();
                     CompanyInfo2.CALCFIELDS(Picture);
-                END;
-        END;
+                end;
+        end;
     end;
 
     var
@@ -918,9 +918,9 @@ report 99003 "Service - Credit Memo PW" //8044281
         RecGCustomer: Record Customer;
         ServiceCrMemoCountPrinted: Codeunit "Service Cr. Memo-Printed";
         FormatAddr: Codeunit "Format Address";
-        CustAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
-        CompanyAddr: array[8] of Text[50];
+        CustAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text[100];
+        CompanyAddr: array[8] of Text[100];
         SalesPersonText: Text[30];
         VATNoText: Text[80];
         ReferenceText: Text[80];
@@ -1020,32 +1020,32 @@ report 99003 "Service - Credit Memo PW" //8044281
     begin
         NextEntryNo := 1;
 
-        CASE "Service Cr.Memo Line".Type OF
+        case "Service Cr.Memo Line".Type of
             "Service Cr.Memo Line".Type::Item:
                 GenerateBufferFromValueEntry("Service Cr.Memo Line");
             "Service Cr.Memo Line".Type::" ":
-                EXIT(0D);
-        END;
+                exit(0D);
+        end;
 
         ServiceShipmentBuffer.RESET();
         ServiceShipmentBuffer.SETRANGE("Document No.", "Service Cr.Memo Line"."Document No.");
         ServiceShipmentBuffer.SETRANGE("Line No.", "Service Cr.Memo Line"."Line No.");
 
-        IF ServiceShipmentBuffer.FIND('-') THEN BEGIN
+        if ServiceShipmentBuffer.FIND('-') then begin
             ServiceShipmentBuffer2 := ServiceShipmentBuffer;
-            IF ServiceShipmentBuffer.NEXT() = 0 THEN BEGIN
+            if ServiceShipmentBuffer.NEXT() = 0 then begin
                 ServiceShipmentBuffer.GET(ServiceShipmentBuffer2."Document No.", ServiceShipmentBuffer2."Line No.", ServiceShipmentBuffer2.
                   "Entry No.");
                 ServiceShipmentBuffer.DELETE();
-                EXIT(ServiceShipmentBuffer2."Posting Date");
-            END;
+                exit(ServiceShipmentBuffer2."Posting Date");
+            end;
             ServiceShipmentBuffer.CALCSUMS(Quantity);
-            IF ServiceShipmentBuffer.Quantity <> "Service Cr.Memo Line".Quantity THEN BEGIN
+            if ServiceShipmentBuffer.Quantity <> "Service Cr.Memo Line".Quantity then begin
                 ServiceShipmentBuffer.DELETEALL();
-                EXIT("Service Cr.Memo Header"."Posting Date");
-            END;
-        END ELSE
-            EXIT("Service Cr.Memo Header"."Posting Date");
+                exit("Service Cr.Memo Header"."Posting Date");
+            end;
+        end else
+            exit("Service Cr.Memo Header"."Posting Date");
     end;
 
     procedure GenerateBufferFromValueEntry(ServiceCrMemoLine2: Record "Service Cr.Memo Line")
@@ -1061,21 +1061,21 @@ report 99003 "Service - Credit Memo PW" //8044281
         ValueEntry.SETRANGE("Posting Date", "Service Cr.Memo Header"."Posting Date");
         ValueEntry.SETRANGE("Item Charge No.", '');
         ValueEntry.SETFILTER("Entry No.", '%1..', FirstValueEntryNo);
-        IF ValueEntry.FIND('-') THEN
-            REPEAT
-                IF ItemLedgerEntry.GET(ValueEntry."Item Ledger Entry No.") THEN BEGIN
-                    IF ServiceCrMemoLine2."Qty. per Unit of Measure" <> 0 THEN
+        if ValueEntry.FIND('-') then
+            repeat
+                if ItemLedgerEntry.GET(ValueEntry."Item Ledger Entry No.") then begin
+                    if ServiceCrMemoLine2."Qty. per Unit of Measure" <> 0 then
                         Quantity := ValueEntry."Invoiced Quantity" / ServiceCrMemoLine2."Qty. per Unit of Measure"
-                    ELSE
+                    else
                         Quantity := ValueEntry."Invoiced Quantity";
                     AddBufferEntry(
                       ServiceCrMemoLine2,
                       -Quantity,
                       ItemLedgerEntry."Posting Date");
                     TotalQuantity := TotalQuantity - ValueEntry."Invoiced Quantity";
-                END;
+                end;
                 FirstValueEntryNo := ValueEntry."Entry No." + 1;
-            UNTIL (ValueEntry.NEXT() = 0) OR (TotalQuantity = 0);
+            until (ValueEntry.NEXT() = 0) or (TotalQuantity = 0);
     end;
 
     procedure AddBufferEntry(ServiceCrMemoLine: Record "Service Cr.Memo Line"; QtyOnShipment: Decimal; PostingDate: Date)
@@ -1083,13 +1083,13 @@ report 99003 "Service - Credit Memo PW" //8044281
         ServiceShipmentBuffer.SETRANGE("Document No.", ServiceCrMemoLine."Document No.");
         ServiceShipmentBuffer.SETRANGE("Line No.", ServiceCrMemoLine."Line No.");
         ServiceShipmentBuffer.SETRANGE("Posting Date", PostingDate);
-        IF ServiceShipmentBuffer.FIND('-') THEN BEGIN
+        if ServiceShipmentBuffer.FIND('-') then begin
             ServiceShipmentBuffer.Quantity := ServiceShipmentBuffer.Quantity - QtyOnShipment;
             ServiceShipmentBuffer.MODIFY();
-            EXIT;
-        END;
+            exit;
+        end;
 
-        WITH ServiceShipmentBuffer DO BEGIN
+        with ServiceShipmentBuffer do begin
             INIT();
             "Document No." := ServiceCrMemoLine."Document No.";
             "Line No." := ServiceCrMemoLine."Line No.";
@@ -1100,7 +1100,7 @@ report 99003 "Service - Credit Memo PW" //8044281
             "Posting Date" := PostingDate;
             INSERT();
             NextEntryNo := NextEntryNo + 1
-        END;
+        end;
     end;
 
     procedure FindDimTxt(DimSetID: Integer)
@@ -1112,23 +1112,23 @@ report 99003 "Service - Credit Memo PW" //8044281
     begin
         DimSetEntry.SETRANGE("Dimension Set ID", DimSetID);
         DimTxtArrLength := 0;
-        FOR i := 1 TO ARRAYLEN(DimTxtArr) DO
+        for i := 1 to ARRAYLEN(DimTxtArr) do
             DimTxtArr[i] := '';
-        IF NOT DimSetEntry.FINDSET() THEN
-            EXIT;
+        if not DimSetEntry.FINDSET() then
+            exit;
         Separation := '; ';
-        REPEAT
+        repeat
             TxtToAdd := DimSetEntry."Dimension Code" + ' - ' + DimSetEntry."Dimension Value Code";
-            IF DimTxtArrLength = 0 THEN
-                StartNewLine := TRUE
-            ELSE
+            if DimTxtArrLength = 0 then
+                StartNewLine := true
+            else
                 StartNewLine := STRLEN(DimTxtArr[DimTxtArrLength]) + STRLEN(Separation) + STRLEN(TxtToAdd) > MAXSTRLEN(DimTxtArr[1]);
-            IF StartNewLine THEN BEGIN
+            if StartNewLine then begin
                 DimTxtArrLength += 1;
                 DimTxtArr[DimTxtArrLength] := TxtToAdd
-            END ELSE
+            end else
                 DimTxtArr[DimTxtArrLength] := DimTxtArr[DimTxtArrLength] + Separation + TxtToAdd;
-        UNTIL DimSetEntry.NEXT() = 0;
+        until DimSetEntry.NEXT() = 0;
     end;
 
     procedure InitializeRequest(NewShowInternalInfo: Boolean)

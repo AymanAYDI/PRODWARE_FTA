@@ -4,7 +4,7 @@ enum 50016 status
 
     value(0; "'Referencing in progress")
     {
-        Caption = 'Referencing in progress",Referred,"No Referred",Unreferred';
+        Caption = '';
     }
     value(1; Referred)
     {

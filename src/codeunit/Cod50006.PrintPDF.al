@@ -7,11 +7,11 @@ codeunit 50006 "Print PDF"
 
     var
 
-        ProcessStartInfo: DotNet ProcessStartInfo;
+    // ProcessStartInfo: DotNet ProcessStartInfo;
 
-        ProcessWindowStyle: DotNet ProcessWindowStyle;
+    // ProcessWindowStyle: DotNet ProcessWindowStyle;
 
-        Process: DotNet Process;
+    // Process: DotNet Process;
 
 
     procedure PrintExternalDocument(TxtPFilePath: Text[250])
@@ -21,28 +21,28 @@ codeunit 50006 "Print PDF"
 
     local procedure PrintDocument(TxtPFilePath: Text[250])
     begin
-        ProcessStartInfo := ProcessStartInfo.ProcessStartInfo(TxtPFilePath);
-        ProcessStartInfo.Verb := 'Print';
-        ProcessStartInfo.CreateNoWindow := true;
-        ProcessStartInfo.WindowStyle := ProcessWindowStyle.Hidden;
+        // ProcessStartInfo := ProcessStartInfo.ProcessStartInfo(TxtPFilePath);
+        // ProcessStartInfo.Verb := 'Print';
+        // ProcessStartInfo.CreateNoWindow := true;
+        // ProcessStartInfo.WindowStyle := ProcessWindowStyle.Hidden;
 
-        Process.Start(ProcessStartInfo);
+        // Process.Start(ProcessStartInfo);
     end;
 
-    trigger Process::OutputDataReceived(sender: Variant; e: DotNet DataReceivedEventArgs)
-    begin
-    end;
+    // trigger Process::OutputDataReceived(sender: Variant; e: DotNet DataReceivedEventArgs)
+    // begin
+    // end;
 
-    trigger Process::ErrorDataReceived(sender: Variant; e: DotNet DataReceivedEventArgs)
-    begin
-    end;
+    // trigger Process::ErrorDataReceived(sender: Variant; e: DotNet DataReceivedEventArgs)
+    // begin
+    // end;
 
-    trigger Process::Exited(sender: Variant; e: DotNet EventArgs)
-    begin
-    end;
+    // trigger Process::Exited(sender: Variant; e: DotNet EventArgs)
+    // begin
+    // end;
 
-    trigger Process::Disposed(sender: Variant; e: DotNet EventArgs)
-    begin
-    end;
+    // trigger Process::Disposed(sender: Variant; e: DotNet EventArgs)
+    // begin
+    // end;
 }
 

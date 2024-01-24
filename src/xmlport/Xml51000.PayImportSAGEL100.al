@@ -258,26 +258,25 @@ xmlport 51000 "Pay Import SAGE L100"
     end;
 
     var
-        RecGGenJnlTempl: Record "Gen. Journal Template";
         RecGGenJnlBatch: Record "Gen. Journal Batch";
         RecGGenJnlLine: Record "Gen. Journal Line";
+        RecGGenJnlTempl: Record "Gen. Journal Template";
         RecGGLSetup: Record "General Ledger Setup";
         NoSeriesMgt: Codeunit NoSeriesManagement;
         BooGInsertDimension: Boolean;
-        CodGGenJnlTempl: Code[10];
-        CodGGenJnlBatch: Code[10];
-        IntGLineNo: Integer;
-        DatGPostingDate: Date;
         CodGDocNo: Code[20];
+        CodGGenJnlBatch: Code[10];
+        CodGGenJnlTempl: Code[10];
+        DatGPostingDate: Date;
         DecGGenAmout: Decimal;
+        IntGLineNo: Integer;
         TxtGFilename: Text[250];
         TXTFileType: Label 'Text Files (*.txt)|*.txt', Comment = '{Split=r''\|''}{Locked=s''1''}';
 
-    [Scope('OnPrem')]
     procedure TestAccountNo(CodLAccountNo: Code[13]) BooLReturn: Boolean
     var
-        RecLGLAccount: Record "G/L Account";
         RecLGLAccount2: Record "G/L Account";
+        RecLGLAccount: Record "G/L Account";
         TxtL001: Label 'The G/L Account No. %1 does not exist. Do you want to create it?';
         TxtL002: Label 'Created during Pay Import';
     begin

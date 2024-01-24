@@ -156,10 +156,12 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
             part("Sales Order total"; "Sales Order total")
             {
                 SubPageLink = "Document Type" = field("Document Type"),
-                              "Document No." = field("No."),
-                "Line No." = field("Line No.");
+                              "Document No." = field("Document No."),
+                            "Line No." = field("Line No.");
                 Provider = SalesLines;
                 Visible = true;
+                UpdatePropagation = Both;
+                ShowFilter = true;
             }
         }
 

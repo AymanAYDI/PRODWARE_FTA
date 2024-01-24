@@ -1534,10 +1534,10 @@ report 51020 "Sales - Invoice FTA"
         NoShipmentText: Text[30];
         SalesPersonText: Text[30];
         TxtGLibDevise: Text[30];
-        CompanyAddr: array[8] of Text[50];
-        CustAddr: array[8] of Text[50];
+        CompanyAddr: array[8] of Text[100];
+        CustAddr: array[8] of Text[100];
         SalesLineDescription: Text[50];
-        ShipToAddr: array[8] of Text[50];
+        ShipToAddr: array[8] of Text[100];
         TotalExclVATText: Text[50];
         TotalInclVATText: Text[50];
         TotalText: Text[50];

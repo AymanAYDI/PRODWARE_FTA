@@ -10,17 +10,45 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
         {
             Style = Favorable;
             StyleExpr = BooGOK;
-
+            trigger OnAfterValidate()
+            begin
+                if (rec."Item Base" = rec."Item Base"::Transitory) then
+                    CurrPage.UPDATE();
+            end;
         }
         modify("No.")
         {
             Style = Favorable;
             StyleExpr = BooGOK;
+            trigger OnAfterValidate()
+            begin
+                if (rec."Item Base" = rec."Item Base"::Transitory) then
+                    CurrPage.UPDATE();
+            end;
         }
         modify(Description)
         {
             Style = Favorable;
             StyleExpr = BooGOK;
+            trigger OnAfterValidate()
+            begin
+                if (rec."Item Base" = rec."Item Base"::Transitory) then
+                    CurrPage.UPDATE();
+            end;
+        }
+        modify("Item Reference No.")
+        {
+            trigger OnAfterValidate()
+            begin
+                if (rec."Item Base" = rec."Item Base"::Transitory) then
+                    CurrPage.UPDATE();
+            end;
+
+            trigger OnLookup(var Text: Text): Boolean
+            begin
+                if (rec."Item Base" = rec."Item Base"::Transitory) then
+                    CurrPage.UPDATE();
+            end;
         }
         modify("Location Code")
         {
@@ -31,15 +59,15 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
         {
             Style = Favorable;
             StyleExpr = BooGOK;
-            trigger OnAfterValidate()
-            var
-                CstL001: Label 'The Entered quantity is greather than the existing quantity, please entered this quantity in a new line.';
-            begin
-                if (xRec.Quantity <> 0) and (xRec.Quantity < rec.Quantity) then
-                    ERROR(CstL001);
-                DecGxQuantity := xRec.Quantity;
-                OptGxPreparationType := xRec."Preparation Type";
-            end;
+            // trigger OnAfterValidate()
+            // var
+            //     CstL001: Label 'The Entered quantity is greather than the existing quantity, please entered this quantity in a new line.';
+            // begin
+            //     if (xRec.Quantity <> 0) and (xRec.Quantity < rec.Quantity) then
+            //         ERROR(CstL001);
+            //     DecGxQuantity := xRec.Quantity;
+            //     OptGxPreparationType := xRec."Preparation Type";
+            // end;
         }
         modify("Unit of Measure Code")
         {

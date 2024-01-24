@@ -13,10 +13,7 @@ codeunit 50030 "FTA_Functions"
         RecLReportUser: Record "Report Email By User";
         ReportSelection: Record "Report Selections";
         SalesSetup: Record "Sales & Receivables Setup";
-        SalesLine: Record "Sales Line";
-        DocumentMailing: Codeunit "Document-Mailing";
         PurchCalcDisc: Codeunit "Purch.-Calc.Discount";
-        BooLLogo: Boolean;
         AttachmentFilePath: Text[250];
     begin
         PurchHeader.SETRANGE("No.", PurchHeader."No.");
@@ -56,30 +53,30 @@ codeunit 50030 "FTA_Functions"
             RecLReportUser.Email := SendAsEmail;
             RecLReportUser.MODIFY();
             COMMIT();
-        //TODO : functions not found
-        // if SendAsEmail then begin
-        //     AttachmentFilePath := SavePurchHeaderReportAsPdf(PurchHeader, ReportSelection."Report ID");
-        //     DocumentMailing.EmailFileFromPurchHeader(PurchHeader, AttachmentFilePath);
+            if SendAsEmail then begin
+                AttachmentFilePath := SavePurchHeaderReportAsPdf(PurchHeader, ReportSelection."Report ID", ReportSelection."Report Caption");
+                EmailFileFromPurchHeader(PurchHeader, AttachmentFilePath);
 
-        //     end else
-        //         REPORT.RUNMODAL(ReportSelection."Report ID", true, false, PurchHeader)
+            end else
+                REPORT.RUNMODAL(ReportSelection."Report ID", true, false, PurchHeader)
         until ReportSelection.NEXT() = 0;
     end;
     //<<Migration Codeunit 229 2/1/2024>>
-    //todo: Scope OnPrem
-    procedure SavePurchHeaderReportAsPdf(var PurchHeader: Record "Purchase Header"; ReportId: Integer): Text[250];
+    //todo: verifier 
+    procedure SavePurchHeaderReportAsPdf(var PurchHeader: Record "Purchase Header"; ReportId: Integer; ReportName: Text[250]): Text[250];
     var
         FileManagement: Codeunit "File Management";
-        ServerAttachmentFilePath: Text;
-        ServerSaveAsPdfFailedErr: Label 'Cannot open the document because it is empty or cannot be created.';
+        ReportParameters: Text;
+        OStream: OutStream;
+        TempBlob: Codeunit "Temp Blob";
+        Filename: Text;
     begin
-        // ServerAttachmentFilePath := FileManagement.ServerTempFileName('pdf');
+        ReportParameters := Report.RunRequestPage(ReportId);
+        Filename := Format(ReportId) + '_' + ReportName + '.pdf';
+        REPORT.SaveAs(ReportId, ReportParameters, ReportFormat::Pdf, OStream);
+        FileManagement.BLOBExport(TempBlob, Filename, true);
 
-        // REPORT.SAVEASPDF(ReportId, ServerAttachmentFilePath, PurchHeader);
-        // if not EXISTS(ServerAttachmentFilePath) then
-        //     ERROR(ServerSaveAsPdfFailedErr);
-
-        // exit(ServerAttachmentFilePath);
+        exit(Filename);
     end;
     //<<Migration Codeunit 260 2/1/2024>>
     procedure EmailFileFromPurchHeader(PurchHeader: Record "Purchase Header"; AttachmentFilePath: Text[250]);
@@ -637,7 +634,7 @@ codeunit 50030 "FTA_Functions"
 
 
     // codeunit 905
-    procedure FctRefreshTempSubKitSalesFTA(var AsmLine: Record "Assembly Line");
+    procedure FctRefreshTempSubKitSalesFTA(var AsmLine: Record "Assembly Line"; AutoReserveOk: Boolean);
     var
         AssemblyHeader: Record "Assembly Header";
         RecLAsmLine: Record "Assembly Line";
@@ -759,8 +756,8 @@ codeunit 50030 "FTA_Functions"
                     end;
 
                     //>> FTA1.02
-                    // if AutoReserveOk then //TODO -> possibly not needed
-                    ToAssemblyLine.FctAutoReserveFTA();
+                    if AutoReserveOk then
+                        ToAssemblyLine.FctAutoReserveFTA();
                     //<< FTA1.02
 
                 end;

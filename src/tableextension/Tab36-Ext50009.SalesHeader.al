@@ -13,44 +13,44 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
 {
     fields
     {
-        // modify("Sell-to Customer No.")   
-        // {
-        //     Description = 'FTA1.01';
-        //     trigger OnAfterValidate()
-        //     var
-        //         RecLCommentLine: Record "Comment Line";
-        //         FrmLCommentSheet: Page "Comment Sheet";
-        //         RecLSalesHeader: Record "Sales Header";
-        //     begin
-        //         //>>FED_20090415:PA 15/04/2009
-        //         IF "Sell-to Customer No." <> '' THEN
-        //             IF NOT ("Document Type" = "Document Type"::Invoice) AND NOT ("Document Type" = "Document Type"::"Credit Memo") THEN BEGIN
-        //                 IF RecLSalesHeader.GET("Document Type", "No.") THEN BEGIN
-        //                     //MESSAGE( "Sell-to Customer No.");
-        //                     RecLCommentLine.SETRANGE("Table Name", RecLCommentLine."Table Name"::Customer);
-        //                     RecLCommentLine.SETRANGE("No.", "Sell-to Customer No.");
-        //                     IF RecLCommentLine.FINDFIRST() THEN
-        //                         CLEAR(FrmLCommentSheet);
-        //                     FrmLCommentSheet.SETTABLEVIEW(RecLCommentLine);
-        //                     FrmLCommentSheet.EDITABLE(FALSE);
-        //                     FrmLCommentSheet.RUN();
+        //todo: verifier 
+        modify("Sell-to Customer No.")
+        {
+            trigger OnAfterValidate()
+            var
+                RecLCommentLine: Record "Comment Line";
+                FrmLCommentSheet: Page "Comment Sheet";
+                RecLSalesHeader: Record "Sales Header";
+            begin
+                //>>FED_20090415:PA 15/04/2009
+                if "Sell-to Customer No." <> '' then
+                    if not ("Document Type" = "Document Type"::Invoice) and not ("Document Type" = "Document Type"::"Credit Memo") then begin
+                        if RecLSalesHeader.GET("Document Type", "No.") then begin
+                            //MESSAGE( "Sell-to Customer No.");
+                            RecLCommentLine.SETRANGE("Table Name", RecLCommentLine."Table Name"::Customer);
+                            RecLCommentLine.SETRANGE("No.", "Sell-to Customer No.");
+                            if RecLCommentLine.FINDFIRST() then
+                                CLEAR(FrmLCommentSheet);
+                            FrmLCommentSheet.SETTABLEVIEW(RecLCommentLine);
+                            FrmLCommentSheet.EDITABLE(false);
+                            FrmLCommentSheet.RUN();
 
-        //                 END;
+                        end;
 
-        //                 IF RecGContact.GET("Sell-to Contact No.") THEN BEGIN
-        //                     "E-Mail" := RecGContact."E-Mail";
-        //                     "Fax No." := RecGContact."Fax No.";
-        //                     "Subject Mail" := '';
-        //                 END
-        //                 ELSE BEGIN
-        //                     "E-Mail" := '';
-        //                     "Fax No." := '';
-        //                     "Subject Mail" := '';
-        //                 END;
-        //             end;
+                        if RecGContact.GET("Sell-to Contact No.") then begin
+                            "E-Mail" := RecGContact."E-Mail";
+                            "Fax No." := RecGContact."Fax No.";
+                            "Subject Mail" := '';
+                        end
+                        else begin
+                            "E-Mail" := '';
+                            "Fax No." := '';
+                            "Subject Mail" := '';
+                        end;
+                    end;
 
-        //     end;
-        // }
+            end;
+        }
         modify("Sell-to Contact No.")
 
         {
@@ -459,7 +459,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
                 SalesLine.VALIDATE("No.", ShippingCostsCarrier."Item No.");
                 SalesLine.VALIDATE(Quantity, 1);
                 SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
-                SalesLine."Shipping Costs" := TRUE;
+                SalesLine."Shipping Costs" := true;
                 SalesLine.INSERT();
             end;
         end;

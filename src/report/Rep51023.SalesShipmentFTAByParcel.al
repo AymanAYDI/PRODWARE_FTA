@@ -851,8 +851,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                     ReferenceText := ''
                 else
                     ReferenceText := FIELDCAPTION("Your Reference");
-                //TODO : verifier i add CompanyAddr
-                FormatAddr.SalesShptBillTo(CompanyAddr, ShipToAddr, "Sales Shipment Header");
+                FormatAddr.SalesShptBillTo(CustAddr, ShipToAddr, "Sales Shipment Header");
 
                 FormatAddr.SalesShptShipTo(CustAddr, "Sales Shipment Header");
                 if LogInteraction then
@@ -1033,9 +1032,9 @@ report 51023 "Sales - Shipment FTA By Parcel"
         SegManagement: Codeunit SegManagement;
         ItemTrackingMgt: Codeunit "Item Tracking Management";
         ItemTrackingDocMgt: Codeunit "Item Tracking Doc. Management";
-        CustAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
-        CompanyAddr: array[8] of Text[50];
+        CustAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text[100];
+        CompanyAddr: array[8] of Text[100];
         SalesPersonText: Text[20];
         ReferenceText: Text[80];
         MoreLines: Boolean;
@@ -1103,7 +1102,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
         LblOurReferences: Label 'Your customer No.';
         LblSalesperson: Label 'Salesperson';
         LblContact: Label 'Contact';
-        TxtGOurReferences: Text[100];
+        TxtGOurReferences: Text;
         RecGCustomer: Record Customer;
         RecGContact: Record Contact;
         BooGValued: Boolean;

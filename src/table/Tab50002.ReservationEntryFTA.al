@@ -4,6 +4,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Ledger;
+using System.Security.AccessControl;
 table 50002 "Reservation EntryFTA"
 {
     Caption = 'Reservation Entry';
@@ -93,13 +94,12 @@ table 50002 "Reservation EntryFTA"
         field(25; "Created By"; Code[20])
         {
             Caption = 'Created By';
-            //TODO Table2000000002 is not found TableRelation = Table2000000002;
-
+            TableRelation = User."User Name";
         }
         field(27; "Changed By"; Code[20])
         {
             Caption = 'Changed By';
-            //TODO Table2000000002 is not found TableRelation = Table2000000002;
+            TableRelation = User."User Name";
 
         }
         field(28; Positive; Boolean)

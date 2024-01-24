@@ -1,6 +1,6 @@
 codeunit 50004 "Export Sales Price"
 {
-    TableNo = "Job Queue Entry";
+    // TableNo = "Job Queue Entry";
 
     trigger OnRun()
     begin
@@ -18,7 +18,7 @@ codeunit 50004 "Export Sales Price"
         RecLSalesPrice: Record "Sales Price";
         TxtLRepertory: Text[250];
         TxtLFileName: Text[250];
-        TxtLTextFields: array[80] of Text[350];
+        TxtLTextFields: array[80] of Text;
         IntLCmp: Integer;
     begin
         //>> Message structure: EDIFACT GENERIX
@@ -42,7 +42,7 @@ codeunit 50004 "Export Sales Price"
         BooGCommaDecimal := false;
 
 
-        CduGWriteFile.FctInitMessage(TxtLRepertory, TxtLFileName, ';', BooGFixedFile, BooGCommaDecimal);
+        CduGWriteFile.FctInitMessage(';', BooGFixedFile, BooGCommaDecimal);
 
 
 
@@ -101,7 +101,7 @@ codeunit 50004 "Export Sales Price"
         RecLSalesInvHeader2.MODIFY;
         */
 
-        CduGWriteFile.FctEndMessage();
+        CduGWriteFile.FctEndMessage(TxtLFileName);
 
     end;
 }

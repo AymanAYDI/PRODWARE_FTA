@@ -47,7 +47,7 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
 
                             if RecLATOLink.GET(rec."Document Type", rec."Document No.") then begin
                                 KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
-                                FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec);
+                                FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec, false);
                             end;
 
 
@@ -55,7 +55,7 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
 
                             if RecLATOLink.GET(rec."Document Type", rec."Document No.") then begin
                                 KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
-                                FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec);
+                                FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec, false);
                             end;
 
                     end;
@@ -335,8 +335,7 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 begin
                     Rec.VALIDATE(rec."Kit Action", rec."Kit Action"::Disassembly);
                     Rec.MODIFY();
-                    FTA_Functions.SetAutoReserve();
-                    FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec);
+                    FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec, true);
                     CurrPage.UPDATE();
                 end;
             }

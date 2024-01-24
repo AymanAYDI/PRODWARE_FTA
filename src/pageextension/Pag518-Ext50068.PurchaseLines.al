@@ -8,6 +8,7 @@ pageextension 50068 "PurchaseLines" extends "Purchase Lines" //518
         {
             field(DecGQtyNotAffected; DecGQtyNotAffected)
             {
+                Caption = 'Quantity Not Affected';
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the DecGQtyNotAffected field.';
             }

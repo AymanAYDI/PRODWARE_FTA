@@ -372,7 +372,7 @@ pageextension 50010 ItemCard extends "Item Card" //30
             group(Action1100267023)
             {
                 Caption = 'Kit';
-                Visible = false;
+                // Visible = false;
                 action(kit)
                 {
                     Promoted = true;
@@ -382,8 +382,6 @@ pageextension 50010 ItemCard extends "Item Card" //30
                     ApplicationArea = All;
                     ToolTip = 'Executes the kit action.';
                     trigger OnAction()
-                    var
-                        RecLProdBOMHeader: Record "Production BOM Header";
                     begin
                         rec.FctBOM(Rec);
                         CurrPage.UPDATE(true);
@@ -400,7 +398,7 @@ pageextension 50010 ItemCard extends "Item Card" //30
     trigger OnAfterGetRecord()
     begin
         rec.CALCFIELDS(rec.Inventory, rec."Qty. on Sales Order", rec."Qty. on Asm. Component", rec."Reserved Qty. on Purch. Orders");
-        DecGAvailable := rec.Inventory - (rec."Qty. on Sales Order" + rec."Qty. on Asm. Component") + rec."Reserved Qty. on Purch. Orders";
+        DecGAvailable := (rec.Inventory - (rec."Qty. on Sales Order" + rec."Qty. on Asm. Component")) + rec."Reserved Qty. on Purch. Orders";
     end;
 
 }

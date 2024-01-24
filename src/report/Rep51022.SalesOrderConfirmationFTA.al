@@ -1626,9 +1626,9 @@ report 51022 "Sales - Order Confirmation FTA"
         ArchiveManagement: Codeunit ArchiveManagement;
         SalesPostPrepmt: Codeunit "Sales-Post Prepayments";
         DimMgt: Codeunit DimensionManagement;
-        CustAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
-        CompanyAddr: array[8] of Text[50];
+        CustAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text[100];
+        CompanyAddr: array[8] of Text[100];
         SalesPersonText: Text[30];
         VATNoText: Text[80];
         ReferenceText: Text[80];

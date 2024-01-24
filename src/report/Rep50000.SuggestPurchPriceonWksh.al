@@ -158,7 +158,7 @@ report 50000 "Suggest Purch. Price on Wksh."
 
                         trigger OnLookup(var Text: Text): Boolean
                         var
-                            VendList: Page "27";
+                            VendList: Page "Vendor List";
                         begin
                             //>>MODIF HL 18/02/2016
                             case ToSalesType of
@@ -294,6 +294,8 @@ report 50000 "Suggest Purch. Price on Wksh."
         ToUnitOfMeasure: Record "Unit of Measure";
         ToVend: Record Vendor;
         UOMMgt: Codeunit "Unit of Measure Management";
+
+
         [InDataSet]
         BooGEnableSalesCodeCtrl: Boolean;
         CreateNewPrices: Boolean;
@@ -313,7 +315,6 @@ report 50000 "Suggest Purch. Price on Wksh."
         Text002: Label 'Sales Code must be specified when copying from %1 to All Customers.';
         ToSalesType: Option Vendor;
 
-    [Scope('Internal')]
     procedure InitializeRequest(NewToSalesType: Option Customer,"Customer Price Group",Campaign,"All CUstomers"; NewToSalesCode: Code[20]; NewToStartDate: Date; NewToEndDate: Date; NewToCurrCode: Code[10]; NewToUOMCode: Code[10]; NewCreateNewPrices: Boolean)
     begin
         ToSalesType := NewToSalesType;

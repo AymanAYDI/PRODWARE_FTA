@@ -27,11 +27,11 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                 if StopPayments then
                     CurrReport.Break();
                 Window.Update(1, "No.");
-                IF BooGCheckPostGroup THEN BEGIN
-                    GetVendLedgEntries2(TRUE, FALSE);
-                    GetVendLedgEntries2(FALSE, FALSE);
-                END
-                ELSE
+                if BooGCheckPostGroup then begin
+                    GetVendLedgEntries2(true, false);
+                    GetVendLedgEntries2(false, false);
+                end
+                else
                     //code ajouter terminer
                     if IncludeVendor(Vendor, VendorBalance) then begin
                         //commentaire  standard
@@ -109,9 +109,9 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                 TempPayableVendorLedgerEntry.SetRange(Priority, 1, 2147483647);
                 // MakeGenJnlLines();
                 //code ajouter
-                IF BooGCheckPostGroup THEN
+                if BooGCheckPostGroup then
                     MakeGenJnlLines2()
-                ELSE
+                else
                     //code ajouter
 
                     TempPayableVendorLedgerEntry.Reset();
@@ -119,9 +119,9 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                 // MakeGenJnlLines();
                 //code ajouter
                 //todo a verifier
-                IF BooGCheckPostGroup THEN
+                if BooGCheckPostGroup then
                     MakeGenJnlLines2()
-                ELSE
+                else
                     //code ajouter
 
                     TempPayableVendorLedgerEntry.Reset();
@@ -299,7 +299,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                         {
                             ApplicationArea = Basic, Suite;
                             Caption = 'Posting Date';
-                            Editable = UseDueDateAsPostingDate = FALSE;
+                            Editable = UseDueDateAsPostingDate = false;
                             Importance = Promoted;
                             ToolTip = 'Specifies the date for the posting of this batch job. By default, the working date is entered, but you can change it.';
 
@@ -1417,13 +1417,13 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
 
                                 // if TempVendorPaymentBuffer.Find() then begin
 
-                                IF TempPaymentBuffer.GET(VendLedgEntry."Vendor No.",
+                                if TempPaymentBuffer.GET(VendLedgEntry."Vendor No.",
                               VendLedgEntry."Currency Code",
                               0,
                               VendLedgEntry."Dimension Set ID",
                               VendLedgEntry."Vendor Posting Group")
 
-     THEN BEGIN
+     then begin
 
                                     TempVendorPaymentBuffer.Amount := TempVendorPaymentBuffer.Amount + TempPayableVendorLedgerEntry.Amount;
                                     OnMakeGenJnlLinesOnBeforeVendorPaymentBufferModify(TempVendorPaymentBuffer, VendLedgEntry);

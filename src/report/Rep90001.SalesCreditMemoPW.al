@@ -1094,9 +1094,9 @@ report 90001 "Sales - Credit Memo PW" //8044275
         FormatAddr: Codeunit "Format Address";
         SegManagement: Codeunit SegManagement;
         RespCenter: Record "Responsibility Center";
-        CustAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
-        CompanyAddr: array[8] of Text[50];
+        CustAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text[100];
+        CompanyAddr: array[8] of Text[100];
         ReturnOrderNoText: Text[80];
         SalesPersonText: Text[30];
         VATNoText: Text[80];

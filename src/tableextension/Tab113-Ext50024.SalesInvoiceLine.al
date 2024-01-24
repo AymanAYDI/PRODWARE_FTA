@@ -52,14 +52,14 @@ tableextension 50024 SalesInvoiceLine extends "Sales Invoice Line" //113
             Editable = false;
             FieldClass = FlowField;
         }
-        field(50016; "Item Product Group Code"; Code[10])
-        {
-            //TODO: FIELD Product Group Code removed from item a verifier
-            //CalcFormula = lookup(Item."Product Group Code" where ("No."=field("No.")));
-            Caption = 'Item Product Group Code';
-            Editable = false;
-            FieldClass = FlowField;
-        }
+        // field(50016; "Item Product Group Code"; Code[10])
+        // {
+        //     //TODO: FIELD Product Group Code removed from item a verifier
+        //     //CalcFormula = lookup(Item."Product Group Code" where ("No."=field("No.")));
+        //     Caption = 'Item Product Group Code';
+        //     Editable = false;
+        //     FieldClass = FlowField;
+        // }
         field(50041; Prepare; Boolean)
         {
             Caption = 'Préparé';

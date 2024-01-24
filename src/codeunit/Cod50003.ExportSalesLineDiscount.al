@@ -1,6 +1,6 @@
 codeunit 50003 "Export Sales Line Discount"
 {
-    TableNo = "Job Queue Entry";
+    // TableNo = "Job Queue Entry";
 
     trigger OnRun()
     begin
@@ -20,7 +20,7 @@ codeunit 50003 "Export Sales Line Discount"
         RecLDiscountLines: Record "Sales Line Discount";
         TxtLRepertory: Text[250];
         TxtLFileName: Text[250];
-        TxtLTextFields: array[80] of Text[350];
+        TxtLTextFields: array[80] of Text;
 
         IntLCmp: Integer;
     begin
@@ -45,7 +45,7 @@ codeunit 50003 "Export Sales Line Discount"
         BooGCommaDecimal := false;
 
 
-        CduGWriteFile.FctInitMessage(TxtLRepertory, TxtLFileName, ';', BooGFixedFile, BooGCommaDecimal);
+        CduGWriteFile.FctInitMessage(';', BooGFixedFile, BooGCommaDecimal);
 
 
 
@@ -93,7 +93,7 @@ codeunit 50003 "Export Sales Line Discount"
         RecLSalesInvHeader2.MODIFY;
         */
 
-        CduGWriteFile.FctEndMessage();
+        CduGWriteFile.FctEndMessage(TxtLFileName);
 
     end;
 }

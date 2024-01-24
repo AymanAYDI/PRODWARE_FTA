@@ -1,6 +1,6 @@
 codeunit 50005 "Export Purchase Line"
 {
-    TableNo = "Job Queue Entry";
+    // TableNo = "Job Queue Entry";
 
     trigger OnRun()
     begin
@@ -18,7 +18,7 @@ codeunit 50005 "Export Purchase Line"
         RecLPurchLine: Record "Purchase Line";
         TxtLRepertory: Text[250];
         TxtLFileName: Text[250];
-        TxtLTextFields: array[80] of Text[350];
+        TxtLTextFields: array[80] of Text;
         DecLQty: Decimal;
         IntLCmp: Integer;
     begin
@@ -43,7 +43,7 @@ codeunit 50005 "Export Purchase Line"
         BooGCommaDecimal := false;
 
 
-        CduGWriteFile.FctInitMessage(TxtLRepertory, TxtLFileName, ';', BooGFixedFile, BooGCommaDecimal);
+        CduGWriteFile.FctInitMessage(';', BooGFixedFile, BooGCommaDecimal);
 
 
 
@@ -101,7 +101,7 @@ codeunit 50005 "Export Purchase Line"
         RecLSalesInvHeader2.MODIFY;
         */
 
-        CduGWriteFile.FctEndMessage();
+        CduGWriteFile.FctEndMessage(TxtLFileName);
 
     end;
 }

@@ -1426,10 +1426,10 @@ report 51003 "Purchases - Order FTA"
         ArchiveManagement: Codeunit ArchiveManagement;
         SegManagement: Codeunit SegManagement;
         PurchPostPrepmt: Codeunit "Purchase-Post Prepayments";
-        VendAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
-        CompanyAddr: array[8] of Text[50];
-        BuyFromAddr: array[8] of Text[50];
+        VendAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text[100];
+        CompanyAddr: array[8] of Text[100];
+        BuyFromAddr: array[8] of Text[100];
         PurchaserText: Text[30];
         VATNoText: Text[80];
         ReferenceText: Text[80];

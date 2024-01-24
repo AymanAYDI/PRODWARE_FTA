@@ -1,6 +1,6 @@
 codeunit 50001 "Export Items"
 {
-    TableNo = "Job Queue Entry";
+    // TableNo = "Job Queue Entry";
 
     trigger OnRun()
     begin
@@ -24,7 +24,7 @@ codeunit 50001 "Export Items"
         RecLItem: Record Item;
         TxtLRepertory: Text[250];
         TxtLFileName: Text[250];
-        TxtLTextFields: array[80] of Text[350];
+        TxtLTextFields: array[80] of Text;
 
         IntLCmp: Integer;
     begin
@@ -48,7 +48,7 @@ codeunit 50001 "Export Items"
         BooGCommaDecimal := false;
 
 
-        CduGWriteFile.FctInitMessage(TxtLRepertory, TxtLFileName, ';', BooGFixedFile, BooGCommaDecimal);
+        CduGWriteFile.FctInitMessage(';', BooGFixedFile, BooGCommaDecimal);
 
         // Get setup
         RecLCompanyInfo.GET();
@@ -135,7 +135,7 @@ codeunit 50001 "Export Items"
         RecLSalesInvHeader2.MODIFY;
         */
 
-        CduGWriteFile.FctEndMessage();
+        CduGWriteFile.FctEndMessage(TxtLFileName);
 
     end;
 }

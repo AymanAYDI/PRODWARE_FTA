@@ -352,18 +352,10 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         key(Key50001; "Shortcut Dimension 1 Code", "Document No.")
         {
         }
-        //TODO: You cannot add tableextension’s fields and base table’s fields to the same key
-        // key(Key50002; "Vendor No.", "No.", "Location Code")
-        // {
-        // }
         key(Key50003; Type, "No.")
         {
             SumIndexFields = "Outstanding Quantity";
         }
-        //TODO: You cannot add tableextension’s fields and base table’s fields to the same key
-        // key(Key50004; "Document Type", Type, "Outstanding Quantity", "Internal field", "Vendor No.", "No.", "Location Code")
-        // {
-        // }
     }
     trigger OnAfterInsert()
     begin

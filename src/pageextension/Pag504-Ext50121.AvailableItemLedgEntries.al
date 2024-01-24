@@ -45,30 +45,30 @@ pageextension 50121 AvailableItemLedgEntries extends "Available - Item Ledg. Ent
             ERROR(Text000);
     end;
 
-    PROCEDURE CreateReservation(VAR ReserveQuantity: Decimal);
-    VAR
+    procedure CreateReservation(var ReserveQuantity: Decimal);
+    var
 
         "Item Ledger Entry": Record "Item Ledger Entry";
         TrackingSpecification: Record "Tracking Specification";
-    BEGIN
-        "Item Ledger Entry".TESTFIELD("Drop Shipment", FALSE);
+    begin
+        "Item Ledger Entry".TESTFIELD("Drop Shipment", false);
         "Item Ledger Entry".TESTFIELD("Item No.", ReservEntry."Item No.");
         "Item Ledger Entry".TESTFIELD("Variant Code", ReservEntry."Variant Code");
         "Item Ledger Entry".TESTFIELD("Location Code", ReservEntry."Location Code");
 
-        IF TotalAvailQty < 0 THEN BEGIN
+        if TotalAvailQty < 0 then begin
             ReserveQuantity := 0;
-            EXIT;
-        END;
+            exit;
+        end;
 
-        IF TotalAvailQty < ReserveQuantity THEN
+        if TotalAvailQty < ReserveQuantity then
             ReserveQuantity := TotalAvailQty;
         TotalAvailQty := TotalAvailQty - ReserveQuantity;
 
-        IF (TotalAvailQty = 0) AND
-           (ReserveQuantity = 0) AND
+        if (TotalAvailQty = 0) and
+           (ReserveQuantity = 0) and
            (QtyToReserve <> 0)
-        THEN
+        then
             ERROR(Text002);
 
         UpdateReservMgt();
@@ -78,7 +78,7 @@ pageextension 50121 AvailableItemLedgEntries extends "Available - Item Ledg. Ent
         ReservMgt.CreateReservation(
           ReservEntry.Description, 0D, 0, ReserveQuantity, TrackingSpecification);
         UpdateReservFrom();
-    END;
+    end;
 
     local procedure UpdateReservMgt()
     var

@@ -238,13 +238,6 @@ codeunit 50031 "FTA_Events"
         end;
         IsHandled := true;
     end;
-    //TODO : CurrPage not exist in the current context 
-    // [EventSubscriber(ObjectType::Page, Page::"Sales Order Subform", 'OnNoOnAfterValidateOnAfterSaveAndAutoAsmToOrder', '', false, false)]
-    // local procedure OnNoOnAfterValidateOnAfterSaveAndAutoAsmToOrder(var SalesLine: Record "Sales Line")
-    // begin
-    //     if (SalesLine."Item Base" = SalesLine."Item Base"::Transitory) then
-    //         CurrPage.UPDATE;
-    // end;
     //Page 46
     [EventSubscriber(ObjectType::Page, Page::"Sales Order Subform", 'OnBeforeQuantityOnAfterValidate', '', false, false)]
     local procedure OnBeforeQuantityOnAfterValidate(var SalesLine: Record "Sales Line"; var xSalesLine: Record "Sales Line")
@@ -1268,7 +1261,7 @@ codeunit 50031 "FTA_Events"
                 begin
                     UseQtyToHandle := OldReservationEntry.TrackingExists();
                     ItemJournalLine.get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
-                    //TransferQty := ItemJournalLine."Outstanding Qty. (Base)";//QtyToBeShippedBase("Quanity (Base)")
+                    // TransferQty := ItemJournalLine."Outstanding Qty. (Base)";//QtyToBeShippedBase("Quanity (Base)")
                     CurrSignFactor := CreateReservEntry.SignFactor(OldReservationEntry);
                     TransferQty := TransferQty * CurrSignFactor;
                     xTransferQty := TransferQty;
@@ -1534,7 +1527,7 @@ codeunit 50031 "FTA_Events"
         ArchiveManagement: Codeunit ArchiveManagement;
 
     begin
-        IsHandled := TRUE;
+        IsHandled := true;
         OnBeforeArchiveUnpostedOrder(SalesHeader, IsHandled, PreviewMode, OrderArchived);
         if IsHandled then
             exit;
@@ -1552,8 +1545,8 @@ codeunit 50031 "FTA_Events"
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         SalesLine.SetRange("Document No.", SalesHeader."No.");
         SalesLine.SetFilter(Quantity, '<>0');
-        IF SalesHeader."Document Type" = SalesHeader."Document Type"::Order THEN
-            SalesLine.SETRANGE(Prepare, TRUE);
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then
+            SalesLine.SETRANGE(Prepare, true);
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then
             SalesLine.SetFilter("Qty. to Ship", '<>0')
         else
@@ -1570,7 +1563,7 @@ codeunit 50031 "FTA_Events"
     local procedure OnPostSalesLineOnAfterSetEverythingInvoiced(SalesLine: Record "Sales Line"; var EverythingInvoiced: Boolean; var IsHandled: Boolean; SalesHeader: Record "Sales Header")
     begin
         //>>FTA 28.01.2022
-        IF SalesHeader.Ship AND (SalesLine.Type = SalesLine.Type::Item) AND (SalesHeader."Document Type" = SalesHeader."Document Type"::Order) THEN
+        if SalesHeader.Ship and (SalesLine.Type = SalesLine.Type::Item) and (SalesHeader."Document Type" = SalesHeader."Document Type"::Order) then
             SalesLine.TESTFIELD(Quantity);
         //<<FTA 28.01.2022
     end;
@@ -1702,9 +1695,9 @@ codeunit 50031 "FTA_Events"
     local procedure OnAfterFindNotShippedLines(SalesHeader: Record "Sales Header"; var TempSalesLine: Record "Sales Line" temporary)
 
     begin
-        IF SalesHeader."Document Type" = SalesHeader."Document Type"::Order THEN
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then
             //SalesLine.SETFILTER("Planned Delivery Date",'<=%1',TODAY);
-            TempSalesLine.SETRANGE(Prepare, TRUE);
+            TempSalesLine.SETRANGE(Prepare, true);
     end;
     //todo a verifier emplcament
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnAfterUpdateLastPostingNos', '', false, false)]
@@ -1749,13 +1742,7 @@ codeunit 50031 "FTA_Events"
         SalesShptHeader."Total Parcels" := SalesShptHeader."Total Parcels";
 
     end;
-    // Invoice Header"; PrepmtInvLineBuffer: Record "Prepayment Inv. Line Buffer"; CommitIsSuppressed: Boolean)
 
-    //     begin
-    //         //TODO  GenJnlLine."Mobile Salesperson Code" := SalesInvHeader."Mobile Salesperson Code";
-    //     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post Prepayments", 'OnBeforeSalesInvLineInsert', '', false, false)]
-    //     local procedure OnBeforeSalesInvLineInsert(var SalesInvLine: Record "Sales Invoice Line"; SalesInvHeader: Record "Sales I
-    //     end;
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"ArchiveManagement", 'OnAfterTransferFromArchToSalesHeader', '', false, false)]
     local procedure OnAfterTransferFromArchToSalesHeader(var SalesHeader: Record "Sales Header"; var SalesHeaderArchive: Record "Sales Header Archive")
     begin
@@ -2069,11 +2056,11 @@ codeunit 50031 "FTA_Events"
         SalesLine."Document No." := TempSalesLine."Document No.";
 
         RecGSalesShipHeader.GET(SalesShptLine."Document No.");
-        IF STRLEN(STRSUBSTNO(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.", RecGSalesShipHeader."Order No."))
-               <= 50 THEN
+        if STRLEN(STRSUBSTNO(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.", RecGSalesShipHeader."Order No."))
+               <= 50 then
             SalesLine.Description := COPYSTR(STRSUBSTNO(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.",
             RecGSalesShipHeader."Order No."), 1, 50)
-        ELSE
+        else
             SalesLine.Description := COPYSTR(STRSUBSTNO(CstG0002, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No."), 1, 50);
     end;
     //Table 111 ajouté par hadil
@@ -2114,9 +2101,9 @@ codeunit 50031 "FTA_Events"
 
     begin
 
-        IF RecGParmNavi.GET() THEN
-            IF RecGParmNavi."Filing Sales Orders" THEN
-                RecGArchiveManagement.StoreSalesDocument(SalesHeader, FALSE);
+        if RecGParmNavi.GET() then
+            if RecGParmNavi."Filing Sales Orders" then
+                RecGArchiveManagement.StoreSalesDocument(SalesHeader, false);
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnPostUpdateOrderLineOnBeforeGetQuantityShipped', '', false, false)]
@@ -2127,7 +2114,7 @@ codeunit 50031 "FTA_Events"
 
             if not IsHandled then begin
 
-                TempSalesLine.Prepare := FALSE;
+                TempSalesLine.Prepare := false;
                 TempSalesLine."Start Date" := TODAY;
             end;
         end;
@@ -2166,16 +2153,16 @@ codeunit 50031 "FTA_Events"
 
     //Page 498
     // TODO CodeUnit ReservMgt
-    // [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnUpdateReservMgt', '', false, false)]
-    // local procedure OnUpdateReservMgt(var ReservationEntry: Record "Reservation Entry"; var ReservationManagement: Codeunit "Reservation Management")
-    // begin
-    //     //>>NDBI
-    //     IF BooGResaFTA THEN
-    //         ReservMgt.FctSetBooResaFTA(TRUE);
-    //     IF BooGResaAssFTA THEN
-    //         ReservMgt.FctSetBooResaAssFTA(TRUE);
-    //     //<<NDBI
-    // end;
+    [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnUpdateReservMgt', '', false, false)]
+    local procedure OnUpdateReservMgt(var ReservationEntry: Record "Reservation Entry"; var ReservationManagement: Codeunit "Reservation Management")
+    var
+        FTASingleInstance: Codeunit FTASingleInstance;
+    begin
+        if FTASingleInstance.FctGetBooResaFTA() then
+            FTASingleInstance.FctSetBooResaFTA(true);
+        if FTASingleInstance.FctGetBooResaAssFTA() then
+            FTASingleInstance.FctSetBooResaAssFTA(true);
+    end;
     // TODO Can not find event has RecGItem and ReserveEntry on parametre
     // [EventSubscriber(ObjectType::Page, PAge::Reservation, 'OnAfterUpdateReservFrom', '', False, False)]
     // local procedure OnAfterUpdateReservFrom(var EntrySummary: Record "Entry Summary")
@@ -2200,16 +2187,16 @@ codeunit 50031 "FTA_Events"
     // end;
     // TODO CodeUnitReservMgt
     //Page 498
-    // [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnBeforeAutoReserve', '', false, false)]
-    // local procedure OnBeforeAutoReserve(ReservEntry: Record "Reservation Entry"; var FullAutoReservation: Boolean; QtyToReserve: Decimal; QtyReserved: Decimal; QtyToReserveBase: Decimal; QtyReservedBase: Decimal; var IsHandled: Boolean)
-    // begin
-    //     //>>NDBI
-    //     IF BooGResaFTA THEN
-    //         ReservMgt.FctSetBooResaFTA(TRUE);
-    //     IF BooGResaAssFTA THEN
-    //         ReservMgt.FctSetBooResaAssFTA(TRUE);
-    //     //<<NDBI
-    // end;
+    [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnBeforeAutoReserve', '', false, false)]
+    local procedure OnBeforeAutoReserve(ReservEntry: Record "Reservation Entry"; var FullAutoReservation: Boolean; QtyToReserve: Decimal; QtyReserved: Decimal; QtyToReserveBase: Decimal; QtyReservedBase: Decimal; var IsHandled: Boolean)
+    var
+        FTASingleInstance: Codeunit FTASingleInstance;
+    begin
+        if FTASingleInstance.FctGetBooResaFTA() then
+            FTASingleInstance.FctSetBooResaFTA(true);
+        if FTASingleInstance.FctGetBooResaAssFTA() then
+            FTASingleInstance.FctSetBooResaAssFTA(true);
+    end;
 
     //TODO Salesline and PurchLina are declared on global
     // [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnAfterAutoReserve', '', false, false)]
@@ -2254,13 +2241,13 @@ codeunit 50031 "FTA_Events"
 
     //    TODO can't find event  on DrillDownTotalQuantity
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Posting Selection Management", 'OnConfirmPostSalesDocumentOnBeforeSalesOrderGetSalesInvoicePostingPolicy', '', False, False)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Posting Selection Management", 'OnConfirmPostSalesDocumentOnBeforeSalesOrderGetSalesInvoicePostingPolicy', '', false, false)]
     local procedure OnConfirmPostSalesDocumentOnBeforeSalesOrderGetSalesInvoicePostingPolicy(var SalesHeader: Record "Sales Header")
     var
         RecLSalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
         RecLSalesReceivablesSetup.GET();
-        IF RecLSalesReceivablesSetup."Default Posting Date" = RecLSalesReceivablesSetup."Default Posting Date"::"Work Date" THEN
+        if RecLSalesReceivablesSetup."Default Posting Date" = RecLSalesReceivablesSetup."Default Posting Date"::"Work Date" then
             SalesHeader.VALIDATE("Posting Date", WORKDATE());
     end;
 

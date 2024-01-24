@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -11,273 +11,6 @@
       <rd:DataSourceID>fb5a3061-bc43-4772-8295-cd8cafc0a095</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="Payment_Lines1_No_">
-          <DataField>Payment_Lines1_No_</DataField>
-        </Field>
-        <Field Name="Payment_Lines1_Line_No_">
-          <DataField>Payment_Lines1_Line_No_</DataField>
-        </Field>
-        <Field Name="Operation">
-          <DataField>Operation</DataField>
-        </Field>
-        <Field Name="PaymtHeader__No__">
-          <DataField>PaymtHeader__No__</DataField>
-        </Field>
-        <Field Name="STRSUBSTNO_Text003____1__CopyText_">
-          <DataField>STRSUBSTNO_Text003____1__CopyText_</DataField>
-        </Field>
-        <Field Name="STRSUBSTNO__Page__1__FORMAT_CurrReport_PAGENO__">
-          <DataField>STRSUBSTNO__Page__1__FORMAT_CurrReport_PAGENO__</DataField>
-        </Field>
-        <Field Name="CompanyAddr_1_">
-          <DataField>CompanyAddr_1_</DataField>
-        </Field>
-        <Field Name="CompanyAddr_2_">
-          <DataField>CompanyAddr_2_</DataField>
-        </Field>
-        <Field Name="CompanyAddr_3_">
-          <DataField>CompanyAddr_3_</DataField>
-        </Field>
-        <Field Name="CompanyAddr_4_">
-          <DataField>CompanyAddr_4_</DataField>
-        </Field>
-        <Field Name="CompanyAddr_5_">
-          <DataField>CompanyAddr_5_</DataField>
-        </Field>
-        <Field Name="CompanyAddr_6_">
-          <DataField>CompanyAddr_6_</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Phone_No__">
-          <DataField>CompanyInfo__Phone_No__</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Fax_No__">
-          <DataField>CompanyInfo__Fax_No__</DataField>
-        </Field>
-        <Field Name="CompanyInfo__VAT_Registration_No__">
-          <DataField>CompanyInfo__VAT_Registration_No__</DataField>
-        </Field>
-        <Field Name="FORMAT_PostingDate_0_4_">
-          <DataField>FORMAT_PostingDate_0_4_</DataField>
-        </Field>
-        <Field Name="BankAccAddr_4_">
-          <DataField>BankAccAddr_4_</DataField>
-        </Field>
-        <Field Name="BankAccAddr_5_">
-          <DataField>BankAccAddr_5_</DataField>
-        </Field>
-        <Field Name="BankAccAddr_6_">
-          <DataField>BankAccAddr_6_</DataField>
-        </Field>
-        <Field Name="BankAccAddr_7_">
-          <DataField>BankAccAddr_7_</DataField>
-        </Field>
-        <Field Name="BankAccAddr_3_">
-          <DataField>BankAccAddr_3_</DataField>
-        </Field>
-        <Field Name="BankAccAddr_2_">
-          <DataField>BankAccAddr_2_</DataField>
-        </Field>
-        <Field Name="BankAccAddr_1_">
-          <DataField>BankAccAddr_1_</DataField>
-        </Field>
-        <Field Name="PrintCurrencyCode">
-          <DataField>PrintCurrencyCode</DataField>
-        </Field>
-        <Field Name="PaymtHeader__Bank_Branch_No__">
-          <DataField>PaymtHeader__Bank_Branch_No__</DataField>
-        </Field>
-        <Field Name="PaymtHeader__Agency_Code_">
-          <DataField>PaymtHeader__Agency_Code_</DataField>
-        </Field>
-        <Field Name="PaymtHeader__Bank_Account_No__">
-          <DataField>PaymtHeader__Bank_Account_No__</DataField>
-        </Field>
-        <Field Name="OutputNo">
-          <DataField>OutputNo</DataField>
-        </Field>
-        <Field Name="Text003">
-          <DataField>Text003</DataField>
-        </Field>
-        <Field Name="Text000">
-          <DataField>Text000</DataField>
-        </Field>
-        <Field Name="PaymtHeader_IBAN">
-          <DataField>PaymtHeader_IBAN</DataField>
-        </Field>
-        <Field Name="PaymtHeader__SWIFT_Code_">
-          <DataField>PaymtHeader__SWIFT_Code_</DataField>
-        </Field>
-        <Field Name="PageLoop_Number">
-          <DataField>PageLoop_Number</DataField>
-        </Field>
-        <Field Name="PaymtHeader__No__Caption">
-          <DataField>PaymtHeader__No__Caption</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Phone_No__Caption">
-          <DataField>CompanyInfo__Phone_No__Caption</DataField>
-        </Field>
-        <Field Name="CompanyInfo__Fax_No__Caption">
-          <DataField>CompanyInfo__Fax_No__Caption</DataField>
-        </Field>
-        <Field Name="CompanyInfo__VAT_Registration_No__Caption">
-          <DataField>CompanyInfo__VAT_Registration_No__Caption</DataField>
-        </Field>
-        <Field Name="PrintCurrencyCodeCaption">
-          <DataField>PrintCurrencyCodeCaption</DataField>
-        </Field>
-        <Field Name="PaymtHeader__Bank_Branch_No__Caption">
-          <DataField>PaymtHeader__Bank_Branch_No__Caption</DataField>
-        </Field>
-        <Field Name="PaymtHeader__Agency_Code_Caption">
-          <DataField>PaymtHeader__Agency_Code_Caption</DataField>
-        </Field>
-        <Field Name="PaymtHeader__Bank_Account_No__Caption">
-          <DataField>PaymtHeader__Bank_Account_No__Caption</DataField>
-        </Field>
-        <Field Name="PaymtHeader_IBANCaption">
-          <DataField>PaymtHeader_IBANCaption</DataField>
-        </Field>
-        <Field Name="PaymtHeader__SWIFT_Code_Caption">
-          <DataField>PaymtHeader__SWIFT_Code_Caption</DataField>
-        </Field>
-        <Field Name="PrintAmountInLCYCode">
-          <DataField>PrintAmountInLCYCode</DataField>
-        </Field>
-        <Field Name="StatementAmount">
-          <DataField>StatementAmount</DataField>
-        </Field>
-        <Field Name="StatementAmountFormat">
-          <DataField>StatementAmountFormat</DataField>
-        </Field>
-        <Field Name="PrintCurrencyCode_Control1120060">
-          <DataField>PrintCurrencyCode_Control1120060</DataField>
-        </Field>
-        <Field Name="Cust_Name">
-          <DataField>Cust_Name</DataField>
-        </Field>
-        <Field Name="StatementAmount_Control1120031">
-          <DataField>StatementAmount_Control1120031</DataField>
-        </Field>
-        <Field Name="StatementAmount_Control1120031Format">
-          <DataField>StatementAmount_Control1120031Format</DataField>
-        </Field>
-        <Field Name="PrintCurrencyCode_Control1120061">
-          <DataField>PrintCurrencyCode_Control1120061</DataField>
-        </Field>
-        <Field Name="Payment_Line__Due_Date_">
-          <DataField>Payment_Line__Due_Date_</DataField>
-        </Field>
-        <Field Name="Payment_Line__No__">
-          <DataField>Payment_Line__No__</DataField>
-        </Field>
-        <Field Name="Payment_Line__Account_No__">
-          <DataField>Payment_Line__Account_No__</DataField>
-        </Field>
-        <Field Name="Payment_Line__Drawee_Reference_">
-          <DataField>Payment_Line__Drawee_Reference_</DataField>
-        </Field>
-        <Field Name="Payment_Line__Bank_Branch_No__">
-          <DataField>Payment_Line__Bank_Branch_No__</DataField>
-        </Field>
-        <Field Name="Payment_Line__Agency_Code_">
-          <DataField>Payment_Line__Agency_Code_</DataField>
-        </Field>
-        <Field Name="Payment_Line__Bank_Account_No__">
-          <DataField>Payment_Line__Bank_Account_No__</DataField>
-        </Field>
-        <Field Name="Payment_Line__SWIFT_Code_">
-          <DataField>Payment_Line__SWIFT_Code_</DataField>
-        </Field>
-        <Field Name="Payment_Line_IBAN">
-          <DataField>Payment_Line_IBAN</DataField>
-        </Field>
-        <Field Name="StatementAmount_Control1120036">
-          <DataField>StatementAmount_Control1120036</DataField>
-        </Field>
-        <Field Name="StatementAmount_Control1120036Format">
-          <DataField>StatementAmount_Control1120036Format</DataField>
-        </Field>
-        <Field Name="PrintCurrencyCode_Control1120063">
-          <DataField>PrintCurrencyCode_Control1120063</DataField>
-        </Field>
-        <Field Name="StatementAmount_Control1120039">
-          <DataField>StatementAmount_Control1120039</DataField>
-        </Field>
-        <Field Name="StatementAmount_Control1120039Format">
-          <DataField>StatementAmount_Control1120039Format</DataField>
-        </Field>
-        <Field Name="PrintCountingDelivery">
-          <DataField>PrintCountingDelivery</DataField>
-        </Field>
-        <Field Name="PrintCurrencyCode_Control1120064">
-          <DataField>PrintCurrencyCode_Control1120064</DataField>
-        </Field>
-        <Field Name="Payment_Line_Line_No_">
-          <DataField>Payment_Line_Line_No_</DataField>
-        </Field>
-        <Field Name="All_amounts_are_in_company_currencyCaption">
-          <DataField>All_amounts_are_in_company_currencyCaption</DataField>
-        </Field>
-        <Field Name="Cust_NameCaption">
-          <DataField>Cust_NameCaption</DataField>
-        </Field>
-        <Field Name="StatementAmount_Control1120031Caption">
-          <DataField>StatementAmount_Control1120031Caption</DataField>
-        </Field>
-        <Field Name="Payment_Line__Drawee_Reference_Caption">
-          <DataField>Payment_Line__Drawee_Reference_Caption</DataField>
-        </Field>
-        <Field Name="Payment_Line__No__Caption">
-          <DataField>Payment_Line__No__Caption</DataField>
-        </Field>
-        <Field Name="Payment_Line__Due_Date_Caption">
-          <DataField>Payment_Line__Due_Date_Caption</DataField>
-        </Field>
-        <Field Name="Payment_Line__Account_No__Caption">
-          <DataField>Payment_Line__Account_No__Caption</DataField>
-        </Field>
-        <Field Name="Payment_Line__Bank_Branch_No__Caption">
-          <DataField>Payment_Line__Bank_Branch_No__Caption</DataField>
-        </Field>
-        <Field Name="Payment_Line__Agency_Code_Caption">
-          <DataField>Payment_Line__Agency_Code_Caption</DataField>
-        </Field>
-        <Field Name="Payment_Line__Bank_Account_No__Caption">
-          <DataField>Payment_Line__Bank_Account_No__Caption</DataField>
-        </Field>
-        <Field Name="Payment_Line__SWIFT_Code_Caption">
-          <DataField>Payment_Line__SWIFT_Code_Caption</DataField>
-        </Field>
-        <Field Name="Payment_Line_IBANCaption">
-          <DataField>Payment_Line_IBANCaption</DataField>
-        </Field>
-        <Field Name="ReportCaption">
-          <DataField>ReportCaption</DataField>
-        </Field>
-        <Field Name="EmptyStringCaption">
-          <DataField>EmptyStringCaption</DataField>
-        </Field>
-        <Field Name="ReportCaption_Control1120015">
-          <DataField>ReportCaption_Control1120015</DataField>
-        </Field>
-        <Field Name="TotalCaption">
-          <DataField>TotalCaption</DataField>
-        </Field>
-      </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>Report.xsd</rd:SchemaPath>
-        <rd:TableName>Result</rd:TableName>
-      </rd:DataSetInfo>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -3735,4 +3468,263 @@ End Function</Code>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>cb321b4b-8d75-426c-81ba-15ee989d1b8b</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="Payment_Lines1_No_">
+          <DataField>Payment_Lines1_No_</DataField>
+        </Field>
+        <Field Name="Payment_Lines1_Line_No_">
+          <DataField>Payment_Lines1_Line_No_</DataField>
+        </Field>
+        <Field Name="Operation">
+          <DataField>Operation</DataField>
+        </Field>
+        <Field Name="PaymtHeader__No__">
+          <DataField>PaymtHeader__No__</DataField>
+        </Field>
+        <Field Name="STRSUBSTNO_Text003____1__CopyText_">
+          <DataField>STRSUBSTNO_Text003____1__CopyText_</DataField>
+        </Field>
+        <Field Name="CompanyAddr_1_">
+          <DataField>CompanyAddr_1_</DataField>
+        </Field>
+        <Field Name="CompanyAddr_2_">
+          <DataField>CompanyAddr_2_</DataField>
+        </Field>
+        <Field Name="CompanyAddr_3_">
+          <DataField>CompanyAddr_3_</DataField>
+        </Field>
+        <Field Name="CompanyAddr_4_">
+          <DataField>CompanyAddr_4_</DataField>
+        </Field>
+        <Field Name="CompanyAddr_5_">
+          <DataField>CompanyAddr_5_</DataField>
+        </Field>
+        <Field Name="CompanyAddr_6_">
+          <DataField>CompanyAddr_6_</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Phone_No__">
+          <DataField>CompanyInfo__Phone_No__</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Fax_No__">
+          <DataField>CompanyInfo__Fax_No__</DataField>
+        </Field>
+        <Field Name="CompanyInfo__VAT_Registration_No__">
+          <DataField>CompanyInfo__VAT_Registration_No__</DataField>
+        </Field>
+        <Field Name="FORMAT_PostingDate_0_4_">
+          <DataField>FORMAT_PostingDate_0_4_</DataField>
+        </Field>
+        <Field Name="BankAccAddr_4_">
+          <DataField>BankAccAddr_4_</DataField>
+        </Field>
+        <Field Name="BankAccAddr_5_">
+          <DataField>BankAccAddr_5_</DataField>
+        </Field>
+        <Field Name="BankAccAddr_6_">
+          <DataField>BankAccAddr_6_</DataField>
+        </Field>
+        <Field Name="BankAccAddr_7_">
+          <DataField>BankAccAddr_7_</DataField>
+        </Field>
+        <Field Name="BankAccAddr_3_">
+          <DataField>BankAccAddr_3_</DataField>
+        </Field>
+        <Field Name="BankAccAddr_2_">
+          <DataField>BankAccAddr_2_</DataField>
+        </Field>
+        <Field Name="BankAccAddr_1_">
+          <DataField>BankAccAddr_1_</DataField>
+        </Field>
+        <Field Name="PrintCurrencyCode">
+          <DataField>PrintCurrencyCode</DataField>
+        </Field>
+        <Field Name="PaymtHeader__Bank_Branch_No__">
+          <DataField>PaymtHeader__Bank_Branch_No__</DataField>
+        </Field>
+        <Field Name="PaymtHeader__Agency_Code_">
+          <DataField>PaymtHeader__Agency_Code_</DataField>
+        </Field>
+        <Field Name="PaymtHeader__Bank_Account_No__">
+          <DataField>PaymtHeader__Bank_Account_No__</DataField>
+        </Field>
+        <Field Name="OutputNo">
+          <DataField>OutputNo</DataField>
+        </Field>
+        <Field Name="Text003">
+          <DataField>Text003</DataField>
+        </Field>
+        <Field Name="Text000">
+          <DataField>Text000</DataField>
+        </Field>
+        <Field Name="PaymtHeader_IBAN">
+          <DataField>PaymtHeader_IBAN</DataField>
+        </Field>
+        <Field Name="PaymtHeader__SWIFT_Code_">
+          <DataField>PaymtHeader__SWIFT_Code_</DataField>
+        </Field>
+        <Field Name="PageLoop_Number">
+          <DataField>PageLoop_Number</DataField>
+        </Field>
+        <Field Name="PaymtHeader__No__Caption">
+          <DataField>PaymtHeader__No__Caption</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Phone_No__Caption">
+          <DataField>CompanyInfo__Phone_No__Caption</DataField>
+        </Field>
+        <Field Name="CompanyInfo__Fax_No__Caption">
+          <DataField>CompanyInfo__Fax_No__Caption</DataField>
+        </Field>
+        <Field Name="CompanyInfo__VAT_Registration_No__Caption">
+          <DataField>CompanyInfo__VAT_Registration_No__Caption</DataField>
+        </Field>
+        <Field Name="PrintCurrencyCodeCaption">
+          <DataField>PrintCurrencyCodeCaption</DataField>
+        </Field>
+        <Field Name="PaymtHeader__Bank_Branch_No__Caption">
+          <DataField>PaymtHeader__Bank_Branch_No__Caption</DataField>
+        </Field>
+        <Field Name="PaymtHeader__Agency_Code_Caption">
+          <DataField>PaymtHeader__Agency_Code_Caption</DataField>
+        </Field>
+        <Field Name="PaymtHeader__Bank_Account_No__Caption">
+          <DataField>PaymtHeader__Bank_Account_No__Caption</DataField>
+        </Field>
+        <Field Name="PaymtHeader_IBANCaption">
+          <DataField>PaymtHeader_IBANCaption</DataField>
+        </Field>
+        <Field Name="PaymtHeader__SWIFT_Code_Caption">
+          <DataField>PaymtHeader__SWIFT_Code_Caption</DataField>
+        </Field>
+        <Field Name="PrintAmountInLCYCode">
+          <DataField>PrintAmountInLCYCode</DataField>
+        </Field>
+        <Field Name="StatementAmount">
+          <DataField>StatementAmount</DataField>
+        </Field>
+        <Field Name="StatementAmountFormat">
+          <DataField>StatementAmountFormat</DataField>
+        </Field>
+        <Field Name="PrintCurrencyCode_Control1120060">
+          <DataField>PrintCurrencyCode_Control1120060</DataField>
+        </Field>
+        <Field Name="Cust_Name">
+          <DataField>Cust_Name</DataField>
+        </Field>
+        <Field Name="StatementAmount_Control1120031">
+          <DataField>StatementAmount_Control1120031</DataField>
+        </Field>
+        <Field Name="StatementAmount_Control1120031Format">
+          <DataField>StatementAmount_Control1120031Format</DataField>
+        </Field>
+        <Field Name="PrintCurrencyCode_Control1120061">
+          <DataField>PrintCurrencyCode_Control1120061</DataField>
+        </Field>
+        <Field Name="Payment_Line__Due_Date_">
+          <DataField>Payment_Line__Due_Date_</DataField>
+        </Field>
+        <Field Name="Payment_Line__No__">
+          <DataField>Payment_Line__No__</DataField>
+        </Field>
+        <Field Name="Payment_Line__Account_No__">
+          <DataField>Payment_Line__Account_No__</DataField>
+        </Field>
+        <Field Name="Payment_Line__Drawee_Reference_">
+          <DataField>Payment_Line__Drawee_Reference_</DataField>
+        </Field>
+        <Field Name="Payment_Line__Bank_Branch_No__">
+          <DataField>Payment_Line__Bank_Branch_No__</DataField>
+        </Field>
+        <Field Name="Payment_Line__Agency_Code_">
+          <DataField>Payment_Line__Agency_Code_</DataField>
+        </Field>
+        <Field Name="Payment_Line__Bank_Account_No__">
+          <DataField>Payment_Line__Bank_Account_No__</DataField>
+        </Field>
+        <Field Name="Payment_Line__SWIFT_Code_">
+          <DataField>Payment_Line__SWIFT_Code_</DataField>
+        </Field>
+        <Field Name="Payment_Line_IBAN">
+          <DataField>Payment_Line_IBAN</DataField>
+        </Field>
+        <Field Name="StatementAmount_Control1120036">
+          <DataField>StatementAmount_Control1120036</DataField>
+        </Field>
+        <Field Name="StatementAmount_Control1120036Format">
+          <DataField>StatementAmount_Control1120036Format</DataField>
+        </Field>
+        <Field Name="PrintCurrencyCode_Control1120063">
+          <DataField>PrintCurrencyCode_Control1120063</DataField>
+        </Field>
+        <Field Name="StatementAmount_Control1120039">
+          <DataField>StatementAmount_Control1120039</DataField>
+        </Field>
+        <Field Name="StatementAmount_Control1120039Format">
+          <DataField>StatementAmount_Control1120039Format</DataField>
+        </Field>
+        <Field Name="PrintCountingDelivery">
+          <DataField>PrintCountingDelivery</DataField>
+        </Field>
+        <Field Name="PrintCurrencyCode_Control1120064">
+          <DataField>PrintCurrencyCode_Control1120064</DataField>
+        </Field>
+        <Field Name="Payment_Line_Line_No_">
+          <DataField>Payment_Line_Line_No_</DataField>
+        </Field>
+        <Field Name="All_amounts_are_in_company_currencyCaption">
+          <DataField>All_amounts_are_in_company_currencyCaption</DataField>
+        </Field>
+        <Field Name="Cust_NameCaption">
+          <DataField>Cust_NameCaption</DataField>
+        </Field>
+        <Field Name="StatementAmount_Control1120031Caption">
+          <DataField>StatementAmount_Control1120031Caption</DataField>
+        </Field>
+        <Field Name="Payment_Line__Drawee_Reference_Caption">
+          <DataField>Payment_Line__Drawee_Reference_Caption</DataField>
+        </Field>
+        <Field Name="Payment_Line__No__Caption">
+          <DataField>Payment_Line__No__Caption</DataField>
+        </Field>
+        <Field Name="Payment_Line__Due_Date_Caption">
+          <DataField>Payment_Line__Due_Date_Caption</DataField>
+        </Field>
+        <Field Name="Payment_Line__Account_No__Caption">
+          <DataField>Payment_Line__Account_No__Caption</DataField>
+        </Field>
+        <Field Name="Payment_Line__Bank_Branch_No__Caption">
+          <DataField>Payment_Line__Bank_Branch_No__Caption</DataField>
+        </Field>
+        <Field Name="Payment_Line__Agency_Code_Caption">
+          <DataField>Payment_Line__Agency_Code_Caption</DataField>
+        </Field>
+        <Field Name="Payment_Line__Bank_Account_No__Caption">
+          <DataField>Payment_Line__Bank_Account_No__Caption</DataField>
+        </Field>
+        <Field Name="Payment_Line__SWIFT_Code_Caption">
+          <DataField>Payment_Line__SWIFT_Code_Caption</DataField>
+        </Field>
+        <Field Name="Payment_Line_IBANCaption">
+          <DataField>Payment_Line_IBANCaption</DataField>
+        </Field>
+        <Field Name="ReportCaption">
+          <DataField>ReportCaption</DataField>
+        </Field>
+        <Field Name="EmptyStringCaption">
+          <DataField>EmptyStringCaption</DataField>
+        </Field>
+        <Field Name="ReportCaption_Control1120015">
+          <DataField>ReportCaption_Control1120015</DataField>
+        </Field>
+        <Field Name="TotalCaption">
+          <DataField>TotalCaption</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>

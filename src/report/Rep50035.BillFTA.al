@@ -311,8 +311,8 @@ report 50035 "Bill FTA"
         Vendor_NameCaptionLbl: Label 'Name';
         AmountText: Text[30];
         IssueCity: Text[30];
-        CompanyAddr: array[8] of Text[50];
-        VendAdr: array[8] of Text[50];
+        CompanyAddr: array[8] of Text[100];
+        VendAdr: array[8] of Text[100];
         Operation: Text[80];
 
 

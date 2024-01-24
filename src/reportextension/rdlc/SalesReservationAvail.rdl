@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -10,150 +10,6 @@
       <rd:DataSourceID>23e91a69-e70b-4bd3-b7d1-85db59ef1f21</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="TodayFormatted">
-          <DataField>TodayFormatted</DataField>
-        </Field>
-        <Field Name="CompanyName">
-          <DataField>CompanyName</DataField>
-        </Field>
-        <Field Name="StrsubstnoDocTypeDocNo">
-          <DataField>StrsubstnoDocTypeDocNo</DataField>
-        </Field>
-        <Field Name="StrsubstnoDocTypeDocNo1">
-          <DataField>StrsubstnoDocTypeDocNo1</DataField>
-        </Field>
-        <Field Name="ShowSalesLineGrHeader2">
-          <DataField>ShowSalesLineGrHeader2</DataField>
-        </Field>
-        <Field Name="No_SalesLine">
-          <DataField>No_SalesLine</DataField>
-        </Field>
-        <Field Name="Description_SalesLine">
-          <DataField>Description_SalesLine</DataField>
-        </Field>
-        <Field Name="ShpmtDt__SalesLine">
-          <DataField>ShpmtDt__SalesLine</DataField>
-        </Field>
-        <Field Name="Preparation_Type_FORMAT">
-          <DataField>Preparation_Type_FORMAT</DataField>
-        </Field>
-        <Field Name="Reserve__SalesLine">
-          <DataField>Reserve__SalesLine</DataField>
-        </Field>
-        <Field Name="OutstdngQtyBase_SalesLine">
-          <DataField>OutstdngQtyBase_SalesLine</DataField>
-        </Field>
-        <Field Name="OutstdngQtyBase_SalesLineFormat">
-          <DataField>OutstdngQtyBase_SalesLineFormat</DataField>
-        </Field>
-        <Field Name="ResrvdQtyBase_SalesLine">
-          <DataField>ResrvdQtyBase_SalesLine</DataField>
-        </Field>
-        <Field Name="ResrvdQtyBase_SalesLineFormat">
-          <DataField>ResrvdQtyBase_SalesLineFormat</DataField>
-        </Field>
-        <Field Name="LineStatus">
-          <DataField>LineStatus</DataField>
-        </Field>
-        <Field Name="DecGDisposalQtyStock">
-          <DataField>DecGDisposalQtyStock</DataField>
-        </Field>
-        <Field Name="DecGDisposalQtyStockFormat">
-          <DataField>DecGDisposalQtyStockFormat</DataField>
-        </Field>
-        <Field Name="LineReceiptDate">
-          <DataField>LineReceiptDate</DataField>
-        </Field>
-        <Field Name="LineQuantityOnHand">
-          <DataField>LineQuantityOnHand</DataField>
-        </Field>
-        <Field Name="LineQuantityOnHandFormat">
-          <DataField>LineQuantityOnHandFormat</DataField>
-        </Field>
-        <Field Name="ShowSalesLineBody">
-          <DataField>ShowSalesLineBody</DataField>
-        </Field>
-        <Field Name="DocumentReceiptDate">
-          <DataField>DocumentReceiptDate</DataField>
-        </Field>
-        <Field Name="DocumentStatus">
-          <DataField>DocumentStatus</DataField>
-        </Field>
-        <Field Name="ShipmentDt_SalesHeader">
-          <DataField>ShipmentDt_SalesHeader</DataField>
-        </Field>
-        <Field Name="Reserve_SalesHeader">
-          <DataField>Reserve_SalesHeader</DataField>
-        </Field>
-        <Field Name="DocType__SalesLine">
-          <DataField>DocType__SalesLine</DataField>
-        </Field>
-        <Field Name="DoctNo_SalesLine">
-          <DataField>DoctNo_SalesLine</DataField>
-        </Field>
-        <Field Name="LineNo_SalesLine">
-          <DataField>LineNo_SalesLine</DataField>
-        </Field>
-        <Field Name="SalesResrvtnAvalbtyCaption">
-          <DataField>SalesResrvtnAvalbtyCaption</DataField>
-        </Field>
-        <Field Name="CurrRepPageNoCaption">
-          <DataField>CurrRepPageNoCaption</DataField>
-        </Field>
-        <Field Name="SalesLineShpmtDtCaption">
-          <DataField>SalesLineShpmtDtCaption</DataField>
-        </Field>
-        <Field Name="LineReceiptDateCaption">
-          <DataField>LineReceiptDateCaption</DataField>
-        </Field>
-        <Field Name="LineStatusCaption">
-          <DataField>LineStatusCaption</DataField>
-        </Field>
-        <Field Name="LineQuantityOnHandCaption">
-          <DataField>LineQuantityOnHandCaption</DataField>
-        </Field>
-        <Field Name="TypePrepaCaption">
-          <DataField>TypePrepaCaption</DataField>
-        </Field>
-        <Field Name="LocationCaption">
-          <DataField>LocationCaption</DataField>
-        </Field>
-        <Field Name="ReservText">
-          <DataField>ReservText</DataField>
-        </Field>
-        <Field Name="ShowReservDate">
-          <DataField>ShowReservDate</DataField>
-        </Field>
-        <Field Name="Qty_ReservationEntry">
-          <DataField>Qty_ReservationEntry</DataField>
-        </Field>
-        <Field Name="Qty_ReservationEntryFormat">
-          <DataField>Qty_ReservationEntryFormat</DataField>
-        </Field>
-        <Field Name="EntryQuantityOnHand">
-          <DataField>EntryQuantityOnHand</DataField>
-        </Field>
-        <Field Name="EntryQuantityOnHandFormat">
-          <DataField>EntryQuantityOnHandFormat</DataField>
-        </Field>
-        <Field Name="ShowResEntryBody">
-          <DataField>ShowResEntryBody</DataField>
-        </Field>
-      </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>Report.xsd</rd:SchemaPath>
-        <rd:TableName>Result</rd:TableName>
-      </rd:DataSetInfo>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -1939,4 +1795,143 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>853055c1-3f14-4482-bf97-1108a5b42ec2</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="TodayFormatted">
+          <DataField>TodayFormatted</DataField>
+        </Field>
+        <Field Name="CompanyName">
+          <DataField>CompanyName</DataField>
+        </Field>
+        <Field Name="StrsubstnoDocTypeDocNo">
+          <DataField>StrsubstnoDocTypeDocNo</DataField>
+        </Field>
+        <Field Name="ShowSalesLineGrHeader2">
+          <DataField>ShowSalesLineGrHeader2</DataField>
+        </Field>
+        <Field Name="No_SalesLine">
+          <DataField>No_SalesLine</DataField>
+        </Field>
+        <Field Name="Description_SalesLine">
+          <DataField>Description_SalesLine</DataField>
+        </Field>
+        <Field Name="ShpmtDt__SalesLine">
+          <DataField>ShpmtDt__SalesLine</DataField>
+        </Field>
+        <Field Name="Reserve__SalesLine">
+          <DataField>Reserve__SalesLine</DataField>
+        </Field>
+        <Field Name="OutstdngQtyBase_SalesLine">
+          <DataField>OutstdngQtyBase_SalesLine</DataField>
+        </Field>
+        <Field Name="OutstdngQtyBase_SalesLineFormat">
+          <DataField>OutstdngQtyBase_SalesLineFormat</DataField>
+        </Field>
+        <Field Name="ResrvdQtyBase_SalesLine">
+          <DataField>ResrvdQtyBase_SalesLine</DataField>
+        </Field>
+        <Field Name="ResrvdQtyBase_SalesLineFormat">
+          <DataField>ResrvdQtyBase_SalesLineFormat</DataField>
+        </Field>
+        <Field Name="LineStatus">
+          <DataField>LineStatus</DataField>
+        </Field>
+        <Field Name="LineReceiptDate">
+          <DataField>LineReceiptDate</DataField>
+        </Field>
+        <Field Name="LineQuantityOnHand">
+          <DataField>LineQuantityOnHand</DataField>
+        </Field>
+        <Field Name="LineQuantityOnHandFormat">
+          <DataField>LineQuantityOnHandFormat</DataField>
+        </Field>
+        <Field Name="ShowSalesLineBody">
+          <DataField>ShowSalesLineBody</DataField>
+        </Field>
+        <Field Name="DocumentReceiptDate">
+          <DataField>DocumentReceiptDate</DataField>
+        </Field>
+        <Field Name="DocumentStatus">
+          <DataField>DocumentStatus</DataField>
+        </Field>
+        <Field Name="ShipmentDt_SalesHeader">
+          <DataField>ShipmentDt_SalesHeader</DataField>
+        </Field>
+        <Field Name="Reserve_SalesHeader">
+          <DataField>Reserve_SalesHeader</DataField>
+        </Field>
+        <Field Name="DocType__SalesLine">
+          <DataField>DocType__SalesLine</DataField>
+        </Field>
+        <Field Name="DoctNo_SalesLine">
+          <DataField>DoctNo_SalesLine</DataField>
+        </Field>
+        <Field Name="LineNo_SalesLine">
+          <DataField>LineNo_SalesLine</DataField>
+        </Field>
+        <Field Name="SalesResrvtnAvalbtyCaption">
+          <DataField>SalesResrvtnAvalbtyCaption</DataField>
+        </Field>
+        <Field Name="CurrRepPageNoCaption">
+          <DataField>CurrRepPageNoCaption</DataField>
+        </Field>
+        <Field Name="SalesLineShpmtDtCaption">
+          <DataField>SalesLineShpmtDtCaption</DataField>
+        </Field>
+        <Field Name="LineReceiptDateCaption">
+          <DataField>LineReceiptDateCaption</DataField>
+        </Field>
+        <Field Name="LineStatusCaption">
+          <DataField>LineStatusCaption</DataField>
+        </Field>
+        <Field Name="LineQuantityOnHandCaption">
+          <DataField>LineQuantityOnHandCaption</DataField>
+        </Field>
+        <Field Name="ReservText">
+          <DataField>ReservText</DataField>
+        </Field>
+        <Field Name="ShowReservDate">
+          <DataField>ShowReservDate</DataField>
+        </Field>
+        <Field Name="Qty_ReservationEntry">
+          <DataField>Qty_ReservationEntry</DataField>
+        </Field>
+        <Field Name="Qty_ReservationEntryFormat">
+          <DataField>Qty_ReservationEntryFormat</DataField>
+        </Field>
+        <Field Name="EntryQuantityOnHand">
+          <DataField>EntryQuantityOnHand</DataField>
+        </Field>
+        <Field Name="EntryQuantityOnHandFormat">
+          <DataField>EntryQuantityOnHandFormat</DataField>
+        </Field>
+        <Field Name="ShowResEntryBody">
+          <DataField>ShowResEntryBody</DataField>
+        </Field>
+        <Field Name="StrsubstnoDocTypeDocNo1">
+          <DataField>StrsubstnoDocTypeDocNo1</DataField>
+        </Field>
+        <Field Name="Preparation_Type_FORMAT">
+          <DataField>Preparation_Type_FORMAT</DataField>
+        </Field>
+        <Field Name="DecGDisposalQtyStock">
+          <DataField>DecGDisposalQtyStock</DataField>
+        </Field>
+        <Field Name="DecGDisposalQtyStockFormat">
+          <DataField>DecGDisposalQtyStockFormat</DataField>
+        </Field>
+        <Field Name="TypePrepaCaption">
+          <DataField>TypePrepaCaption</DataField>
+        </Field>
+        <Field Name="LocationCaption">
+          <DataField>LocationCaption</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>

@@ -1,6 +1,6 @@
 codeunit 50002 "Customers Export"
 {
-    TableNo = "Job Queue Entry";
+    // TableNo = "Job Queue Entry";
 
     trigger OnRun()
     begin
@@ -12,7 +12,6 @@ codeunit 50002 "Customers Export"
         CduGWriteFile: Codeunit "Write Text File";
         BooGFixedFile: Boolean;
         BooGCommaDecimal: Boolean;
-        DecGAvailable: Decimal;
 
 
     procedure FctSendCustomers()
@@ -20,7 +19,7 @@ codeunit 50002 "Customers Export"
         RecLCustomer: Record "Customer";
         TxtLRepertory: Text[250];
         TxtLFileName: Text[250];
-        TxtLTextFields: array[80] of Text[350];
+        TxtLTextFields: array[80] of Text;
 
         IntLCmp: Integer;
     begin
@@ -45,7 +44,7 @@ codeunit 50002 "Customers Export"
         BooGCommaDecimal := false;
 
 
-        CduGWriteFile.FctInitMessage(TxtLRepertory, TxtLFileName, ';', BooGFixedFile, BooGCommaDecimal);
+        CduGWriteFile.FctInitMessage(';', BooGFixedFile, BooGCommaDecimal);
 
 
 
@@ -116,7 +115,7 @@ codeunit 50002 "Customers Export"
         RecLSalesInvHeader2.MODIFY;
         */
 
-        CduGWriteFile.FctEndMessage();
+        CduGWriteFile.FctEndMessage(TxtLFileName);
 
     end;
 }

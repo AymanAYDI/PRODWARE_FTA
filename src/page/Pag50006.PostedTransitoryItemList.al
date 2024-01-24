@@ -120,9 +120,9 @@ page 50006 "Posted Transitory Item List"
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                 }
-                field("Item Product Group Code"; Rec."Item Product Group Code")
-                {
-                }
+                // field("Item Product Group Code"; Rec."Item Product Group Code")
+                // {
+                // }
             }
         }
     }
@@ -145,9 +145,9 @@ page 50006 "Posted Transitory Item List"
         else
             Rec.SETRANGE("Item Vendor No.");
         if CodGProduct <> '' then
-            Rec.SETFILTER("Item Product Group Code", CodGProduct)
+            Rec.SETFILTER("Item Category Code", CodGProduct)
         else
-            Rec.SETRANGE("Item Product Group Code");
+            Rec.SETRANGE("Item Category Code");
         if CodGCategory <> '' then
             Rec.SETFILTER("Item Category Code 2", CodGCategory)
         else

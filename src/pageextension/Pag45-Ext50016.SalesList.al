@@ -43,8 +43,8 @@ pageextension 50016 SalesList extends "Sales List" //45
     }
 
     var
-        GTel: Text[30];
         GCust: Record Customer;
+        GTel: Text[30];
 
 
     trigger OnAfterGetRecord()

@@ -300,15 +300,6 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
 
     keys
     {
-        //TODO : cannot be used for filds standard et spe
-        // key(key50000;Type,"No.";SumIndexFields = "x Outstanding Quantity")
-        // {
-
-        // }
-        // key(key50000; "Vendor No.","No.", "Location Code")
-        // {
-
-        // }
         key(Key50; "Remaining Quantity")
         {
         }

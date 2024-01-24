@@ -1034,10 +1034,10 @@ report 90002 "Service - Invoice PW" //8044280
         CopyText: Text[30];
         SalesPersonText: Text[30];
         TxtGLibDevise: Text[30];
-        CompanyAddr: array[8] of Text[50];
-        CustAddr: array[8] of Text[50];
+        CompanyAddr: array[8] of Text[100];
+        CustAddr: array[8] of Text[100];
         DimTxtArr: array[500] of Text[50];
-        ShipToAddr: array[8] of Text[50];
+        ShipToAddr: array[8] of Text[100];
         TotalExclVATText: Text[50];
         TotalInclVATText: Text[50];
         TotalText: Text[50];

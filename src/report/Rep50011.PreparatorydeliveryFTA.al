@@ -945,9 +945,9 @@ report 50011 "Preparatory delivery FTA"
         VATRegNoCaptionLbl: Label 'VAT Registration No.';
         CopyText: Text[30];
         SalesPersonText: Text[30];
-        CompanyAddr: array[8] of Text[50];
-        CustAddr: array[8] of Text[50];
-        ShipToAddr: array[8] of Text[50];
+        CompanyAddr: array[8] of Text[100];
+        CustAddr: array[8] of Text[100];
+        ShipToAddr: array[8] of Text[100];
         OldDimText: Text[75];
         ReferenceText: Text[80];
         VATNoText: Text[80];

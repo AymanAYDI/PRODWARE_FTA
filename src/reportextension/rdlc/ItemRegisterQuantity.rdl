@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -11,78 +11,6 @@
       <rd:DataSourceID>ece80b50-d510-453f-8629-b18d323f65ce</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="CompanyName">
-          <DataField>CompanyName</DataField>
-        </Field>
-        <Field Name="ItemRegFilterCopyText">
-          <DataField>ItemRegFilterCopyText</DataField>
-        </Field>
-        <Field Name="ItemRegFilter">
-          <DataField>ItemRegFilter</DataField>
-        </Field>
-        <Field Name="No_ItemRegister">
-          <DataField>No_ItemRegister</DataField>
-        </Field>
-        <Field Name="ItemRegQtyCaption">
-          <DataField>ItemRegQtyCaption</DataField>
-        </Field>
-        <Field Name="CurrReportPageNoCaption">
-          <DataField>CurrReportPageNoCaption</DataField>
-        </Field>
-        <Field Name="PostingDateCaption">
-          <DataField>PostingDateCaption</DataField>
-        </Field>
-        <Field Name="ItemDescriptionCaption">
-          <DataField>ItemDescriptionCaption</DataField>
-        </Field>
-        <Field Name="No_ItemRegisterCaption">
-          <DataField>No_ItemRegisterCaption</DataField>
-        </Field>
-        <Field Name="PostingDate_ItemLedgEntry">
-          <DataField>PostingDate_ItemLedgEntry</DataField>
-        </Field>
-        <Field Name="EntryType_ItemLedgEntry">
-          <DataField>EntryType_ItemLedgEntry</DataField>
-        </Field>
-        <Field Name="ItemNo_ItemLedgEntry">
-          <DataField>ItemNo_ItemLedgEntry</DataField>
-        </Field>
-        <Field Name="ItemDescription">
-          <DataField>ItemDescription</DataField>
-        </Field>
-        <Field Name="Quantity_ItemLedgEntry">
-          <DataField>Quantity_ItemLedgEntry</DataField>
-        </Field>
-        <Field Name="Quantity_ItemLedgEntryFormat">
-          <DataField>Quantity_ItemLedgEntryFormat</DataField>
-        </Field>
-        <Field Name="EntryNo_ItemLedgEntry">
-          <DataField>EntryNo_ItemLedgEntry</DataField>
-        </Field>
-        <Field Name="DocNo_ItemLedgEntry">
-          <DataField>DocNo_ItemLedgEntry</DataField>
-        </Field>
-        <Field Name="ItemShelfNo">
-          <DataField>ItemShelfNo</DataField>
-        </Field>
-        <Field Name="ItemShelfNoCaption">
-          <DataField>ItemShelfNoCaption</DataField>
-        </Field>
-      </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>Report.xsd</rd:SchemaPath>
-        <rd:TableName>Result</rd:TableName>
-      </rd:DataSetInfo>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -1510,4 +1438,71 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>1443715e-0fed-4f1d-a34c-1452a532db79</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="CompanyName">
+          <DataField>CompanyName</DataField>
+        </Field>
+        <Field Name="ItemRegFilterCopyText">
+          <DataField>ItemRegFilterCopyText</DataField>
+        </Field>
+        <Field Name="ItemRegFilter">
+          <DataField>ItemRegFilter</DataField>
+        </Field>
+        <Field Name="No_ItemRegister">
+          <DataField>No_ItemRegister</DataField>
+        </Field>
+        <Field Name="ItemRegQtyCaption">
+          <DataField>ItemRegQtyCaption</DataField>
+        </Field>
+        <Field Name="CurrReportPageNoCaption">
+          <DataField>CurrReportPageNoCaption</DataField>
+        </Field>
+        <Field Name="PostingDateCaption">
+          <DataField>PostingDateCaption</DataField>
+        </Field>
+        <Field Name="ItemDescriptionCaption">
+          <DataField>ItemDescriptionCaption</DataField>
+        </Field>
+        <Field Name="No_ItemRegisterCaption">
+          <DataField>No_ItemRegisterCaption</DataField>
+        </Field>
+        <Field Name="PostingDate_ItemLedgEntry">
+          <DataField>PostingDate_ItemLedgEntry</DataField>
+        </Field>
+        <Field Name="EntryType_ItemLedgEntry">
+          <DataField>EntryType_ItemLedgEntry</DataField>
+        </Field>
+        <Field Name="ItemNo_ItemLedgEntry">
+          <DataField>ItemNo_ItemLedgEntry</DataField>
+        </Field>
+        <Field Name="ItemDescription">
+          <DataField>ItemDescription</DataField>
+        </Field>
+        <Field Name="Quantity_ItemLedgEntry">
+          <DataField>Quantity_ItemLedgEntry</DataField>
+        </Field>
+        <Field Name="Quantity_ItemLedgEntryFormat">
+          <DataField>Quantity_ItemLedgEntryFormat</DataField>
+        </Field>
+        <Field Name="EntryNo_ItemLedgEntry">
+          <DataField>EntryNo_ItemLedgEntry</DataField>
+        </Field>
+        <Field Name="DocNo_ItemLedgEntry">
+          <DataField>DocNo_ItemLedgEntry</DataField>
+        </Field>
+        <Field Name="ItemShelfNo">
+          <DataField>ItemShelfNo</DataField>
+        </Field>
+        <Field Name="ItemShelfNoCaption">
+          <DataField>ItemShelfNoCaption</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>

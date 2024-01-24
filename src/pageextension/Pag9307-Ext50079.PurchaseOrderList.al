@@ -37,9 +37,9 @@ pageextension 50079 "PurchaseOrderList" extends "Purchase Order List" //9307
                 trigger OnAction()
                 var
                     DocPrint: Codeunit FTA_Functions;
-                BEGIN
+                begin
                     DocPrint.EmailPurchHeader(Rec);
-                END;
+                end;
             }
         }
     }

@@ -97,7 +97,7 @@ page 50004 "Purchase Discount Worksheet"
 
                     trigger OnAction()
                     begin
-                        REPORT.RUNMODAL(REPORT::"Suggest Purch. Disc. on Wksh.", TRUE, TRUE);
+                        REPORT.RUNMODAL(REPORT::"Suggest Purch. Disc. on Wksh.", true, true);
                     end;
                 }
                 action("I&mplement Discount Change")
@@ -108,7 +108,7 @@ page 50004 "Purchase Discount Worksheet"
 
                     trigger OnAction()
                     begin
-                        REPORT.RUNMODAL(REPORT::"Implement Purch. Disc. Change", TRUE, TRUE, Rec);
+                        REPORT.RUNMODAL(REPORT::"Implement Purch. Disc. Change", true, true, Rec);
                     end;
 
                 }

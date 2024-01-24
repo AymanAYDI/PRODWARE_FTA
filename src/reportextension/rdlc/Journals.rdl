@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -10,237 +10,6 @@
       <rd:DataSourceID>cc9b6d7a-2511-4191-a64e-600eb9734423</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText>/* Local Query */</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="COMPANYNAME">
-          <DataField>COMPANYNAME</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ConstGText001">
-          <DataField>ConstGText001</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="CreditCaption">
-          <DataField>CreditCaption</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="CreditTotal">
-          <DataField>CreditTotal</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="CreditTotalFormat">
-          <DataField>CreditTotalFormat</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Date__Period_Name____YearString">
-          <DataField>Date__Period_Name____YearString</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Date__Period_Type_">
-          <DataField>Date__Period_Type_</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="DateRecNo">
-          <DataField>DateRecNo</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="DebitCaption">
-          <DataField>DebitCaption</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="DebitTotal">
-          <DataField>DebitTotal</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="DebitTotalFormat">
-          <DataField>DebitTotalFormat</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="DescriptionCaption">
-          <DataField>DescriptionCaption</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="DisplayCentral">
-          <DataField>DisplayCentral</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="DisplayEntries">
-          <DataField>DisplayEntries</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="Document_No_Caption">
-          <DataField>Document_No_Caption</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="External_Document_No_Caption">
-          <DataField>External_Document_No_Caption</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Filter">
-          <DataField>Filter</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Filter2">
-          <DataField>Filter2</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="FiscalYearStatusText">
-          <DataField>FiscalYearStatusText</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Account___No__">
-          <DataField>G_L_Account___No__</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Account__Name">
-          <DataField>G_L_Account__Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Account_No_Caption">
-          <DataField>G_L_Account_No_Caption</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Entry__Credit_Amount_">
-          <DataField>G_L_Entry__Credit_Amount_</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Entry__Credit_Amount_Format">
-          <DataField>G_L_Entry__Credit_Amount_Format</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Entry__Debit_Amount_">
-          <DataField>G_L_Entry__Debit_Amount_</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Entry__Debit_Amount_Format">
-          <DataField>G_L_Entry__Debit_Amount_Format</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Entry__Document_No__">
-          <DataField>G_L_Entry__Document_No__</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Entry__External_Document_No__">
-          <DataField>G_L_Entry__External_Document_No__</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Entry__G_L_Account_No__">
-          <DataField>G_L_Entry__G_L_Account_No__</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Entry__Posting_Date_">
-          <DataField>G_L_Entry__Posting_Date_</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="G_L_Entry_Description">
-          <DataField>G_L_Entry_Description</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="GBoolCentralisationPiece">
-          <DataField>GBoolCentralisationPiece</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="GLEntry2__Credit_Amount_">
-          <DataField>GLEntry2__Credit_Amount_</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="GLEntry2__Credit_Amount_Format">
-          <DataField>GLEntry2__Credit_Amount_Format</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="GLEntry2__Debit_Amount_">
-          <DataField>GLEntry2__Debit_Amount_</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="GLEntry2__Debit_Amount_Format">
-          <DataField>GLEntry2__Debit_Amount_Format</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="GLEntry2_TABLECAPTION__________Filter">
-          <DataField>GLEntry2_TABLECAPTION__________Filter</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Grand_Total__Caption">
-          <DataField>Grand_Total__Caption</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Hidden">
-          <DataField>Hidden</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-        <Field Name="PeriodTypeNo">
-          <DataField>PeriodTypeNo</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Posting_DateCaption">
-          <DataField>Posting_DateCaption</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SortingByNo">
-          <DataField>SortingByNo</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="SourceCode_Code">
-          <DataField>SourceCode_Code</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SourceCode_Description">
-          <DataField>SourceCode_Description</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SourceCode_TABLECAPTION__________Filter2">
-          <DataField>SourceCode_TABLECAPTION__________Filter2</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SourceCode2_Code">
-          <DataField>SourceCode2_Code</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SourceCode2_Code_Control1120096">
-          <DataField>SourceCode2_Code_Control1120096</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SourceCode2_Description">
-          <DataField>SourceCode2_Description</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SourceCode2_Description_Control1120098">
-          <DataField>SourceCode2_Description_Control1120098</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="STRSUBSTNO_Text006____">
-          <DataField>STRSUBSTNO_Text006____</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="STRSUBSTNO_Text007____">
-          <DataField>STRSUBSTNO_Text007____</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="STRSUBSTNO_Text008_FIELDCAPTION__Document_No_____Document_No___">
-          <DataField>STRSUBSTNO_Text008_FIELDCAPTION__Document_No_____Document_No___</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Text012">
-          <DataField>Text012</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Title">
-          <DataField>Title</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>Report.xsd</rd:SchemaPath>
-        <rd:TableName>Result</rd:TableName>
-      </rd:DataSetInfo>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -2926,4 +2695,173 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>57deef92-7382-4526-a641-ed2485bf7055</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="Title">
+          <DataField>Title</DataField>
+        </Field>
+        <Field Name="COMPANYNAME">
+          <DataField>COMPANYNAME</DataField>
+        </Field>
+        <Field Name="STRSUBSTNO_Text006____">
+          <DataField>STRSUBSTNO_Text006____</DataField>
+        </Field>
+        <Field Name="STRSUBSTNO_Text007____">
+          <DataField>STRSUBSTNO_Text007____</DataField>
+        </Field>
+        <Field Name="GLEntry2_TABLECAPTION__________Filter">
+          <DataField>GLEntry2_TABLECAPTION__________Filter</DataField>
+        </Field>
+        <Field Name="Filter">
+          <DataField>Filter</DataField>
+        </Field>
+        <Field Name="Hidden">
+          <DataField>Hidden</DataField>
+        </Field>
+        <Field Name="FiscalYearStatusText">
+          <DataField>FiscalYearStatusText</DataField>
+        </Field>
+        <Field Name="SourceCode_TABLECAPTION__________Filter2">
+          <DataField>SourceCode_TABLECAPTION__________Filter2</DataField>
+        </Field>
+        <Field Name="Filter2">
+          <DataField>Filter2</DataField>
+        </Field>
+        <Field Name="DisplayEntries">
+          <DataField>DisplayEntries</DataField>
+        </Field>
+        <Field Name="SortingByNo">
+          <DataField>SortingByNo</DataField>
+        </Field>
+        <Field Name="DateRecNo">
+          <DataField>DateRecNo</DataField>
+        </Field>
+        <Field Name="DisplayCentral">
+          <DataField>DisplayCentral</DataField>
+        </Field>
+        <Field Name="DebitTotal">
+          <DataField>DebitTotal</DataField>
+        </Field>
+        <Field Name="DebitTotalFormat">
+          <DataField>DebitTotalFormat</DataField>
+        </Field>
+        <Field Name="CreditTotal">
+          <DataField>CreditTotal</DataField>
+        </Field>
+        <Field Name="CreditTotalFormat">
+          <DataField>CreditTotalFormat</DataField>
+        </Field>
+        <Field Name="Posting_DateCaption">
+          <DataField>Posting_DateCaption</DataField>
+        </Field>
+        <Field Name="Document_No_Caption">
+          <DataField>Document_No_Caption</DataField>
+        </Field>
+        <Field Name="External_Document_No_Caption">
+          <DataField>External_Document_No_Caption</DataField>
+        </Field>
+        <Field Name="G_L_Account_No_Caption">
+          <DataField>G_L_Account_No_Caption</DataField>
+        </Field>
+        <Field Name="DescriptionCaption">
+          <DataField>DescriptionCaption</DataField>
+        </Field>
+        <Field Name="DebitCaption">
+          <DataField>DebitCaption</DataField>
+        </Field>
+        <Field Name="CreditCaption">
+          <DataField>CreditCaption</DataField>
+        </Field>
+        <Field Name="Grand_Total__Caption">
+          <DataField>Grand_Total__Caption</DataField>
+        </Field>
+        <Field Name="Date__Period_Type_">
+          <DataField>Date__Period_Type_</DataField>
+        </Field>
+        <Field Name="Date__Period_Name____YearString">
+          <DataField>Date__Period_Name____YearString</DataField>
+        </Field>
+        <Field Name="PeriodTypeNo">
+          <DataField>PeriodTypeNo</DataField>
+        </Field>
+        <Field Name="SourceCode_Code">
+          <DataField>SourceCode_Code</DataField>
+        </Field>
+        <Field Name="SourceCode_Description">
+          <DataField>SourceCode_Description</DataField>
+        </Field>
+        <Field Name="SourceCode2_Code">
+          <DataField>SourceCode2_Code</DataField>
+        </Field>
+        <Field Name="SourceCode2_Description">
+          <DataField>SourceCode2_Description</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Debit_Amount_">
+          <DataField>G_L_Entry__Debit_Amount_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Debit_Amount_Format">
+          <DataField>G_L_Entry__Debit_Amount_Format</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Credit_Amount_">
+          <DataField>G_L_Entry__Credit_Amount_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Credit_Amount_Format">
+          <DataField>G_L_Entry__Credit_Amount_Format</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Posting_Date_">
+          <DataField>G_L_Entry__Posting_Date_</DataField>
+        </Field>
+        <Field Name="G_L_Entry__Document_No__">
+          <DataField>G_L_Entry__Document_No__</DataField>
+        </Field>
+        <Field Name="G_L_Entry__External_Document_No__">
+          <DataField>G_L_Entry__External_Document_No__</DataField>
+        </Field>
+        <Field Name="G_L_Entry__G_L_Account_No__">
+          <DataField>G_L_Entry__G_L_Account_No__</DataField>
+        </Field>
+        <Field Name="G_L_Entry_Description">
+          <DataField>G_L_Entry_Description</DataField>
+        </Field>
+        <Field Name="STRSUBSTNO_Text008_FIELDCAPTION__Document_No_____Document_No___">
+          <DataField>STRSUBSTNO_Text008_FIELDCAPTION__Document_No_____Document_No___</DataField>
+        </Field>
+        <Field Name="SourceCode2_Code_Control1120096">
+          <DataField>SourceCode2_Code_Control1120096</DataField>
+        </Field>
+        <Field Name="SourceCode2_Description_Control1120098">
+          <DataField>SourceCode2_Description_Control1120098</DataField>
+        </Field>
+        <Field Name="GLEntry2__Debit_Amount_">
+          <DataField>GLEntry2__Debit_Amount_</DataField>
+        </Field>
+        <Field Name="GLEntry2__Debit_Amount_Format">
+          <DataField>GLEntry2__Debit_Amount_Format</DataField>
+        </Field>
+        <Field Name="GLEntry2__Credit_Amount_">
+          <DataField>GLEntry2__Credit_Amount_</DataField>
+        </Field>
+        <Field Name="GLEntry2__Credit_Amount_Format">
+          <DataField>GLEntry2__Credit_Amount_Format</DataField>
+        </Field>
+        <Field Name="G_L_Account___No__">
+          <DataField>G_L_Account___No__</DataField>
+        </Field>
+        <Field Name="G_L_Account__Name">
+          <DataField>G_L_Account__Name</DataField>
+        </Field>
+        <Field Name="GBoolCentralisationPiece">
+          <DataField>GBoolCentralisationPiece</DataField>
+        </Field>
+        <Field Name="ConstGText001">
+          <DataField>ConstGText001</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>

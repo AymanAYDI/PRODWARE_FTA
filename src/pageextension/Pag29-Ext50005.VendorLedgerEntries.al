@@ -13,6 +13,7 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
                 field(CodGPostGrpFilter; CodGPostGrpFilter)
                 {
                     TableRelation = "Customer Posting Group".Code;
+                    Caption = 'Posting Group Filter';
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the CodGPostGrpFilter field.';
                     trigger OnValidate()

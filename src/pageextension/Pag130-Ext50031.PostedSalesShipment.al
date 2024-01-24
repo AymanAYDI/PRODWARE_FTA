@@ -5,6 +5,10 @@ pageextension 50031 "PostedSalesShipment" extends "Posted Sales Shipment" //130
 {
     layout
     {
+        modify("Shipping Agent Code")
+        {
+            Editable = true;
+        }
         addafter("Sell-to Contact No.")
         {
             field("Your Reference"; rec."Your Reference")
@@ -57,6 +61,7 @@ pageextension 50031 "PostedSalesShipment" extends "Posted Sales Shipment" //130
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Packer field.';
             }
+
         }
         addafter("Shipping Agent Service Code")
         {
