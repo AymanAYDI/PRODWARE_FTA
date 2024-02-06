@@ -54,6 +54,8 @@ page 50006 "Posted Transitory Item List"
             //     end;
             // } //TODO -> Table Removed
             field(CodGStat; CodGStat)
+
+
             {
                 Caption = 'Item Statistics Group';
 

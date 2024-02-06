@@ -25,15 +25,22 @@ pageextension 50045 ApplyVendorEntries extends "Apply Vendor Entries" //233
             field(VendorName; Rec.getVendorName(Rec."Vendor No."))
             {
                 Caption = 'Name';
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Name field.';
             }
             field("Vendor Posting Group"; Rec."Vendor Posting Group")
             {
+                Caption = 'Vendor Posting Group';
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Vendor Posting Group field.';
             }
         }
         addafter(Description)
         {
             field("CPFLG1"; Rec."CPFLG1")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Lettrage ORION field.';
             }
         }
     }

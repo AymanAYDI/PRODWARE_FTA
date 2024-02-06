@@ -14,9 +14,6 @@ pageextension 50091 "PurchaseLineDiscounts" extends "Purchase Line Discounts"//7
                 ToolTip = 'Item Description';
                 ApplicationArea = All;
             }
-        }
-        addafter("Item No.")
-        {
             field("Item No. 2"; Rec."Item No. 2")
             {
                 ToolTip = 'Item Description';

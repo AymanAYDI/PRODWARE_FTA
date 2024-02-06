@@ -4,13 +4,6 @@ using Microsoft.Assembly.Document;
 using Microsoft.Sales.Document;
 page 50011 "Kit Line to order"
 {
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    // www.prodware.fr
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    // 
-    // //>>MODIFHL
-    // TI302489 DO.GEPO 15/12/2015 : modify OnOpenPage
-
     InsertAllowed = false;
     PageType = ListPart;
     SourceTable = "Assembly Line";
@@ -145,10 +138,8 @@ page 50011 "Kit Line to order"
 
     trigger OnOpenPage()
     begin
-        //>>TI302489
         //FctSelectRecForOrder(Rec);
         Rec.FctSelectRecForOrder2(Rec);
-        //<<TI302489
         Rec.FILTERGROUP(0);
         Rec.SETRANGE("Document Type", Rec."Document Type"::Order);
         Rec.CALCFIELDS("Inventory Value Zero");
@@ -156,13 +147,11 @@ page 50011 "Kit Line to order"
         Rec.FILTERGROUP(2);
     end;
 
-
     procedure FctShowDocKit()
     var
         RecLSalesHeader: Record "Sales Header";
         RecLAssembletoOrderLink: Record "Assemble-to-Order Link";
     begin
-        //>>MIG NAV 2015 : Update OLD Code
         if RecLAssembletoOrderLink.GET(Rec."Document Type", Rec."Document No.") then begin
             RecLSalesHeader.SETRANGE("Document Type", RecLAssembletoOrderLink."Document Type");
             RecLSalesHeader.SETRANGE("No.", RecLAssembletoOrderLink."Document No.");
@@ -171,9 +160,7 @@ page 50011 "Kit Line to order"
             if RecLAssembletoOrderLink."Document Type" = RecLAssembletoOrderLink."Document Type"::Invoice then
                 page.RUNMODAL(Page::"Sales Invoice", RecLSalesHeader);
         end;
-        //<<MIG NAV 2015 : Update OLD Code
     end;
-
 
     procedure FctShowKitLine(var CodPVendorNo: Code[20]; var BooPSelectLine: Boolean)
     begin

@@ -1,4 +1,3 @@
-
 namespace Prodware.FTA;
 
 using Microsoft.Inventory.Availability;
@@ -9,24 +8,35 @@ pageextension 50054 ItemAvailabilityLines extends "Item Availability Lines" //35
 {
     layout
     {
-        addafter("Period Name")
+        // addafter("Period Name")
+        // {
+        //     field(Inventory; Item.Inventory)
+        //     {
+        //         Caption = 'Inventory';
+        //         DecimalPlaces = 0 : 5;
+        //         ToolTip = 'Specifies the value of the Inventory field.';
+        //         ApplicationArea = All;
+        //         trigger OnDrillDown()
+        //         begin
+        //             ShowItemLedgerEntries(false);
+        //         end;
+        //     }
+        // }
+        modify("Item.Inventory")
         {
-            field(Inventory; Item.Inventory)
-            {
-                Caption = 'Inventory';
-                DecimalPlaces = 0 : 5;
-
-                trigger OnDrillDown()
-                begin
-                    ShowItemLedgerEntries(false);
-                end;
-            }
+            Visible = true;
         }
+        moveafter("Period Name"; "Item.Inventory")
         modify(PlannedOrderRcpt)
         {
             Visible = false;
         }
     }
+    // trigger OnAfterGetRecord()
+    // begin
+    //     Item.CalcFields(Inventory);
+    // end;
+
     procedure ShowItemLedgerEntries(NetChange: Boolean)
     var
         ItemLedgerEntry: Record "Item Ledger Entry";

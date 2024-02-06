@@ -5,6 +5,7 @@ page 50002 "Purchase Price Worksheet"
 {
     Caption = 'Purchase Price Worksheet';
     DelayedInsert = true;
+    UsageCategory = Lists;
     PageType = List;
     SaveValues = true;
     SourceTable = "Purchase Price Worksheet";

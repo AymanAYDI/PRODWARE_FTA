@@ -11,6 +11,8 @@ pageextension 50050 PaymentJournal extends "Payment Journal" //256
         {
             field("Posting Group "; Rec."Posting Group")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Posting Group field.';
             }
 
         }

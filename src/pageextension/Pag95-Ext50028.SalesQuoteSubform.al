@@ -27,9 +27,9 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
         {
             field("Item Base"; Rec."Item Base")
             {
+                ApplicationArea = All;
                 trigger OnValidate()
                 begin
-                    //>>FED_20090415:PA
                     CurrPage.UPDATE(true);
                 end;
             }
@@ -38,6 +38,7 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
         {
             field("Quote Associated"; Rec."Quote Associated")
             {
+                ApplicationArea = All;
             }
         }
         moveafter("Unit Price"; "Line Discount %")
@@ -49,21 +50,25 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
         {
             field("Unit Price Discounted"; Rec."Unit Price Discounted")
             {
+                ApplicationArea = All;
             }
         }
         addafter("Unit Price")
         {
             field("Purchase Price Base"; Rec."Purchase Price Base")
             {
+                ApplicationArea = All;
             }
             field("Margin %"; Rec."Margin %")
             {
+                ApplicationArea = All;
             }
         }
         addafter("Allow Item Charge Assignment")
         {
             field("Shipment Date"; Rec."Shipment Date")
             {
+                ApplicationArea = All;
             }
         }
         modify(Control53)
@@ -79,6 +84,7 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
             {
                 Caption = 'Rendre visible article provisoire';
                 Image = Item;
+                ApplicationArea = All;
 
                 trigger OnAction()
                 var
@@ -95,9 +101,7 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
 
     trigger OnAfterGetRecord() //TODO-> Verif
     begin
-        Rec.ShowShortcutDimCode(ShortcutDimCode);
-        //>>NDBI
+        // Rec.ShowShortcutDimCode(ShortcutDimCode);
         Rec.CALCFIELDS("Quote Associated");
-        //<<NDBI
     end;
 }

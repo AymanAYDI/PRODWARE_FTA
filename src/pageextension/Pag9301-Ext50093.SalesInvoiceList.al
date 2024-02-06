@@ -9,7 +9,6 @@ pageextension 50093 SalesInvoiceList extends "Sales Invoice List" //9301
     layout
     {
 
-
         addafter("Salesperson Code")
         {
             field("Mobile Salesperson Code"; Rec."Mobile Salesperson Code")

@@ -26,15 +26,20 @@ pageextension 50063 Reservation extends Reservation //498
     // TODO ReservEntry variable global 
     procedure GetReservEntry(var RecPReservEntry: Record "Reservation Entry")
     begin
-        //     RecPReservEntry := ReservEntry;
+        RecPReservEntry := globalReservEntry;
     end;
 
-    procedure FctSetBooResaFTA(BooPResaFTA: Boolean);
+    procedure SetReservEntryFTA(ReservEntry: Record "Reservation Entry")
+    begin
+        globalReservEntry := ReservEntry;
+    end;
+
+    procedure FctSetBooResaFTA(BooPResaFTA: Boolean)
     begin
         BooGResaFTA := BooPResaFTA;
     end;
 
-    procedure FctSetBooResaASSFTA(BooPResaAssFTA: Boolean);
+    procedure FctSetBooResaASSFTA(BooPResaAssFTA: Boolean)
     begin
         BooGResaAssFTA := BooPResaAssFTA;
     end;
@@ -46,7 +51,10 @@ pageextension 50063 Reservation extends Reservation //498
 
     var
         RecGItem: Record Item;
+        globalReservEntry: Record "Reservation Entry";
         BooGResaFTA: Boolean;
         BooGResaAssFTA: Boolean;
         CstG001: Label 'FRéservation impossible à partir de cet écran.\Revenir sur l''écran "Choix du type de préparation" pour faire la réservation !';
+
 }
+

@@ -640,7 +640,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         Validate("Qty. to Assemble to Order", 0);
 
         RecLSalesLine.Validate("Preparation Type", "Preparation Type"::Remainder);
-        //TODO: A VERIFIER  Cross-Reference No. is removed
+        RecLSalesLine."Item Reference No." := RecLSalesLine."Item Reference No.";
         //RecLSalesLine."Cross-Reference No." := RecLSalesLine."Cross-Reference No.";
         RecLSalesLine.Description := RecLSalesLine.Description;
         RecLSalesLine."Description 2" := RecLSalesLine."Description 2";

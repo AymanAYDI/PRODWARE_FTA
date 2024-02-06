@@ -10,9 +10,6 @@ pageextension 50036 "SalesQuotes" extends "Sales Quotes"//9300
                 ToolTip = 'Mobile Salesperson Code.';
                 ApplicationArea = All;
             }
-        }
-        addafter("Salesperson Code")
-        {
             field("Customer Typology"; Rec."Customer Typology")
             {
                 ToolTip = '"Customer Typology"';

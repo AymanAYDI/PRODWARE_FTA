@@ -31,4 +31,5 @@ pageextension 50096 SalesOrderList extends "Sales Order List" //9305
             }
         }
     }
+
 }

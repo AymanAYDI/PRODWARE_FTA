@@ -28,18 +28,7 @@ report 50002 "Suggest Purch. Disc. on Wksh."
                     Window.UPDATE(1, "Item No.");
                 end;
 
-                //ReplaceSalesCode := NOT(("Sales Type" = ToSalesType) AND ("Sales Code" = ToSalesCode));
-
-                //IF (ToSalesCode = '') AND (ToSalesType <> ToSalesType::"All Customers") THEN
-                //  ERROR(Text002,"Sales Type");
-
                 CLEAR(PurchDiscWksh);
-
-                //PurchDiscWksh.VALIDATE("Sales Type",ToSalesType);
-                //IF NOT ReplaceSalesCode THEN
-                //  PurchDiscWksh.VALIDATE("Sales Code","Sales Code")
-                //ELSE
-                //  SalesPriceWksh.VALIDATE("Sales Code",ToSalesCode);
                 if ToSalesCode <> '' then
                     PurchDiscWksh.VALIDATE("Vendor No.", ToSalesCode)
                 else
@@ -221,13 +210,6 @@ report 50002 "Suggest Purch. Disc. on Wksh."
                 ToCurrency.Code := '';
             end;
             BooGEnableSalesCodeCtrl := true;
-            //RequestOptionsForm.SalesCodeCtrl.ENABLED := TRUE;
-            //IF ToSalesType = ToSalesType::"All Customers" THEN
-            //  RequestOptionsForm.SalesCodeCtrl.ENABLED := FALSE;
-
-            //RequestOptionsForm.SalesCodeCtrl.ENABLED := ToSalesType <> ToSalesType::"All Customers";
-            //RequestOptionsForm.ToStartDateCtrl.ENABLED := ToSalesType <> ToSalesType::Campaign;
-            //RequestOptionsForm.ToEndDateCtrl.ENABLED := ToSalesType <> ToSalesType::Campaign;
         end;
     }
 
@@ -249,30 +231,6 @@ report 50002 "Suggest Purch. Disc. on Wksh."
                         ToSalesCode := ToVend."No.";
                     end;
                 end;
-        /*ToSalesType::"Customer Price Group":
-          BEGIN
-            ToCustPriceGr.Code := ToSalesCode;
-            IF ToCustPriceGr.Code <> '' THEN
-              ToCustPriceGr.FIND
-            ELSE BEGIN
-              IF NOT ToCustPriceGr.FIND THEN
-                ToCustPriceGr.INIT;
-              ToSalesCode := ToCustPriceGr.Code;
-            END;
-          END;
-        ToSalesType::Campaign:
-          BEGIN
-            ToCampaign."No." := ToSalesCode;
-            IF ToCampaign."No." <> '' THEN
-              ToCampaign.FIND
-            ELSE BEGIN
-              IF NOT ToCampaign.FIND THEN
-                ToCampaign.INIT;
-              ToSalesCode := ToCampaign."No.";
-            END;
-            ToStartDate := ToCampaign."Starting Date";
-            ToEndDate := ToCampaign."Ending Date";
-          END;  */
         end;
 
 

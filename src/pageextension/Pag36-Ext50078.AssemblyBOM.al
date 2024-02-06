@@ -29,12 +29,9 @@ pageextension 50078 "AssemblyBOM" extends "Assembly BOM"//36
                     if page.RUNMODAL(0, RecLItem) = ACTION::LookupOK then
                         rec.CopyBOM(RecLItem."No.", rec."Parent Item No.");
                 end;
-
-
             }
         }
     }
-
     trigger OnClosePage()
     var
         RecLItem: Record Item;

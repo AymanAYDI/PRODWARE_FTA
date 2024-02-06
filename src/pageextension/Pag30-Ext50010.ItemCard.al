@@ -80,6 +80,12 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the User field.';
             }
+            field("Item Base"; Rec."Item Base")
+            {
+                //Todo : added for test
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Item Base field.';
+            }
         }
         addafter("Inventory")
         {

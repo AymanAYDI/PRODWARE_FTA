@@ -5,12 +5,16 @@ reportextension 50096 "CombineShipments" extends "Combine Shipments"//295
 {
     dataset
     {
+        modify(SalesOrderHeader)
+        {
+            // todo DataItemTableView cannot be customized
+            // DataItemTableView = SORTING("Document Type", "Bill-to Customer No.", "Combine Shipments", "Currency Code")
+            //                      WHERE("Document Type"=CONST(Order));
+        }
         modify("Sales Shipment Header")
         {
             trigger OnAfterAfterGetRecord()
             begin
-
-
                 if SalesOrderHeader."Combine Shipments" = false then
                     BoolGCreateNewInvoice := true
                 else

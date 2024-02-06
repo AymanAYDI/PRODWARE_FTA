@@ -5,11 +5,12 @@ reportextension 50001 "CloseIncomeStatement" extends "Close Income Statement" //
 {
     dataset
     {
-        modify("G/L Account")
+        modify("G/L Entry")
         {
             trigger OnAfterPreDataItem()
             begin
-                //TODO : i can't find solution 
+                //TODO : Entry Type removed 
+                // SetCurrentKey( "G/L Account No.","Business Unit Code","Posting Date","Entry Type");
             end;
         }
     }

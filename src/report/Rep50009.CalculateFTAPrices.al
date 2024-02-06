@@ -1,12 +1,5 @@
 report 50009 "Calculate FTA Prices"
 {
-    // ------------------------------------------------------------------------
-    // Prodware - www.prodware.fr
-    // ------------------------------------------------------------------------
-    // //>>FTA1.00
-    // FED_20090415:PA 15/04/2009 Item Management : Pricing
-    //                           - Creation
-
     Caption = 'Calculate FTA Prices';
     ProcessingOnly = true;
 

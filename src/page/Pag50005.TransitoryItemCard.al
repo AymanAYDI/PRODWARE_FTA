@@ -87,14 +87,27 @@ page 50005 "Transitory Item Card"
                 {
                     ToolTip = 'Specifies the number that the vendor uses for this item.';
                 }
-                field("Item Category Code"; Rec."Item Category Code")
-                {
-                    ToolTip = 'Specifies the category that the item belongs to. Item categories also contain any assigned item attributes.';
-                }
+                // field("Item Category Code"; Rec."Item Category Code")
+                // {
+                //     ToolTip = 'Specifies the category that the item belongs to. Item categories also contain any assigned item attributes.';
+                // }
                 // field("Product Group Code"; Rec."Product Group Code")
                 // {
                 //     ToolTip = 'Specifies the value of the Product Group Code field.';
-                // }//TODO-> Field 'Product Group Code' is removed
+                // }
+                //Todo : verifier
+                field("item category parent"; itemcat."Parent Category")
+                {
+
+                }
+                field("Item Category Code"; Rec."Item Category Code")
+                {
+                    trigger OnValidate()
+                    begin
+                        itemcat.Get(rec."Item Category Code");
+                    end;
+
+                }//todo end verifer
                 field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
                 {
                     ToolTip = 'Specifies the value of the Global Dimension 1 Code field.';
@@ -1070,7 +1083,7 @@ page 50005 "Transitory Item Card"
         OverflowLevelEnable: Boolean;
         StandardCostEnable: Boolean;
         UnitCostEnable: Boolean;
-
+        itemcat: Record "Item Category";
 
 
     procedure EnablePlanningControls()

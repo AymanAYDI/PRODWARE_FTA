@@ -2,6 +2,7 @@ namespace Prodware.FTA;
 
 using Microsoft.Inventory.Reports;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
 reportextension 50007 "PhysInventoryList" extends "Phys. Inventory List" //722
 {
     RDLCLayout = './src/reportextension/rdlc/PhysInventoryList.rdl';
@@ -14,6 +15,7 @@ reportextension 50007 "PhysInventoryList" extends "Phys. Inventory List" //722
             trigger OnAfterAfterGetRecord()
             begin
                 if not ItemCard.GET("Item Journal Line"."Item No.") then;
+                "Bin Code" := ItemCard."Shelf No.";
             end;
 
         }
@@ -27,15 +29,11 @@ reportextension 50007 "PhysInventoryList" extends "Phys. Inventory List" //722
             {
 
             }
-            //TODO : verifier line 150
-            column(BinCode_ItemJournalLinespe; ItemCard."Shelf No.")
-            {
-                IncludeCaption = true;
-                Caption = 'Shelf No.';
-            }
+
         }
     }
     var
         ItemCard: Record Item;
         CstTxt001: label 'Shelf No.';
+
 }

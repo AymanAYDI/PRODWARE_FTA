@@ -5,10 +5,7 @@ using Microsoft.Inventory.Journal;
 pageextension 50082 "RevaluationJournal" extends "Revaluation Journal"//5803
 {
     layout
-
-
     {
-
         addafter("Description")
         {
             field("Shelf No."; Rec."Shelf No.")
@@ -21,8 +18,5 @@ pageextension 50082 "RevaluationJournal" extends "Revaluation Journal"//5803
                 end;
             }
         }
-
-
-
     }
 }

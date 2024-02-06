@@ -66,15 +66,12 @@ pageextension 50033 "PostedSalesInvoice" extends "Posted Sales Invoice" //132
                     trigger OnAction()
 
                     var
-                        RecLPurchHeader: Record "Purchase Header";
-                        PgeLPurchaseOrder: Page "Purchase Order";
                         RecLInvoicePurchHeader: Record "Purch. Inv. Header";
+                        RecLPurchHeader: Record "Purchase Header";
                         PgeLInvoicePurchHeader: Page "Posted Purchase Invoice";
-                        TextCdeTransport001: Label 'FRA=Il n''y a pas de Commande d''achat Transport.';
-                        "Sales Invoice Header": Record "Sales Invoice Header";
+                        PgeLPurchaseOrder: Page "Purchase Order";
+                        TextCdeTransport001: Label 'Il n''y a pas de Commande d''achat Transport.';
                     begin
-
-
                         if rec."Shipping Order No." <> '' then begin
                             RecLPurchHeader.RESET();
                             RecLPurchHeader.SETRANGE("Document Type", RecLPurchHeader."Document Type"::Order);

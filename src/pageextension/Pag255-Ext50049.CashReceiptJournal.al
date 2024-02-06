@@ -18,8 +18,14 @@ pageextension 50049 CashReceiptJournal extends "Cash Receipt Journal" //255
         {
             field("Posting Group "; Rec."Posting Group")
             {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Posting Group field.';
             }
 
+        }
+        modify("Reason Code")
+        {
+            Visible = true;
         }
         moveafter("Posting Group "; "Reason Code")
     }

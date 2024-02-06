@@ -7,18 +7,11 @@ pageextension 50013 ItemJournal extends "Item Journal"//40
     {
         modify("Item No.")
         {
-            Editable = false;
             trigger OnAfterValidate()
-            var
-                "Item Journal Line": Record "Item Journal Line";
             begin
-                "Item Journal Line".CALCFIELDS("Shelf No.");
+                rec.CALCFIELDS("Shelf No.");
             end;
         }
-
-
-
-        //todo a verifier 
         addafter("Description")
         {
             field("Shelf No."; rec."Shelf No.")
@@ -27,7 +20,6 @@ pageextension 50013 ItemJournal extends "Item Journal"//40
                 ToolTip = 'Specifies the value of the Shelf No. field.';
             }
         }
-
     }
 
     actions
@@ -46,11 +38,9 @@ pageextension 50013 ItemJournal extends "Item Journal"//40
                 var
                     CduLItemJnlExplode: Codeunit "Item Jnl.-Explode BOM";
                 begin
-
                     CLEAR(CduLItemJnlExplode);
                     CduLItemJnlExplode.Run(Rec);
                     CLEAR(CduLItemJnlExplode);
-
                 end;
             }
             action("Démontage")
@@ -65,21 +55,12 @@ pageextension 50013 ItemJournal extends "Item Journal"//40
                 var
                     CduLItemJnlExplode: Codeunit "Item Jnl.-Explode BOM";
                 begin
-
                     CLEAR(CduLItemJnlExplode);
                     CduLItemJnlExplode.Run(Rec);
                     CLEAR(CduLItemJnlExplode);
-
                 end;
-
-
             }
-
-
-
-
         }
-
     }
 }
 

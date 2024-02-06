@@ -10,13 +10,15 @@ pageextension 50083 "ItemSubstitutionEntries" extends "Item Substitution Entries
             {
                 ToolTip = 'Avaibility no reserved';
                 ApplicationArea = All;
-                Visible = false;
             }
         }
-
+        modify("Quantity Avail. on Shpt. Date")
+        {
+            Visible = false;
+        }
     }
     trigger OnAfterGetRecord()
     begin
-        //"Avaibility no reserved" := CalcAvailableNoReserv;
+        rec."Avaibility no reserved" := rec.CalcAvailableNoReserv();
     end;
 }

@@ -41,6 +41,10 @@ pageextension 50016 SalesList extends "Sales List" //45
             }
         }
     }
+    actions
+    {
+
+    }
 
     var
         GCust: Record Customer;
