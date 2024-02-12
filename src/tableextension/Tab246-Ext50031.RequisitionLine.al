@@ -7,7 +7,7 @@ tableextension 50031 RequisitionLine extends "Requisition Line" //246
 {
     fields
     {
-        modify("No.")
+        Modify("No.")
         {
             TableRelation = if (Type = const("G/L Account")) "G/L Account"
             else

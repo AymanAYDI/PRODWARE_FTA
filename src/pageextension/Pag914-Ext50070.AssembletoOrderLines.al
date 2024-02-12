@@ -39,22 +39,22 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                     IntLDocumentLineNo: Integer;
                     IntLLineNo: Integer;
                 begin
-                    CurrPage.SAVERECORD();
+                    CurrPage.SaveRecord();
                     IntLDocumentLineNo := rec."Line No.";
                     IntLLineNo := rec."Line No.";
                     case rec."Kit Action" of
                         rec."Kit Action"::Assembly:
 
-                            if RecLATOLink.GET(rec."Document Type", rec."Document No.") then begin
-                                KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
+                            if RecLATOLink.Get(rec."Document Type", rec."Document No.") then begin
+                                KitLine.Get(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
                                 FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec, false);
                             end;
 
 
                         rec."Kit Action"::Disassembly:
 
-                            if RecLATOLink.GET(rec."Document Type", rec."Document No.") then begin
-                                KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
+                            if RecLATOLink.Get(rec."Document Type", rec."Document No.") then begin
+                                KitLine.Get(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
                                 FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec, false);
                             end;
 
@@ -64,9 +64,9 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                         repeat
                             if IntLLineNo = rec."Line No." then
                                 BoolEndLoop := true;
-                        until (rec.NEXT() = 0) or (BoolEndLoop = true);
-                    rec.NEXT(-1);
-                    CurrPage.UPDATE();
+                        until (rec.Next() = 0) or (BoolEndLoop = true);
+                    rec.Next(-1);
+                    CurrPage.Update();
                 end;
             }
         }
@@ -151,47 +151,47 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
             {
             }
         }
-        modify(Type)
+        Modify(Type)
         {
             StyleExpr = TxTGStyle;
         }
-        modify("No.")
+        Modify("No.")
         {
             StyleExpr = TxTGStyle;
         }
-        modify(Description)
+        Modify(Description)
         {
             StyleExpr = TxTGStyle;
         }
-        modify("Description 2")
+        Modify("Description 2")
         {
             StyleExpr = TxTGStyle;
         }
-        modify("Variant Code")
+        Modify("Variant Code")
         {
             StyleExpr = TxTGStyle;
         }
-        modify("Quantity per")
+        Modify("Quantity per")
         {
             StyleExpr = TxTGStyle;
         }
-        modify("Unit of Measure Code")
+        Modify("Unit of Measure Code")
         {
             StyleExpr = TxTGStyle;
         }
-        modify(Quantity)
+        Modify(Quantity)
         {
             Caption = 'Total Qty';
             StyleExpr = TxTGStyle;
         }
-        modify("Reserved Quantity")
+        Modify("Reserved Quantity")
         {
             StyleExpr = TxTGStyle;
         }
     }
     actions
     {
-        modify("&Reserve")
+        Modify("&Reserve")
         {
             trigger OnBeforeAction()
             begin
@@ -220,47 +220,47 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                     FullAutoReservation: Boolean;
                     QtyToReserve: Decimal;
                 begin
-                    AssemblyLine.COPYFILTERS(Rec);
-                    if AssemblyLine.FINDFIRST() then
+                    AssemblyLine.CopyFilters(Rec);
+                    if AssemblyLine.findFirst() then
                         repeat
-                            RecL337.SETRANGE("Source Type", DATABASE::"Assembly Line");
-                            RecL337.SETRANGE("Source Subtype", AssemblyLine."Document Type");
-                            RecL337.SETRANGE("Source ID", AssemblyLine."Document No.");
-                            RecL337.SETRANGE("Source Ref. No.", AssemblyLine."Line No.");
-                            RecL337.SETRANGE("Reservation Status", RecL337."Reservation Status"::Reservation);
-                            if RecL337.FINDSET() then
+                            RecL337.SetRange("Source Type", DATABASE::"Assembly Line");
+                            RecL337.SetRange("Source Subtype", AssemblyLine."Document Type");
+                            RecL337.SetRange("Source ID", AssemblyLine."Document No.");
+                            RecL337.SetRange("Source Ref. No.", AssemblyLine."Line No.");
+                            RecL337.SetRange("Reservation Status", RecL337."Reservation Status"::Reservation);
+                            if RecL337.FindSet() then
                                 repeat
                                     QtyToReserve := 0;
 
-                                    RecL337b.SETRANGE("Entry No.", RecL337."Entry No.");
-                                    RecL337b.SETFILTER("Source Type", '<>901');
-                                    if RecL337b.FINDSET() then
+                                    RecL337b.SetRange("Entry No.", RecL337."Entry No.");
+                                    RecL337b.SetFilter("Source Type", '<>901');
+                                    if RecL337b.FindSet() then
                                         if RecL337b."Source Type" = DATABASE::"Purchase Line" then begin
-                                            ItemLedgerEntry.SETRANGE("Item No.", AssemblyLine."No.");
-                                            ItemLedgerEntry.SETRANGE("Variant Code", AssemblyLine."Variant Code");
-                                            ItemLedgerEntry.SETRANGE("Location Code", AssemblyLine."Location Code");
-                                            ItemLedgerEntry.SETRANGE("Drop Shipment", false);
-                                            ItemLedgerEntry.SETRANGE(Open, true);
-                                            ItemLedgerEntry.SETRANGE(Positive, true);
-                                            ItemLedgerEntry.SETFILTER("Remaining Quantity", '>%1', 0);
-                                            if ItemLedgerEntry.FINDSET() then
+                                            ItemLedgerEntry.SetRange("Item No.", AssemblyLine."No.");
+                                            ItemLedgerEntry.SetRange("Variant Code", AssemblyLine."Variant Code");
+                                            ItemLedgerEntry.SetRange("Location Code", AssemblyLine."Location Code");
+                                            ItemLedgerEntry.SetRange("Drop Shipment", false);
+                                            ItemLedgerEntry.SetRange(Open, true);
+                                            ItemLedgerEntry.SetRange(Positive, true);
+                                            ItemLedgerEntry.SetFilter("Remaining Quantity", '>%1', 0);
+                                            if ItemLedgerEntry.FindSet() then
                                                 repeat
-                                                    ItemLedgerEntry.CALCFIELDS("Reserved Quantity");
+                                                    ItemLedgerEntry.CalcFields("Reserved Quantity");
                                                     QtyToReserve += ItemLedgerEntry."Remaining Quantity" - ItemLedgerEntry."Reserved Quantity";
-                                                until ItemLedgerEntry.NEXT() = 0;
+                                                until ItemLedgerEntry.Next() = 0;
 
                                             if QtyToReserve >= AssemblyLine.Quantity then begin
 
-                                                CLEAR(ReservEngineMgt);
+                                                Clear(ReservEngineMgt);
                                                 ReservEngineMgt.CancelReservation(RecL337b);
 
-                                                CLEAR(ReservMgt);
+                                                Clear(ReservMgt);
                                                 ReservMgt.SetReservSource(AssemblyLine);
                                                 ReservMgt.AutoReserve(FullAutoReservation, '', AssemblyLine."Due Date", AssemblyLine."Remaining Quantity", AssemblyLine."Remaining Quantity (Base)");
                                             end;
                                         end;
-                                until (RecL337.NEXT() = 0);
-                        until AssemblyLine.NEXT() = 0;
+                                until (RecL337.Next() = 0);
+                        until AssemblyLine.Next() = 0;
                 end;
             }
         }
@@ -276,13 +276,13 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                     AssemblyLineRec: Record "Assembly Line";
                     ItemSubstMgt: Codeunit FTA_Functions;
                 begin
-                    CLEAR(AssemblyLineRec);
-                    CurrPage.SETSELECTIONFILTER(AssemblyLineRec);
-                    if AssemblyLineRec.FindFirst() then
+                    Clear(AssemblyLineRec);
+                    CurrPage.SetSelectionFilter(AssemblyLineRec);
+                    if AssemblyLineRec.findFirst() then
                         repeat
                             ItemSubstMgt.ExplodeItemAssemblySubst(AssemblyLineRec, false, false);
-                        until AssemblyLineRec.NEXT() = 0;
-                    CurrPage.UPDATE();
+                        until AssemblyLineRec.Next() = 0;
+                    CurrPage.Update();
                 end;
             }
             action("Get All Available Item Substitution List")
@@ -295,13 +295,13 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                     AssemblyLineRec: Record "Assembly Line";
                     ItemSubstMgt: Codeunit FTA_Functions;
                 begin
-                    CLEAR(AssemblyLineRec);
-                    CurrPage.SETSELECTIONFILTER(AssemblyLineRec);
-                    if AssemblyLineRec.FindFirst() then
+                    Clear(AssemblyLineRec);
+                    CurrPage.SetSelectionFilter(AssemblyLineRec);
+                    if AssemblyLineRec.findFirst() then
                         repeat
                             ItemSubstMgt.ExplodeItemAssemblySubst(AssemblyLineRec, true, false);
-                        until AssemblyLineRec.NEXT() = 0;
-                    CurrPage.UPDATE();
+                        until AssemblyLineRec.Next() = 0;
+                    CurrPage.Update();
                 end;
             }
             action("Remplace And Reserve All Available Item Substitution List")
@@ -314,13 +314,13 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                     AssemblyLineRec: Record "Assembly Line";
                     ItemSubstMgt: Codeunit FTA_Functions;
                 begin
-                    CLEAR(AssemblyLineRec);
-                    CurrPage.SETSELECTIONFILTER(AssemblyLineRec);
-                    if AssemblyLineRec.FindFirst() then
+                    Clear(AssemblyLineRec);
+                    CurrPage.SetSelectionFilter(AssemblyLineRec);
+                    if AssemblyLineRec.findFirst() then
                         repeat
                             ItemSubstMgt.ExplodeItemAssemblySubst(AssemblyLineRec, true, true);
-                        until AssemblyLineRec.NEXT() = 0;
-                    CurrPage.UPDATE();
+                        until AssemblyLineRec.Next() = 0;
+                    CurrPage.Update();
                 end;
             }
         }
@@ -333,10 +333,10 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                 Image = ExplodeBOM;
                 trigger OnAction()
                 begin
-                    Rec.VALIDATE(rec."Kit Action", rec."Kit Action"::Disassembly);
-                    Rec.MODIFY();
+                    Rec.Validate(rec."Kit Action", rec."Kit Action"::Disassembly);
+                    Rec.Modify();
                     FTA_Functions.FctRefreshTempSubKitSalesFTA(Rec, true);
-                    CurrPage.UPDATE();
+                    CurrPage.Update();
                 end;
             }
         }
@@ -368,21 +368,21 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         RecL337: Record "Reservation Entry";
         RecL337b: Record "Reservation Entry";
     begin
-        rec.CALCFIELDS(rec."Reserved Quantity");
+        rec.CalcFields(rec."Reserved Quantity");
         IntGColor := 0;
         if (rec."Reserved Quantity" < rec."Remaining Quantity") then
             IntGColor := 0
         else begin
-            RecL337.SETRANGE("Source Type", DATABASE::"Assembly Line");
-            RecL337.SETRANGE("Source Subtype", rec."Document Type");
-            RecL337.SETRANGE("Source ID", rec."Document No.");
-            RecL337.SETRANGE("Source Ref. No.", rec."Line No.");
-            RecL337.SETRANGE("Reservation Status", RecL337."Reservation Status"::Reservation);
-            if RecL337.FINDSET() then
+            RecL337.SetRange("Source Type", DATABASE::"Assembly Line");
+            RecL337.SetRange("Source Subtype", rec."Document Type");
+            RecL337.SetRange("Source ID", rec."Document No.");
+            RecL337.SetRange("Source Ref. No.", rec."Line No.");
+            RecL337.SetRange("Reservation Status", RecL337."Reservation Status"::Reservation);
+            if RecL337.FindSet() then
                 repeat
-                    RecL337b.SETRANGE("Entry No.", RecL337."Entry No.");
-                    RecL337b.SETFILTER("Source Type", '<>901');
-                    if RecL337b.FINDSET() then
+                    RecL337b.SetRange("Entry No.", RecL337."Entry No.");
+                    RecL337b.SetFilter("Source Type", '<>901');
+                    if RecL337b.FindSet() then
                         case IntGColor of
                             0:
                                 begin
@@ -395,7 +395,7 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
                                 if RecL337b."Source Type" = DATABASE::"Purchase Line" then
                                     IntGColor := 2;
                         end;
-                until (RecL337.NEXT() = 0) or (IntGColor = 2);
+                until (RecL337.Next() = 0) or (IntGColor = 2);
         end;
 
         TxTGStyle := '';
@@ -425,16 +425,16 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
     begin
         AvailibilityQty := 0;
 
-        PurchaseLine.RESET();
-        PurchaseLine.SETRANGE(PurchaseLine."Document Type", PurchaseLine."Document Type"::Order);
-        PurchaseLine.SETRANGE(Type, PurchaseLine.Type::Item);
-        PurchaseLine.SETRANGE("No.", rec."No.");
-        PurchaseLine.SETFILTER("Expected Receipt Date", '<=%1', DateFilter);
-        if PurchaseLine.FINDSET() then
+        PurchaseLine.Reset();
+        PurchaseLine.SetRange(PurchaseLine."Document Type", PurchaseLine."Document Type"::Order);
+        PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
+        PurchaseLine.SetRange("No.", rec."No.");
+        PurchaseLine.SetFilter("Expected Receipt Date", '<=%1', DateFilter);
+        if PurchaseLine.FindSet() then
             repeat
-                PurchaseLine.CALCFIELDS("Reserved Quantity");
+                PurchaseLine.CalcFields("Reserved Quantity");
                 AvailibilityQty += PurchaseLine."Outstanding Quantity" - PurchaseLine."Reserved Quantity";
-            until PurchaseLine.NEXT() = 0;
+            until PurchaseLine.Next() = 0;
 
 
         exit(AvailibilityQty);
@@ -445,13 +445,13 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         PurchaseLine: Record "Purchase Line";
         PurchaseLines: Page "Purchase Lines";
     begin
-        PurchaseLine.RESET();
-        PurchaseLine.SETRANGE(PurchaseLine."Document Type", PurchaseLine."Document Type"::Order);
-        PurchaseLine.SETRANGE(Type, PurchaseLine.Type::Item);
-        PurchaseLine.SETRANGE("No.", rec."No.");
-        PurchaseLine.SETFILTER("Expected Receipt Date", '<=%1', DateFilter);
-        PurchaseLines.SETTABLEVIEW(PurchaseLine);
-        PurchaseLines.RUNMODAL();
+        PurchaseLine.Reset();
+        PurchaseLine.SetRange(PurchaseLine."Document Type", PurchaseLine."Document Type"::Order);
+        PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
+        PurchaseLine.SetRange("No.", rec."No.");
+        PurchaseLine.SetFilter("Expected Receipt Date", '<=%1', DateFilter);
+        PurchaseLines.SetTableView(PurchaseLine);
+        PurchaseLines.RunModal();
     end;
 
     local procedure GetAvailbilityPurchaseQty(): Decimal;
@@ -461,19 +461,19 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
     begin
         AvailibilityQty := 0;
 
-        PurchaseLine.RESET();
-        PurchaseLine.SETCURRENTKEY("Document Type", Type, "No.", "Variant Code", "Drop Shipment", "Location Code", "Expected Receipt Date", "Promised Receipt Date");
-        PurchaseLine.SETRANGE(PurchaseLine."Document Type", PurchaseLine."Document Type"::Order);
-        PurchaseLine.SETRANGE(Type, PurchaseLine.Type::Item);
-        PurchaseLine.SETRANGE("No.", rec."No.");
-        PurchaseLine.SETFILTER("Promised Receipt Date", '<>%1', 0D);
-        if PurchaseLine.FINDSET() then
+        PurchaseLine.Reset();
+        PurchaseLine.SetCurrentKey("Document Type", Type, "No.", "Variant Code", "Drop Shipment", "Location Code", "Expected Receipt Date", "Promised Receipt Date");
+        PurchaseLine.SetRange(PurchaseLine."Document Type", PurchaseLine."Document Type"::Order);
+        PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
+        PurchaseLine.SetRange("No.", rec."No.");
+        PurchaseLine.SetFilter("Promised Receipt Date", '<>%1', 0D);
+        if PurchaseLine.FindSet() then
             repeat
-                PurchaseLine.CALCFIELDS("Reserved Quantity");
+                PurchaseLine.CalcFields("Reserved Quantity");
                 AvailibilityQty := PurchaseLine."Outstanding Quantity" - PurchaseLine."Reserved Quantity";
                 if AvailibilityQty >= Rec.Quantity then
                     exit(AvailibilityQty);
-            until PurchaseLine.NEXT() = 0;
+            until PurchaseLine.Next() = 0;
 
         exit(AvailibilityQty);
     end;
@@ -485,19 +485,19 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
     begin
         AvailibilityQty := 0;
 
-        PurchaseLine.RESET();
-        PurchaseLine.SETCURRENTKEY("Document Type", Type, "No.", "Variant Code", "Drop Shipment", "Location Code", "Expected Receipt Date", "Promised Receipt Date");
-        PurchaseLine.SETRANGE(PurchaseLine."Document Type", PurchaseLine."Document Type"::Order);
-        PurchaseLine.SETRANGE(Type, PurchaseLine.Type::Item);
-        PurchaseLine.SETRANGE("No.", rec."No.");
-        PurchaseLine.SETFILTER("Promised Receipt Date", '<>%1', 0D);
-        if PurchaseLine.FINDSET() then
+        PurchaseLine.Reset();
+        PurchaseLine.SetCurrentKey("Document Type", Type, "No.", "Variant Code", "Drop Shipment", "Location Code", "Expected Receipt Date", "Promised Receipt Date");
+        PurchaseLine.SetRange(PurchaseLine."Document Type", PurchaseLine."Document Type"::Order);
+        PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
+        PurchaseLine.SetRange("No.", rec."No.");
+        PurchaseLine.SetFilter("Promised Receipt Date", '<>%1', 0D);
+        if PurchaseLine.FindSet() then
             repeat
-                PurchaseLine.CALCFIELDS("Reserved Quantity");
+                PurchaseLine.CalcFields("Reserved Quantity");
                 AvailibilityQty := PurchaseLine."Outstanding Quantity" - PurchaseLine."Reserved Quantity";
                 if AvailibilityQty >= Rec.Quantity then
                     exit(PurchaseLine."Promised Receipt Date");
-            until PurchaseLine.NEXT() = 0;
+            until PurchaseLine.Next() = 0;
 
         exit(0D);
     end;
@@ -506,8 +506,8 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
     var
         Item: Record Item;
     begin
-        if Item.GET(rec."No.") then begin
-            Item.CALCFIELDS(Inventory);
+        if Item.Get(rec."No.") then begin
+            Item.CalcFields(Inventory);
             exit(Item.Inventory);
         end;
 
@@ -519,25 +519,25 @@ pageextension 50070 "AssembletoOrderLines" extends "Assemble-to-Order Lines" //9
         RecLItem: Record Item;
     begin
         if rec.Type = rec.Type::Item then
-            if RecLItem.GET(rec."No.") then begin
+            if RecLItem.Get(rec."No.") then begin
                 if rec."Location Code" <> '' then
-                    RecLItem.SETFILTER("Location Filter", rec."Location Code");
-                RecLItem.CALCFIELDS(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
+                    RecLItem.SetFilter("Location Filter", rec."Location Code");
+                RecLItem.CalcFields(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
                 if not BooGAvailWithoutCurrentLine then
                     rec."Avaibility no reserved" := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + RecLItem."Qty. on Asm. Component")
                                + RecLItem."Reserved Qty. on Purch. Orders"
                 else begin
                     DecGQtyKit := 0;
-                    RecGKitSalesLine.SETRANGE("Document Type", RecGKitSalesLine."Document Type"::Order);
-                    RecGKitSalesLine.SETRANGE(Type, RecGKitSalesLine.Type::Item);
-                    RecGKitSalesLine.SETRANGE("No.", rec."No.");
-                    RecGKitSalesLine.SETFILTER("Remaining Quantity (Base)", '<>0');
-                    if not RecGKitSalesLine.ISEMPTY then begin
-                        RecGKitSalesLine.FINDSET();
+                    RecGKitSalesLine.SetRange("Document Type", RecGKitSalesLine."Document Type"::Order);
+                    RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
+                    RecGKitSalesLine.SetRange("No.", rec."No.");
+                    RecGKitSalesLine.SetFilter("Remaining Quantity (Base)", '<>0');
+                    if not RecGKitSalesLine.IsEmpty then begin
+                        RecGKitSalesLine.FindSet();
                         repeat
                             if (RecGKitSalesLine."Document No." <> rec."Document No.") or (RecGKitSalesLine."Line No." <> rec."Line No.") then
                                 DecGQtyKit += RecGKitSalesLine."Remaining Quantity (Base)";
-                        until RecGKitSalesLine.NEXT() = 0;
+                        until RecGKitSalesLine.Next() = 0;
                     end;
                     rec."Avaibility no reserved" := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + DecGQtyKit) + RecLItem."Reserved Qty. on Purch. Orders";
                 end;

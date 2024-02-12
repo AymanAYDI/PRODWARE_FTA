@@ -9,7 +9,7 @@ page 50021 "Customer Typology List"
     // REIMS 10/02/2017: Customer Typology on Customer Card and Sales Quote
 
     Caption = 'Customer Typology List';
-    PageType = List;
+    PaGetype = List;
     SourceTable = "Customer Typology";
     ApplicationArea = All;
 

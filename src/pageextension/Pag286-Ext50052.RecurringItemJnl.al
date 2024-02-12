@@ -8,11 +8,11 @@ pageextension 50052 RecurringItemJnl extends "Recurring Item Jnl." //286
 
     layout
     {
-        modify("Item No.")
+        Modify("Item No.")
         {
             trigger OnAfterValidate()
             begin
-                Rec.CALCFIELDS("Shelf No.");
+                Rec.CalcFields("Shelf No.");
             end;
 
         }

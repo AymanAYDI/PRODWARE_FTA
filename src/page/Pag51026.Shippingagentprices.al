@@ -12,7 +12,7 @@ page 51026 "Shipping agent prices"
     // ------------------------------------------------------------------------
 
     Caption = 'Shipping Agent Price';
-    PageType = List;
+    PaGetype = List;
     SourceTable = "Shipping Agent Price";
     ApplicationArea = All;
 

@@ -13,14 +13,14 @@ report 99001 "Update Table For Data Upgrade"
         //         RecLItemUnitofMeasure: Record "5404";
         //     begin
         //         IF Table104076."Base Unit of Measure" = '' THEN BEGIN
-        //             IF NOT RecLItemUnitofMeasure.GET("No.", 'PIECE') THEN BEGIN
-        //                 RecLItemUnitofMeasure.INIT();
+        //             IF NOT RecLItemUnitofMeasure.Get("No.", 'PIECE') THEN BEGIN
+        //                 RecLItemUnitofMeasure.Init();
         //                 RecLItemUnitofMeasure."Item No." := "No.";
         //                 RecLItemUnitofMeasure.Code := 'PIECE';
-        //                 RecLItemUnitofMeasure.INSERT();
+        //                 RecLItemUnitofMeasure.Insert();
         //             END;
         //             "Base Unit of Measure" := 'PIECE';
-        //             MODIFY();
+        //             Modify();
         //         END;
         //     end;
         // }

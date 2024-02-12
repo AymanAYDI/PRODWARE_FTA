@@ -39,16 +39,16 @@ report 51296 "Batch.Post.Sales.Orders" //TODO -> A verifier Test
                 if ("Sales Header"."Document Type" = "Sales Header"."Document Type"::Order) and
                    (RecGPurchHeader.Ship) and
                    (CodGNumDoc <> '') then
-                    if (RecGPurchHeader.GET(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
-                        RecGPurchHeader.CALCFIELDS("Order Type");
+                    if (RecGPurchHeader.Get(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
+                        RecGPurchHeader.CalcFields("Order Type");
                         if (RecGPurchHeader."Order Type" = RecGPurchHeader."Order Type"::Transport) then begin
                             RecGPurchHeader.Receive := true;
-                            CLEAR(CuGPurchPost);
+                            Clear(CuGPurchPost);
                             PurchaseBatchPostMgt.SetParameter(Enum::"Batch Posting Parameter Type"::Print, PrintDoc);
                             PurchaseBatchPostMgt.SetParameter(Enum::"Batch Posting Parameter Type"::"Replace VAT Date", ReplaceVATDateReq);
                             PurchaseBatchPostMgt.SetParameter(Enum::"Batch Posting Parameter Type"::"VAT Date", VATDateReq);
                             // CuGPurchPost.SetPostingDate(ReplacePostingDate, ReplaceDocumentDate, PostingDateReq);
-                            // CuGPurchPost.RUN(RecGPurchHeader);
+                            // CuGPurchPost.Run(RecGPurchHeader);
                             PurchaseBatchPostMgt.RunBatch(RecGPurchHeader, ReplacePostingDate, PostingDateReq, ReplaceDocumentDate, CalcInvDisc, ShipReq, InvReq);
                         end;
                     end;
@@ -211,9 +211,9 @@ report 51296 "Batch.Post.Sales.Orders" //TODO -> A verifier Test
                 end;
             end;
             //>>FE-DIVERS 18/09/2009
-            RecLSalesReceivablesSetup.GET();
+            RecLSalesReceivablesSetup.Get();
             if RecLSalesReceivablesSetup."Default Posting Date" = RecLSalesReceivablesSetup."Default Posting Date"::"Work Date" then begin
-                PostingDateReq := WORKDATE();
+                PostingDateReq := WorkDate();
                 ReplacePostingDate := true;
             end;
             ShipReq := false;

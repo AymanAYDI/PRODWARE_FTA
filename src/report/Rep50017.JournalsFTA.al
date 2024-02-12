@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License. See License.txt in the project root for license information.
+// Licensed under the MIT License. See License.txt in the project root for license inFormation.
 // ------------------------------------------------------------------------------------------------
 namespace Microsoft.Finance.GeneralLedger.Reports;
 
@@ -31,10 +31,10 @@ report 50017 JournalsFTA //Dupliquer de 10801
             column(COMPANYNAME; COMPANYPROPERTY.DisplayName())
             {
             }
-            column(STRSUBSTNO_Text006____; StrSubstNo(Text006, ''))
+            column(StrSubstNo_Text006____; StrSubstNo(Text006, ''))
             {
             }
-            column(STRSUBSTNO_Text007____; StrSubstNo(Text007, ''))
+            column(StrSubstNo_Text007____; StrSubstNo(Text007, ''))
             {
             }
             column(GLEntry2_TABLECAPTION__________Filter; GLEntry2.TableCaption + ': ' + Filter)
@@ -156,7 +156,7 @@ report 50017 JournalsFTA //Dupliquer de 10801
                     column(G_L_Entry_Description; Description)
                     {
                     }
-                    column(STRSUBSTNO_Text008_FIELDCAPTION__Document_No_____Document_No___; StrSubstNo(Text008, FieldCaption("Document No."), "Document No."))
+                    column(StrSubstNo_Text008_FIELDCAPTION__Document_No_____Document_No___; StrSubstNo(Text008, FieldCaption("Document No."), "Document No."))
                     {
                     }
 
@@ -164,33 +164,33 @@ report 50017 JournalsFTA //Dupliquer de 10801
                     begin
                         if DisplayEntries then
                             if GBoolCentralisationPiece then begin
-                                RecGLEntryTEMP.RESET();
-                                RecGLEntryTEMP.SETCURRENTKEY("G/L Account No.", "Document No.", "Posting Date");
-                                RecGLEntryTEMP.SETRANGE("G/L Account No.", "G/L Account No.");
-                                RecGLEntryTEMP.SETRANGE("Posting Date", "Posting Date");
-                                RecGLEntryTEMP.SETRANGE("Document Type", "Document Type");
-                                RecGLEntryTEMP.SETRANGE("Document No.", "Document No.");
-                                if RecGLEntryTEMP.FINDFIRST() then
-                                    CurrReport.SKIP();
+                                RecGLEntryTEMP.Reset();
+                                RecGLEntryTEMP.SetCurrentKey("G/L Account No.", "Document No.", "Posting Date");
+                                RecGLEntryTEMP.SetRange("G/L Account No.", "G/L Account No.");
+                                RecGLEntryTEMP.SetRange("Posting Date", "Posting Date");
+                                RecGLEntryTEMP.SetRange("Document Type", "Document Type");
+                                RecGLEntryTEMP.SetRange("Document No.", "Document No.");
+                                if RecGLEntryTEMP.findFirst() then
+                                    CurrReport.Skip();
 
-                                RecGLEntry.RESET();
-                                RecGLEntry.SETCURRENTKEY("G/L Account No.", "Document No.", "Posting Date");
-                                RecGLEntry.COPYFILTERS("G/L Entry");
-                                RecGLEntry.SETRANGE("G/L Account No.", "G/L Account No.");
-                                RecGLEntry.SETRANGE("Posting Date", "Posting Date");
-                                RecGLEntry.SETRANGE("Document Type", "Document Type");
-                                RecGLEntry.SETRANGE("Document No.", "Document No.");
-                                if RecGLEntry.FINDFIRST() then
+                                RecGLEntry.Reset();
+                                RecGLEntry.SetCurrentKey("G/L Account No.", "Document No.", "Posting Date");
+                                RecGLEntry.CopyFilters("G/L Entry");
+                                RecGLEntry.SetRange("G/L Account No.", "G/L Account No.");
+                                RecGLEntry.SetRange("Posting Date", "Posting Date");
+                                RecGLEntry.SetRange("Document Type", "Document Type");
+                                RecGLEntry.SetRange("Document No.", "Document No.");
+                                if RecGLEntry.findFirst() then
                                     repeat
                                         if RecGLEntry."Entry No." > "Entry No." then begin
                                             "Debit Amount" := "Debit Amount" + RecGLEntry."Debit Amount";
                                             "Credit Amount" := "Credit Amount" + RecGLEntry."Credit Amount";
                                         end;
-                                    until RecGLEntry.NEXT() = 0;
+                                    until RecGLEntry.Next() = 0;
 
-                                RecGLEntryTEMP.INIT();
+                                RecGLEntryTEMP.Init();
                                 RecGLEntryTEMP := "G/L Entry";
-                                RecGLEntryTEMP.INSERT();
+                                RecGLEntryTEMP.Insert();
 
 
                                 DebitTotal := DebitTotal + "Debit Amount";
@@ -326,7 +326,7 @@ report 50017 JournalsFTA //Dupliquer de 10801
                 StartDate := GetRangeMin("Period Start");
                 CopyFilter("Period Type", Period."Period Type");
                 Period.SetRange("Period Start", StartDate);
-                if not Period.FindFirst() then
+                if not Period.findFirst() then
                     Error(Text009, StartDate, GetFilter("Period Type"));
                 DateFilterCalc.CreateFiscalYearFilter(TextDate, TextDate, StartDate, 0);
                 TextDate := ConvertStr(TextDate, '.', ',');
@@ -342,7 +342,7 @@ report 50017 JournalsFTA //Dupliquer de 10801
                 Clear(Period);
                 CopyFilter("Period Type", Period."Period Type");
                 Period.SetRange("Period End", ClosingDate(EndDate));
-                if not Period.FindFirst() then
+                if not Period.findFirst() then
                     Error(Text010, EndDate, GetFilter("Period Type"));
                 FiscalYearStatusText := StrSubstNo(Text011, CheckFiscalYearStatus(GetFilter("Period Start")));
 
@@ -379,7 +379,7 @@ report 50017 JournalsFTA //Dupliquer de 10801
                         ApplicationArea = Basic, Suite;
                         Caption = 'Sorted by';
                         OptionCaption = 'Posting Date,Document No.';
-                        ToolTip = 'Specifies criteria for arranging information in the report.';
+                        ToolTip = 'Specifies criteria for arranging inFormation in the report.';
 
                         trigger OnValidate()
                         begin
@@ -521,7 +521,7 @@ report 50017 JournalsFTA //Dupliquer de 10801
     begin
         PeriodDate.SetRange("Period Type", PeriodType);
         PeriodDate.SetRange("Period Start", StartPeriod);
-        if PeriodDate.Findfirst() then
+        if PeriodDate.findFirst() then
             exit(PeriodDate."Period End")
         else
             exit(0D);

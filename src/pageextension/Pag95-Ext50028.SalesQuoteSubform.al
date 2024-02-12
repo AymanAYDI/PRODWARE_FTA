@@ -30,7 +30,7 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
                 ApplicationArea = All;
                 trigger OnValidate()
                 begin
-                    CurrPage.UPDATE(true);
+                    CurrPage.Update(true);
                 end;
             }
         }
@@ -42,7 +42,7 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
             }
         }
         moveafter("Unit Price"; "Line Discount %")
-        modify("Line Discount %")
+        Modify("Line Discount %")
         {
             BlankZero = true;
         }
@@ -71,7 +71,7 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
                 ApplicationArea = All;
             }
         }
-        modify(Control53)
+        Modify(Control53)
         {
             Visible = false;
         }
@@ -90,9 +90,9 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
                 var
                     RecLItem: Record Item;
                 begin
-                    if (Rec.Type = Rec.Type::Item) and RecLItem.GET(Rec."No.") then begin
+                    if (Rec.Type = Rec.Type::Item) and RecLItem.Get(Rec."No.") then begin
                         RecLItem."Quote Associated" := false;
-                        RecLItem.MODIFY();
+                        RecLItem.Modify();
                     end;
                 end;
             }
@@ -102,6 +102,6 @@ pageextension 50028 SalesQuoteSubform extends "Sales Quote Subform" //95
     trigger OnAfterGetRecord() //TODO-> Verif
     begin
         // Rec.ShowShortcutDimCode(ShortcutDimCode);
-        Rec.CALCFIELDS("Quote Associated");
+        Rec.CalcFields("Quote Associated");
     end;
 }

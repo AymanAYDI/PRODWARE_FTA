@@ -24,19 +24,19 @@ codeunit 50005 "Export Purchase Line"
     begin
         //>> Message structure: EDIFACT GENERIX
         // Get setup
-        RecGSalesSetup.GET();
+        RecGSalesSetup.Get();
 
         // Get file setup for this customer
         TxtLRepertory := RecGSalesSetup."Export Sales Price Repertory";
         //TxtLFileName := 'Item_Export';
 
         TxtLFileName := 'PurchaseLine_Export_' +
-          //OLD FORMAT(CURRENTDATETIME,0,'<year4><month,2><Day,2><Hours24,2><Filler Character,0><Minutes,2><Seconds,2>')
-          FORMAT(TODAY, 0, '<year4><month,2><Day,2><Filler Character,0>')
-          + '_' + FORMAT(TIME, 0, '<Hours,2><Minutes,2><Seconds,2><Filler Character,0>')
+          //OLD Format(CURRENTDATETIME,0,'<year4><month,2><Day,2><Hours24,2><Filler Character,0><Minutes,2><Seconds,2>')
+          Format(TODAY, 0, '<year4><month,2><Day,2><Filler Character,0>')
+          + '_' + Format(TIME, 0, '<Hours,2><Minutes,2><Seconds,2><Filler Character,0>')
           + '.csv';
 
-        // STRSUBSTNO(RecPEDICustSetup."File Name",'F' + RecPSalesInvHeader."No.");
+        // StrSubstNo(RecPEDICustSetup."File Name",'F' + RecPSalesInvHeader."No.");
 
         // Create file
         BooGFixedFile := false;
@@ -51,12 +51,12 @@ codeunit 50005 "Export Purchase Line"
 
         // Pour les tests
         //DatLDate := DMY2DATE(1,1,2018);
-        //RecLPurchLine.SETFILTER(RecLPurchLine."Expected Receipt Date",'%1..',DatLDate);
-        RecLPurchLine.SETFILTER(RecLPurchLine."Promised Receipt Date", '>%1', TODAY);
-        RecLPurchLine.SETRANGE(RecLPurchLine.Type, RecLPurchLine.Type::Item);
+        //RecLPurchLine.SetFilter(RecLPurchLine."Expected Receipt Date",'%1..',DatLDate);
+        RecLPurchLine.SetFilter(RecLPurchLine."Promised Receipt Date", '>%1', TODAY);
+        RecLPurchLine.SetRange(RecLPurchLine.Type, RecLPurchLine.Type::Item);
         // ********************************* HEADER ********************************* //
-        CLEAR(TxtLTextFields);
-        if RecLPurchLine.FINDSET() then
+        Clear(TxtLTextFields);
+        if RecLPurchLine.FindSet() then
             repeat
                 if IntLCmp = 0 then begin
                     // 1 - Code Article
@@ -78,17 +78,17 @@ codeunit 50005 "Export Purchase Line"
                 // 1 - Code Article
                 TxtLTextFields[1] := CduGWriteFile.FormatText(RecLPurchLine."No.", 20, false);
                 // 2 - Quantité non reservée
-                RecLPurchLine.CALCFIELDS(RecLPurchLine."Reserved Quantity");
+                RecLPurchLine.CalcFields(RecLPurchLine."Reserved Quantity");
                 DecLQty := RecLPurchLine."Outstanding Quantity" - RecLPurchLine."Reserved Quantity";
-                TxtLTextFields[2] := CduGWriteFile.FormatText(FORMAT(DecLQty), 20, false);
+                TxtLTextFields[2] := CduGWriteFile.FormatText(Format(DecLQty), 20, false);
                 // 3 - Date début
-                TxtLTextFields[3] := CduGWriteFile.FormatText(FORMAT(RecLPurchLine."Promised Receipt Date"), 10, false);
+                TxtLTextFields[3] := CduGWriteFile.FormatText(Format(RecLPurchLine."Promised Receipt Date"), 10, false);
                 // 4 - Date fin
-                TxtLTextFields[4] := CduGWriteFile.FormatText(FORMAT(RecLPurchLine."Expected Receipt Date"), 10, false);
+                TxtLTextFields[4] := CduGWriteFile.FormatText(Format(RecLPurchLine."Expected Receipt Date"), 10, false);
 
 
                 CduGWriteFile.FctWriteBigSegment(TxtLTextFields, 4);
-            until RecLPurchLine.NEXT() = 0;
+            until RecLPurchLine.Next() = 0;
         //Demande Golda pour MARKRO : ne pas prendre en compte :
         //CduGWriteFile.FctWriteBigSegment(TxtLTextFields,71);
 
@@ -98,7 +98,7 @@ codeunit 50005 "Export Purchase Line"
         RecLSalesInvHeader2 := RecPSalesInvHeader;
         RecLSalesInvHeader2."EDI Exported" := TRUE;
         RecLSalesInvHeader2."EDI DateTime Export" := CURRENTDATETIME;
-        RecLSalesInvHeader2.MODIFY;
+        RecLSalesInvHeader2.Modify;
         */
 
         CduGWriteFile.FctEndMessage(TxtLFileName);

@@ -5,11 +5,11 @@ pageextension 50004 GLAccountList extends "G/L Account List"//18
 {
     layout
     {
-        modify("Debit Amount")
+        Modify("Debit Amount")
         {
             Visible = false;
         }
-        modify("Credit Amount")
+        Modify("Credit Amount")
         {
             Visible = false;
         }

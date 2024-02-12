@@ -13,15 +13,15 @@ report 50008 "Calculate Kit Price Item"
 
             trigger OnAfterGetRecord()
             begin
-                Window.UPDATE(1, "No.");
+                Window.Update(1, "No.");
 
                 FctCalcKitPriceFTA(Item, BooGMonoLevel);
-                MODIFY(true);
+                Modify(true);
             end;
 
             trigger OnPreDataItem()
             begin
-                Window.OPEN(
+                Window.Open(
                   Text000 +
                   Text007);
             end;

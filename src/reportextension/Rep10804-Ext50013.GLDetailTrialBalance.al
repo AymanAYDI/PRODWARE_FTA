@@ -27,32 +27,32 @@ reportextension 50013 "GLDetailTrialBalance" extends "G/L Detail Trial Balance"/
                 RecGLEntry: Record "G/L Entry";
             begin
                 if GBoolCentralisationPiece then begin
-                    RecGLEntryTEMP.RESET();
-                    RecGLEntryTEMP.SETCURRENTKEY("G/L Account No.", "Document No.", "Posting Date");
-                    RecGLEntryTEMP.SETRANGE("G/L Account No.", "G/L Account No.");
-                    RecGLEntryTEMP.SETRANGE("Posting Date", "Posting Date");
-                    RecGLEntryTEMP.SETRANGE("Document Type", "Document Type");
-                    RecGLEntryTEMP.SETRANGE("Document No.", "Document No.");
-                    if RecGLEntryTEMP.FINDFIRST() then
-                        CurrReport.SKIP();
-                    RecGLEntry.RESET();
-                    RecGLEntry.SETCURRENTKEY("G/L Account No.", "Document No.", "Posting Date");
-                    RecGLEntry.COPYFILTERS("G/L Entry");
-                    RecGLEntry.SETRANGE("G/L Account No.", "G/L Account No.");
-                    RecGLEntry.SETRANGE("Posting Date", "Posting Date");
-                    RecGLEntry.SETRANGE("Document Type", "Document Type");
-                    RecGLEntry.SETRANGE("Document No.", "Document No.");
-                    if RecGLEntry.FINDFIRST() then
+                    RecGLEntryTEMP.Reset();
+                    RecGLEntryTEMP.SetCurrentKey("G/L Account No.", "Document No.", "Posting Date");
+                    RecGLEntryTEMP.SetRange("G/L Account No.", "G/L Account No.");
+                    RecGLEntryTEMP.SetRange("Posting Date", "Posting Date");
+                    RecGLEntryTEMP.SetRange("Document Type", "Document Type");
+                    RecGLEntryTEMP.SetRange("Document No.", "Document No.");
+                    if RecGLEntryTEMP.findFirst() then
+                        CurrReport.Skip();
+                    RecGLEntry.Reset();
+                    RecGLEntry.SetCurrentKey("G/L Account No.", "Document No.", "Posting Date");
+                    RecGLEntry.CopyFilters("G/L Entry");
+                    RecGLEntry.SetRange("G/L Account No.", "G/L Account No.");
+                    RecGLEntry.SetRange("Posting Date", "Posting Date");
+                    RecGLEntry.SetRange("Document Type", "Document Type");
+                    RecGLEntry.SetRange("Document No.", "Document No.");
+                    if RecGLEntry.findFirst() then
                         repeat
                             if RecGLEntry."Entry No." > "Entry No." then begin
                                 "Debit Amount" := "Debit Amount" + RecGLEntry."Debit Amount";
                                 "Credit Amount" := "Credit Amount" + RecGLEntry."Credit Amount";
                             end;
-                        until RecGLEntry.NEXT() = 0;
+                        until RecGLEntry.Next() = 0;
 
-                    RecGLEntryTEMP.INIT();
+                    RecGLEntryTEMP.Init();
                     RecGLEntryTEMP := "G/L Entry";
-                    RecGLEntryTEMP.INSERT();
+                    RecGLEntryTEMP.Insert();
 
                 end;
             end;

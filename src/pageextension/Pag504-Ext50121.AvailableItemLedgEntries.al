@@ -20,19 +20,19 @@ pageextension 50121 AvailableItemLedgEntries extends "Available - Item Ledg. Ent
 
         AvailableItemLedgEntries: Page "Available - Item Ledg. Entries";
     begin
-        ReservEntry.LOCKTABLE();
+        ReservEntry.LockTable();
         UpdateReservMgt();
         ItemLedgerEntry.GetReservationQty(QtyReserved, QtyToReserve); //TODO
 
         ReservMgt.CalculateRemainingQty(NewQtyReservedThisLine, NewQtyReservedThisLineBase);
 
 
-        if MaxQtyDefined and (ABS(MaxQtyToReserve) < ABS(NewQtyReservedThisLine)) then
+        if MaxQtyDefined and (Abs(MaxQtyToReserve) < Abs(NewQtyReservedThisLine)) then
             NewQtyReservedThisLine := MaxQtyToReserve;
 
         ReservMgt.CopySign(NewQtyReservedThisLine, QtyToReserve);
         if NewQtyReservedThisLine <> 0 then begin
-            if ABS(NewQtyReservedThisLine) > ABS(QtyToReserve) then begin
+            if Abs(NewQtyReservedThisLine) > Abs(QtyToReserve) then begin
                 CreateReservation(QtyToReserve);
                 MaxQtyToReserve := MaxQtyToReserve - QtyToReserve;
             end else begin
@@ -42,7 +42,7 @@ pageextension 50121 AvailableItemLedgEntries extends "Available - Item Ledg. Ent
             if MaxQtyToReserve < 0 then
                 MaxQtyToReserve := 0;
         end else
-            ERROR(Text000);
+            Error(Text000);
     end;
 
     procedure CreateReservation(var ReserveQuantity: Decimal);
@@ -51,10 +51,10 @@ pageextension 50121 AvailableItemLedgEntries extends "Available - Item Ledg. Ent
         "Item Ledger Entry": Record "Item Ledger Entry";
         TrackingSpecification: Record "Tracking Specification";
     begin
-        "Item Ledger Entry".TESTFIELD("Drop Shipment", false);
-        "Item Ledger Entry".TESTFIELD("Item No.", ReservEntry."Item No.");
-        "Item Ledger Entry".TESTFIELD("Variant Code", ReservEntry."Variant Code");
-        "Item Ledger Entry".TESTFIELD("Location Code", ReservEntry."Location Code");
+        "Item Ledger Entry".TestField("Drop Shipment", false);
+        "Item Ledger Entry".TestField("Item No.", ReservEntry."Item No.");
+        "Item Ledger Entry".TestField("Variant Code", ReservEntry."Variant Code");
+        "Item Ledger Entry".TestField("Location Code", ReservEntry."Location Code");
 
         if TotalAvailQty < 0 then begin
             ReserveQuantity := 0;
@@ -69,7 +69,7 @@ pageextension 50121 AvailableItemLedgEntries extends "Available - Item Ledg. Ent
            (ReserveQuantity = 0) and
            (QtyToReserve <> 0)
         then
-            ERROR(Text002);
+            Error(Text002);
 
         UpdateReservMgt();
         TrackingSpecification.InitTrackingSpecification(

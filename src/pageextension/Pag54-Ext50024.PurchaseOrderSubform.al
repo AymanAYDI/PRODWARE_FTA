@@ -19,7 +19,7 @@ pageextension 50024 PurchaseOrderSubform extends "Purchase Order Subform" //54
     // DelayedInsert = true;
     // LinksAllowed = false;
     // MultipleNewLines = true;
-    // PageType = ListPart;
+    // PaGetype = ListPart;
     // SourceTable = "Purchase Line";
     // SourceTableView = WHERE("Document Type"=FILTER(Order));
 
@@ -79,12 +79,12 @@ pageextension 50024 PurchaseOrderSubform extends "Purchase Order Subform" //54
     //     DocumentTotals: Codeunit 57;
     begin
         //     // >>FED_20090415:PA
-        Rec.CALCFIELDS("Reserved Quantity");
-        Rec.TESTFIELD("Reserved Quantity", 0);
+        Rec.CalcFields("Reserved Quantity");
+        Rec.TestField("Reserved Quantity", 0);
         //     // >>FED_20090415:PA
         //     DocumentTotals.PurchaseDocTotalsNotUpToDate();
         //     if (Rec.Quantity <> 0) and Rec.ItemExists(Rec."No.") then begin
-        //              COMMIT();
+        //              Commit();
         //         if not ReservePurchLine.DeleteLineConfirm(Rec) then
         //             exit(false);
         //         ReservePurchLine.DeleteLine(Rec);

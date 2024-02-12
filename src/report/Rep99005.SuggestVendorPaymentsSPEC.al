@@ -131,7 +131,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
 
                 Window2.Close();
                 Window.Close();
-                ShowMessage(MessageText);
+                ShowMessage(MessaGetext);
             end;
 
             trigger OnPreDataItem()
@@ -148,7 +148,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                 BalAccNo := GenJnlLine2."Bal. Account No.";
                 GenJnlLineInserted := false;
                 SeveralCurrencies := false;
-                MessageText := '';
+                MessaGetext := '';
 
                 if ((BankPmtType = GenJnlLine2."Bank Payment Type"::" ") or
                     SummarizePerVend) and
@@ -251,7 +251,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                             ApplicationArea = Basic, Suite;
                             Caption = 'Skip Exported Payments';
                             Importance = Additional;
-                            ToolTip = 'Specifies if you do not want the batch job to insert payment journal lines for documents for which payments have already been exported to a bank file.';
+                            ToolTip = 'Specifies if you do not want the batch job to Insert payment journal lines for documents for which payments have already been exported to a bank file.';
                         }
                         field(CheckOtherJournalBatches; CheckOtherJournalBatches)
                         {
@@ -336,7 +336,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                         {
                             ApplicationArea = Basic, Suite;
                             Caption = 'Starting Document No.';
-                            ToolTip = 'Specifies the next available number in the number series for the journal batch that is linked to the payment journal. When you run the batch job, this is the document number that appears on the first payment journal line. You can also fill in this field manually.';
+                            ToolTip = 'Specifies the Next available number in the number series for the journal batch that is linked to the payment journal. When you run the batch job, this is the document number that appears on the first payment journal line. You can also fill in this field manually.';
 
                             trigger OnValidate()
                             begin
@@ -370,7 +370,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                                 if not (GenJnlLine2."Bal. Account Type" in
                                     [GenJnlLine2."Bal. Account Type"::"Bank Account", GenJnlLine2."Bal. Account Type"::"G/L Account"])
                                 then
-                                    error(
+                                    Error(
                                         BalAccountTypeErr,
                                         GenJnlLine2."Bal. Account Type"::"Bank Account", GenJnlLine2."Bal. Account Type"::"G/L Account");
                                 GenJnlLine2."Bal. Account No." := '';
@@ -480,7 +480,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
 
     trigger OnInitReport()
     var
-        EnvironmentInfo: Codeunit "Environment Information";
+        EnvironmentInfo: Codeunit "Environment InFormation";
     begin
         if EnvironmentInfo.IsSaaS() then
             CheckOtherJournalBatches := true;
@@ -503,7 +503,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
 
     trigger OnPreReport()
     begin
-        CompanyInformation.Get();
+        CompanyInFormation.Get();
         TempVendorLedgerEntry.DeleteAll();
         ShowPostingDateWarning := false;
     end;
@@ -519,7 +519,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
         GLAcc: Record "G/L Account";
         BankAcc: Record "Bank Account";
         TempPayableVendorLedgerEntry: Record "Payable Vendor Ledger Entry" temporary;
-        CompanyInformation: Record "Company Information";
+        CompanyInFormation: Record "Company InFormation";
         TempVendorPaymentBuffer: Record "Vendor Payment Buffer" temporary;
         TempOldVendorPaymentBuffer: Record "Vendor Payment Buffer" temporary;
         SelectedDim: Record "Selected Dimension";
@@ -549,7 +549,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
         BankPmtType: Enum "Bank Payment Type";
         BalAccType: Enum "Gen. Journal Account Type";
         BalAccNo: Code[20];
-        MessageText: Text;
+        MessaGetext: Text;
         GenJnlLineInserted: Boolean;
         SeveralCurrencies: Boolean;
         SummarizePerDimTextEnable: Boolean;
@@ -579,10 +579,10 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
         Text025: Label 'The %1 with the number %2 has a %3 with the number %4.';
         BalAccountTypeErr: label 'Balancing account must be %1 or %2.';
         ReplacePostingDateMsg: Label 'For one or more entries, the requested posting date is before the work date.\\These posting dates will use the work date.';
-        PmtDiscUnavailableErr: Label 'You cannot use Find Payment Discounts or Summarize per Vendor together with Calculate Posting Date from Applies-to-Doc. Due Date, because the resulting posting date might not match the payment discount date.';
+        PmtDiscUnavailableErr: Label 'You cannot use Find Payment Discounts or Summarize per Vendor toGether with Calculate Posting Date from Applies-to-Doc. Due Date, because the resulting posting date might not match the payment discount date.';
         SkipExportedPayments: Boolean;
-        MessageToRecipientMsg: Label 'Payment of %1 %2 ', Comment = '%1 document type, %2 Document No.';
-        StartingDocumentNoErr: Label 'The value in the Starting Document No. field must have a number so that we can assign the next number in the series.';
+        MessaGetoRecipientMsg: Label 'Payment of %1 %2 ', Comment = '%1 document type, %2 Document No.';
+        StartingDocumentNoErr: Label 'The value in the Starting Document No. field must have a number so that we can assign the Next number in the series.';
         CheckOtherJournalBatches: Boolean;
         ReviewNotSuggestedLinesQst: Label 'There are payments in other journal batches that are not suggested here. This helps avoid duplicate payments. To add them to this batch, remove the payment from the other batch, and then suggest payments again.\\Do you want to review the payments from the other journal batches now?';
         NotSuggestedPaymentInfoTxt: Label 'There are payments in %1 %2, %3 %4, %5 %6', Comment = 'There are payments in Journal Template Name PAYMENT, Journal Batch Name GENERAL, Applies-to Doc. No. 101321';
@@ -774,10 +774,10 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
             RemainingAmtAvailable := OriginalAmtAvailable;
             RemovePaymentsAboveLimit(TempPayableVendorLedgerEntry, RemainingAmtAvailable);
         end;
-        if TempPayableVendorLedgerEntry.Findfirst() then
+        if TempPayableVendorLedgerEntry.findFirst() then
             repeat
                 TempPayableVendorLedgerEntry.SetRange("Vendor No.", TempPayableVendorLedgerEntry."Vendor No.");
-                TempPayableVendorLedgerEntry.Findfirst();
+                TempPayableVendorLedgerEntry.findFirst();
                 repeat
                     VendLedgEntry.Get(TempPayableVendorLedgerEntry."Vendor Ledg. Entry No.");
                     SetPostingDate(GenJnlLine1, VendLedgEntry."Due Date", PostingDate);
@@ -867,7 +867,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                 until not TempPayableVendorLedgerEntry.FindSet();
                 TempPayableVendorLedgerEntry.DeleteAll();
                 TempPayableVendorLedgerEntry.SetRange("Vendor No.");
-            until not TempPayableVendorLedgerEntry.Findfirst();
+            until not TempPayableVendorLedgerEntry.findFirst();
 
         Clear(TempOldVendorPaymentBuffer);
         TempVendorPaymentBuffer.SetCurrentKey("Document No.");
@@ -875,7 +875,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
           "Vendor Ledg. Entry Doc. Type", '<>%1&<>%2', TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Refund,
           TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Payment);
 
-        if TempVendorPaymentBuffer.Findfirst() then
+        if TempVendorPaymentBuffer.findFirst() then
             repeat
                 InsertGenJournalLine();
             until TempVendorPaymentBuffer.Next() = 0;
@@ -930,7 +930,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
             "Bal. Account Type" := BalAccType;
             Validate("Bal. Account No.", BalAccNo);
             Validate("Currency Code", TempVendorPaymentBuffer."Currency Code");
-            "Message to Recipient" := GetMessageToRecipient(SummarizePerVend);
+            "Message to Recipient" := GetMessaGetoRecipient(SummarizePerVend);
             "Bank Payment Type" := BankPmtType;
             if SummarizePerVend then
                 "Applies-to ID" := "Document No.";
@@ -1061,16 +1061,16 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                         until TmpTempPayableVendorLedgerEntry.Next() = 0;
 
                     TempPayableVendorLedgerEntry2.SetFilter("Currency Code", '<>%1', BankAcc."Currency Code");
-                    SeveralCurrencies := SeveralCurrencies or TempPayableVendorLedgerEntry2.FindFirst();
+                    SeveralCurrencies := SeveralCurrencies or TempPayableVendorLedgerEntry2.findFirst();
 
                     if SeveralCurrencies then
-                        MessageText :=
+                        MessaGetext :=
                           StrSubstNo(Text020, BankAcc.FieldCaption("Currency Code"), BankAcc."Currency Code")
                     else
-                        MessageText :=
+                        MessaGetext :=
                           StrSubstNo(Text021, BankAcc.FieldCaption("Currency Code"), BankAcc."Currency Code");
                 end else
-                    MessageText := Text022;
+                    MessaGetext := Text022;
             end;
     end;
 
@@ -1133,18 +1133,18 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
         DimBuf.Insert();
     end;
 
-    local procedure GetMessageToRecipient(SummarizePerVend: Boolean): Text[140]
+    local procedure GetMessaGetoRecipient(SummarizePerVend: Boolean): Text[140]
     var
         VendorLedgerEntry: Record "Vendor Ledger Entry";
         IsHandled: Boolean;
         Message: Text[140];
     begin
-        OnBeforeGetMessageToRecipient(SummarizePerVend, TempVendorPaymentBuffer, IsHandled, Message);
+        OnBeforeGetMessaGetoRecipient(SummarizePerVend, TempVendorPaymentBuffer, IsHandled, Message);
         if IsHandled then
             exit(Message);
 
         if SummarizePerVend then
-            exit(CompanyInformation.Name);
+            exit(CompanyInFormation.Name);
 
         VendorLedgerEntry.Get(TempVendorPaymentBuffer."Vendor Ledg. Entry No.");
         if VendorLedgerEntry."Message to Recipient" <> '' then
@@ -1152,7 +1152,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
 
         exit(
           StrSubstNo(
-            MessageToRecipientMsg,
+            MessaGetoRecipientMsg,
             TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type",
             TempVendorPaymentBuffer."Applies-to Ext. Doc. No."));
     end;
@@ -1184,7 +1184,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
         if SelectedDim.FindSet() then begin
             repeat
                 TempDimSetEntry.SetRange("Dimension Code", SelectedDim."Dimension Code");
-                if TempDimSetEntry.FindFirst() then begin
+                if TempDimSetEntry.findFirst() then begin
                     TempDimSetEntry2.TransferFields(TempDimSetEntry, true);
                     TempDimSetEntry2.Insert();
                 end;
@@ -1199,7 +1199,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
         GLSetup: Record "General Ledger Setup";
         EntryNo: Integer;
     begin
-        OnBeforeSetTempPaymentBufferDims(VendLedgEntry, SummarizePerDim);
+        OnBefoResetTempPaymentBufferDims(VendLedgEntry, SummarizePerDim);
         if SummarizePerDim then begin
             DimBuf.Reset();
             DimBuf.DeleteAll();
@@ -1316,13 +1316,13 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
     begin
         VendLedgEntry.Reset();
         //VendLedgEntry.SetCurrentKey("Vendor No.", Open, Positive, "Due Date");
-        VendLedgEntry.SETCURRENTKEY("Vendor No.", Open, Positive, "Vendor Posting Group", "Due Date");
+        VendLedgEntry.SetCurrentKey("Vendor No.", Open, Positive, "Vendor Posting Group", "Due Date");
         VendLedgEntry.SetRange("Vendor No.", Vendor."No.");
         VendLedgEntry.SetRange(Open, true);
         VendLedgEntry.SetRange(Positive, Positive);
         VendLedgEntry.SetRange("Applies-to ID", '');
 
-        VendLedgEntry.SETFILTER(VendLedgEntry."Applies-to ID", '%1', '');
+        VendLedgEntry.SetFilter(VendLedgEntry."Applies-to ID", '%1', '');
 
         if Future then begin
             VendLedgEntry.SetRange("Due Date", LastDueDateToPayReq + 1, DMY2Date(31, 12, 9999));
@@ -1379,10 +1379,10 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
             RemainingAmtAvailable := OriginalAmtAvailable;
             RemovePaymentsAboveLimit(TempPayableVendorLedgerEntry, RemainingAmtAvailable);
         end;
-        if TempPayableVendorLedgerEntry.Findfirst() then
+        if TempPayableVendorLedgerEntry.findFirst() then
             repeat
                 TempPayableVendorLedgerEntry.SetRange("Vendor No.", TempPayableVendorLedgerEntry."Vendor No.");
-                TempPayableVendorLedgerEntry.Findfirst();
+                TempPayableVendorLedgerEntry.findFirst();
                 repeat
                     VendLedgEntry.Get(TempPayableVendorLedgerEntry."Vendor Ledg. Entry No.");
                     SetPostingDate(GenJnlLine1, VendLedgEntry."Due Date", PostingDate);
@@ -1417,7 +1417,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
 
                                 // if TempVendorPaymentBuffer.Find() then begin
 
-                                if TempPaymentBuffer.GET(VendLedgEntry."Vendor No.",
+                                if TempPaymentBuffer.Get(VendLedgEntry."Vendor No.",
                               VendLedgEntry."Currency Code",
                               0,
                               VendLedgEntry."Dimension Set ID",
@@ -1489,7 +1489,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                 until not TempPayableVendorLedgerEntry.FindSet();
                 TempPayableVendorLedgerEntry.DeleteAll();
                 TempPayableVendorLedgerEntry.SetRange("Vendor No.");
-            until not TempPayableVendorLedgerEntry.Findfirst();
+            until not TempPayableVendorLedgerEntry.findFirst();
 
         Clear(TempOldVendorPaymentBuffer);
         TempVendorPaymentBuffer.SetCurrentKey("Document No.");
@@ -1497,7 +1497,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
           "Vendor Ledg. Entry Doc. Type", '<>%1&<>%2', TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Refund,
           TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Payment);
 
-        if TempVendorPaymentBuffer.Findfirst() then
+        if TempVendorPaymentBuffer.findFirst() then
             repeat
                 InsertGenJournalLine();
             until TempVendorPaymentBuffer.Next() = 0;
@@ -1565,7 +1565,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnBeforeSetTempPaymentBufferDims(VendorLedgerEntry: Record "Vendor Ledger Entry"; var SummarizePerDim: Boolean)
+    local procedure OnBefoResetTempPaymentBufferDims(VendorLedgerEntry: Record "Vendor Ledger Entry"; var SummarizePerDim: Boolean)
     begin
     end;
 
@@ -1645,7 +1645,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnBeforeGetMessageToRecipient(SummarizePerVend: Boolean; TempVendorPaymentBuffer: Record "Vendor Payment Buffer" temporary; var IsHandled: Boolean; var Message: Text[140])
+    local procedure OnBeforeGetMessaGetoRecipient(SummarizePerVend: Boolean; TempVendorPaymentBuffer: Record "Vendor Payment Buffer" temporary; var IsHandled: Boolean; var Message: Text[140])
     begin
     end;
 }

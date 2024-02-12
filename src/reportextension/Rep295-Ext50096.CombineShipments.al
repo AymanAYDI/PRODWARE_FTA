@@ -5,13 +5,13 @@ reportextension 50096 "CombineShipments" extends "Combine Shipments"//295
 {
     dataset
     {
-        modify(SalesOrderHeader)
+        Modify(SalesOrderHeader)
         {
             // todo DataItemTableView cannot be customized
             // DataItemTableView = SORTING("Document Type", "Bill-to Customer No.", "Combine Shipments", "Currency Code")
             //                      WHERE("Document Type"=CONST(Order));
         }
-        modify("Sales Shipment Header")
+        Modify("Sales Shipment Header")
         {
             trigger OnAfterAfterGetRecord()
             begin
@@ -30,7 +30,7 @@ reportextension 50096 "CombineShipments" extends "Combine Shipments"//295
 
             end;
         }
-        modify("Sales Shipment Line")
+        Modify("Sales Shipment Line")
         {
             trigger OnAfterAfterGetRecord()
             begin
@@ -51,7 +51,7 @@ reportextension 50096 "CombineShipments" extends "Combine Shipments"//295
                                          or BoolGCreateNewInvoice
                                then begin
                             if BoolGCreateNewInvoice then
-                                SalesHeader.INIT();
+                                SalesHeader.Init();
 
                         end else
                             BoolGSkip := true;

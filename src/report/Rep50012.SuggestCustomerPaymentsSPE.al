@@ -47,7 +47,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                     Reset();
                     CopyFilters(Cust2);
                     Window.Open(Text007);
-                    if Findfirst() then
+                    if findFirst() then
                         repeat
                             Window.Update(1, "No.");
                             PayableCustLedgEntry.SetRange("Vendor No.", "No.");
@@ -90,7 +90,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                     GenPayHead."Partner Type" := Customer."Partner Type";
                     GenPayHead.Modify();
                 end;
-                ShowMessage(MessageText);
+                ShowMessage(MessaGetext);
             end;
 
             trigger OnPreDataItem()
@@ -101,7 +101,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                     Error(Text001);
 
                 GenPayLineInserted := false;
-                MessageText := '';
+                MessaGetext := '';
 
                 if UsePaymentDisc and (LastDueDateToPayReq < WorkDate()) then
                     if not
@@ -208,7 +208,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
         SummarizePer: Option " ",Customer,"Due date";
         LastLineNo: Integer;
         NextEntryNo: Integer;
-        MessageText: Text[250];
+        MessaGetext: Text[250];
         GenPayLineInserted: Boolean;
         CurrencyFilter: Code[10];
         CodGNextDocNo: Code[20];
@@ -242,8 +242,8 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
             CustLedgEntry.SetRange("Due Date", 0D, LastDueDateToPayReq);
         CustLedgEntry.SetRange("On Hold", '');
         // add
-        CustLedgEntry.SETFILTER("Payment Method Code", CodGPayMetFilter);
-        if CustLedgEntry.Findfirst() then
+        CustLedgEntry.SetFilter("Payment Method Code", CodGPayMetFilter);
+        if CustLedgEntry.findFirst() then
             repeat
                 SaveAmount();
             until CustLedgEntry.Next() = 0;
@@ -291,7 +291,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
     begin
         PayableCustLedgEntry.SetRange("Vendor No.", Customer."No.");
         PayableCustLedgEntry.SetRange(Future, Future);
-        if PayableCustLedgEntry.Findfirst() then begin
+        if PayableCustLedgEntry.findFirst() then begin
             PrevCurrency := PayableCustLedgEntry."Currency Code";
             repeat
                 if PayableCustLedgEntry."Currency Code" <> PrevCurrency then begin
@@ -334,10 +334,10 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
     begin
         TempPaymentPostBuffer.DeleteAll();
 
-        if PayableCustLedgEntry.Findfirst() then
+        if PayableCustLedgEntry.findFirst() then
             repeat
                 PayableCustLedgEntry.SetRange("Vendor No.", PayableCustLedgEntry."Vendor No.");
-                PayableCustLedgEntry.Findfirst();
+                PayableCustLedgEntry.findFirst();
                 repeat
                     CustLedgEntry.Get(PayableCustLedgEntry."Vendor Ledg. Entry No.");
                     TempPaymentPostBuffer."Account No." := CustLedgEntry."Customer No.";
@@ -365,7 +365,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                                 NextDocNo := NoSeriesMgt.GetNextNo(PaymentClass."Line No. Series", PostingDate, true);
                                 TempPaymentPostBuffer."Applies-to ID" := GenPayHead."No." + '/' + NextDocNo;
                             end;
-                            CodGNextDocNo := GenPayHead."No." + '/' + FORMAT(LastLineNo);
+                            CodGNextDocNo := GenPayHead."No." + '/' + Format(LastLineNo);
                             TempPaymentPostBuffer."Document No." := NextDocNo;
                             NextDocNo := IncStr(NextDocNo);
                             TempPaymentPostBuffer.Amount := PayableCustLedgEntry.Amount;
@@ -384,7 +384,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                         GenPayLine3.SetRange("Account No.", CustLedgEntry."Customer No.");
                         GenPayLine3.SetRange("Applies-to Doc. Type", CustLedgEntry."Document Type");
                         GenPayLine3.SetRange("Applies-to Doc. No.", CustLedgEntry."Document No.");
-                        if GenPayLine3.FindFirst() then
+                        if GenPayLine3.findFirst() then
                             GenPayLine3.FieldError(
                               "Applies-to Doc. No.",
                               StrSubstNo(
@@ -399,7 +399,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                     CODEUNIT.Run(CODEUNIT::"Cust. Entry-Edit", CustLedgEntry)
                 until PayableCustLedgEntry.Next() = 0;
                 PayableCustLedgEntry.SetFilter("Vendor No.", '>%1', PayableCustLedgEntry."Vendor No.");
-            until not PayableCustLedgEntry.Findfirst();
+            until not PayableCustLedgEntry.findFirst();
 
         Clear(OldTempPaymentPostBuffer);
         TempPaymentPostBuffer.SetCurrentKey("Document No.");
@@ -425,7 +425,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                         // "Applies-to ID" := TempPaymentPostBuffer."Applies-to ID";
                     end;
                     // add
-                    CodGNextDocNo := GenPayLine."No." + '/' + FORMAT("Line No.");
+                    CodGNextDocNo := GenPayLine."No." + '/' + Format("Line No.");
                     "Document No." := NextDocNo;
                     // add
                     GenPayLine."Applies-to ID" := CodGNextDocNo;
@@ -510,8 +510,8 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
             CustLedgEntry.SetRange("Due Date", 0D, LastDueDateToPayReq);
         CustLedgEntry.SetRange("On Hold", '');
         // add
-        CustLedgEntry.SETFILTER("Payment Method Code", CodGPayMetFilter);
-        if CustLedgEntry.Findfirst() then
+        CustLedgEntry.SetFilter("Payment Method Code", CodGPayMetFilter);
+        if CustLedgEntry.findFirst() then
             repeat
                 SaveAmount();
             until CustLedgEntry.Next() = 0;
@@ -524,10 +524,10 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
     begin
         TempPaymentPostBuffer.DeleteAll();
 
-        if PayableCustLedgEntry.Findfirst() then
+        if PayableCustLedgEntry.findFirst() then
             repeat
                 PayableCustLedgEntry.SetRange("Vendor No.", PayableCustLedgEntry."Vendor No.");
-                PayableCustLedgEntry.Findfirst();
+                PayableCustLedgEntry.findFirst();
                 repeat
                     CustLedgEntry.Get(PayableCustLedgEntry."Vendor Ledg. Entry No.");
                     TempPaymentPostBuffer."Account No." := CustLedgEntry."Customer No.";
@@ -557,7 +557,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
 
                             end;
                             //add
-                            CodGNextDocNo := GenPayHead."No." + '/' + FORMAT(LastLineNo);
+                            CodGNextDocNo := GenPayHead."No." + '/' + Format(LastLineNo);
                             TempPaymentPostBuffer."Document No." := NextDocNo;
                             NextDocNo := IncStr(NextDocNo);
                             TempPaymentPostBuffer.Amount := PayableCustLedgEntry.Amount;
@@ -575,7 +575,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                         GenPayLine3.SetRange("Account No.", CustLedgEntry."Customer No.");
                         GenPayLine3.SetRange("Applies-to Doc. Type", CustLedgEntry."Document Type");
                         GenPayLine3.SetRange("Applies-to Doc. No.", CustLedgEntry."Document No.");
-                        if GenPayLine3.FindFirst() then
+                        if GenPayLine3.findFirst() then
                             GenPayLine3.FieldError(
                               "Applies-to Doc. No.",
                               StrSubstNo(
@@ -590,7 +590,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                     CODEUNIT.Run(CODEUNIT::"Cust. Entry-Edit", CustLedgEntry)
                 until PayableCustLedgEntry.Next() = 0;
                 PayableCustLedgEntry.SetFilter("Vendor No.", '>%1', PayableCustLedgEntry."Vendor No.");
-            until not PayableCustLedgEntry.Findfirst();
+            until not PayableCustLedgEntry.findFirst();
 
         Clear(OldTempPaymentPostBuffer);
         TempPaymentPostBuffer.SetCurrentKey("Document No.");
@@ -615,7 +615,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                         "Applies-to ID" := TempPaymentPostBuffer."Applies-to ID";
                     end;
                     //add
-                    CodGNextDocNo := GenPayHead."No." + '/' + FORMAT(LastLineNo);
+                    CodGNextDocNo := GenPayHead."No." + '/' + Format(LastLineNo);
                     "Document No." := NextDocNo;
                     //add
                     "Applies-to ID" := CodGNextDocNo;

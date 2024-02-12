@@ -73,29 +73,29 @@ pageextension 50033 "PostedSalesInvoice" extends "Posted Sales Invoice" //132
                         TextCdeTransport001: Label 'Il n''y a pas de Commande d''achat Transport.';
                     begin
                         if rec."Shipping Order No." <> '' then begin
-                            RecLPurchHeader.RESET();
-                            RecLPurchHeader.SETRANGE("Document Type", RecLPurchHeader."Document Type"::Order);
-                            RecLPurchHeader.SETRANGE("No.", rec."Shipping Order No.");
-                            if RecLPurchHeader.FINDFIRST() then begin //Commande achat
+                            RecLPurchHeader.Reset();
+                            RecLPurchHeader.SetRange("Document Type", RecLPurchHeader."Document Type"::Order);
+                            RecLPurchHeader.SetRange("No.", rec."Shipping Order No.");
+                            if RecLPurchHeader.findFirst() then begin //Commande achat
                                 RecLPurchHeader.FILTERGROUP(2);
-                                PgeLPurchaseOrder.SETTABLEVIEW(RecLPurchHeader);
-                                PgeLPurchaseOrder.RUNMODAL();
+                                PgeLPurchaseOrder.SetTableView(RecLPurchHeader);
+                                PgeLPurchaseOrder.RunModal();
                             end
                             else begin //Facture achat
-                                RecLInvoicePurchHeader.RESET();
-                                RecLInvoicePurchHeader.SETCURRENTKEY("Order No.");
-                                RecLInvoicePurchHeader.SETRANGE("Order No.", rec."Shipping Order No.");
-                                if RecLInvoicePurchHeader.FINDFIRST() then begin
+                                RecLInvoicePurchHeader.Reset();
+                                RecLInvoicePurchHeader.SetCurrentKey("Order No.");
+                                RecLInvoicePurchHeader.SetRange("Order No.", rec."Shipping Order No.");
+                                if RecLInvoicePurchHeader.findFirst() then begin
                                     RecLInvoicePurchHeader.FILTERGROUP(2);
-                                    PgeLInvoicePurchHeader.SETTABLEVIEW(RecLInvoicePurchHeader);
-                                    PgeLInvoicePurchHeader.RUNMODAL();
+                                    PgeLInvoicePurchHeader.SetTableView(RecLInvoicePurchHeader);
+                                    PgeLInvoicePurchHeader.RunModal();
                                 end
                                 else
-                                    ERROR(TextCdeTransport001);
+                                    Error(TextCdeTransport001);
                             end;
                         end
                         else
-                            ERROR(TextCdeTransport001);
+                            Error(TextCdeTransport001);
                     end;
                 }
 

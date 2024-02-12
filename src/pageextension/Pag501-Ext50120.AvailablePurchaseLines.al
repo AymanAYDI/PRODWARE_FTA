@@ -14,11 +14,11 @@ pageextension 50120 AvailablePurchaseLines extends "Available - Purchase Lines" 
         {
             trigger OnAfterAction()
             begin
-                SalesLine.GET();
+                SalesLine.Get();
                 //>>NDBI
                 SalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
-                //SalesLine.MODIFY;
-                if SalesLine.MODIFY() then;
+                //SalesLine.Modify;
+                if SalesLine.Modify() then;
                 //<<NDBI //TODO-> A Verifier
             end;
         }
@@ -27,7 +27,7 @@ pageextension 50120 AvailablePurchaseLines extends "Available - Purchase Lines" 
     trigger OnOpenPage()
     begin
         if BooGResaFTA or BooGResaAssFTA then
-            Rec.SETFILTER("Promised Receipt Date", '<>%1', 0D);
+            Rec.SetFilter("Promised Receipt Date", '<>%1', 0D);
     end;
 
 
@@ -48,7 +48,7 @@ pageextension 50120 AvailablePurchaseLines extends "Available - Purchase Lines" 
 
     procedure ReservLine()
     begin
-        ReservEntry.LOCKTABLE();
+        ReservEntry.LockTable();
         //UpdateReservMgt();
         Clear(ReservMgt);
         ReservMgt.SetReservSource(SourceRecRef, ReservEntry.GetTransferDirection());
@@ -61,12 +61,12 @@ pageextension 50120 AvailablePurchaseLines extends "Available - Purchase Lines" 
 
         ReservMgt.CopySign(NewQtyReservedThisLine, QtyToReserve);
         if NewQtyReservedThisLine <> 0 then
-            if ABS(NewQtyReservedThisLine) > ABS(QtyToReserve) then
+            if Abs(NewQtyReservedThisLine) > Abs(QtyToReserve) then
                 CreateReservation(QtyToReserve, QtyToReserveBase)
             else
                 CreateReservation(NewQtyReservedThisLine, NewQtyReservedThisLineBase)
         else
-            ERROR(Text000);
+            Error(Text000);
     end;
 
 
@@ -103,7 +103,7 @@ pageextension 50120 AvailablePurchaseLines extends "Available - Purchase Lines" 
 
     procedure ReservLine2()
     begin
-        ReservEntry.LOCKTABLE();
+        ReservEntry.LockTable();
         //UpdateReservMgt;
         Clear(ReservMgt);
         ReservMgt.SetReservSource(SourceRecRef, ReservEntry.GetTransferDirection());
@@ -115,7 +115,7 @@ pageextension 50120 AvailablePurchaseLines extends "Available - Purchase Lines" 
         //<<MIG NAV 2015 : Not supported
         ReservMgt.CopySign(NewQtyReservedThisLine, QtyToReserve);
         if NewQtyReservedThisLine <> 0 then
-            if ABS(NewQtyReservedThisLine) > ABS(QtyToReserve) then
+            if Abs(NewQtyReservedThisLine) > Abs(QtyToReserve) then
                 CreateReservation(QtyToReserve, QtyToReserveBase)
             else
                 CreateReservation(NewQtyReservedThisLine, NewQtyReservedThisLine);

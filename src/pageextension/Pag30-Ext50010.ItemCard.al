@@ -9,48 +9,48 @@ pageextension 50010 ItemCard extends "Item Card" //30
     //SourceTableView=SORTING(Search Description);
     layout
     {
-        modify("Created From Nonstock Item")
+        Modify("Created From Nonstock Item")
         {
             Visible = false;
         }
 
-        modify("Service Item Group")
+        Modify("Service Item Group")
         {
             Visible = false;
         }
-        modify("Qty. on Prod. Order")
+        Modify("Qty. on Prod. Order")
         {
             Visible = false;
         }
-        modify("Qty. on Component Lines")
+        Modify("Qty. on Component Lines")
         {
             Visible = false;
         }
-        modify("Qty. on Service Order")
+        Modify("Qty. on Service Order")
         {
             Visible = false;
         }
-        modify("Overhead Rate")
+        Modify("Overhead Rate")
         {
             Visible = false;
         }
-        modify("Indirect Cost %")
+        Modify("Indirect Cost %")
         {
             Visible = false;
         }
-        modify(ItemPicture)
+        Modify(ItemPicture)
         {
             Visible = false;
         }
-        modify("Price/Profit Calculation")
+        Modify("Price/Profit Calculation")
         {
             Visible = false;
         }
-        modify("Profit %")
+        Modify("Profit %")
         {
             Visible = false;
         }
-        modify("Net Invoiced Qty.")
+        Modify("Net Invoiced Qty.")
         {
             Visible = false;
         }
@@ -202,38 +202,38 @@ pageextension 50010 ItemCard extends "Item Card" //30
 
     actions
     {
-        modify("Va&riants")
+        Modify("Va&riants")
         {
             visible = false;
         }
-        modify("Substituti&ons")
+        Modify("Substituti&ons")
         {
             visible = false;
         }
-        modify("Translations")
+        Modify("Translations")
         {
             visible = false;
         }
 
 
-        modify("Identifiers")
+        Modify("Identifiers")
         {
             visible = false;
         }
-        modify("ItemAvailabilityBy")
+        Modify("ItemAvailabilityBy")
         {
             visible = false;
         }
-        modify("Variant")
+        Modify("Variant")
         {
             visible = false;
         }
         //TODO: RunPageView cannot be customized
-        // modify("Action85")
+        // Modify("Action85")
         // {
         //     RunPageView=SORTING("Item No.");
         // }
-        modify("Set Special Discounts")
+        Modify("Set Special Discounts")
         {
             trigger OnAfterAction()
             begin
@@ -241,39 +241,39 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 CurrPage.Update(true);
             end;
         }
-        modify("Action5")
+        Modify("Action5")
         {
             visible = false;
         }
-        modify("&Bin Contents")
+        Modify("&Bin Contents")
         {
             visible = false;
         }
-        modify("Stockkeepin&g Units")
+        Modify("Stockkeepin&g Units")
         {
             visible = false;
         }
-        modify("Ser&vice Items")
+        Modify("Ser&vice Items")
         {
             visible = false;
         }
-        modify("Troubleshooting")
+        Modify("Troubleshooting")
         {
             visible = false;
         }
-        modify("Troubleshooting setup")
+        Modify("Troubleshooting setup")
         {
             visible = false;
         }
-        modify("Resources")
+        Modify("Resources")
         {
             visible = false;
         }
-        modify("Resource Skills")
+        Modify("Resource Skills")
         {
             visible = false;
         }
-        modify("Skilled Resources")
+        Modify("Skilled Resources")
         {
             visible = false;
         }
@@ -319,9 +319,9 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 var
                     RecLItem: Record Item;
                 begin
-                    CLEAR(RecLItem);
-                    RecLItem.SETRANGE("No.", rec."No.");
-                    REPORT.RUNMODAL(50004, true, false, RecLItem);
+                    Clear(RecLItem);
+                    RecLItem.SetRange("No.", rec."No.");
+                    REPORT.RunModal(50004, true, false, RecLItem);
                 end;
             }
             action("Calulation Unit price")
@@ -332,9 +332,9 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 var
                     RecLItem: Record Item;
                 begin
-                    CLEAR(RecLItem);
-                    RecLItem.SETRANGE("No.", rec."No.");
-                    REPORT.RUNMODAL(Report::"Calculate Unit Price Item", true, false, RecLItem);
+                    Clear(RecLItem);
+                    RecLItem.SetRange("No.", rec."No.");
+                    REPORT.RunModal(Report::"Calculate Unit Price Item", true, false, RecLItem);
                 end;
             }
             action("Calcul Prix Kit")
@@ -345,9 +345,9 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 var
                     RecLItem: Record Item;
                 begin
-                    CLEAR(RecLItem);
-                    RecLItem.SETRANGE("No.", rec."No.");
-                    REPORT.RUNMODAL(Report::"Calculate Kit Price Item", true, false, RecLItem);
+                    Clear(RecLItem);
+                    RecLItem.SetRange("No.", rec."No.");
+                    REPORT.RunModal(Report::"Calculate Kit Price Item", true, false, RecLItem);
                 end;
             }
             action("Calculer Co– Kit")
@@ -356,7 +356,7 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 ToolTip = 'Executes the Calculer Co– Kit action.';
                 trigger OnAction()
                 begin
-                    CLEAR(CalculateStdCost);
+                    Clear(CalculateStdCost);
                     CalculateStdCost.CalcItem(rec."No.", true);
                 end;
             }
@@ -368,11 +368,11 @@ pageextension 50010 ItemCard extends "Item Card" //30
                 var
                     RecLItem: Record Item;
                 begin
-                    CLEAR(RecLItem);
+                    Clear(RecLItem);
                     RecLItem := Rec;
-                    RecLItem.SETRANGE("No.", rec."No.");
-                    RecLItem.SETRECFILTER();
-                    REPORT.RUNMODAL(50009, true, false, RecLItem);
+                    RecLItem.SetRange("No.", rec."No.");
+                    RecLItem.SetRecFilter();
+                    REPORT.RunModal(50009, true, false, RecLItem);
                 end;
             }
             group(Action1100267023)
@@ -390,7 +390,7 @@ pageextension 50010 ItemCard extends "Item Card" //30
                     trigger OnAction()
                     begin
                         rec.FctBOM(Rec);
-                        CurrPage.UPDATE(true);
+                        CurrPage.Update(true);
                     end;
                 }
             }
@@ -403,7 +403,7 @@ pageextension 50010 ItemCard extends "Item Card" //30
 
     trigger OnAfterGetRecord()
     begin
-        rec.CALCFIELDS(rec.Inventory, rec."Qty. on Sales Order", rec."Qty. on Asm. Component", rec."Reserved Qty. on Purch. Orders");
+        rec.CalcFields(rec.Inventory, rec."Qty. on Sales Order", rec."Qty. on Asm. Component", rec."Reserved Qty. on Purch. Orders");
         DecGAvailable := (rec.Inventory - (rec."Qty. on Sales Order" + rec."Qty. on Asm. Component")) + rec."Reserved Qty. on Purch. Orders";
     end;
 

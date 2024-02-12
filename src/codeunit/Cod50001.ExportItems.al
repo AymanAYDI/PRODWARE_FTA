@@ -17,7 +17,7 @@ codeunit 50001 "Export Items"
 
     procedure FctSendItems()
     var
-        RecLCompanyInfo: Record "Company Information";
+        RecLCompanyInfo: Record "Company InFormation";
         RecLGLSetup: Record "General Ledger Setup";
         RecLVendor: Record Vendor;
         //RecLItemCrossRef: Record "5717";
@@ -29,19 +29,19 @@ codeunit 50001 "Export Items"
         IntLCmp: Integer;
     begin
         //>> Message structure: EDIFACT GENERIX
-        RecGSalesSetup.GET();
+        RecGSalesSetup.Get();
 
         // Get file setup for this customer
         TxtLRepertory := RecGSalesSetup."Export Item Repertory";
         //TxtLFileName := 'Item_Export';
 
         TxtLFileName := 'Item_Export_' +
-          //OLD FORMAT(CURRENTDATETIME,0,'<year4><month,2><Day,2><Hours24,2><Filler Character,0><Minutes,2><Seconds,2>')
-          FORMAT(TODAY, 0, '<year4><month,2><Day,2><Filler Character,0>')
-          + '_' + FORMAT(TIME, 0, '<Hours,2><Minutes,2><Seconds,2><Filler Character,0>')
+          //OLD Format(CURRENTDATETIME,0,'<year4><month,2><Day,2><Hours24,2><Filler Character,0><Minutes,2><Seconds,2>')
+          Format(TODAY, 0, '<year4><month,2><Day,2><Filler Character,0>')
+          + '_' + Format(TIME, 0, '<Hours,2><Minutes,2><Seconds,2><Filler Character,0>')
           + '.csv';
 
-        // STRSUBSTNO(RecPEDICustSetup."File Name",'F' + RecPSalesInvHeader."No.");
+        // StrSubstNo(RecPEDICustSetup."File Name",'F' + RecPSalesInvHeader."No.");
 
         // Create file
         BooGFixedFile := false;
@@ -51,16 +51,16 @@ codeunit 50001 "Export Items"
         CduGWriteFile.FctInitMessage(';', BooGFixedFile, BooGCommaDecimal);
 
         // Get setup
-        RecLCompanyInfo.GET();
-        RecLGLSetup.GET();
+        RecLCompanyInfo.Get();
+        RecLGLSetup.Get();
 
         // Pour les tests
-        //RecLItem.SETRANGE(RecLItem."No.",'2072');
+        //RecLItem.SetRange(RecLItem."No.",'2072');
         IntLCmp := 0;
         // ********************************* HEADER ********************************* //
-        CLEAR(TxtLTextFields);
-        RecLItem.SETRANGE(RecLItem."Send To Web", true);
-        if RecLItem.FINDSET() then
+        Clear(TxtLTextFields);
+        RecLItem.SetRange(RecLItem."Send To Web", true);
+        if RecLItem.FindSet() then
             repeat
                 if IntLCmp = 0 then begin
                     // 1 - Item No.
@@ -103,16 +103,16 @@ codeunit 50001 "Export Items"
                 TxtLTextFields[5] := CduGWriteFile.FormatText(RecLItem."Unit Price", 20, false);
 
                 // 6 - Nom du fournisseur
-                if RecLVendor.GET(RecLItem."Vendor No.") then
+                if RecLVendor.Get(RecLItem."Vendor No.") then
                     TxtLTextFields[6] := CopyStr(CduGWriteFile.FormatText(RecLVendor.Name, 50, false), 1, 350)
                 else
                     TxtLTextFields[6] := CopyStr(CduGWriteFile.FormatText('', 8, false), 1, 350);
                 // 7 - Stock
-                RecLItem.CALCFIELDS(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders", RecLItem."Assembly BOM");
+                RecLItem.CalcFields(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders", RecLItem."Assembly BOM");
                 DecGAvailable := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + RecLItem."Qty. on Asm. Component") + RecLItem."Reserved Qty. on Purch. Orders";
-                TxtLTextFields[7] := CopyStr(CduGWriteFile.FormatText(FORMAT(DecGAvailable), 20, false), 1, 350);
+                TxtLTextFields[7] := CopyStr(CduGWriteFile.FormatText(Format(DecGAvailable), 20, false), 1, 350);
                 // 8 - BOM
-                TxtLTextFields[8] := CopyStr(CduGWriteFile.FormatText(FORMAT(RecLItem."Assembly BOM"), 10, false), 1, 350);
+                TxtLTextFields[8] := CopyStr(CduGWriteFile.FormatText(Format(RecLItem."Assembly BOM"), 10, false), 1, 350);
 
                 // 9 - Item Category Code
                 //>>TI487350
@@ -122,7 +122,7 @@ codeunit 50001 "Export Items"
 
 
                 CduGWriteFile.FctWriteBigSegment(TxtLTextFields, 9);
-            until RecLItem.NEXT() = 0;
+            until RecLItem.Next() = 0;
         //Demande Golda pour MARKRO : ne pas prendre en compte :
         //CduGWriteFile.FctWriteBigSegment(TxtLTextFields,71);
 
@@ -132,7 +132,7 @@ codeunit 50001 "Export Items"
         RecLSalesInvHeader2 := RecPSalesInvHeader;
         RecLSalesInvHeader2."EDI Exported" := TRUE;
         RecLSalesInvHeader2."EDI DateTime Export" := CURRENTDATETIME;
-        RecLSalesInvHeader2.MODIFY;
+        RecLSalesInvHeader2.Modify;
         */
 
         CduGWriteFile.FctEndMessage(TxtLFileName);

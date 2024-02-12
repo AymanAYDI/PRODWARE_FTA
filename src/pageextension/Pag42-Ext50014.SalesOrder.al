@@ -8,47 +8,47 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
 {
     layout
     {
-        modify("Sell-to Contact")
+        Modify("Sell-to Contact")
         {
             Visible = false;
         }
-        modify("Posting Date")
+        Modify("Posting Date")
         {
             Caption = 'Posting Date';
         }
-        modify("Order Date")
+        Modify("Order Date")
         {
             Caption = 'Order Date';
         }
-        modify("Document Date")
+        Modify("Document Date")
         {
             Visible = false;
         }
-        modify("Campaign No.")
+        Modify("Campaign No.")
         {
             Visible = false;
         }
-        modify("Responsibility Center")
+        Modify("Responsibility Center")
         {
             Visible = false;
         }
-        modify("Shortcut Dimension 1 Code")
+        Modify("Shortcut Dimension 1 Code")
         {
             Visible = false;
         }
-        modify("Shortcut Dimension 2 Code")
+        Modify("Shortcut Dimension 2 Code")
         {
             Visible = false;
         }
-        modify("Prices Including VAT")
+        Modify("Prices Including VAT")
         {
             Visible = false;
         }
-        modify("Shipment Method Code")
+        Modify("Shipment Method Code")
         {
             Enabled = false;
         }
-        modify("Shipping Agent Code")
+        Modify("Shipping Agent Code")
         {
             Visible = false;
         }
@@ -168,22 +168,22 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
     }
     actions
     {
-        modify("Co&mments")
+        Modify("Co&mments")
         {
             Visible = false;
         }
-        modify("Reopen")
+        Modify("Reopen")
         {
             trigger OnAfterAction()
             begin
                 OpenComment();
             end;
         }
-        modify(CopyDocument)
+        Modify(CopyDocument)
         {
             Visible = false;
         }
-        modify("Work Order")
+        Modify("Work Order")
         {
             Visible = false;
         }
@@ -200,14 +200,14 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
                     SalesCommentLine: Record "Sales Comment Line";
                     SalesCommentSheet: Page "Sales Comment Sheet";
                 begin
-                    SalesCommentLine.RESET();
-                    SalesCommentLine.SETRANGE("Document Type", rec."Document Type");
-                    SalesCommentLine.SETRANGE("No.", rec."No.");
-                    SalesCommentLine.SETRANGE("Document Line No.", 0);
+                    SalesCommentLine.Reset();
+                    SalesCommentLine.SetRange("Document Type", rec."Document Type");
+                    SalesCommentLine.SetRange("No.", rec."No.");
+                    SalesCommentLine.SetRange("Document Line No.", 0);
                     //TODO: procedure AddNewComment removed ... maybe -> SetUpNewLine
                     // SalesCommentSheet.AddNewComment(rec."Document Type", rec."No.");
-                    SalesCommentSheet.SETTABLEVIEW(SalesCommentLine);
-                    SalesCommentSheet.RUN();
+                    SalesCommentSheet.SetTableView(SalesCommentLine);
+                    SalesCommentSheet.Run();
                 end;
             }
         }
@@ -236,8 +236,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
                     SalesHeader: Record "Sales Header";
                 begin
                     SalesHeader := Rec;
-                    SalesHeader.SETRECFILTER();
-                    REPORT.RUNMODAL(50011, true, false, SalesHeader);
+                    SalesHeader.SetRecFilter();
+                    REPORT.RunModal(50011, true, false, SalesHeader);
                 end;
             }
             action(Action225)
@@ -252,8 +252,8 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
                 begin
                     DocPrint.PrintSalesOrder(Rec, Usage::"Work Order");
                     SalesHeader := Rec;
-                    SalesHeader.SETRECFILTER();
-                    REPORT.RUNMODAL(50011, true, false, SalesHeader);
+                    SalesHeader.SetRecFilter();
+                    REPORT.RunModal(50011, true, false, SalesHeader);
                 end;
             }
         }
@@ -268,10 +268,10 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
                 var
                     RecLOrder: Record "Sales Header";
                 begin
-                    RecLOrder.RESET();
+                    RecLOrder.Reset();
                     RecLOrder := Rec;
-                    RecLOrder.SETRECFILTER();
-                    REPORT.RUNMODAL(Report::"Sales - PROFORMA FTA", true, false, RecLOrder);
+                    RecLOrder.SetRecFilter();
+                    REPORT.RunModal(Report::"Sales - PROFORMA FTA", true, false, RecLOrder);
                 end;
             }
         }
@@ -297,7 +297,7 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
         TxtCst001: Label 'Il existe des liens pour ce document.';
     begin
         if Rec.HASLINKS then
-            MESSAGE(TxtCst001, Rec."No.");
+            Message(TxtCst001, Rec."No.");
     end;
 
     local procedure OpenComment();
@@ -305,13 +305,13 @@ pageextension 50014 "SalesOrder" extends "Sales Order" //42
         SalesCommentLine: Record "Sales Comment Line";
         SalesCommentSheet: Page "Sales Comment Sheet";
     begin
-        SalesCommentLine.RESET();
-        SalesCommentLine.SETRANGE("Document Type", rec."Document Type");
-        SalesCommentLine.SETRANGE("No.", rec."No.");
-        SalesCommentLine.SETRANGE("Document Line No.", 0);
+        SalesCommentLine.Reset();
+        SalesCommentLine.SetRange("Document Type", rec."Document Type");
+        SalesCommentLine.SetRange("No.", rec."No.");
+        SalesCommentLine.SetRange("Document Line No.", 0);
         // SalesCommentSheet.AddNewComment(rec."Document Type", rec."No.");
-        SalesCommentSheet.SETTABLEVIEW(SalesCommentLine);
-        if not SalesCommentLine.ISEMPTY then
-            SalesCommentSheet.RUN();
+        SalesCommentSheet.SetTableView(SalesCommentLine);
+        if not SalesCommentLine.IsEmpty then
+            SalesCommentSheet.Run();
     end;
 }

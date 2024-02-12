@@ -19,10 +19,10 @@ tableextension 50047 ItemSubstitution extends "Item Substitution"//5715
     begin
         AvaibilityNoReserved := 0;
         if Type = Type::Item then begin
-            Item.GET("Substitute No.");
+            Item.Get("Substitute No.");
             if "Location Filter" <> '' then
-                Item.SETRANGE("Location Filter", "Location Filter");
-            Item.CALCFIELDS(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
+                Item.SetRange("Location Filter", "Location Filter");
+            Item.CalcFields(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
             AvaibilityNoReserved := Item.Inventory
                                     - Item."Qty. on Sales Order"
                                     - Item."Qty. on Asm. Component"

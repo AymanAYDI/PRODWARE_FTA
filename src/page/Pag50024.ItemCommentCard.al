@@ -4,7 +4,7 @@ page 50024 "Item Comment Card"
     // //>>FTA1.00
     // FTA:AM  31.03.2023  Create page
 
-    PageType = Card;
+    PaGetype = Card;
     SourceTable = "Item Comment";
     ApplicationArea = All;
 

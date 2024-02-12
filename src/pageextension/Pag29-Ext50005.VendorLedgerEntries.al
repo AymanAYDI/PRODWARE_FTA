@@ -54,8 +54,8 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
     }
     trigger OnOpenPage()
     begin
-        if rec.GETFILTER("Vendor Posting Group") <> '' then
-            CodGPostGrpFilter := rec.GETFILTER("Vendor Posting Group")
+        if rec.GetFilter("Vendor Posting Group") <> '' then
+            CodGPostGrpFilter := rec.GetFilter("Vendor Posting Group")
         else
             CodGPostGrpFilter := '';
     end;
@@ -82,11 +82,11 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
     local procedure ApplyFilters();
     begin
         if CodGPostGrpFilter <> '' then
-            rec.SETFILTER("Vendor Posting Group", CodGPostGrpFilter)
+            rec.SetFilter("Vendor Posting Group", CodGPostGrpFilter)
         else
-            rec.SETFILTER("Vendor Posting Group", '');
+            rec.SetFilter("Vendor Posting Group", '');
 
-        CurrPage.UPDATE(false)
+        CurrPage.Update(false)
     end;
 
     local procedure CalcRecBalance(): Decimal;
@@ -94,13 +94,13 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
         RecLVendEntry: Record "Vendor Ledger Entry";
         DecLAmount: Decimal;
     begin
-        RecLVendEntry.COPY(Rec);
-        if RecLVendEntry.Findfirst() then
+        RecLVendEntry.Copy(Rec);
+        if RecLVendEntry.findFirst() then
             repeat
 
-                RecLVendEntry.CALCFIELDS("Remaining Amt. (LCY)");
+                RecLVendEntry.CalcFields("Remaining Amt. (LCY)");
                 DecLAmount += RecLVendEntry."Remaining Amt. (LCY)";
-            until RecLVendEntry.NEXT() = 0;
+            until RecLVendEntry.Next() = 0;
 
         exit(DecLAmount);
     end;

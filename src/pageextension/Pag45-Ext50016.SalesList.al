@@ -54,7 +54,7 @@ pageextension 50016 SalesList extends "Sales List" //45
     trigger OnAfterGetRecord()
     begin
         GTel := '';
-        if GCust.GET(rec."Sell-to Customer No.") then
+        if GCust.Get(rec."Sell-to Customer No.") then
             GTel := GCust."Phone No.";
     end;
 }

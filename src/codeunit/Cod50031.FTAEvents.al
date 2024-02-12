@@ -17,28 +17,28 @@ codeunit 50031 "FTA_Events"
             Item."Item Base"::Transitory:
                 begin
                     Item.GetInvtSetup();
-                    InvtSetup.TESTFIELD("Transitory Item Nos.");
+                    InvtSetup.TestField("Transitory Item Nos.");
                     NoSeriesMgt.InitSeries(InvtSetup."Transitory Item Nos.", xRecItem."No. Series", 0D, Item."No.", Item."No. Series");
                     Item."Item Base" := Item."Item Base"::Transitory;
                 end;
             Item."Item Base"::"Transitory Kit":
                 begin
                     Item.GetInvtSetup();
-                    InvtSetup.TESTFIELD("Transitory Kit Item Nos.");
+                    InvtSetup.TestField("Transitory Kit Item Nos.");
                     NoSeriesMgt.InitSeries(InvtSetup."Transitory Kit Item Nos.", xRecItem."No. Series", 0D, Item."No.", Item."No. Series");
                     Item."Item Base" := Item."Item Base"::"Transitory Kit";
                 end;
             Item."Item Base"::"Bored blocks":
                 begin
                     Item.GetInvtSetup();
-                    InvtSetup.TESTFIELD("Bored blocks Item Nos.");
+                    InvtSetup.TestField("Bored blocks Item Nos.");
                     NoSeriesMgt.InitSeries(InvtSetup."Bored blocks Item Nos.", xRecItem."No. Series", 0D, Item."No.", Item."No. Series");
                     Item."Item Base" := Item."Item Base"::"Bored blocks";
                 end;
             else
                 if Item."No." = '' then begin
                     Item.GetInvtSetup();
-                    InvtSetup.TESTFIELD("Item Nos.");
+                    InvtSetup.TestField("Item Nos.");
                     NoSeriesMgt.InitSeries(InvtSetup."Item Nos.", xRecItem."No. Series", 0D, Item."No.", Item."No. Series");
                 end;
         end;
@@ -46,8 +46,8 @@ codeunit 50031 "FTA_Events"
         DimMgt.UpdateDefaultDim(
               DATABASE::Item, Item."No.",
               Item."Global Dimension 1 Code", Item."Global Dimension 2 Code");
-        Item."Creation Date" := WORKDATE();
-        Item.User := USERID();
+        Item."Creation Date" := WorkDate();
+        Item.User := UserId();
         Item.UpdateReferencedIds();
         Item.SetLastDateTimeModified();
 
@@ -58,9 +58,9 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Table, Database::Item, 'OnBeforeValidateNo', '', false, false)]
     local procedure OnBeforeValidateNo(var IsHandled: Boolean; var Item: Record Item; xItem: Record Item; InventorySetup: Record "Inventory Setup"; var NoSeriesMgt: Codeunit NoSeriesManagement)
     begin
-        if Item.GETFILTER("Item Base") = '<>Standard' then begin
+        if Item.GetFilter("Item Base") = '<>Standard' then begin
             Item.GetInvtSetup();
-            InventorySetup.TESTFIELD("Transitory Item Nos.");
+            InventorySetup.TestField("Transitory Item Nos.");
             NoSeriesMgt.InitSeries(InventorySetup."Transitory Item Nos.", xItem."No. Series", 0D, Item."No.", Item."No. Series");
             Item."Item Base" := Item."Item Base"::Transitory;
         end;
@@ -97,32 +97,32 @@ codeunit 50031 "FTA_Events"
     local procedure OnBeforeValidatePromisedReceiptDate(var PurchaseHeader: Record "Purchase Header"; xPurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean; CUrrentFieldNo: Integer)
     var
         RecLPurchLine: Record "Purchase Line";
-        CstL001: Label 'This change can delete the reservation of the lines : do want to continue?';
+        CstL001: Label 'This change can Delete the reservation of the lines : do want to continue?';
         CstL002: Label 'Canceled operation;FRA=Traitement annul';
     begin
         PurchaseHeader.TestStatusOpen();
         if PurchaseHeader."Promised Receipt Date" <> xPurchaseHeader."Promised Receipt Date" then begin
-            RecLPurchLine.SETRANGE("Document Type", PurchaseHeader."Document Type");
-            RecLPurchLine.SETRANGE("Document No.", PurchaseHeader."No.");
-            RecLPurchLine.SETFILTER("Expected Receipt Date", '<%1', PurchaseHeader."Promised Receipt Date");
-            RecLPurchLine.SETRANGE(Type, RecLPurchLine.Type::Item);
+            RecLPurchLine.SetRange("Document Type", PurchaseHeader."Document Type");
+            RecLPurchLine.SetRange("Document No.", PurchaseHeader."No.");
+            RecLPurchLine.SetFilter("Expected Receipt Date", '<%1', PurchaseHeader."Promised Receipt Date");
+            RecLPurchLine.SetRange(Type, RecLPurchLine.Type::Item);
 
-            if not RecLPurchLine.ISEMPTY() then begin
-                RecLPurchLine.FINDSET();
+            if not RecLPurchLine.IsEmpty() then begin
+                RecLPurchLine.FindSet();
                 repeat
-                    RecLPurchLine.CALCFIELDS("Reserved Qty. (Base)");
+                    RecLPurchLine.CalcFields("Reserved Qty. (Base)");
                     if RecLPurchLine."Reserved Qty. (Base)" <> 0 then
-                        if not CONFIRM(CstL001, false) then
-                            ERROR(CstL002);
-                until (RecLPurchLine.NEXT() = 0) or (RecLPurchLine."Reserved Qty. (Base)" <> 0);
+                        if not Confirm(CstL001, false) then
+                            Error(CstL002);
+                until (RecLPurchLine.Next() = 0) or (RecLPurchLine."Reserved Qty. (Base)" <> 0);
             end;
             PurchaseHeader.UpdatePurchLinesByFieldNo(PurchaseHeader.FieldNo(PurchaseHeader."Promised Receipt Date"), CUrrentFieldNo <> 0);
         end;
         if PurchaseHeader."Promised Receipt Date" <> 0D then
-            PurchaseHeader."Planned Receipt Date" := CALCDATE(PurchaseHeader."Lead Time Calculation", PurchaseHeader."Promised Receipt Date")
+            PurchaseHeader."Planned Receipt Date" := CalcDate(PurchaseHeader."Lead Time Calculation", PurchaseHeader."Promised Receipt Date")
         else
             if PurchaseHeader."Requested Receipt Date" <> 0D then
-                PurchaseHeader."Planned Receipt Date" := CALCDATE(PurchaseHeader."Lead Time Calculation", PurchaseHeader."Requested Receipt Date");
+                PurchaseHeader."Planned Receipt Date" := CalcDate(PurchaseHeader."Lead Time Calculation", PurchaseHeader."Requested Receipt Date");
         IsHandled := true;
     end;
     //Record 38
@@ -231,10 +231,10 @@ codeunit 50031 "FTA_Events"
             AsmLine.SetRange("Document Type", AssembleOrderLink."Assembly Document Type");
             AsmLine.SetRange("Document No.", AssembleOrderLink."Assembly Document No.");
             AsmLine.FilterGroup := 0;
-            SalesHeader.GET(SalesLine."Document Type", SalesLine."Document No.");
+            SalesHeader.Get(SalesLine."Document Type", SalesLine."Document No.");
             AssembletoOrderLines.FctSetDate(SalesHeader."Requested Delivery Date");
-            AssembletoOrderLines.SETTABLEVIEW(AsmLine);
-            AssembletoOrderLines.RUNMODAL();
+            AssembletoOrderLines.SetTableView(AsmLine);
+            AssembletoOrderLines.RunModal();
         end;
         IsHandled := true;
     end;
@@ -248,22 +248,22 @@ codeunit 50031 "FTA_Events"
         PgeLAssignmentItem: Page 50003;
         RecGInventorySetup: Record "Inventory Setup";
     begin
-        RecGInventorySetup.GET();
+        RecGInventorySetup.Get();
         if RecGInventorySetup."Reservation FTA" then
             // IF Quantity > DecGxQuantity THEN BEGIN
             if SalesLine.Quantity > xSalesLine.Quantity then begin
-                if RecLItem.GET(SalesLine."No.") then;
+                if RecLItem.Get(SalesLine."No.") then;
                 if (SalesLine.Quantity <> 0) and (SalesLine."Reserved Quantity" <> SalesLine.Quantity) and
                 (SalesLine.Type = Type::Item) and (SalesLine."Document Type" <> "Document Type"::Quote) and not (RecLItem."Inventory Value Zero") then begin
                     //TODO : CurrPage not exist in the current context 
-                    //CurrPage.SAVERECORD;
+                    //CurrPage.SaveRecord;
 
-                    CLEAR(PgeLAssignmentItem);
+                    Clear(PgeLAssignmentItem);
                     BoopF12 := false;
                     PgeLAssignmentItem.FctGetParm(SalesLine, xSalesLine.Quantity, xSalesLine."Preparation Type");
-                    PgeLAssignmentItem.SETTABLEVIEW(SalesLine);
-                    PgeLAssignmentItem.SETRECORD(SalesLine);
-                    PgeLAssignmentItem.RUN();
+                    PgeLAssignmentItem.SetTableView(SalesLine);
+                    PgeLAssignmentItem.SetRecord(SalesLine);
+                    PgeLAssignmentItem.Run();
                 end;
             end;
 
@@ -297,11 +297,11 @@ codeunit 50031 "FTA_Events"
         CstLTxt001: Label 'The amount available for article 1% is lower the amount requested.';
         CstL001: Label 'The quantity %1 is greater than the available quantity %2 for the journal %3 line no. %4';
     begin
-        RecLInventorySetup.GET();
+        RecLInventorySetup.Get();
         DecLQuantity := 0;
-        CLEAR(RecLItem);
-        if RecLItem.GET(ItemJournalLine."Item No.") and (RecLInventorySetup."Negative Inventory Not Allowed") then
-            if RecLItem.GET(ItemJournalLine."Item No.") and not (RecLItem."Inventory Value Zero") then begin
+        Clear(RecLItem);
+        if RecLItem.Get(ItemJournalLine."Item No.") and (RecLInventorySetup."Negative Inventory Not Allowed") then
+            if RecLItem.Get(ItemJournalLine."Item No.") and not (RecLItem."Inventory Value Zero") then begin
                 if (ItemJournalLine."Entry Type" = ItemJournalLine."Entry Type"::Purchase) or
                    (ItemJournalLine."Entry Type" = ItemJournalLine."Entry Type"::"Positive Adjmt.") or
                    (ItemJournalLine."Entry Type" = ItemJournalLine."Entry Type"::Output) then
@@ -309,23 +309,23 @@ codeunit 50031 "FTA_Events"
                 else
                     DecLQuantity := ItemJournalLine."Quantity (Base)";
 
-                RecLItemLedgerEntry.RESET();
-                RecLItemLedgerEntry.SETCURRENTKEY("Item No.", "Location Code", Open, "Posting Date", "Variant Code");
-                RecLItemLedgerEntry.SETFILTER("Item No.", '%1', ItemJournalLine."Item No.");
-                RecLItemLedgerEntry.SETFILTER("Location Code", '%1', ItemJournalLine."Location Code");
-                RecLItemLedgerEntry.SETFILTER(Open, '%1', true);
-                RecLItemLedgerEntry.SETFILTER("Variant Code", '%1', ItemJournalLine."Variant Code");
-                RecLItemLedgerEntry.CALCSUMS("Remaining Quantity");
+                RecLItemLedgerEntry.Reset();
+                RecLItemLedgerEntry.SetCurrentKey("Item No.", "Location Code", Open, "Posting Date", "Variant Code");
+                RecLItemLedgerEntry.SetFilter("Item No.", '%1', ItemJournalLine."Item No.");
+                RecLItemLedgerEntry.SetFilter("Location Code", '%1', ItemJournalLine."Location Code");
+                RecLItemLedgerEntry.SetFilter(Open, '%1', true);
+                RecLItemLedgerEntry.SetFilter("Variant Code", '%1', ItemJournalLine."Variant Code");
+                RecLItemLedgerEntry.CalcSums("Remaining Quantity");
                 if RecLItemLedgerEntry."Remaining Quantity" - DecLQuantity < 0 then
-                    ERROR(CstLTxt001, ItemJournalLine."Item No.");
+                    Error(CstLTxt001, ItemJournalLine."Item No.");
             end;
         if (ItemJournalLine."Entry Type" in
     [ItemJournalLine."Entry Type"::"Negative Adjmt."]) then begin
-            RecLItem.GET(ItemJournalLine."Item No.");
-            RecLItem.CALCFIELDS(Inventory, "Reserved Qty. on Inventory");
+            RecLItem.Get(ItemJournalLine."Item No.");
+            RecLItem.CalcFields(Inventory, "Reserved Qty. on Inventory");
             DecPQtyAvailable := RecLItem.Inventory - (RecLItem."Reserved Qty. on Inventory");
             if ItemJournalLine.Quantity > DecPQtyAvailable then
-                ERROR(CstL001, ItemJournalLine.Quantity, DecPQtyAvailable, ItemJournalLine."Journal Batch Name", ItemJournalLine."Line No.");
+                Error(CstL001, ItemJournalLine.Quantity, DecPQtyAvailable, ItemJournalLine."Journal Batch Name", ItemJournalLine."Line No.");
         end;
     end;
     //CodeUnit 22
@@ -344,8 +344,8 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnBeforeGetProdOrderLine', '', false, false)]
     local procedure OnBeforeGetProdOrderLine(var ProdOrderLine: Record "Prod. Order Line"; OrderNo: Code[20]; OrderLineNo: Integer; var IsHandled: Boolean)
     begin
-        if not ProdOrderLine.GET(ProdOrderLine.Status::Released, OrderNo, OrderLineNo) then
-            ProdOrderLine.GET(ProdOrderLine.Status::Finished, OrderNo, OrderLineNo);
+        if not ProdOrderLine.Get(ProdOrderLine.Status::Released, OrderNo, OrderLineNo) then
+            ProdOrderLine.Get(ProdOrderLine.Status::Finished, OrderNo, OrderLineNo);
         IsHandled := true;
     end;
     //CodeUnit 82
@@ -354,9 +354,9 @@ codeunit 50031 "FTA_Events"
     var
         RecLSalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
-        RecLSalesReceivablesSetup.GET();
+        RecLSalesReceivablesSetup.Get();
         if RecLSalesReceivablesSetup."Default Posting Date" = RecLSalesReceivablesSetup."Default Posting Date"::"Work Date" then
-            SalesHeader.VALIDATE(SalesHeader."Posting Date", WORKDATE());
+            SalesHeader.Validate(SalesHeader."Posting Date", WorkDate());
     end;
     //CodeUnit 82
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post + Print", 'OnAfterConfirmPost', '', false, false)]
@@ -370,11 +370,11 @@ codeunit 50031 "FTA_Events"
         if (SalesHeader."Document Type" = "Document Type"::Order) and
           (SalesHeader.Ship) and
           (CodGNumDoc <> '') then
-            if (RecGPurchHeader.GET(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
-                RecGPurchHeader.CALCFIELDS("Order Type");
+            if (RecGPurchHeader.Get(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
+                RecGPurchHeader.CalcFields("Order Type");
                 if (RecGPurchHeader."Order Type" = RecGPurchHeader."Order Type"::Transport) then begin
                     RecGPurchHeader.Receive := true;
-                    CuGPurchPost.RUN(RecGPurchHeader);
+                    CuGPurchPost.Run(RecGPurchHeader);
                 end;
             end;
     end;
@@ -382,13 +382,13 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePostPurchaseDoc', '', false, false)]
     local procedure OnBeforePostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; CommitIsSupressed: Boolean; var HideProgressWindow: Boolean; var ItemJnlPostLine: Codeunit "Item Jnl.-Post Line"; var IsHandled: Boolean)
     begin
-        PurchaseHeader.CALCFIELDS("Order Type");
+        PurchaseHeader.CalcFields("Order Type");
     end;
     //CodeUnit 90
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnRunOnAfterFillTempLines', '', false, false)]
     local procedure OnRunOnAfterFillTempLines(var PurchHeader: Record "Purchase Header")
     begin
-        PurchHeader.CALCFIELDS("Order Type");
+        PurchHeader.CalcFields("Order Type");
     end;
     //CodeUnit 90
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforeCheckHeaderPostingType', '', false, false)]
@@ -397,7 +397,7 @@ codeunit 50031 "FTA_Events"
         DocumentErrorsMgt: Codeunit "Document Errors Mgt.";
     begin
         if not (PurchaseHeader.Receive or PurchaseHeader.Invoice or PurchaseHeader.Ship) then begin
-            PurchaseHeader.CALCFIELDS("Order Type");
+            PurchaseHeader.CalcFields("Order Type");
             if (PurchaseHeader."Order Type" = PurchaseHeader."Order Type"::Transport) and
                (PurchaseHeader."Initial Order No." <> '') and
                (PurchaseHeader."Initial Order Type" <> PurchaseHeader."Initial Order Type"::" ") then
@@ -433,7 +433,7 @@ codeunit 50031 "FTA_Events"
         CstL001: Label 'Purchase Invoice %1 created.';
     begin
         if PurchaseHeader.Invoice and (PurchInvHdrNo <> '') then
-            MESSAGE(CstL001, PurchInvHdrNo);
+            Message(CstL001, PurchInvHdrNo);
     end;
     //CodeUnit 225
     //Todo : verifier
@@ -460,17 +460,17 @@ codeunit 50031 "FTA_Events"
     begin
         ReportSelections.SetRange(Usage, ReportUsage);
         ReportSelections.SetFilter("Report ID", '<>0');
-        ReportSelections.FindFirst();
+        ReportSelections.findFirst();
         repeat
-            if not RecLReportUser.GET(USERID, ReportSelections."Report ID") then begin
-                RecLReportUser.INIT();
-                RecLReportUser.UserID := USERID;
+            if not RecLReportUser.Get(UserId, ReportSelections."Report ID") then begin
+                RecLReportUser.Init();
+                RecLReportUser.UserId := UserId;
                 RecLReportUser."Report ID" := ReportSelections."Report ID";
-                RecLReportUser.INSERT();
+                RecLReportUser.Insert();
             end;
             RecLReportUser.Email := SendAsEmail;
-            RecLReportUser.MODIFY();
-            COMMIT();
+            RecLReportUser.Modify();
+            Commit();
             if SendAsEmail then
                 ReportSelections.SendEmailToCust(
                     ReportUsage, SalesHeader, SalesHeader."No.", SalesHeader.GetDocTypeTxt(), true, SalesHeader.GetBillToNo())
@@ -489,17 +489,17 @@ codeunit 50031 "FTA_Events"
     begin
         ReportSelections.SetRange(Usage, ReportUsage);
         ReportSelections.SetFilter("Report ID", '<>0');
-        ReportSelections.FindFirst();
+        ReportSelections.findFirst();
         repeat
-            if not RecLReportUser.GET(USERID, ReportSelections."Report ID") then begin
-                RecLReportUser.INIT();
-                RecLReportUser.UserID := USERID;
+            if not RecLReportUser.Get(UserId, ReportSelections."Report ID") then begin
+                RecLReportUser.Init();
+                RecLReportUser.UserId := UserId;
                 RecLReportUser."Report ID" := ReportSelections."Report ID";
-                RecLReportUser.INSERT();
+                RecLReportUser.Insert();
             end;
             RecLReportUser.Email := false;
-            RecLReportUser.MODIFY();
-            COMMIT();
+            RecLReportUser.Modify();
+            Commit();
         until ReportSelections.Next() = 0;
         ReportSelections.PrintWithDialogForVend(ReportUsage, PurchHeader, true, PurchHeader.FieldNo("Buy-from Vendor No."));
 
@@ -515,17 +515,17 @@ codeunit 50031 "FTA_Events"
     begin
         ReportSelections.SetRange(Usage, ReportUsage);
         ReportSelections.SetFilter("Report ID", '<>0');
-        ReportSelections.FindFirst();
+        ReportSelections.findFirst();
         repeat
-            if not RecLReportUser.GET(USERID, ReportSelections."Report ID") then begin
-                RecLReportUser.INIT();
-                RecLReportUser.UserID := USERID;
+            if not RecLReportUser.Get(UserId, ReportSelections."Report ID") then begin
+                RecLReportUser.Init();
+                RecLReportUser.UserId := UserId;
                 RecLReportUser."Report ID" := ReportSelections."Report ID";
-                RecLReportUser.INSERT();
+                RecLReportUser.Insert();
             end;
             RecLReportUser.Email := false;
-            RecLReportUser.MODIFY();
-            COMMIT();
+            RecLReportUser.Modify();
+            Commit();
         until ReportSelections.Next() = 0;
         ReportSelections.PrintWithDialogForCust(
             ReportUsage, SalesHeader, GuiAllowed, SalesHeader.FieldNo("Bill-to Customer No."));
@@ -537,8 +537,8 @@ codeunit 50031 "FTA_Events"
     local procedure OnUpdateStdCostSharesOnAfterCopyCosts(var Item: Record Item; FromItem: Record Item)
     begin
         if (Item."Item Base" = Item."Item Base"::"Transitory Kit") or (Item."Item Base" = Item."Item Base"::"Bored blocks") then begin
-            Item.VALIDATE("Purchase Price Base", Item."Single-Level Material Cost");
-            Item.VALIDATE("Unit Price", Item."Kit - Sales Price");
+            Item.Validate("Purchase Price Base", Item."Single-Level Material Cost");
+            Item.Validate("Unit Price", Item."Kit - Sales Price");
         end;
     end;
     //Record 27
@@ -581,7 +581,7 @@ codeunit 50031 "FTA_Events"
             end
     end;
     //CodeUnit 5812
-    //TODO : I cant find solution line 606
+    //TODO : I cant Find solution line 606
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Calculate Standard Cost", 'OnCalcProdBOMCostOnAfterCalcAnyItem', '', false, false)]
     local procedure OnCalcProdBOMCostOnAfterCalcAnyItem(var ProductionBOMLine: Record "Production BOM Line"; MfgItem: Record Item; MfgItemQtyBase: Decimal; CompItem: Record Item; CompItemQtyBase: Decimal; Level: Integer; IsTypeItem: Boolean; UOMFactor: Decimal; var SLMat: Decimal; var RUMat: Decimal; var RUCap: Decimal; var RUSub: Decimal; var RUCapOvhd: Decimal; var RUMfgOvhd: Decimal)
     begin
@@ -607,7 +607,7 @@ codeunit 50031 "FTA_Events"
     var
         GLSetup: Record "General Ledger Setup";
     begin
-        GLSetup.get();
+        GLSetup.Get();
         if CompItem.IsInventoriableType() then
             if CompItem.IsMfgItem() or CompItem.IsAssemblyItem() then begin
                 SLMat := SLMat - Round(CompItemQtyBase * CompItem."Standard Cost", GLSetup."Unit-Amount Rounding Precision");
@@ -615,7 +615,7 @@ codeunit 50031 "FTA_Events"
             end;
     end;
     //CodeUnit 10860
-    //TODO: i can't find solution line 263..264
+    //TODO: i can't Find solution line 263..264
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Payment Management", 'OnCopyLigBorOnBeforeToPaymentLineInsert', '', false, false)]
     local procedure OnCopyLigBorOnBeforeToPaymentLineInsert(var ToPaymentLine: Record "Payment Line"; var Process: Record "Payment Class")
     var
@@ -643,33 +643,33 @@ codeunit 50031 "FTA_Events"
         if (ReservEntry."Reservation Status" = ReservEntry."Reservation Status"::Reservation) and
             (ReservEntry."Source Type" in [37, 39]) then begin
             if ReservEntry."Source Type" = 37 then begin
-                if RecLSalesLine.GET(ReservEntry."Source Subtype", ReservEntry."Source ID", ReservEntry."Source Ref. No.") then
-                    RecLSalesLine.CALCFIELDS("Reserved Quantity");
+                if RecLSalesLine.Get(ReservEntry."Source Subtype", ReservEntry."Source ID", ReservEntry."Source Ref. No.") then
+                    RecLSalesLine.CalcFields("Reserved Quantity");
                 if ((RecLSalesLine."Preparation Type" <> RecLSalesLine."Preparation Type"::Remainder) and
                   (RecLSalesLine."Preparation Type" <> RecLSalesLine."Preparation Type"::" "))
-                  and (RecLSalesLine."Reserved Quantity" = ABS(ReservEntry.Quantity)) then begin
+                  and (RecLSalesLine."Reserved Quantity" = Abs(ReservEntry.Quantity)) then begin
                     RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Remainder;
                     if DeleteAll = false then
-                        RecLSalesLine.MODIFY();
+                        RecLSalesLine.Modify();
                 end;
             end;
             if ReservEntry."Source Type" = 39 then begin
-                RecLReservEntry.SETRANGE("Entry No.", ReservEntry."Entry No.");
-                RecLReservEntry.SETRANGE("Source Type", 37);
-                if not RecLReservEntry.ISEMPTY then begin
-                    RecLReservEntry.FINDSET();
+                RecLReservEntry.SetRange("Entry No.", ReservEntry."Entry No.");
+                RecLReservEntry.SetRange("Source Type", 37);
+                if not RecLReservEntry.IsEmpty then begin
+                    RecLReservEntry.FindSet();
                     repeat
-                        if RecLSalesLine.GET(RecLReservEntry."Source Subtype", RecLReservEntry."Source ID", RecLReservEntry."Source Ref. No.") then begin
-                            RecLSalesLine.CALCFIELDS("Reserved Quantity");
+                        if RecLSalesLine.Get(RecLReservEntry."Source Subtype", RecLReservEntry."Source ID", RecLReservEntry."Source Ref. No.") then begin
+                            RecLSalesLine.CalcFields("Reserved Quantity");
                             if ((RecLSalesLine."Preparation Type" <> RecLSalesLine."Preparation Type"::Remainder) and
                               (RecLSalesLine."Preparation Type" <> RecLSalesLine."Preparation Type"::" "))
-                              and (RecLSalesLine."Reserved Quantity" = ABS(RecLReservEntry.Quantity)) then begin
+                              and (RecLSalesLine."Reserved Quantity" = Abs(RecLReservEntry.Quantity)) then begin
                                 RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Remainder;
                                 if DeleteAll = false then
-                                    RecLSalesLine.MODIFY();
+                                    RecLSalesLine.Modify();
                             end;
                         end;
-                    until RecLReservEntry.NEXT() = 0;
+                    until RecLReservEntry.Next() = 0;
                 end;
             end;
         end;
@@ -681,7 +681,7 @@ codeunit 50031 "FTA_Events"
         RecLSalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
         DefaultOption := 1;
-        RecLSalesReceivablesSetup.GET();
+        RecLSalesReceivablesSetup.Get();
         if RecLSalesReceivablesSetup."Default Posting Date" = RecLSalesReceivablesSetup."Default Posting Date"::"Work Date" then
             SalesHeader.Validate("Posting Date", WorkDate());
 
@@ -698,11 +698,11 @@ codeunit 50031 "FTA_Events"
         if (SalesHeader."Document Type" = "Document Type"::Order) and
            (SalesHeader.Ship) and
            (CodGNumDoc <> '') then
-            if (RecGPurchHeader.GET(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
-                RecGPurchHeader.CALCFIELDS("Order Type");
+            if (RecGPurchHeader.Get(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
+                RecGPurchHeader.CalcFields("Order Type");
                 if (RecGPurchHeader."Order Type" = RecGPurchHeader."Order Type"::Transport) then begin
                     RecGPurchHeader.Receive := true;
-                    CuGPurchPost.RUN(RecGPurchHeader);
+                    CuGPurchPost.Run(RecGPurchHeader);
                 end;
             end;
     end;
@@ -711,8 +711,8 @@ codeunit 50031 "FTA_Events"
     local procedure OnDeleteOnBeforeTestStatusOpen(var PurchaseLine: Record "Purchase Line"; var IsHandled: Boolean)
     begin
         PurchaseLine.TestStatusOpen();
-        PurchaseLine.CALCFIELDS("Reserved Quantity");
-        PurchaseLine.TESTFIELD("Reserved Quantity", 0);
+        PurchaseLine.CalcFields("Reserved Quantity");
+        PurchaseLine.TestField("Reserved Quantity", 0);
     end;
     //Table Purchase Line 39
     [EventSubscriber(ObjectType::Table, Database::"Purchase Line", 'OnAfterUpdateWithWarehouseReceive', '', false, false)]
@@ -740,18 +740,18 @@ codeunit 50031 "FTA_Events"
 
 
     // begin
-    //     SalesLine.INSERT();
+    //     SalesLine.Insert();
     //     NextLineNo := NextLineNo + 10000;
     //     SalesLine."Line No." := NextLineNo;
     //     SalesLine."Document Type" := TempSalesLine."Document Type";
     //     SalesLine."Document No." := TempSalesLine."Document No.";
-    //     RecGSalesShipHeader.GET(SalesShptLine."Document No.");
-    //     if STRLEN(STRSUBSTNO(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.", RecGSalesShipHeader."Order No."))
+    //     RecGSalesShipHeader.Get(SalesShptLine."Document No.");
+    //     if StrLen(StrSubstNo(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.", RecGSalesShipHeader."Order No."))
     //            <= 50 then
-    //         SalesLine.Description := COPYSTR(STRSUBSTNO(SalesShptLine.CstG0001, SalesShptLine."Document No.", SalesShptLine.RecGSalesShipHeader."External Document No.",
+    //         SalesLine.Description := CopyStr(StrSubstNo(SalesShptLine.CstG0001, SalesShptLine."Document No.", SalesShptLine.RecGSalesShipHeader."External Document No.",
     //         RecGSalesShipHeader."Order No."), 1, 50)
     //     else
-    //         SalesLine.Description := COPYSTR(STRSUBSTNO(CstG0002, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No."), 1, 50);
+    //         SalesLine.Description := CopyStr(StrSubstNo(CstG0002, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No."), 1, 50);
     // end;
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reservation Management", 'OnBeforeAutoReservePurchLine', '', false, false)]
     local procedure OnBeforeAutoReservePurchLine(ReservSummEntryNo: Integer; var RemainingQtyToReserve: Decimal; var RemainingQtyToReserveBase: Decimal; Description: Text[100]; AvailabilityDate: Date; var IsReserved: Boolean; var Search: Text[1]; var NextStep: Integer; CalcReservEntry: Record "Reservation Entry")
@@ -761,11 +761,11 @@ codeunit 50031 "FTA_Events"
         // PurchLine.FilterLinesForReservation(
         //  CalcReservEntry, Enum::"Purchase Document Type".FromInteger(ReservSummEntryNo - Enum::"Reservation Summary Type"::"Purchase Quote".AsInteger()),
         //  GetAvailabilityFilter(AvailabilityDate), Positive);
-        //todo : Ican't find solution
+        //todo : Ican't Find solution
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reservation Management", 'OnBeforeSetValueArray', '', false, false)]
-    local procedure OnBeforeSetValueArray(EntryStatus: Option; var ValueArray: array[30] of Integer; var ArrayCounter: Integer; var IsHandled: Boolean)
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reservation Management", 'OnBefoResetValueArray', '', false, false)]
+    local procedure OnBefoResetValueArray(EntryStatus: Option; var ValueArray: array[30] of Integer; var ArrayCounter: Integer; var IsHandled: Boolean)
     begin
         Clear(ValueArray);
         case EntryStatus of
@@ -840,7 +840,7 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Page, Page::"Reservation", 'OnAfterSetSalesLine', '', false, false)]
     local procedure OnAfterSetSalesLine2(var EntrySummary: Record "Entry Summary"; ReservEntry: Record "Reservation Entry")
     begin
-        // SetReservEntryFTA(ReservEntry); //TODO : i can't find solution
+        // SetReservEntryFTA(ReservEntry); //TODO : i can't Find solution
     end;
     //<<<<<<<<<<<<<<<<<<Partie Mortadha >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     //Codeunit 12 Line 811
@@ -904,7 +904,7 @@ codeunit 50031 "FTA_Events"
         BooGPaymentMgt: Boolean;
     begin
         BooGPaymentMgt := true;
-        TempOldVendLedgEntry.DELETE();
+        TempOldVendLedgEntry.Delete();
         if not BooGPaymentMgt then
             FTAfct.CheckVendPostGroup(NewCVLedgEntryBuf, TempOldVendLedgEntry);
     end; //TODO-> Verif
@@ -923,27 +923,27 @@ codeunit 50031 "FTA_Events"
         SalesOrderLine: Record "Sales Line";
         FrmLAssignmentItem: Page "Assignment Item";
     begin
-        RecLInventorySetup.GET();
+        RecLInventorySetup.Get();
         if RecLInventorySetup."Reservation FTA" then begin
-            SalesOrderLine.RESET();
-            SalesOrderLine.SETRANGE("Document Type", SalesOrderLine."Document Type"::Order);
-            SalesOrderLine.SETRANGE("Document No.", SalesOrderHeader."No.");//CodLSalesOrderNo
-            SalesOrderLine.SETRANGE(Type, SalesOrderLine.Type::Item);
-            SalesOrderLine.SETRANGE("Preparation Type", SalesOrderLine."Preparation Type"::" ");
-            if SalesOrderLine.FINDSET() then
+            SalesOrderLine.Reset();
+            SalesOrderLine.SetRange("Document Type", SalesOrderLine."Document Type"::Order);
+            SalesOrderLine.SetRange("Document No.", SalesOrderHeader."No.");//CodLSalesOrderNo
+            SalesOrderLine.SetRange(Type, SalesOrderLine.Type::Item);
+            SalesOrderLine.SetRange("Preparation Type", SalesOrderLine."Preparation Type"::" ");
+            if SalesOrderLine.FindSet() then
                 repeat
                     //>>FED_20090415:PA Kit Build up or remove into pieces
-                    if RecLItem.GET(SalesOrderLine."No.") then;
+                    if RecLItem.Get(SalesOrderLine."No.") then;
                     if (SalesOrderLine.Quantity <> 0) and (SalesOrderLine."Reserved Quantity" <> SalesOrderLine.Quantity) and
                            not (RecLItem."Inventory Value Zero") then begin
-                        CLEAR(FrmLAssignmentItem);
+                        Clear(FrmLAssignmentItem);
                         //BoopF12 := false; //TODO variable Globale
                         FrmLAssignmentItem.FctGetParm(SalesOrderLine, SalesOrderLine.Quantity, SalesOrderLine."Preparation Type");
-                        FrmLAssignmentItem.SETTABLEVIEW(SalesOrderLine);
-                        FrmLAssignmentItem.SETRECORD(SalesOrderLine);
-                        FrmLAssignmentItem.RUN();
+                        FrmLAssignmentItem.SetTableView(SalesOrderLine);
+                        FrmLAssignmentItem.SetRecord(SalesOrderLine);
+                        FrmLAssignmentItem.Run();
                     end;
-                until SalesOrderLine.NEXT() = 0;
+                until SalesOrderLine.Next() = 0;
         end;
     end;
 
@@ -982,10 +982,10 @@ codeunit 50031 "FTA_Events"
         if SalesOrderLine.Reserve = SalesOrderLine.Reserve::Always then
             SalesOrderLine.AutoReserve();
         if (SalesQuoteLine.Type = SalesQuoteLine.Type::Item) and
-         RecLItem.GET(SalesQuoteLine."No.") and
+         RecLItem.Get(SalesQuoteLine."No.") and
          RecLItem."Quote Associated" then begin
             RecLItem."Quote Associated" := false;
-            RecLItem.MODIFY();
+            RecLItem.Modify();
         end;
     end;
     //codeunit 92 Line 109
@@ -1008,15 +1008,15 @@ codeunit 50031 "FTA_Events"
         if (PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order) and
            (PurchaseHeader.Receive) and
            (CodGNumDoc <> '') then
-            if (RecGPurchHeader.GET(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
-                RecGPurchHeader.CALCFIELDS("Order Type");
+            if (RecGPurchHeader.Get(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
+                RecGPurchHeader.CalcFields("Order Type");
                 if (RecGPurchHeader."Order Type" = RecGPurchHeader."Order Type"::Transport) then begin
 
                     //Cas 1 : 1 Cde achat transport li‚e … 1 seule Cde achat marchandise
                     if (RecGPurchHeader."Initial Order No." <> '') and
                        (RecGPurchHeader."Initial Order Type" <> RecGPurchHeader."Initial Order Type"::" ") then begin
                         RecGPurchHeader.Receive := true;
-                        CuGPurchPost.RUN(RecGPurchHeader);
+                        CuGPurchPost.Run(RecGPurchHeader);
                     end;
 
                     //Cas 2 : 1 Cde achat transport li‚e … n Cdes achat marchandise
@@ -1031,29 +1031,29 @@ codeunit 50031 "FTA_Events"
                         end;
 
                         //Modification des lignes de la cde achat transport pour ne recevoir que la ligne achat li‚e … la cde achat marchandise
-                        RecGPurchLine.RESET();
-                        RecGPurchLine.SETRANGE("Document Type", RecGPurchHeader."Document Type");
-                        RecGPurchLine.SETRANGE("Document No.", RecGPurchHeader."No.");
-                        if RecGPurchLine.FINDSET(true, false) then
+                        RecGPurchLine.Reset();
+                        RecGPurchLine.SetRange("Document Type", RecGPurchHeader."Document Type");
+                        RecGPurchLine.SetRange("Document No.", RecGPurchHeader."No.");
+                        if RecGPurchLine.FindSet(true, false) then
                             repeat
                                 if RecGPurchLine."Initial Order No." = CodGNumDocMarchandise then begin
                                     DecGQty := RecGPurchLine.Quantity;
-                                    RecGPurchLine.VALIDATE(Quantity, DecGQty);             //on valide la Qt‚ … recevoir pour la ligne achat li‚e
+                                    RecGPurchLine.Validate(Quantity, DecGQty);             //on valide la Qt‚ … recevoir pour la ligne achat li‚e
                                 end;
 
                                 if RecGPurchLine."Initial Order No." <> CodGNumDocMarchandise then
-                                    RecGPurchLine.VALIDATE("Qty. to Receive", 0);          //on met … 0 la Qt‚ … recevoir pr les autres lignes
+                                    RecGPurchLine.Validate("Qty. to Receive", 0);          //on met … 0 la Qt‚ … recevoir pr les autres lignes
 
-                                RecGPurchLine.MODIFY();
-                            until RecGPurchLine.NEXT() = 0;
+                                RecGPurchLine.Modify();
+                            until RecGPurchLine.Next() = 0;
 
                         //Si la cde achat transport ‚tait lanc‚e, on referme la cde
                         if BooGARefermer then
-                            CuGReleasePurchaseDoc.RUN(RecGPurchHeader);
+                            CuGReleasePurchaseDoc.Run(RecGPurchHeader);
 
                         //On lance la r‚ception de la cde achat transport
                         RecGPurchHeader.Receive := true;
-                        CuGPurchPost.RUN(RecGPurchHeader);
+                        CuGPurchPost.Run(RecGPurchHeader);
 
                     end;  //Fin Cas 2
                 end;
@@ -1078,46 +1078,46 @@ codeunit 50031 "FTA_Events"
     begin
         //>>FED_20090415:PA 15/04/2009
         BooLNegMargin := false;
-        if RecLCust.GET(SalesHeader."Sell-to Customer No.") then
-            SalesLine.SETRANGE("Document Type", SalesHeader."Document Type");
-        SalesLine.SETRANGE("Document No.", SalesHeader."No.");
-        SalesLine.SETRANGE(Type, SalesLine.Type::Item);
-        if SalesLine.FINDSET() then
+        if RecLCust.Get(SalesHeader."Sell-to Customer No.") then
+            SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        SalesLine.SetRange("Document No.", SalesHeader."No.");
+        SalesLine.SetRange(Type, SalesLine.Type::Item);
+        if SalesLine.FindSet() then
             repeat
                 if (SalesLine."Margin %" <= 0) and not BooLNegMargin then
-                    if CONFIRM(STRSUBSTNO(CstL003, SalesLine."Line No.", SalesLine."No."), true) then
-                        ERROR(CstL004)
+                    if Confirm(StrSubstNo(CstL003, SalesLine."Line No.", SalesLine."No."), true) then
+                        Error(CstL004)
                     else
                         BooLNegMargin := true;
                 if DecLAmount < RecLCust."Franco Amount" then
                     DecLAmount += SalesLine.Amount;
-            until SalesLine.NEXT() = 0;
-        SalesLine.RESET();
+            until SalesLine.Next() = 0;
+        SalesLine.Reset();
         if RecLCust."Franco Amount" <> 0 then
             if DecLAmount < RecLCust."Franco Amount" then
-                if CONFIRM(STRSUBSTNO(CstL001, FORMAT(RecLCust."Franco Amount"), FORMAT(DecLAmount))) then
-                    ERROR(CstL002);
+                if Confirm(StrSubstNo(CstL001, Format(RecLCust."Franco Amount"), Format(DecLAmount))) then
+                    Error(CstL002);
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
-            SalesLine.SETRANGE("Document Type", SalesHeader."Document Type");
-            SalesLine.SETRANGE("Document No.", SalesHeader."No.");
-            SalesLine.SETRANGE(Type, SalesLine.Type::Item);
-            SalesLine.SETRANGE("Preparation Type", SalesLine."Preparation Type"::" ");
-            if SalesLine.FINDFIRST() then
+            SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+            SalesLine.SetRange("Document No.", SalesHeader."No.");
+            SalesLine.SetRange(Type, SalesLine.Type::Item);
+            SalesLine.SetRange("Preparation Type", SalesLine."Preparation Type"::" ");
+            if SalesLine.findFirst() then
                 repeat
-                    if RecLItem.GET(SalesLine."No.") then
+                    if RecLItem.Get(SalesLine."No.") then
                         if RecLItem."Inventory Value Zero" = false then
-                            ERROR(CstL005, SalesLine."Line No.", SalesLine."No.");
-                until SalesLine.NEXT() = 0;
+                            Error(CstL005, SalesLine."Line No.", SalesLine."No.");
+                until SalesLine.Next() = 0;
         end;
-        SalesLine.RESET();
-        SalesLine.SETRANGE("Document Type", SalesHeader."Document Type");
-        SalesLine.SETRANGE("Document No.", SalesHeader."No.");
-        SalesLine.SETRANGE(Type, SalesLine.Type::Item);
-        SalesLine.SETRANGE("No.", '');
-        if SalesLine.FINDFIRST() then
+        SalesLine.Reset();
+        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        SalesLine.SetRange("Document No.", SalesHeader."No.");
+        SalesLine.SetRange(Type, SalesLine.Type::Item);
+        SalesLine.SetRange("No.", '');
+        if SalesLine.findFirst() then
             repeat
-                ERROR(CstL006, SalesLine."Line No.");
-            until SalesLine.NEXT() = 0;
+                Error(CstL006, SalesLine."Line No.");
+            until SalesLine.Next() = 0;
 
         //<<FED_20090415:PA 15/04/2009
     end;
@@ -1168,21 +1168,21 @@ codeunit 50031 "FTA_Events"
         case Item."Item Base" of
             Item."Item Base"::Standard:
                 begin
-                    CLEAR(FrmLItemCard);
-                    FrmLItemCard.SETRECORD(Item);
-                    FrmLItemCard.RUN();
+                    Clear(FrmLItemCard);
+                    FrmLItemCard.SetRecord(Item);
+                    FrmLItemCard.Run();
                 end;
             Item."Item Base"::Transitory:
                 begin
-                    CLEAR(FrmLTransItemCard);
-                    FrmLTransItemCard.SETRECORD(Item);
-                    FrmLTransItemCard.RUN();
+                    Clear(FrmLTransItemCard);
+                    FrmLTransItemCard.SetRecord(Item);
+                    FrmLTransItemCard.Run();
                 end;
             Item."Item Base"::"Transitory Kit":
                 begin
-                    CLEAR(FrmLTransKitItemCard);
-                    FrmLTransKitItemCard.SETRECORD(Item);
-                    FrmLTransKitItemCard.RUN();
+                    Clear(FrmLTransKitItemCard);
+                    FrmLTransKitItemCard.SetRecord(Item);
+                    FrmLTransKitItemCard.Run();
                 end;
         end;
         PAGE.RunModal(PAGE::"Item Card", Item);
@@ -1205,16 +1205,16 @@ codeunit 50031 "FTA_Events"
         case AccType of
             AccType::Customer:
                 begin
-                    CustLedgEntry.get();
-                    CustLedgEntry.SETCURRENTKEY("Customer No.", Open, Positive);
-                    CustLedgEntry.SETRANGE("Customer No.", AccNo);
-                    CustLedgEntry.SETRANGE(Open, true);
+                    CustLedgEntry.Get();
+                    CustLedgEntry.SetCurrentKey("Customer No.", Open, Positive);
+                    CustLedgEntry.SetRange("Customer No.", AccNo);
+                    CustLedgEntry.SetRange(Open, true);
                     CustLedgEntry.SetRange("Applies-to ID", GenJnlLine."Applies-to ID");
                     CodLPostingGroup := CustLedgEntry."Customer Posting Group";
                 end;
             AccType::Vendor:
                 begin
-                    VendLedgEntry.get();
+                    VendLedgEntry.Get();
                     VendLedgEntry.SetCurrentKey("Vendor No.", Open, Positive);
                     VendLedgEntry.SetRange("Vendor No.", AccNo);
                     VendLedgEntry.SetRange(Open, true);
@@ -1255,7 +1255,7 @@ codeunit 50031 "FTA_Events"
 
     // begin
 
-    //     RecLxOldReservEntry.TRANSFERFIELDS(OldReservationEntry);
+    //     RecLxOldReservEntry.TransferFields(OldReservationEntry);
 
 
     //     /*******************/
@@ -1263,7 +1263,7 @@ codeunit 50031 "FTA_Events"
     //         Database::"Sales Line":
     //             begin
     //                 UseQtyToHandle := OldReservationEntry.TrackingExists();
-    //                 RecLSalesLine2.get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
+    //                 RecLSalesLine2.Get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
     //                 TransferQty := RecLSalesLine2."Outstanding Qty. (Base)";
     //                 CurrSignFactor := CreateReservEntry.SignFactor(OldReservationEntry);
     //                 TransferQty := TransferQty * CurrSignFactor;
@@ -1283,7 +1283,7 @@ codeunit 50031 "FTA_Events"
     //         Database::"Item Journal Line":
     //             begin
     //                 UseQtyToHandle := OldReservationEntry.TrackingExists();
-    //                 ItemJournalLine.get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
+    //                 ItemJournalLine.Get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
     //                 // TransferQty := ItemJournalLine."Outstanding Qty. (Base)";//QtyToBeShippedBase("Quanity (Base)")
     //                 CurrSignFactor := CreateReservEntry.SignFactor(OldReservationEntry);
     //                 TransferQty := TransferQty * CurrSignFactor;
@@ -1305,22 +1305,22 @@ codeunit 50031 "FTA_Events"
 
 
     //     if (TransferQty <> 0) and (RecLxOldReservEntry."Source Type" = 39) then begin
-    //         RecLReservEntry.SETRANGE("Entry No.", RecLxOldReservEntry."Entry No.");
-    //         RecLReservEntry.SETRANGE("Source Type", 37);
-    //         RecLReservEntry.SETRANGE("Item No.", RecLxOldReservEntry."Item No.");
-    //         if not RecLReservEntry.ISEMPTY then begin
-    //             RecLReservEntry.FINDSET();
+    //         RecLReservEntry.SetRange("Entry No.", RecLxOldReservEntry."Entry No.");
+    //         RecLReservEntry.SetRange("Source Type", 37);
+    //         RecLReservEntry.SetRange("Item No.", RecLxOldReservEntry."Item No.");
+    //         if not RecLReservEntry.IsEmpty then begin
+    //             RecLReservEntry.FindSet();
     //             repeat
-    //                 if RecLSalesLine.GET(RecLReservEntry."Source Subtype", RecLReservEntry."Source ID", RecLReservEntry."Source Ref. No.") then begin
-    //                     RecLSalesLine.CALCFIELDS("Reserved Quantity");
+    //                 if RecLSalesLine.Get(RecLReservEntry."Source Subtype", RecLReservEntry."Source ID", RecLReservEntry."Source Ref. No.") then begin
+    //                     RecLSalesLine.CalcFields("Reserved Quantity");
     //                     if (RecLSalesLine."Preparation Type" <> RecLSalesLine."Preparation Type"::Stock) and
-    //                        (RecLSalesLine."Reserved Quantity" <= ABS(TransferQty)) and
-    //                         (RecLSalesLine."Outstanding Qty. (Base)" <= ABS(TransferQty)) then begin
+    //                        (RecLSalesLine."Reserved Quantity" <= Abs(TransferQty)) and
+    //                         (RecLSalesLine."Outstanding Qty. (Base)" <= Abs(TransferQty)) then begin
     //                         RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Stock;
-    //                         RecLSalesLine.MODIFY();
+    //                         RecLSalesLine.Modify();
     //                     end;
     //                 end;
-    //             until RecLReservEntry.NEXT() = 0;
+    //             until RecLReservEntry.Next() = 0;
     //         end;
     //     end;
     //     //<<FE-DIVERS 18/09/2009
@@ -1334,25 +1334,25 @@ codeunit 50031 "FTA_Events"
         RecLxOldReservEntry: Record "Reservation Entry" temporary;
         RecLSalesLine: Record "Sales Line";
     begin
-        RecLxOldReservEntry.TRANSFERFIELDS(OldReservEntry);
+        RecLxOldReservEntry.TransferFields(OldReservEntry);
 
         if (TransferQty <> 0) and (RecLxOldReservEntry."Source Type" = 39) then begin
-            RecLReservEntry.SETRANGE("Entry No.", RecLxOldReservEntry."Entry No.");
-            RecLReservEntry.SETRANGE("Source Type", 37);
-            RecLReservEntry.SETRANGE("Item No.", RecLxOldReservEntry."Item No.");
-            if not RecLReservEntry.ISEMPTY then begin
-                RecLReservEntry.FINDSET();
+            RecLReservEntry.SetRange("Entry No.", RecLxOldReservEntry."Entry No.");
+            RecLReservEntry.SetRange("Source Type", 37);
+            RecLReservEntry.SetRange("Item No.", RecLxOldReservEntry."Item No.");
+            if not RecLReservEntry.IsEmpty then begin
+                RecLReservEntry.FindSet();
                 repeat
-                    if RecLSalesLine.GET(RecLReservEntry."Source Subtype", RecLReservEntry."Source ID", RecLReservEntry."Source Ref. No.") then begin
-                        RecLSalesLine.CALCFIELDS("Reserved Quantity");
+                    if RecLSalesLine.Get(RecLReservEntry."Source Subtype", RecLReservEntry."Source ID", RecLReservEntry."Source Ref. No.") then begin
+                        RecLSalesLine.CalcFields("Reserved Quantity");
                         if (RecLSalesLine."Preparation Type" <> RecLSalesLine."Preparation Type"::Stock) and
-                           (RecLSalesLine."Reserved Quantity" <= ABS(TransferQty)) and
-                            (RecLSalesLine."Outstanding Qty. (Base)" <= ABS(TransferQty)) then begin
+                           (RecLSalesLine."Reserved Quantity" <= Abs(TransferQty)) and
+                            (RecLSalesLine."Outstanding Qty. (Base)" <= Abs(TransferQty)) then begin
                             RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Stock;
-                            RecLSalesLine.MODIFY();
+                            RecLSalesLine.Modify();
                         end;
                     end;
-                until RecLReservEntry.NEXT() = 0;
+                until RecLReservEntry.Next() = 0;
             end;
         end;
     end;
@@ -1397,14 +1397,14 @@ codeunit 50031 "FTA_Events"
         if (PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order) and
            (PurchaseHeader.Receive) and
            (CodGNumDoc <> '') then
-            if (RecGPurchHeader.GET(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
-                RecGPurchHeader.CALCFIELDS("Order Type");
+            if (RecGPurchHeader.Get(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
+                RecGPurchHeader.CalcFields("Order Type");
                 if (RecGPurchHeader."Order Type" = RecGPurchHeader."Order Type"::Transport) then begin
 
                     if (RecGPurchHeader."Initial Order No." <> '') and
                        (RecGPurchHeader."Initial Order Type" <> RecGPurchHeader."Initial Order Type"::" ") then begin
                         RecGPurchHeader.Receive := true;
-                        CuGPurchPost.RUN(RecGPurchHeader);
+                        CuGPurchPost.Run(RecGPurchHeader);
                     end;
 
                     BooGARefermer := false;
@@ -1416,27 +1416,27 @@ codeunit 50031 "FTA_Events"
                             CuGReleasePurchaseDoc.Reopen(RecGPurchHeader);
                         end;
 
-                        RecGPurchLine.RESET();
-                        RecGPurchLine.SETRANGE("Document Type", RecGPurchHeader."Document Type");
-                        RecGPurchLine.SETRANGE("Document No.", RecGPurchHeader."No.");
-                        if RecGPurchLine.FINDSET(true, false) then
+                        RecGPurchLine.Reset();
+                        RecGPurchLine.SetRange("Document Type", RecGPurchHeader."Document Type");
+                        RecGPurchLine.SetRange("Document No.", RecGPurchHeader."No.");
+                        if RecGPurchLine.FindSet(true, false) then
                             repeat
                                 if RecGPurchLine."Initial Order No." = CodGNumDocMarchandise then begin
                                     DecGQty := RecGPurchLine.Quantity;
-                                    RecGPurchLine.VALIDATE(Quantity, DecGQty);
+                                    RecGPurchLine.Validate(Quantity, DecGQty);
                                 end;
 
                                 if RecGPurchLine."Initial Order No." <> CodGNumDocMarchandise then
-                                    RecGPurchLine.VALIDATE("Qty. to Receive", 0);
+                                    RecGPurchLine.Validate("Qty. to Receive", 0);
 
-                                RecGPurchLine.MODIFY();
-                            until RecGPurchLine.NEXT() = 0;
+                                RecGPurchLine.Modify();
+                            until RecGPurchLine.Next() = 0;
 
                         if BooGARefermer then
-                            CuGReleasePurchaseDoc.RUN(RecGPurchHeader);
+                            CuGReleasePurchaseDoc.Run(RecGPurchHeader);
 
                         RecGPurchHeader.Receive := true;
-                        CuGPurchPost.RUN(RecGPurchHeader);
+                        CuGPurchPost.Run(RecGPurchHeader);
                     end;
                 end;
             end;
@@ -1456,10 +1456,10 @@ codeunit 50031 "FTA_Events"
         RecGParmNavi: Record "NavEasy Setup";
         RecGArchiveManagement: Codeunit ArchiveManagement;
     begin
-        if RecGParmNavi.GET() then
+        if RecGParmNavi.Get() then
             if RecGParmNavi."Filing Sales Quotes" then begin
                 QuoteSalesHeader."Cause filing" := QuoteSalesHeader."Cause filing"::"Change in Order";
-                QuoteSalesHeader.MODIFY();
+                QuoteSalesHeader.Modify();
                 RecGArchiveManagement.StoreSalesDocument(QuoteSalesHeader, false);
             end;
     end;
@@ -1476,8 +1476,8 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Page, Page::"Purchase order Subform", 'OnBeforeOnDeleteRecord', '', false, false)]
     local procedure OnBeforeOnDeleteRecord(var PurchaseLine: Record "Purchase Line"; var Result: Boolean; var IsHandled: Boolean)
     begin
-        PurchaseLine.CALCFIELDS("Reserved Quantity");
-        PurchaseLine.TESTFIELD("Reserved Quantity", 0);
+        PurchaseLine.CalcFields("Reserved Quantity");
+        PurchaseLine.TestField("Reserved Quantity", 0);
     end;
     //redirect report
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reporting Triggers", 'SubstituteReport', '', false, false)]
@@ -1505,11 +1505,11 @@ codeunit 50031 "FTA_Events"
     var
         RecLPurchHeader: Record "Purchase Header";
         SalesHeader: Record "Sales Header";//TODO A verifier
-        TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
+        TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to Delete this order?';
     begin
         if SalesHeader."Shipping Order No." <> '' then
-            if CONFIRM(STRSUBSTNO(TextCdeTransp002, SalesHeader."Shipping Order No.")) then
-                if RecLPurchHeader.GET(RecLPurchHeader."Document Type"::Order, SalesHeader."Shipping Order No.") then RecLPurchHeader.DELETE(true);
+            if Confirm(StrSubstNo(TextCdeTransp002, SalesHeader."Shipping Order No.")) then
+                if RecLPurchHeader.Get(RecLPurchHeader."Document Type"::Order, SalesHeader."Shipping Order No.") then RecLPurchHeader.Delete(true);
     end;
     //Codeunit 80
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnAfterCheckMandatoryFields', '', false, false)]
@@ -1523,9 +1523,9 @@ codeunit 50031 "FTA_Events"
         function."FTA.UPDATECOST"(SalesHeader);
 
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
-            SalesHeader.TESTFIELD(Preparer);
-            SalesHeader.TESTFIELD(Assembler);
-            SalesHeader.TESTFIELD(Packer);
+            SalesHeader.TestField(Preparer);
+            SalesHeader.TestField(Assembler);
+            SalesHeader.TestField(Packer);
         end;
     end;
     //Codeunit 80
@@ -1558,7 +1558,7 @@ codeunit 50031 "FTA_Events"
         SalesLine.SetRange("Document No.", SalesHeader."No.");
         SalesLine.SetFilter(Quantity, '<>0');
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then
-            SalesLine.SETRANGE(Prepare, true);
+            SalesLine.SetRange(Prepare, true);
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then
             SalesLine.SetFilter("Qty. to Ship", '<>0')
         else
@@ -1576,7 +1576,7 @@ codeunit 50031 "FTA_Events"
     begin
         //>>FTA 28.01.2022
         if SalesHeader.Ship and (SalesLine.Type = SalesLine.Type::Item) and (SalesHeader."Document Type" = SalesHeader."Document Type"::Order) then
-            SalesLine.TESTFIELD(Quantity);
+            SalesLine.TestField(Quantity);
         //<<FTA 28.01.2022
     end;
 
@@ -1595,11 +1595,11 @@ codeunit 50031 "FTA_Events"
                 GLAcc.Get(FromSalesLine."No.");
                 CopyThisLine := GLAcc."Direct Posting";
                 if CopyThisLine then begin
-                    ToSalesLine.VALIDATE("Item Base", FromSalesLine."Item Base");
-                    ToSalesLine.VALIDATE("No.", FromSalesLine."No.");
+                    ToSalesLine.Validate("Item Base", FromSalesLine."Item Base");
+                    ToSalesLine.Validate("No.", FromSalesLine."No.");
                 end
             end else begin
-                ToSalesLine.VALIDATE("Item Base", FromSalesLine."Item Base");
+                ToSalesLine.Validate("Item Base", FromSalesLine."Item Base");
                 ToSalesLine.Validate("No.", FromSalesLine."No.");
             end;
 
@@ -1649,29 +1649,29 @@ codeunit 50031 "FTA_Events"
         BoopF12: Boolean;
     begin
         //>>FED_20090415:PA 15/04/2009
-        COMMIT();
-        RecLInventorySetup.GET();
+        Commit();
+        RecLInventorySetup.Get();
         if RecLInventorySetup."Reservation FTA" and
            (ToSalesHeader."Document Type" = ToSalesHeader."Document Type"::Order) then begin
 
-            ToSalesLine.RESET();
-            ToSalesLine.SETRANGE("Document Type", ToSalesLine."Document Type"::Order);
-            ToSalesLine.SETRANGE("Document No.", ToSalesHeader."No.");
-            ToSalesLine.SETRANGE(Type, ToSalesLine.Type::Item);
-            ToSalesLine.SETRANGE("Preparation Type", ToSalesLine."Preparation Type"::" ");
-            if ToSalesLine.FINDSET() then
+            ToSalesLine.Reset();
+            ToSalesLine.SetRange("Document Type", ToSalesLine."Document Type"::Order);
+            ToSalesLine.SetRange("Document No.", ToSalesHeader."No.");
+            ToSalesLine.SetRange(Type, ToSalesLine.Type::Item);
+            ToSalesLine.SetRange("Preparation Type", ToSalesLine."Preparation Type"::" ");
+            if ToSalesLine.FindSet() then
                 repeat
-                    if RecLItem.GET(ToSalesLine."No.") then;
+                    if RecLItem.Get(ToSalesLine."No.") then;
                     if (ToSalesLine.Quantity <> 0) and (ToSalesLine."Reserved Quantity" <> ToSalesLine.Quantity) and
                          not (RecLItem."Inventory Value Zero") then begin
-                        CLEAR(FrmLAssignmentItem);
+                        Clear(FrmLAssignmentItem);
                         BoopF12 := false;
                         FrmLAssignmentItem.FctGetParm(ToSalesLine, ToSalesLine.Quantity, ToSalesLine."Preparation Type");
-                        FrmLAssignmentItem.SETTABLEVIEW(ToSalesLine);
-                        FrmLAssignmentItem.SETRECORD(ToSalesLine);
-                        FrmLAssignmentItem.RUNMODAL();
+                        FrmLAssignmentItem.SetTableView(ToSalesLine);
+                        FrmLAssignmentItem.SetRecord(ToSalesLine);
+                        FrmLAssignmentItem.RunModal();
                     end;
-                until ToSalesLine.NEXT() = 0;
+                until ToSalesLine.Next() = 0;
         end;
     end;
     //todo a verifier
@@ -1698,7 +1698,7 @@ codeunit 50031 "FTA_Events"
     begin
 
         if SalesHeader."Document Type" = "Document Type"::Order then
-            SalesLine.SETRANGE(Prepare, true);
+            SalesLine.SetRange(Prepare, true);
 
     end;
 
@@ -1708,8 +1708,8 @@ codeunit 50031 "FTA_Events"
 
     begin
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then
-            //SalesLine.SETFILTER("Planned Delivery Date",'<=%1',TODAY);
-            TempSalesLine.SETRANGE(Prepare, true);
+            //SalesLine.SetFilter("Planned Delivery Date",'<=%1',TODAY);
+            TempSalesLine.SetRange(Prepare, true);
     end;
     //todo a verifier emplcament
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnAfterUpdateLastPostingNos', '', false, false)]
@@ -1741,7 +1741,7 @@ codeunit 50031 "FTA_Events"
         RecGArchiveManagement: Codeunit 5063;
     begin
 
-        if RecGParmNavi.GET() then
+        if RecGParmNavi.Get() then
             if RecGParmNavi."Filing Sales Orders" then
                 RecGArchiveManagement.StoreSalesDocument(SalesHeader, false);
     end;
@@ -1758,7 +1758,7 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"ArchiveManagement", 'OnAfterTransferFromArchToSalesHeader', '', false, false)]
     local procedure OnAfterTransferFromArchToSalesHeader(var SalesHeader: Record "Sales Header"; var SalesHeaderArchive: Record "Sales Header Archive")
     begin
-        SalesHeader.VALIDATE("Mobile Salesperson Code", SalesHeaderArchive."Mobile Salesperson Code");
+        SalesHeader.Validate("Mobile Salesperson Code", SalesHeaderArchive."Mobile Salesperson Code");
     end;
     //Codeunit 5815
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Undo Sales Shipment Line", 'OnBeforeNewSalesShptLineInsert', '', false, false)]
@@ -1770,11 +1770,11 @@ codeunit 50031 "FTA_Events"
         CstL001: label 'ENU=Deletion forbidden because of the line %1 having a Kit.;FRA=Annulation impossible … cause de la ligne %1 contenant un Kit.';
     begin
         repeat
-            RecLKitSalesShipLine.SETRANGE("Document No.", OldSalesShipmentLine."Document No.");
-            RecLKitSalesShipLine.SETRANGE("Document Line No.", OldSalesShipmentLine."Line No.");
-            if not RecLKitSalesShipLine.ISEMPTY then
-                ERROR(CstL001, OldSalesShipmentLine."Line No.");
-        until OldSalesShipmentLine.NEXT() = 0;
+            RecLKitSalesShipLine.SetRange("Document No.", OldSalesShipmentLine."Document No.");
+            RecLKitSalesShipLine.SetRange("Document Line No.", OldSalesShipmentLine."Line No.");
+            if not RecLKitSalesShipLine.IsEmpty then
+                Error(CstL001, OldSalesShipmentLine."Line No.");
+        until OldSalesShipmentLine.Next() = 0;
         //<<FTA_DIVERS.001
 
     end;
@@ -1804,8 +1804,8 @@ codeunit 50031 "FTA_Events"
 
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeSetBillToCustomerAddressFieldsFromCustomer', '', false, false)]
-    local procedure OnBeforeSetBillToCustomerAddressFieldsFromCustomer(var SalesHeader: Record "Sales Header"; var BillToCustomer: Record Customer; var SkipBillToContact: Boolean; var IsHandled: Boolean; xSalesHeader: Record "Sales Header"; var GLSetup: Record "General Ledger Setup"; CurrentFieldNo: Integer)
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBefoResetBillToCustomerAddressFieldsFromCustomer', '', false, false)]
+    local procedure OnBefoResetBillToCustomerAddressFieldsFromCustomer(var SalesHeader: Record "Sales Header"; var BillToCustomer: Record Customer; var SkipBillToContact: Boolean; var IsHandled: Boolean; xSalesHeader: Record "Sales Header"; var GLSetup: Record "General Ledger Setup"; CurrentFieldNo: Integer)
     begin
 
         SalesHeader."Mobile Salesperson Code" := BillToCustomer."Mobile Salesperson Code";
@@ -1835,23 +1835,23 @@ codeunit 50031 "FTA_Events"
 
     var
         RecLSalesLine: Record 37;
-        CstL001: label 'ENU=This change can delete the reservation of the lines : do want to continue?;FRA=Cette op‚ration risque de d‚r‚server les lignes : souhaitez-vous continuer?';
+        CstL001: label 'ENU=This change can Delete the reservation of the lines : do want to continue?;FRA=Cette op‚ration risque de d‚r‚server les lignes : souhaitez-vous continuer?';
         CstL002: label 'ENU=Canceled operation;FRA=Op‚ration annul‚e';
     begin
         //>>FED_20090415:PA 15/04/2009
-        RecLSalesLine.SETRANGE("Document Type", xSalesHeader."Document Type");
-        RecLSalesLine.SETRANGE("Document No.", xSalesHeader."No.");
-        RecLSalesLine.SETFILTER("Promised Delivery Date", '>%1', xSalesHeader."Requested Delivery Date");
-        RecLSalesLine.SETRANGE(Type, RecLSalesLine.Type::Item);
+        RecLSalesLine.SetRange("Document Type", xSalesHeader."Document Type");
+        RecLSalesLine.SetRange("Document No.", xSalesHeader."No.");
+        RecLSalesLine.SetFilter("Promised Delivery Date", '>%1', xSalesHeader."Requested Delivery Date");
+        RecLSalesLine.SetRange(Type, RecLSalesLine.Type::Item);
 
-        if not RecLSalesLine.ISEMPTY then begin
-            RecLSalesLine.FINDSET();
+        if not RecLSalesLine.IsEmpty then begin
+            RecLSalesLine.FindSet();
             repeat
-                RecLSalesLine.CALCFIELDS("Reserved Qty. (Base)");
+                RecLSalesLine.CalcFields("Reserved Qty. (Base)");
                 if RecLSalesLine."Reserved Qty. (Base)" <> 0 then
-                    if not CONFIRM(CstL001, false) then
-                        ERROR(CstL002);
-            until (RecLSalesLine.NEXT() = 0) or (RecLSalesLine."Reserved Qty. (Base)" <> 0);
+                    if not Confirm(CstL001, false) then
+                        Error(CstL002);
+            until (RecLSalesLine.Next() = 0) or (RecLSalesLine."Reserved Qty. (Base)" <> 0);
         end;
         //<<FED_20090415:PA 15/04/2009
     end;
@@ -1861,23 +1861,23 @@ codeunit 50031 "FTA_Events"
     local procedure OnBeforeValidatePromisedDeliveryDate(var SalesHeader: Record "Sales Header"; xSalesHeader: Record "Sales Header"; var IsHandled: Boolean)
     var
         RecLSalesLine: Record 37;
-        CstL001: Label 'ENU=This change can delete the reservation of the lines : do want to continue?;FRA=Cette op‚ration risque de d‚r‚server les lignes : souhaitez-vous continuer?';
+        CstL001: Label 'ENU=This change can Delete the reservation of the lines : do want to continue?;FRA=Cette op‚ration risque de d‚r‚server les lignes : souhaitez-vous continuer?';
         CstL002: label 'ENU=Canceled operation;FRA=Op‚ration annul‚e';
     begin
         //>>FED_20090415:PA 15/04/2009
-        RecLSalesLine.SETRANGE("Document Type", xSalesHeader."Document Type");
-        RecLSalesLine.SETRANGE("Document No.", xSalesHeader."No.");
-        RecLSalesLine.SETFILTER("Requested Delivery Date", '>%1', xSalesHeader."Promised Delivery Date");
-        RecLSalesLine.SETRANGE(Type, RecLSalesLine.Type::Item);
+        RecLSalesLine.SetRange("Document Type", xSalesHeader."Document Type");
+        RecLSalesLine.SetRange("Document No.", xSalesHeader."No.");
+        RecLSalesLine.SetFilter("Requested Delivery Date", '>%1', xSalesHeader."Promised Delivery Date");
+        RecLSalesLine.SetRange(Type, RecLSalesLine.Type::Item);
 
-        if not RecLSalesLine.ISEMPTY then begin
-            RecLSalesLine.FINDSET();
+        if not RecLSalesLine.IsEmpty then begin
+            RecLSalesLine.FindSet();
             repeat
-                RecLSalesLine.CALCFIELDS("Reserved Qty. (Base)");
+                RecLSalesLine.CalcFields("Reserved Qty. (Base)");
                 if RecLSalesLine."Reserved Qty. (Base)" <> 0 then
-                    if not CONFIRM(CstL001, false) then
-                        ERROR(CstL002);
-            until (RecLSalesLine.NEXT() = 0) or (RecLSalesLine."Reserved Qty. (Base)" <> 0);
+                    if not Confirm(CstL001, false) then
+                        Error(CstL002);
+            until (RecLSalesLine.Next() = 0) or (RecLSalesLine."Reserved Qty. (Base)" <> 0);
         end;
         //<<FED_20090415:PA 15/04/2009
 
@@ -1891,10 +1891,10 @@ codeunit 50031 "FTA_Events"
     begin
 
         if SalesHeader."Promised Delivery Date" <> 0D then
-            SalesHeader."Planned Shipment Date" := CALCDATE(SalesHeader."Shipping Time", SalesHeader."Promised Delivery Date")
+            SalesHeader."Planned Shipment Date" := CalcDate(SalesHeader."Shipping Time", SalesHeader."Promised Delivery Date")
         else
             if SalesHeader."Requested Delivery Date" <> 0D then
-                SalesHeader."Planned Shipment Date" := CALCDATE(SalesHeader."Shipping Time", SalesHeader."Requested Delivery Date");
+                SalesHeader."Planned Shipment Date" := CalcDate(SalesHeader."Shipping Time", SalesHeader."Requested Delivery Date");
 
     end;
 
@@ -1913,7 +1913,7 @@ codeunit 50031 "FTA_Events"
 
     local procedure OnInitRecordOnBeforeAssignOrderDate(var SalesHeader: Record "Sales Header"; var NewOrderDate: Date)
     begin
-        SalesHeader."Order Shipment Date" := WORKDATE();
+        SalesHeader."Order Shipment Date" := WorkDate();
     end;
 
 
@@ -1937,25 +1937,25 @@ codeunit 50031 "FTA_Events"
     begin
 
         if AssemblyLine.Type = Type::Item then
-            RecLItem.SETFILTER("Location Filter", AssemblyLine."Location Code");
-        if RecLItem.GET(AssemblyLine."No.") then begin
+            RecLItem.SetFilter("Location Filter", AssemblyLine."Location Code");
+        if RecLItem.Get(AssemblyLine."No.") then begin
             AssemblyLine."Vendor No." := RecLItem."Vendor No.";
 
 
-            RecLItem.CALCFIELDS(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
+            RecLItem.CalcFields(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
             DecGQtyKit := 0;
-            RecGKitSalesLine.SETRANGE("Document Type", RecGKitSalesLine."Document Type"::Order);
-            RecGKitSalesLine.SETRANGE(Type, RecGKitSalesLine.Type::Item);
-            RecGKitSalesLine.SETRANGE("No.", AssemblyLine."No.");
-            RecGKitSalesLine.SETFILTER("Remaining Quantity (Base)", '<>0');
+            RecGKitSalesLine.SetRange("Document Type", RecGKitSalesLine."Document Type"::Order);
+            RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
+            RecGKitSalesLine.SetRange("No.", AssemblyLine."No.");
+            RecGKitSalesLine.SetFilter("Remaining Quantity (Base)", '<>0');
 
 
-            if not RecGKitSalesLine.ISEMPTY then begin
-                RecGKitSalesLine.FINDSET();
+            if not RecGKitSalesLine.IsEmpty then begin
+                RecGKitSalesLine.FindSet();
                 repeat
 
                     //>>MIG NAV 2015 : Upgrade Old Code
-                    if RecGAssemLink.GET(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.") then
+                    if RecGAssemLink.Get(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.") then
                         //<<MIG NAV 2015 : Upgrade Old Code
 
                         //>>MIG NAV 2015 : Upgrade Old Code
@@ -1964,7 +1964,7 @@ codeunit 50031 "FTA_Events"
                         if (RecGKitSalesLine."Document No." <> RecGAssemLink."Document No.") or (RecGKitSalesLine."Line No." <> RecGAssemLink."Document Line No.") then
                             //<<MIG NAV 2015 : Upgrade Old Code
                             DecGQtyKit += RecGKitSalesLine."Remaining Quantity (Base)";
-                until RecGKitSalesLine.NEXT() = 0;
+                until RecGKitSalesLine.Next() = 0;
             end;
 
             AssemblyLine."Avaibility no reserved" := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + DecGQtyKit)
@@ -1973,36 +1973,36 @@ codeunit 50031 "FTA_Events"
 
             //>>MIG NAV 2015 : Upgrade Old Code
             //OLD IF RecLItem."Kit BOM No." = '' THEN
-            RecLItem.CALCFIELDS("Assembly BOM");
+            RecLItem.CalcFields("Assembly BOM");
             if RecLItem."Assembly BOM" then
                 AssemblyLine."Kit Qty Available by Assembly" := 0
             else begin
                 AssemblyLine."Kit Qty Available by Assembly" := 0;
                 BoolFirstRead := false;
-                RecLProductionBOMLine.RESET();
-                RecLProductionBOMLine.SETRANGE("Parent Item No.", RecLItem."No.");
-                if RecLProductionBOMLine.FINDSET() then
+                RecLProductionBOMLine.Reset();
+                RecLProductionBOMLine.SetRange("Parent Item No.", RecLItem."No.");
+                if RecLProductionBOMLine.FindSet() then
                     repeat
                         if (RecLProductionBOMLine.Type = RecLProductionBOMLine.Type::Item) then
-                            if RecLItem.GET(RecLProductionBOMLine."No.") then begin
-                                //PAMO RecLItem.SETRANGE("Date Filter","Shipment Date");
-                                RecLItem.SETFILTER("Location Filter", AssemblyLine."Location Code");
+                            if RecLItem.Get(RecLProductionBOMLine."No.") then begin
+                                //PAMO RecLItem.SetRange("Date Filter","Shipment Date");
+                                RecLItem.SetFilter("Location Filter", AssemblyLine."Location Code");
                                 //>>FED_20090415:PA 15/04/2009
-                                // {RecLItem.CALCFIELDS(Inventory,"Reserved Qty. on Inventory");
+                                // {RecLItem.CalcFields(Inventory,"Reserved Qty. on Inventory");
                                 // DecLAvailibityNoReserved := RecLItem.Inventory - RecLItem."Reserved Qty. on Inventory";      }
-                                RecLItem.CALCFIELDS(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
+                                RecLItem.CalcFields(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
                                 DecGQtyKit := 0;
-                                RecGKitSalesLine.SETRANGE("Document Type", RecGKitSalesLine."Document Type"::Order);
-                                RecGKitSalesLine.SETRANGE(Type, RecGKitSalesLine.Type::Item);
-                                RecGKitSalesLine.SETRANGE("No.", AssemblyLine."No.");
-                                RecGKitSalesLine.SETFILTER(RecGKitSalesLine."Remaining Quantity (Base)", '<>0');
+                                RecGKitSalesLine.SetRange("Document Type", RecGKitSalesLine."Document Type"::Order);
+                                RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
+                                RecGKitSalesLine.SetRange("No.", AssemblyLine."No.");
+                                RecGKitSalesLine.SetFilter(RecGKitSalesLine."Remaining Quantity (Base)", '<>0');
 
                                 //>>MIG NAV 2015 : Upgrade Old Code
-                                RecGAssemLink.GET(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.");
+                                RecGAssemLink.Get(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.");
                                 //<<MIG NAV 2015 : Upgrade Old Code
 
-                                if not RecGKitSalesLine.ISEMPTY then begin
-                                    RecGKitSalesLine.FINDSET();
+                                if not RecGKitSalesLine.IsEmpty then begin
+                                    RecGKitSalesLine.FindSet();
                                     repeat
                                         //>>MIG NAV 2015 : Upgrade Old Code
                                         //OLD IF (RecGKitSalesLine."Document No." <> xKitSalesLine."Document No.") OR
@@ -2010,7 +2010,7 @@ codeunit 50031 "FTA_Events"
                                         if (RecGKitSalesLine."Document No." <> RecGAssemLink."Document No.") or (RecGKitSalesLine."Line No." <> RecGAssemLink."Document Line No.") then
                                             //<<MIG NAV 2015 : Upgrade Old Code
                                             DecGQtyKit += RecGKitSalesLine."Remaining Quantity (Base)";
-                                    until RecGKitSalesLine.NEXT() = 0;
+                                    until RecGKitSalesLine.Next() = 0;
                                 end;
 
                                 DecLAvailibityNoReserved := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + DecGQtyKit) +
@@ -2018,13 +2018,13 @@ codeunit 50031 "FTA_Events"
                                 //<<FED_20090415:PA 15/04/2009
 
                                 if not BoolFirstRead then
-                                    AssemblyLine."Kit Qty Available by Assembly" := ROUND(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<')
+                                    AssemblyLine."Kit Qty Available by Assembly" := Round(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<')
                                 else
-                                    if ROUND(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<') < AssemblyLine."Kit Qty Available by Assembly" then
-                                        AssemblyLine."Kit Qty Available by Assembly" := ROUND(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<');
+                                    if Round(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<') < AssemblyLine."Kit Qty Available by Assembly" then
+                                        AssemblyLine."Kit Qty Available by Assembly" := Round(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<');
                                 BoolFirstRead := true;
                             end;
-                    until RecLProductionBOMLine.NEXT() = 0;
+                    until RecLProductionBOMLine.Next() = 0;
             end;
         end;
         //<<FED_20090415:PA 15/04/2009
@@ -2059,21 +2059,21 @@ codeunit 50031 "FTA_Events"
         CstG0001: Label 'No %1|Your Ref: %2|Order FTA %3';
         CstG0002: Label 'No %1|Your Ref: %2';
     begin
-        SalesLine.Description := COPYSTR(CstG0003, 1, 50);
+        SalesLine.Description := CopyStr(CstG0003, 1, 50);
 
-        SalesLine.INSERT();
+        SalesLine.Insert();
         NextLineNo := NextLineNo + 10000;
         SalesLine."Line No." := NextLineNo;
         SalesLine."Document Type" := TempSalesLine."Document Type";
         SalesLine."Document No." := TempSalesLine."Document No.";
 
-        RecGSalesShipHeader.GET(SalesShptLine."Document No.");
-        if STRLEN(STRSUBSTNO(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.", RecGSalesShipHeader."Order No."))
+        RecGSalesShipHeader.Get(SalesShptLine."Document No.");
+        if StrLen(StrSubstNo(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.", RecGSalesShipHeader."Order No."))
                <= 50 then
-            SalesLine.Description := COPYSTR(STRSUBSTNO(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.",
+            SalesLine.Description := CopyStr(StrSubstNo(CstG0001, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No.",
             RecGSalesShipHeader."Order No."), 1, 50)
         else
-            SalesLine.Description := COPYSTR(STRSUBSTNO(CstG0002, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No."), 1, 50);
+            SalesLine.Description := CopyStr(StrSubstNo(CstG0002, SalesShptLine."Document No.", RecGSalesShipHeader."External Document No."), 1, 50);
     end;
     //Table 111 ajouté par hadil
     [EventSubscriber(ObjectType::Table, Database::"Sales Shipment Line", 'OnInsertInvLineFromShptLineOnBeforeValidateQuantity', '', false, false)]
@@ -2113,7 +2113,7 @@ codeunit 50031 "FTA_Events"
 
     begin
 
-        if RecGParmNavi.GET() then
+        if RecGParmNavi.Get() then
             if RecGParmNavi."Filing Sales Orders" then
                 RecGArchiveManagement.StoreSalesDocument(SalesHeader, false);
     end;
@@ -2133,7 +2133,7 @@ codeunit 50031 "FTA_Events"
     end;
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Partie Chaima >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-    // TODO Can not  find an event has SalesLine on parametre
+    // TODO Can not  Find an event has SalesLine on parametre
     // [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnAfterReserveFromCurrentLine', '', false, false)]
     // local procedure OnAfterReserveFromCurrentLine(ReservEntry: Record "Reservation Entry")
     // var
@@ -2146,20 +2146,20 @@ codeunit 50031 "FTA_Events"
     //             SalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
     //         IF "Table ID" = DATABASE::"Item Ledger Entry" THEN
     //             SalesLine."Preparation Type" := SalesLine."Preparation Type"::Stock;
-    //         SalesLine.MODIFY();
+    //         SalesLine.Modify();
     //     END ELSE
     //         //>>TI298981
     //         IF ReservEntry."Source Type" = DATABASE::"Purchase Line" THEN BEGIN
-    //             RecLReservEntry.RESET();
-    //             IF RecLReservEntry.FINDLAST() THEN
-    //                 IF RecLReservEntry2.GET(RecLReservEntry."Entry No.", FALSE) THEN
-    //                     IF RecLSalesLine.GET(RecLReservEntry2."Source Subtype", RecLReservEntry2."Source ID", RecLReservEntry2."Source Ref. No.") THEN BEGIN
+    //             RecLReservEntry.Reset();
+    //             IF RecLReservEntry.FindLast() THEN
+    //                 IF RecLReservEntry2.Get(RecLReservEntry."Entry No.", FALSE) THEN
+    //                     IF RecLSalesLine.Get(RecLReservEntry2."Source Subtype", RecLReservEntry2."Source ID", RecLReservEntry2."Source Ref. No.") THEN BEGIN
     //                         IF ReservEntry."Source Type" = DATABASE::"Purchase Line" THEN
     //                             RecLSalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase
     //                         ELSE
     //                             IF "Table ID" = DATABASE::"Item Ledger Entry" THEN
     //                                 RecLSalesLine."Preparation Type" := SalesLine."Preparation Type"::Stock;
-    //                         RecLSalesLine.MODIFY();
+    //                         RecLSalesLine.Modify();
     //                     END;
     //         END;
 
@@ -2175,13 +2175,13 @@ codeunit 50031 "FTA_Events"
         if FTASingleInstance.FctGetBooResaAssFTA() then
             FTASingleInstance.FctSetBooResaAssFTA(true);
     end;
-    // TODO Can not find event has RecGItem and ReserveEntry on parametre
+    // TODO Can not Find event has RecGItem and ReserveEntry on parametre
     // [EventSubscriber(ObjectType::Page, PAge::Reservation, 'OnAfterUpdateReservFrom', '', False, False)]
     // local procedure OnAfterUpdateReservFrom(var EntrySummary: Record "Entry Summary")
     // begin
     //      //>>FED_20090415:PA
-    //   IF NOT RecGItem.GET(ReservEntry."Item No.") THEN
-    //     CLEAR(RecGItem);
+    //   IF NOT RecGItem.Get(ReservEntry."Item No.") THEN
+    //     Clear(RecGItem);
     //<<FED_20090415:PA
     // end;
 
@@ -2218,52 +2218,52 @@ codeunit 50031 "FTA_Events"
     //         RecLSalesLine: Record "Sales Line";
     //     begin
     //         if SalesLine."Document No." <> '' then begin
-    //             RecLReservEntry.SETRANGE("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
-    //             RecLReservEntry.SETRANGE("Source Type", DATABASE::"Sales Line");
-    //             RecLReservEntry.SETRANGE("Source Subtype", SalesLine."Document Type");
-    //             RecLReservEntry.SETRANGE("Source ID", SalesLine."Document No.");
-    //             RecLReservEntry.SETRANGE("Source Ref. No.", SalesLine."Line No.");
-    //             if RecLReservEntry.FINDLAST then begin
-    //                 if RecLReservEntry2.GET(RecLReservEntry."Entry No.", true) then begin
+    //             RecLReservEntry.SetRange("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
+    //             RecLReservEntry.SetRange("Source Type", DATABASE::"Sales Line");
+    //             RecLReservEntry.SetRange("Source Subtype", SalesLine."Document Type");
+    //             RecLReservEntry.SetRange("Source ID", SalesLine."Document No.");
+    //             RecLReservEntry.SetRange("Source Ref. No.", SalesLine."Line No.");
+    //             if RecLReservEntry.FindLast then begin
+    //                 if RecLReservEntry2.Get(RecLReservEntry."Entry No.", true) then begin
     //                     if RecLReservEntry2."Source Type" = DATABASE::"Purchase Line" then
     //                         SalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
     //                     if "Table ID" = DATABASE::"Item Ledger Entry" then
     //                         SalesLine."Preparation Type" := SalesLine."Preparation Type"::Stock;
-    //                     SalesLine.MODIFY;
+    //                     SalesLine.Modify;
     //                 end;
     //             end
     //         end else
     //             if PurchLine."Document No." <> '' then begin
     //                 //>>TI298981
-    //                 RecLReservEntry.SETRANGE("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
-    //                 RecLReservEntry.SETRANGE("Source Type", DATABASE::"Purchase Line");
-    //                 RecLReservEntry.SETRANGE("Source Subtype", PurchLine."Document Type");
-    //                 RecLReservEntry.SETRANGE("Source ID", PurchLine."Document No.");
-    //                 RecLReservEntry.SETRANGE("Source Ref. No.", PurchLine."Line No.");
-    //                 if RecLReservEntry.FINDLAST then
-    //                     if RecLReservEntry2.GET(RecLReservEntry."Entry No.", false) then
+    //                 RecLReservEntry.SetRange("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
+    //                 RecLReservEntry.SetRange("Source Type", DATABASE::"Purchase Line");
+    //                 RecLReservEntry.SetRange("Source Subtype", PurchLine."Document Type");
+    //                 RecLReservEntry.SetRange("Source ID", PurchLine."Document No.");
+    //                 RecLReservEntry.SetRange("Source Ref. No.", PurchLine."Line No.");
+    //                 if RecLReservEntry.FindLast then
+    //                     if RecLReservEntry2.Get(RecLReservEntry."Entry No.", false) then
     //                         if RecLReservEntry2."Source Type" = DATABASE::"Sales Line" then
-    //                             if RecLSalesLine.GET(RecLReservEntry2."Source Subtype", RecLReservEntry2."Source ID", RecLReservEntry2."Source Ref. No.") then begin
+    //                             if RecLSalesLine.Get(RecLReservEntry2."Source Subtype", RecLReservEntry2."Source ID", RecLReservEntry2."Source Ref. No.") then begin
     //                                 RecLSalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
-    //                                 RecLSalesLine.MODIFY();
+    //                                 RecLSalesLine.Modify();
     //                             end;
     //             end;
     //     end;
-    //    TODO can't find event  on DrillDownTotalQuantity
+    //    TODO can't Find event  on DrillDownTotalQuantity
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Posting Selection Management", 'OnConfirmPostSalesDocumentOnBeforeSalesOrderGetSalesInvoicePostingPolicy', '', false, false)]
     local procedure OnConfirmPostSalesDocumentOnBeforeSalesOrderGetSalesInvoicePostingPolicy(var SalesHeader: Record "Sales Header")
     var
         RecLSalesReceivablesSetup: Record "Sales & Receivables Setup";
     begin
-        RecLSalesReceivablesSetup.GET();
+        RecLSalesReceivablesSetup.Get();
         if RecLSalesReceivablesSetup."Default Posting Date" = RecLSalesReceivablesSetup."Default Posting Date"::"Work Date" then
-            SalesHeader.VALIDATE("Posting Date", WORKDATE());
+            SalesHeader.Validate("Posting Date", WorkDate());
     end;
-    // Todo : i can't find solution table 9053
+    // Todo : i can't Find solution table 9053
     // [EventSubscriber(ObjectType::Table, Database::"Sales Cue", 'OnFilterOrdersOnAfterSalesHeaderSetFilters', '', false, false)]
     // local procedure OnFilterOrdersOnAfterSalesHeaderSetFilters(var SalesHeader: Record "Sales Header")
     // begin
-    //     SalesHeader.reset();
+    //     SalesHeader.Reset();
     //     SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
     //     SalesHeader.SetRange(Status, SalesHeader.Status::Released);
     //     SalesHeader.SetRange("Completely Shipped", false);

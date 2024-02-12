@@ -19,7 +19,7 @@ page 51009 "Sales Archive"
     Caption = 'Sales Archive List';
     DataCaptionFields = "Document Type";
     Editable = false;
-    PageType = List;
+    PaGetype = List;
     SourceTable = "Sales Line Archive";
     ApplicationArea = All;
 
@@ -106,15 +106,15 @@ page 51009 "Sales Archive"
                     var
                         RecLSalesHeadArch: Record "Sales Header Archive";
                     begin
-                        RecLSalesHeadArch.RESET();
-                        RecLSalesHeadArch.SETRANGE("Document Type", Rec."Document Type");
-                        RecLSalesHeadArch.SETRANGE("No.", Rec."Document No.");
-                        if RecLSalesHeadArch.FINDFIRST() then
+                        RecLSalesHeadArch.Reset();
+                        RecLSalesHeadArch.SetRange("Document Type", Rec."Document Type");
+                        RecLSalesHeadArch.SetRange("No.", Rec."Document No.");
+                        if RecLSalesHeadArch.findFirst() then
                             case Rec."Document Type" of
                                 Rec."Document Type"::Order:
-                                    PAGE.RUN(PAGE::"Sales Order Archive", RecLSalesHeadArch);
+                                    PAGE.Run(PAGE::"Sales Order Archive", RecLSalesHeadArch);
                                 Rec."Document Type"::Quote:
-                                    PAGE.RUN(PAGE::"Sales Quote Archive", RecLSalesHeadArch);
+                                    PAGE.Run(PAGE::"Sales Quote Archive", RecLSalesHeadArch);
                             end;
                     end;
                 }

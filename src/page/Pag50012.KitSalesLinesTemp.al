@@ -28,7 +28,7 @@ page 50012 "Kit Sales Lines Temp"
     Caption = 'Assemble-to-Order Lines';
     DataCaptionExpression = GetCaption();
     DelayedInsert = true;
-    PageType = Worksheet;
+    PaGetype = Worksheet;
     PopulateAllFields = true;
     SourceTable = "Assembly Line";
     SourceTableTemporary = true;
@@ -59,28 +59,28 @@ page 50012 "Kit Sales Lines Temp"
                         BoolEndLoop: Boolean;
 
                     begin
-                        CurrPage.SAVERECORD();
+                        CurrPage.SaveRecord();
                         IntLDocumentLineNo := Rec."Line No.";
                         IntLLineNo := Rec."Line No.";
                         case Rec."Kit Action" of
                             Rec."Kit Action"::Assembly:
-                                if RecLATOLink.GET(Rec."Document Type", Rec."Document No.") then
-                                    KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
+                                if RecLATOLink.Get(Rec."Document Type", Rec."Document No.") then
+                                    KitLine.Get(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
 
                             Rec."Kit Action"::Disassembly:
-                                if RecLATOLink.GET(Rec."Document Type", Rec."Document No.") then
-                                    KitLine.GET(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
+                                if RecLATOLink.Get(Rec."Document Type", Rec."Document No.") then
+                                    KitLine.Get(RecLATOLink."Document Type", RecLATOLink."Document No.", RecLATOLink."Document Line No.");
                         end;
-                        //CurrForm.UPDATE(FALSE);
+                        //CurrForm.Update(FALSE);
                         BoolEndLoop := false;
-                        if Rec.FINDSET() then
+                        if Rec.FindSet() then
                             repeat
                                 if IntLLineNo = Rec."Line No." then
                                     BoolEndLoop := true;
-                            until (Rec.NEXT() = 0) or (BoolEndLoop = true);
-                        Rec.NEXT(-1);
-                        //IF GET("Document Type","Document No.",IntLDocumentLineNo,IntLLineNo) THEN;
-                        CurrPage.UPDATE(false);
+                            until (Rec.Next() = 0) or (BoolEndLoop = true);
+                        Rec.Next(-1);
+                        //IF Get("Document Type","Document No.",IntLDocumentLineNo,IntLLineNo) THEN;
+                        CurrPage.Update(false);
                     end;
                 }
                 field("Avail. Warning"; Rec."Avail. Warning")
@@ -255,7 +255,7 @@ page 50012 "Kit Sales Lines Temp"
                 trigger OnAction()
                 begin
                     Rec.ShowItemSub();
-                    CurrPage.UPDATE();
+                    CurrPage.Update();
                 end;
             }
             action("Explode BOM")
@@ -266,7 +266,7 @@ page 50012 "Kit Sales Lines Temp"
                 trigger OnAction()
                 begin
                     Rec.ExplodeAssemblyList();
-                    CurrPage.UPDATE();
+                    CurrPage.Update();
                 end;
             }
             action("Assembly BOM")
@@ -291,7 +291,7 @@ page 50012 "Kit Sales Lines Temp"
                     ATOMovementsCreated: Integer;
                     TotalATOMovementsToBeCreated: Integer;
                 begin
-                    AssemblyHeader.GET(Rec."Document Type", Rec."Document No.");
+                    AssemblyHeader.Get(Rec."Document Type", Rec."Document No.");
                     AssemblyHeader.CreateInvtMovement(false, false, false, ATOMovementsCreated, TotalATOMovementsToBeCreated);
                 end;
             }
@@ -311,8 +311,8 @@ page 50012 "Kit Sales Lines Temp"
                     ATOLink: Record "Assemble-to-Order Link";
                     SalesLine: Record "Sales Line";
                 begin
-                    ATOLink.GET(Rec."Document Type", Rec."Document No.");
-                    SalesLine.GET(ATOLink."Document Type", ATOLink."Document No.", ATOLink."Document Line No.");
+                    ATOLink.Get(Rec."Document Type", Rec."Document No.");
+                    SalesLine.Get(ATOLink."Document Type", ATOLink."Document No.", ATOLink."Document Line No.");
                     ATOLink.ShowAsm(SalesLine);
                 end;
             }
@@ -431,15 +431,15 @@ page 50012 "Kit Sales Lines Temp"
 
         //>>FED_20090415:PA 15/04/2009
         if Rec.Type = Rec.Type::Item then
-            if RecLItem.GET(Rec."No.") then begin
-                //OLD RecLItem.SETRANGE("Date Filter","Shipment Date");
-                RecLItem.SETRANGE("Date Filter", Rec."Due Date");
+            if RecLItem.Get(Rec."No.") then begin
+                //OLD RecLItem.SetRange("Date Filter","Shipment Date");
+                RecLItem.SetRange("Date Filter", Rec."Due Date");
                 if Rec."Location Code" <> '' then
-                    RecLItem.SETFILTER("Location Filter", Rec."Location Code");
-                //PAMO RecLItem.CALCFIELDS(Inventory,"Reserved Qty. on Inventory");
+                    RecLItem.SetFilter("Location Filter", Rec."Location Code");
+                //PAMO RecLItem.CalcFields(Inventory,"Reserved Qty. on Inventory");
                 //PAMO "Avaibility no reserved" := RecLItem.Inventory - RecLItem."Reserved Qty. on Inventory";
                 //>>FED_20090415:PA 15/04/2009
-                RecLItem.CALCFIELDS(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
+                RecLItem.CalcFields(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
                 Rec."Avaibility no reserved" := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + RecLItem."Qty. on Asm. Component")
                            + RecLItem."Reserved Qty. on Purch. Orders" + Rec."Remaining Quantity (Base)";
                 //<<FED_20090415:PA 15/04/2009
@@ -453,7 +453,7 @@ page 50012 "Kit Sales Lines Temp"
         AssemblyLineReserve: codeunit "Assembly Line-Reserve";
     begin
         if (Rec.Quantity <> 0) and Rec.ItemExists(Rec."No.") then begin
-            COMMIT();
+            Commit();
             if not AssemblyLineReserve.DeleteLineConfirm(Rec) then
                 exit(false);
             AssemblyLineReserve.DeleteLine(Rec);
@@ -475,12 +475,12 @@ page 50012 "Kit Sales Lines Temp"
     begin
         Description := '';
 
-        if AsmHeader.GET(Rec."Document Type", Rec."Document No.") then begin
+        if AsmHeader.Get(Rec."Document Type", Rec."Document No.") then begin
             SourceTableName := ObjTransln.TranslateObject(ObjTransln."Object Type"::table, 27);
             SourceFilter := AsmHeader."Item No.";
             Description := AsmHeader.Description;
         end;
-        exit(STRSUBSTNO(Text001, SourceTableName, SourceFilter, Description));
+        exit(StrSubstNo(Text001, SourceTableName, SourceFilter, Description));
     end;
 
 

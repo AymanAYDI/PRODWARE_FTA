@@ -22,12 +22,12 @@ pageextension 50054 ItemAvailabilityLines extends "Item Availability Lines" //35
         //         end;
         //     }
         // }
-        modify("Item.Inventory")
+        Modify("Item.Inventory")
         {
             Visible = true;
         }
         moveafter("Period Name"; "Item.Inventory")
-        modify(PlannedOrderRcpt)
+        Modify(PlannedOrderRcpt)
         {
             Visible = false;
         }
@@ -42,25 +42,25 @@ pageextension 50054 ItemAvailabilityLines extends "Item Availability Lines" //35
         ItemLedgerEntry: Record "Item Ledger Entry";
     begin
         SetItemFilter();
-        ItemLedgerEntry.RESET();
-        ItemLedgerEntry.SETCURRENTKEY("Item No.", "Entry Type", "Variant Code", "Drop Shipment", "Location Code", "Posting Date");
-        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
-        ItemLedgerEntry.SETFILTER("Variant Code", Item.GETFILTER("Variant Filter"));
-        ItemLedgerEntry.SETFILTER("Drop Shipment", Item.GETFILTER("Drop Shipment Filter"));
-        ItemLedgerEntry.SETFILTER("Location Code", Item.GETFILTER("Location Filter"));
-        ItemLedgerEntry.SETFILTER("Global Dimension 1 Code", Item.GETFILTER("Global Dimension 1 Filter"));
-        ItemLedgerEntry.SETFILTER("Global Dimension 2 Code", Item.GETFILTER("Global Dimension 2 Filter"));
+        ItemLedgerEntry.Reset();
+        ItemLedgerEntry.SetCurrentKey("Item No.", "Entry Type", "Variant Code", "Drop Shipment", "Location Code", "Posting Date");
+        ItemLedgerEntry.SetRange("Item No.", Item."No.");
+        ItemLedgerEntry.SetFilter("Variant Code", Item.GetFilter("Variant Filter"));
+        ItemLedgerEntry.SetFilter("Drop Shipment", Item.GetFilter("Drop Shipment Filter"));
+        ItemLedgerEntry.SetFilter("Location Code", Item.GetFilter("Location Filter"));
+        ItemLedgerEntry.SetFilter("Global Dimension 1 Code", Item.GetFilter("Global Dimension 1 Filter"));
+        ItemLedgerEntry.SetFilter("Global Dimension 2 Code", Item.GetFilter("Global Dimension 2 Filter"));
         if NetChange then
-            ItemLedgerEntry.SETFILTER("Posting Date", Item.GETFILTER("Date Filter"));
-        PAGE.RUN(0, ItemLedgerEntry);
+            ItemLedgerEntry.SetFilter("Posting Date", Item.GetFilter("Date Filter"));
+        PAGE.Run(0, ItemLedgerEntry);
     end;
 
     local procedure SetItemFilter()
     begin
         if AmountType = AmountType::"Net Change" then
-            Item.SETRANGE("Date Filter", Rec."Period Start", Rec."Period End")
+            Item.SetRange("Date Filter", Rec."Period Start", Rec."Period End")
         else
-            Item.SETRANGE("Date Filter", 0D, Rec."Period End");
+            Item.SetRange("Date Filter", 0D, Rec."Period End");
     end;
 
     var

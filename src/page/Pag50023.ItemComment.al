@@ -6,7 +6,7 @@ page 50023 "Item Comment"
 
     Caption = 'Historique article';
     CardPageID = "Item Comment Card";
-    PageType = List;
+    PaGetype = List;
     SourceTable = "Item Comment";
     ApplicationArea = All;
 

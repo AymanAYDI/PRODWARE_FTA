@@ -12,7 +12,7 @@ page 51007 "NavEasy Setup"
     // ------------------------------------------------------------------------
 
     Caption = 'NavEasy Setup';
-    PageType = Card;
+    PaGetype = Card;
     SourceTable = "NavEasy Setup";
     ApplicationArea = All;
 

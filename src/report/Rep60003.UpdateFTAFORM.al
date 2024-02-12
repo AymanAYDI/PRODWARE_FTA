@@ -10,8 +10,8 @@ report 60003 "Update FTA-FORM+"
 
         //     trigger OnAfterGetRecord()
         //     begin
-        //         if not RecgPermission.GET('FTA-FORM+', RecgPermission."Object Type"::Page, ID) then begin
-        //             RecgPermission.INIT();
+        //         if not RecgPermission.Get('FTA-FORM+', RecgPermission."Object Type"::Page, ID) then begin
+        //             RecgPermission.Init();
         //             RecgPermission."Role ID" := 'FTA-FORM+';
         //             RecgPermission."Object Type" := RecgPermission."Object Type"::Page;
         //             RecgPermission."Object ID" := ID;
@@ -21,19 +21,19 @@ report 60003 "Update FTA-FORM+"
         //             RecgPermission."Delete Permission" := RecgPermission."Delete Permission"::" ";
 
         //             RecgPermission."Execute Permission" := RecgPermission."Execute Permission"::Yes;
-        //             RecgPermission.INSERT();
+        //             RecgPermission.Insert();
         //         end;
         //     end;
 
         //     trigger OnPostDataItem()
         //     begin
-        //         MESSAGE('Fini');
+        //         Message('Fini');
         //     end;
 
         //     trigger OnPreDataItem()
         //     begin
-        //         RecgPermission.SETRANGE("Role ID", 'FTA-FORM+');
-        //         SETRANGE(Type, Type::Page);
+        //         RecgPermission.SetRange("Role ID", 'FTA-FORM+');
+        //         SetRange(Type, Type::Page);
         //     end;
         // }
     }

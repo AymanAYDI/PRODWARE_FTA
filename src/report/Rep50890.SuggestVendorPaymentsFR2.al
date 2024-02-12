@@ -23,8 +23,8 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
             trigger OnAfterGetRecord()
             begin
                 if StopPayments then
-                    CurrReport.BREAK();
-                Window.UPDATE(1, "No.");
+                    CurrReport.Break();
+                Window.Update(1, "No.");
 
                 //>>NAVEASY.001 [Multi_Collectif]
                 //STD GetVendLedgEntries(TRUE,FALSE);
@@ -44,54 +44,44 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
             trigger OnPostDataItem()
             begin
                 if UsePriority and not StopPayments then begin
-                    RESET();
-                    COPYFILTERS(Vend2);
-                    SETCURRENTKEY(Priority);
-                    SETRANGE(Priority, 0);
-                    if FINDFIRST() then
+                    Reset();
+                    CopyFilters(Vend2);
+                    SetCurrentKey(Priority);
+                    SetRange(Priority, 0);
+                    if findFirst() then
                         repeat
-                            Window.UPDATE(1, "No.");
+                            Window.Update(1, "No.");
                             GetVendLedgEntries(true, false);
                             GetVendLedgEntries(false, false);
                             CheckAmounts(false);
-                        until (NEXT() = 0) or StopPayments;
+                        until (Next() = 0) or StopPayments;
                 end;
 
                 if UsePaymentDisc and not StopPayments then begin
-                    RESET();
-                    COPYFILTERS(Vend2);
-                    Window.OPEN(Text007);
-                    if FINDFIRST() then
+                    Reset();
+                    CopyFilters(Vend2);
+                    Window.Open(Text007);
+                    if findFirst() then
                         repeat
-                            Window.UPDATE(1, "No.");
-                            PayableVendLedgEntry.SETRANGE("Vendor No.", "No.");
+                            Window.Update(1, "No.");
+                            PayableVendLedgEntry.SetRange("Vendor No.", "No.");
                             GetVendLedgEntries(true, true);
                             GetVendLedgEntries(false, true);
                             CheckAmounts(true);
-                        until (NEXT() = 0) or StopPayments;
+                        until (Next() = 0) or StopPayments;
                 end;
 
-                GenPayLine.LOCKTABLE();
-                GenPayLine.SETRANGE("No.", GenPayLine."No.");
-                if GenPayLine.FINDLAST() then begin
+                GenPayLine.LockTable();
+                GenPayLine.SetRange("No.", GenPayLine."No.");
+                if GenPayLine.FindLast() then begin
                     LastLineNo := GenPayLine."Line No.";
-                    GenPayLine.INIT();
+                    GenPayLine.Init();
                 end;
 
-                Window.OPEN(Text008);
+                Window.Open(Text008);
 
-                PayableVendLedgEntry.RESET();
-                PayableVendLedgEntry.SETRANGE(Priority, 1, 2147483647);
-
-                //>>NAVEASY.001 [Multi_Collectif]
-                //STD MakeGenPayLines;
-                if BooGCheckPostGroup then
-                    MakeGenPayLines2()
-                else
-                    MakeGenPayLines();
-                //<<NAVEASY.001 [Multi_Collectif]
-                PayableVendLedgEntry.RESET();
-                PayableVendLedgEntry.SETRANGE(Priority, 0);
+                PayableVendLedgEntry.Reset();
+                PayableVendLedgEntry.SetRange(Priority, 1, 2147483647);
 
                 //>>NAVEASY.001 [Multi_Collectif]
                 //STD MakeGenPayLines;
@@ -100,41 +90,51 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                 else
                     MakeGenPayLines();
                 //<<NAVEASY.001 [Multi_Collectif]
-                PayableVendLedgEntry.RESET();
-                PayableVendLedgEntry.DELETEALL();
+                PayableVendLedgEntry.Reset();
+                PayableVendLedgEntry.SetRange(Priority, 0);
 
-                Window.CLOSE();
-                ShowMessage(MessageText);
+                //>>NAVEASY.001 [Multi_Collectif]
+                //STD MakeGenPayLines;
+                if BooGCheckPostGroup then
+                    MakeGenPayLines2()
+                else
+                    MakeGenPayLines();
+                //<<NAVEASY.001 [Multi_Collectif]
+                PayableVendLedgEntry.Reset();
+                PayableVendLedgEntry.DeleteALL();
+
+                Window.Close();
+                ShowMessage(MessaGetext);
             end;
 
             trigger OnPreDataItem()
             begin
                 if LastDueDateToPayReq = 0D then
-                    ERROR(Text000);
+                    Error(Text000);
                 if PostingDate = 0D then
-                    ERROR(Text001);
+                    Error(Text001);
 
                 GenPayLineInserted := false;
-                MessageText := '';
+                MessaGetext := '';
 
-                if UsePaymentDisc and (LastDueDateToPayReq < WORKDATE()) then
+                if UsePaymentDisc and (LastDueDateToPayReq < WorkDate()) then
                     if not
-                       CONFIRM(
+                       Confirm(
                          Text003 +
                          Text004, false,
-                         WORKDATE())
+                         WorkDate())
                     then
-                        ERROR(Text005);
+                        Error(Text005);
 
-                Vend2.COPYFILTERS(Vendor);
+                Vend2.CopyFilters(Vendor);
 
                 OriginalAmtAvailable := AmountAvailable;
                 if UsePriority then begin
-                    SETCURRENTKEY(Priority);
-                    SETRANGE(Priority, 1, 2147483647);
+                    SetCurrentKey(Priority);
+                    SetRange(Priority, 1, 2147483647);
                     UsePriority := true;
                 end;
-                Window.OPEN(Text006);
+                Window.Open(Text006);
 
                 NextEntryNo := 1;
             end;
@@ -173,7 +173,7 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                         trigger OnValidate()
                         begin
                             if not UsePriority and (AmountAvailable <> 0) then
-                                ERROR(Text011);
+                                Error(Text011);
                         end;
                     }
                     field(AvailableAmountLCY; AmountAvailable)
@@ -255,14 +255,14 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
         Text011: Label 'Use Vendor Priority must be activated when the value in the Amount Available field is not 0.';
         Text016: Label ' is already applied to %1 %2 for vendor %3.';
         SummarizePer: Option " ",Vendor,"Due date";
-        MessageText: Text;
+        MessaGetext: Text;
 
 
     procedure SetGenPayLine(NewGenPayLine: Record "Payment Header")
     begin
         GenPayHead := NewGenPayLine;
         GenPayLine."No." := NewGenPayLine."No.";
-        PaymentClass.GET(GenPayHead."Payment Class");
+        PaymentClass.Get(GenPayHead."Payment Class");
         PostingDate := GenPayHead."Posting Date";
         CurrencyFilter := GenPayHead."Currency Code";
     end;
@@ -270,42 +270,42 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
 
     procedure GetVendLedgEntries(Positive: Boolean; Future: Boolean)
     begin
-        VendLedgEntry.RESET();
-        VendLedgEntry.SETCURRENTKEY("Vendor No.", Open, Positive, "Due Date");
-        VendLedgEntry.SETRANGE("Vendor No.", Vendor."No.");
-        VendLedgEntry.SETRANGE(Open, true);
-        VendLedgEntry.SETRANGE(Positive, Positive);
-        VendLedgEntry.SETRANGE("Currency Code", CurrencyFilter);
-        VendLedgEntry.SETRANGE("Applies-to ID", '');
+        VendLedgEntry.Reset();
+        VendLedgEntry.SetCurrentKey("Vendor No.", Open, Positive, "Due Date");
+        VendLedgEntry.SetRange("Vendor No.", Vendor."No.");
+        VendLedgEntry.SetRange(Open, true);
+        VendLedgEntry.SetRange(Positive, Positive);
+        VendLedgEntry.SetRange("Currency Code", CurrencyFilter);
+        VendLedgEntry.SetRange("Applies-to ID", '');
         if Future then begin
-            VendLedgEntry.SETRANGE("Due Date", LastDueDateToPayReq + 1, 19991231D);
-            VendLedgEntry.SETRANGE("Pmt. Discount Date", PostingDate, LastDueDateToPayReq);
-            VendLedgEntry.SETFILTER("Original Pmt. Disc. Possible", '<0');
+            VendLedgEntry.SetRange("Due Date", LastDueDateToPayReq + 1, 19991231D);
+            VendLedgEntry.SetRange("Pmt. Discount Date", PostingDate, LastDueDateToPayReq);
+            VendLedgEntry.SetFilter("Original Pmt. Disc. Possible", '<0');
         end else
-            VendLedgEntry.SETRANGE("Due Date", 0D, LastDueDateToPayReq);
-        VendLedgEntry.SETRANGE("On Hold", '');
+            VendLedgEntry.SetRange("Due Date", 0D, LastDueDateToPayReq);
+        VendLedgEntry.SetRange("On Hold", '');
 
         //>>NAVEASY.001 [Payment Method propagation]
-        VendLedgEntry.SETFILTER("Payment Method Code", CodGPayMetFilter);
+        VendLedgEntry.SetFilter("Payment Method Code", CodGPayMetFilter);
         //<<NAVEASY.001 [Payment Method propagation]
 
-        if VendLedgEntry.FINDFIRST() then
+        if VendLedgEntry.findFirst() then
             repeat
                 SaveAmount();
-            until VendLedgEntry.NEXT() = 0;
+            until VendLedgEntry.Next() = 0;
     end;
 
     local procedure SaveAmount()
     begin
         with GenPayLine do begin
             "Account Type" := "Account Type"::Vendor;
-            VALIDATE("Account No.", VendLedgEntry."Vendor No.");
+            Validate("Account No.", VendLedgEntry."Vendor No.");
             "Posting Date" := VendLedgEntry."Posting Date";
             "Currency Factor" := VendLedgEntry."Adjusted Currency Factor";
             if "Currency Factor" = 0 then
                 "Currency Factor" := 1;
-            VALIDATE("Currency Code", VendLedgEntry."Currency Code");
-            VendLedgEntry.CALCFIELDS("Remaining Amount");
+            Validate("Currency Code", VendLedgEntry."Currency Code");
+            VendLedgEntry.CalcFields("Remaining Amount");
             if ((VendLedgEntry."Document Type" = VendLedgEntry."Document Type"::"Credit Memo") and
                 (VendLedgEntry."Remaining Pmt. Disc. Possible" <> 0) or
                 (VendLedgEntry."Document Type" = VendLedgEntry."Document Type"::Invoice)) and
@@ -314,7 +314,7 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                 Amount := -(VendLedgEntry."Remaining Amount" - VendLedgEntry."Original Pmt. Disc. Possible")
             else
                 Amount := -VendLedgEntry."Remaining Amount";
-            VALIDATE(Amount);
+            Validate(Amount);
         end;
 
         if UsePriority then
@@ -330,7 +330,7 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
         PayableVendLedgEntry.Future := (VendLedgEntry."Due Date" > LastDueDateToPayReq);
         PayableVendLedgEntry."Currency Code" := VendLedgEntry."Currency Code";
         PayableVendLedgEntry."Due Date" := VendLedgEntry."Due Date";
-        PayableVendLedgEntry.INSERT();
+        PayableVendLedgEntry.Insert();
         NextEntryNo := NextEntryNo + 1;
     end;
 
@@ -340,16 +340,16 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
         PrevCurrency: Code[10];
         CurrencyBalance: Decimal;
     begin
-        PayableVendLedgEntry.SETRANGE("Vendor No.", Vendor."No.");
-        PayableVendLedgEntry.SETRANGE(Future, Future);
-        if PayableVendLedgEntry.FINDFIRST() then begin
+        PayableVendLedgEntry.SetRange("Vendor No.", Vendor."No.");
+        PayableVendLedgEntry.SetRange(Future, Future);
+        if PayableVendLedgEntry.findFirst() then begin
             PrevCurrency := PayableVendLedgEntry."Currency Code";
             repeat
                 if PayableVendLedgEntry."Currency Code" <> PrevCurrency then begin
                     if CurrencyBalance < 0 then begin
-                        PayableVendLedgEntry.SETRANGE("Currency Code", PrevCurrency);
-                        PayableVendLedgEntry.DELETEALL();
-                        PayableVendLedgEntry.SETRANGE("Currency Code");
+                        PayableVendLedgEntry.SetRange("Currency Code", PrevCurrency);
+                        PayableVendLedgEntry.DeleteALL();
+                        PayableVendLedgEntry.SetRange("Currency Code");
                     end else
                         AmountAvailable := AmountAvailable - CurrencyBalance;
                     CurrencyBalance := 0;
@@ -360,33 +360,33 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                 then
                     CurrencyBalance := CurrencyBalance + PayableVendLedgEntry."Amount (LCY)"
                 else
-                    PayableVendLedgEntry.DELETE();
-            until PayableVendLedgEntry.NEXT() = 0;
+                    PayableVendLedgEntry.Delete();
+            until PayableVendLedgEntry.Next() = 0;
             if CurrencyBalance < 0 then begin
-                PayableVendLedgEntry.SETRANGE("Currency Code", PrevCurrency);
-                PayableVendLedgEntry.DELETEALL();
-                PayableVendLedgEntry.SETRANGE("Currency Code");
+                PayableVendLedgEntry.SetRange("Currency Code", PrevCurrency);
+                PayableVendLedgEntry.DeleteALL();
+                PayableVendLedgEntry.SetRange("Currency Code");
             end else
                 if OriginalAmtAvailable > 0 then
                     AmountAvailable := AmountAvailable - CurrencyBalance;
             if (OriginalAmtAvailable > 0) and (AmountAvailable <= 0) then
                 StopPayments := true;
         end;
-        PayableVendLedgEntry.RESET();
+        PayableVendLedgEntry.Reset();
     end;
 
     local procedure MakeGenPayLines()
     var
         GenPayLine3: Record "Gen. Journal Line";
     begin
-        TempPaymentPostBuffer.DELETEALL();
+        TempPaymentPostBuffer.DeleteALL();
 
-        if PayableVendLedgEntry.FINDFIRST() then
+        if PayableVendLedgEntry.findFirst() then
             repeat
-                PayableVendLedgEntry.SETRANGE("Vendor No.", PayableVendLedgEntry."Vendor No.");
-                PayableVendLedgEntry.FINDFIRST();
+                PayableVendLedgEntry.SetRange("Vendor No.", PayableVendLedgEntry."Vendor No.");
+                PayableVendLedgEntry.findFirst();
                 repeat
-                    VendLedgEntry.GET(PayableVendLedgEntry."Vendor Ledg. Entry No.");
+                    VendLedgEntry.Get(PayableVendLedgEntry."Vendor Ledg. Entry No.");
                     TempPaymentPostBuffer."Account No." := VendLedgEntry."Vendor No.";
                     TempPaymentPostBuffer."Currency Code" := VendLedgEntry."Currency Code";
                     if SummarizePer = SummarizePer::"Due date" then
@@ -398,28 +398,28 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
 
                     if SummarizePer in [SummarizePer::" ", SummarizePer::Vendor, SummarizePer::"Due date"] then begin
                         TempPaymentPostBuffer."Auxiliary Entry No." := 0;
-                        if TempPaymentPostBuffer.FIND() then begin
+                        if TempPaymentPostBuffer.Find() then begin
                             TempPaymentPostBuffer.Amount := TempPaymentPostBuffer.Amount + PayableVendLedgEntry.Amount;
                             TempPaymentPostBuffer."Amount (LCY)" := TempPaymentPostBuffer."Amount (LCY)" + PayableVendLedgEntry."Amount (LCY)";
-                            TempPaymentPostBuffer.MODIFY();
+                            TempPaymentPostBuffer.Modify();
                         end else begin
                             LastLineNo := LastLineNo + 10000;
                             TempPaymentPostBuffer."Payment Line No." := LastLineNo;
                             if PaymentClass."Line No. Series" = '' then
-                                NextDocNo := COPYSTR(GenPayHead."No." + '/' + FORMAT(LastLineNo), 1, MAXSTRLEN(NextDocNo))
+                                NextDocNo := CopyStr(GenPayHead."No." + '/' + Format(LastLineNo), 1, MaxStrLen(NextDocNo))
                             else
                                 NextDocNo := NoSeriesMgt.GetNextNo(PaymentClass."Line No. Series", PostingDate, false);
 
                             //>>NAVEASY.001 [ID_Lettrage] Recupération du N° de Bordereau + N° Ligne
-                            CodGNextDocNo := GenPayHead."No." + '/' + FORMAT(LastLineNo);
+                            CodGNextDocNo := GenPayHead."No." + '/' + Format(LastLineNo);
                             //<<NAVEASY.001 [ID_Lettrage] Recupération du N° de Bordereau + N° Ligne
 
                             TempPaymentPostBuffer."Document No." := NextDocNo;
-                            NextDocNo := INCSTR(NextDocNo);
+                            NextDocNo := IncStr(NextDocNo);
                             TempPaymentPostBuffer.Amount := PayableVendLedgEntry.Amount;
                             TempPaymentPostBuffer."Amount (LCY)" := PayableVendLedgEntry."Amount (LCY)";
-                            Window.UPDATE(1, VendLedgEntry."Vendor No.");
-                            TempPaymentPostBuffer.INSERT();
+                            Window.Update(1, VendLedgEntry."Vendor No.");
+                            TempPaymentPostBuffer.Insert();
                         end;
 
                         //>>NAVEASY.001 [ID_Lettrage] Mise à jour de l'ID Lettrage de l'Ecriture fournisseur
@@ -429,19 +429,19 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                         //<<NAVEASY.001 [ID_Lettrage] Mise à jour de l'ID Lettrage de l'Ecriture fournisseur
 
                         //VendLedgEntry."Applies-to ID" := TempPaymentPostBuffer."Document No.";
-                        CODEUNIT.RUN(CODEUNIT::"Vend. Entry-Edit", VendLedgEntry);
+                        CODEUNIT.Run(CODEUNIT::"Vend. Entry-Edit", VendLedgEntry);
                     end else begin
-                        GenPayLine3.RESET();
-                        GenPayLine3.SETCURRENTKEY(
+                        GenPayLine3.Reset();
+                        GenPayLine3.SetCurrentKey(
                           "Account Type", "Account No.", "Applies-to Doc. Type", "Applies-to Doc. No.");
-                        GenPayLine3.SETRANGE("Account Type", GenPayLine3."Account Type"::Vendor);
-                        GenPayLine3.SETRANGE("Account No.", VendLedgEntry."Vendor No.");
-                        GenPayLine3.SETRANGE("Applies-to Doc. Type", VendLedgEntry."Document Type");
-                        GenPayLine3.SETRANGE("Applies-to Doc. No.", VendLedgEntry."Document No.");
-                        if GenPayLine3.FINDFIRST() then
-                            GenPayLine3.FIELDERROR(
+                        GenPayLine3.SetRange("Account Type", GenPayLine3."Account Type"::Vendor);
+                        GenPayLine3.SetRange("Account No.", VendLedgEntry."Vendor No.");
+                        GenPayLine3.SetRange("Applies-to Doc. Type", VendLedgEntry."Document Type");
+                        GenPayLine3.SetRange("Applies-to Doc. No.", VendLedgEntry."Document No.");
+                        if GenPayLine3.findFirst() then
+                            GenPayLine3.FieldError(
                               "Applies-to Doc. No.",
-                              STRSUBSTNO(
+                              StrSubstNo(
                                 Text016,
                                 VendLedgEntry."Document Type", VendLedgEntry."Document No.",
                                 VendLedgEntry."Vendor No."));
@@ -454,28 +454,28 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                         TempPaymentPostBuffer."Global Dimension 1 Code" := VendLedgEntry."Global Dimension 1 Code";
                         TempPaymentPostBuffer."Global Dimension 2 Code" := VendLedgEntry."Global Dimension 2 Code";
                         TempPaymentPostBuffer."Auxiliary Entry No." := VendLedgEntry."Entry No.";
-                        Window.UPDATE(1, VendLedgEntry."Vendor No.");
-                        TempPaymentPostBuffer.INSERT();
+                        Window.Update(1, VendLedgEntry."Vendor No.");
+                        TempPaymentPostBuffer.Insert();
                     end;
-                    VendLedgEntry.CALCFIELDS("Remaining Amount");
+                    VendLedgEntry.CalcFields("Remaining Amount");
                     VendLedgEntry."Amount to Apply" := VendLedgEntry."Remaining Amount";
-                    CODEUNIT.RUN(CODEUNIT::"Vend. Entry-Edit", VendLedgEntry);
-                until PayableVendLedgEntry.NEXT() = 0;
-                PayableVendLedgEntry.SETFILTER("Vendor No.", '>%1', PayableVendLedgEntry."Vendor No.");
-            until not PayableVendLedgEntry.FINDFIRST();
+                    CODEUNIT.Run(CODEUNIT::"Vend. Entry-Edit", VendLedgEntry);
+                until PayableVendLedgEntry.Next() = 0;
+                PayableVendLedgEntry.SetFilter("Vendor No.", '>%1', PayableVendLedgEntry."Vendor No.");
+            until not PayableVendLedgEntry.findFirst();
 
-        CLEAR(OldTempPaymentPostBuffer);
-        TempPaymentPostBuffer.SETCURRENTKEY("Document No.");
-        if TempPaymentPostBuffer.FINDSET() then
+        Clear(OldTempPaymentPostBuffer);
+        TempPaymentPostBuffer.SetCurrentKey("Document No.");
+        if TempPaymentPostBuffer.FindSet() then
             repeat
                 with GenPayLine do begin
-                    INIT();
-                    Window.UPDATE(1, TempPaymentPostBuffer."Account No.");
+                    Init();
+                    Window.Update(1, TempPaymentPostBuffer."Account No.");
                     if SummarizePer = SummarizePer::" " then begin
                         LastLineNo := LastLineNo + 10000;
                         "Line No." := LastLineNo;
                         if PaymentClass."Line No. Series" = '' then
-                            NextDocNo := GenPayHead."No." + '/' + FORMAT("Line No.")
+                            NextDocNo := GenPayHead."No." + '/' + Format("Line No.")
                         else
                             NextDocNo := NoSeriesMgt.GetNextNo(PaymentClass."Line No. Series", PostingDate, false);
                     end else begin
@@ -494,7 +494,7 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                     OldTempPaymentPostBuffer := TempPaymentPostBuffer;
                     OldTempPaymentPostBuffer."Document No." := "Document No.";
                     if SummarizePer = SummarizePer::" " then begin
-                        VendLedgEntry.GET(TempPaymentPostBuffer."Auxiliary Entry No.");
+                        VendLedgEntry.Get(TempPaymentPostBuffer."Auxiliary Entry No.");
 
                         //>>NAVEASY.001 [ID_Lettrage] Mise à jour de l'ID Lettrage de la ligne VENDOR LEDG. ENTRY
                         //std VendLedgEntry."Applies-to ID" := NextDocNo;
@@ -502,10 +502,10 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                         //<<NAVEASY.001 [ID_Lettrage] Mise à jour de l'ID Lettrage de la Ligne VENDOR LEDG. ENTRY
 
                         //VendLedgEntry."Applies-to ID" := NextDocNo;
-                        VendLedgEntry.MODIFY();
+                        VendLedgEntry.Modify();
                     end;
                     "Account Type" := "Account Type"::Vendor;
-                    VALIDATE("Account No.", TempPaymentPostBuffer."Account No.");
+                    Validate("Account No.", TempPaymentPostBuffer."Account No.");
                     "Currency Code" := TempPaymentPostBuffer."Currency Code";
                     Amount := TempPaymentPostBuffer.Amount;
                     if Amount > 0 then
@@ -516,10 +516,10 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                     "Currency Factor" := TempPaymentPostBuffer."Currency Factor";
                     if ("Currency Factor" = 0) and (Amount <> 0) then
                         "Currency Factor" := Amount / "Amount (LCY)";
-                    Vend2.GET("Account No.");
-                    VALIDATE("Bank Account Code", Vend2."Preferred Bank Account Code");
+                    Vend2.Get("Account No.");
+                    Validate("Bank Account Code", Vend2."Preferred Bank Account Code");
                     "Payment Class" := GenPayHead."Payment Class";
-                    VALIDATE("Status No.");
+                    Validate("Status No.");
                     "Posting Date" := PostingDate;
                     if SummarizePer = SummarizePer::" " then begin
                         "Applies-to Doc. Type" := VendLedgEntry."Document Type";
@@ -530,26 +530,26 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                             "Due Date" := VendLedgEntry."Due Date";
                         SummarizePer::Vendor:
                             begin
-                                PayableVendLedgEntry.SETCURRENTKEY("Vendor No.", "Due Date");
-                                PayableVendLedgEntry.SETRANGE("Vendor No.", TempPaymentPostBuffer."Account No.");
-                                PayableVendLedgEntry.FINDFIRST();
+                                PayableVendLedgEntry.SetCurrentKey("Vendor No.", "Due Date");
+                                PayableVendLedgEntry.SetRange("Vendor No.", TempPaymentPostBuffer."Account No.");
+                                PayableVendLedgEntry.findFirst();
                                 "Due Date" := PayableVendLedgEntry."Due Date";
-                                PayableVendLedgEntry.DELETEALL();
+                                PayableVendLedgEntry.DeleteALL();
                             end;
                         SummarizePer::"Due date":
                             "Due Date" := TempPaymentPostBuffer."Due Date";
                     end;
                     if Amount <> 0 then
-                        INSERT();
+                        Insert();
                     GenPayLineInserted := true;
                 end;
-            until TempPaymentPostBuffer.NEXT() = 0;
+            until TempPaymentPostBuffer.Next() = 0;
     end;
 
     local procedure ShowMessage(Text: Text)
     begin
         if (Text <> '') and GenPayLineInserted then
-            MESSAGE(Text);
+            Message(Text);
     end;
 
     local procedure AmountAvailableOnAfterValidate()
@@ -558,39 +558,33 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
             UsePriority := true;
     end;
 
-
-    procedure "---NAVEASY.001---"()
-    begin
-    end;
-
-
     procedure GetVendLedgEntries2(Positive: Boolean; Future: Boolean)
     begin
-        VendLedgEntry.RESET();
-        //VendLedgEntry.SETCURRENTKEY("Vendor No.",Open,Positive,"Due Date");
-        VendLedgEntry.SETCURRENTKEY("Vendor No.", Open, Positive, "Vendor Posting Group", "Due Date");
-        VendLedgEntry.SETRANGE("Vendor No.", Vendor."No.");
-        VendLedgEntry.SETRANGE(Open, true);
-        VendLedgEntry.SETRANGE(Positive, Positive);
-        VendLedgEntry.SETRANGE("Currency Code", CurrencyFilter);
-        VendLedgEntry.SETRANGE("Applies-to ID", '');
+        VendLedgEntry.Reset();
+        //VendLedgEntry.SetCurrentKey("Vendor No.",Open,Positive,"Due Date");
+        VendLedgEntry.SetCurrentKey("Vendor No.", Open, Positive, "Vendor Posting Group", "Due Date");
+        VendLedgEntry.SetRange("Vendor No.", Vendor."No.");
+        VendLedgEntry.SetRange(Open, true);
+        VendLedgEntry.SetRange(Positive, Positive);
+        VendLedgEntry.SetRange("Currency Code", CurrencyFilter);
+        VendLedgEntry.SetRange("Applies-to ID", '');
         if Future then begin
-            VendLedgEntry.SETRANGE("Due Date", LastDueDateToPayReq + 1, 19991231D);
-            VendLedgEntry.SETRANGE("Pmt. Discount Date", PostingDate, LastDueDateToPayReq);
-            VendLedgEntry.SETFILTER("Original Pmt. Disc. Possible", '<0');
+            VendLedgEntry.SetRange("Due Date", LastDueDateToPayReq + 1, 19991231D);
+            VendLedgEntry.SetRange("Pmt. Discount Date", PostingDate, LastDueDateToPayReq);
+            VendLedgEntry.SetFilter("Original Pmt. Disc. Possible", '<0');
         end else
-            VendLedgEntry.SETRANGE("Due Date", 0D, LastDueDateToPayReq);
-        VendLedgEntry.SETRANGE("On Hold", '');
+            VendLedgEntry.SetRange("Due Date", 0D, LastDueDateToPayReq);
+        VendLedgEntry.SetRange("On Hold", '');
 
         //>>NAVEASY.001 [Payment Method propagation]
-        VendLedgEntry.SETFILTER("Payment Method Code", CodGPayMetFilter);
+        VendLedgEntry.SetFilter("Payment Method Code", CodGPayMetFilter);
         //<<NAVEASY.001 [Payment Method propagation]
 
 
-        if VendLedgEntry.FINDFIRST() then
+        if VendLedgEntry.findFirst() then
             repeat
                 SaveAmount();
-            until VendLedgEntry.NEXT() = 0;
+            until VendLedgEntry.Next() = 0;
     end;
 
     local procedure MakeGenPayLines2()
@@ -598,14 +592,14 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
         GenPayLine3: Record "Gen. Journal Line";
         EntryNo: Integer;
     begin
-        TempPaymentPostBuffer.DELETEALL();
+        TempPaymentPostBuffer.DeleteALL();
 
-        if PayableVendLedgEntry.FINDFIRST() then
+        if PayableVendLedgEntry.findFirst() then
             repeat
-                PayableVendLedgEntry.SETRANGE("Vendor No.", PayableVendLedgEntry."Vendor No.");
-                PayableVendLedgEntry.FINDFIRST();
+                PayableVendLedgEntry.SetRange("Vendor No.", PayableVendLedgEntry."Vendor No.");
+                PayableVendLedgEntry.findFirst();
                 repeat
-                    VendLedgEntry.GET(PayableVendLedgEntry."Vendor Ledg. Entry No.");
+                    VendLedgEntry.Get(PayableVendLedgEntry."Vendor Ledg. Entry No.");
                     TempPaymentPostBuffer."Account No." := VendLedgEntry."Vendor No.";
                     TempPaymentPostBuffer."Currency Code" := VendLedgEntry."Currency Code";
                     if SummarizePer = SummarizePer::"Due date" then
@@ -623,24 +617,24 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                         TempPaymentPostBuffer."Auxiliary Entry No." := 0;
 
                         //>>NAVEASY.001 [Multi_Collectif]
-                        //STD IF (TempPaymentPostBuffer.FIND) THEN BEGIN
-                        if (TempPaymentPostBuffer.FIND()) and
+                        //STD IF (TempPaymentPostBuffer.Find) THEN BEGIN
+                        if (TempPaymentPostBuffer.Find()) and
                            (TempPaymentPostBuffer."Posting Group" = VendLedgEntry."Vendor Posting Group") then begin
                             //<<NAVEASY.001 [Multi_Collectif]
 
                             TempPaymentPostBuffer.Amount := TempPaymentPostBuffer.Amount + PayableVendLedgEntry.Amount;
                             TempPaymentPostBuffer."Amount (LCY)" := TempPaymentPostBuffer."Amount (LCY)" + PayableVendLedgEntry."Amount (LCY)";
-                            TempPaymentPostBuffer.MODIFY();
+                            TempPaymentPostBuffer.Modify();
                         end else begin
                             LastLineNo := LastLineNo + 10000;
                             TempPaymentPostBuffer."Payment Line No." := LastLineNo;
                             if PaymentClass."Line No. Series" = '' then
-                                NextDocNo := GenPayHead."No." + '/' + FORMAT(LastLineNo)
+                                NextDocNo := GenPayHead."No." + '/' + Format(LastLineNo)
                             else
                                 NextDocNo := NoSeriesMgt.GetNextNo(PaymentClass."Line No. Series", PostingDate, false);
 
                             //>>NAVEASY.001 [ID_Lettrage] Recupération du N° de Bordereau + N° Ligne
-                            CodGNextDocNo := GenPayHead."No." + '/' + FORMAT(LastLineNo);
+                            CodGNextDocNo := GenPayHead."No." + '/' + Format(LastLineNo);
                             //<<NAVEASY.001 [ID_Lettrage] Recupération du N° de Bordereau + N° Ligne
 
                             TempPaymentPostBuffer."Document No." := NextDocNo;
@@ -649,11 +643,11 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                             TempPaymentPostBuffer."Posting Group" := VendLedgEntry."Vendor Posting Group";
                             //<<NAVEASY.001 [Multi_Collectif]
 
-                            NextDocNo := INCSTR(NextDocNo);
+                            NextDocNo := IncStr(NextDocNo);
                             TempPaymentPostBuffer.Amount := PayableVendLedgEntry.Amount;
                             TempPaymentPostBuffer."Amount (LCY)" := PayableVendLedgEntry."Amount (LCY)";
-                            Window.UPDATE(1, VendLedgEntry."Vendor No.");
-                            TempPaymentPostBuffer.INSERT();
+                            Window.Update(1, VendLedgEntry."Vendor No.");
+                            TempPaymentPostBuffer.Insert();
                         end;
 
                         //>>NAVEASY.001 [ID_Lettrage] Mise à jour de l'ID Lettrage de l'Ecriture fournisseur
@@ -662,19 +656,19 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                         VendLedgEntry."Applies-to ID" := CodGNextDocNo;
                         //<<NAVEASY.001 [ID_Lettrage] Mise à jour de l'ID Lettrage de l'Ecriture fournisseur
 
-                        VendEntryEdit.RUN(VendLedgEntry)
+                        VendEntryEdit.Run(VendLedgEntry)
                     end else begin
-                        GenPayLine3.RESET();
-                        GenPayLine3.SETCURRENTKEY(
+                        GenPayLine3.Reset();
+                        GenPayLine3.SetCurrentKey(
                           "Account Type", "Account No.", "Applies-to Doc. Type", "Applies-to Doc. No.");
-                        GenPayLine3.SETRANGE("Account Type", GenPayLine3."Account Type"::Vendor);
-                        GenPayLine3.SETRANGE("Account No.", VendLedgEntry."Vendor No.");
-                        GenPayLine3.SETRANGE("Applies-to Doc. Type", VendLedgEntry."Document Type");
-                        GenPayLine3.SETRANGE("Applies-to Doc. No.", VendLedgEntry."Document No.");
-                        if GenPayLine3.FINDFIRST() then
-                            GenPayLine3.FIELDERROR(
+                        GenPayLine3.SetRange("Account Type", GenPayLine3."Account Type"::Vendor);
+                        GenPayLine3.SetRange("Account No.", VendLedgEntry."Vendor No.");
+                        GenPayLine3.SetRange("Applies-to Doc. Type", VendLedgEntry."Document Type");
+                        GenPayLine3.SetRange("Applies-to Doc. No.", VendLedgEntry."Document No.");
+                        if GenPayLine3.findFirst() then
+                            GenPayLine3.FieldError(
                               "Applies-to Doc. No.",
-                              STRSUBSTNO(
+                              StrSubstNo(
                                 Text016,
                                 VendLedgEntry."Document Type", VendLedgEntry."Document No.",
                                 VendLedgEntry."Vendor No."));
@@ -692,29 +686,29 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                         TempPaymentPostBuffer."Posting Group" := VendLedgEntry."Vendor Posting Group";
                         //<<FIN.02 20080723
 
-                        Window.UPDATE(1, VendLedgEntry."Vendor No.");
-                        TempPaymentPostBuffer.INSERT();
+                        Window.Update(1, VendLedgEntry."Vendor No.");
+                        TempPaymentPostBuffer.Insert();
                     end;
-                    VendLedgEntry.CALCFIELDS(VendLedgEntry."Remaining Amount");
+                    VendLedgEntry.CalcFields(VendLedgEntry."Remaining Amount");
                     VendLedgEntry."Amount to Apply" := VendLedgEntry."Remaining Amount";
-                    VendEntryEdit.RUN(VendLedgEntry);
-                until PayableVendLedgEntry.NEXT() = 0;
-                PayableVendLedgEntry.DELETEALL();
-                PayableVendLedgEntry.SETRANGE("Vendor No.");
-            until not PayableVendLedgEntry.FINDFIRST();
+                    VendEntryEdit.Run(VendLedgEntry);
+                until PayableVendLedgEntry.Next() = 0;
+                PayableVendLedgEntry.DeleteALL();
+                PayableVendLedgEntry.SetRange("Vendor No.");
+            until not PayableVendLedgEntry.findFirst();
 
-        CLEAR(OldTempPaymentPostBuffer);
-        TempPaymentPostBuffer.SETCURRENTKEY("Document No.");
-        if TempPaymentPostBuffer.FINDFIRST() then
+        Clear(OldTempPaymentPostBuffer);
+        TempPaymentPostBuffer.SetCurrentKey("Document No.");
+        if TempPaymentPostBuffer.findFirst() then
             repeat
                 with GenPayLine do begin
-                    INIT();
-                    Window.UPDATE(1, TempPaymentPostBuffer."Account No.");
+                    Init();
+                    Window.Update(1, TempPaymentPostBuffer."Account No.");
                     if SummarizePer = SummarizePer::" " then begin
                         LastLineNo := LastLineNo + 10000;
                         "Line No." := LastLineNo;
                         if PaymentClass."Line No. Series" = '' then
-                            NextDocNo := GenPayHead."No." + '/' + FORMAT(GenPayLine."Line No.")
+                            NextDocNo := GenPayHead."No." + '/' + Format(GenPayLine."Line No.")
                         else
                             NextDocNo := NoSeriesMgt.GetNextNo(PaymentClass."Line No. Series", PostingDate, false);
                     end else begin
@@ -723,7 +717,7 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                     end;
 
                     //>>NAVEASY.001 [ID_Lettrage] Recupération du N° de Bordereau + N° Ligne
-                    CodGNextDocNo := GenPayLine."No." + '/' + FORMAT("Line No.");
+                    CodGNextDocNo := GenPayLine."No." + '/' + Format("Line No.");
                     //<<NAVEASY.001 [ID_Lettrage] Recupération du N° de Bordereau + N° Ligne
 
                     "Document No." := NextDocNo;
@@ -736,15 +730,15 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                     OldTempPaymentPostBuffer := TempPaymentPostBuffer;
                     OldTempPaymentPostBuffer."Document No." := "Document No.";
                     if SummarizePer = SummarizePer::" " then begin
-                        VendLedgEntry.GET(TempPaymentPostBuffer."Auxiliary Entry No.");
+                        VendLedgEntry.Get(TempPaymentPostBuffer."Auxiliary Entry No.");
                         //>>NAVEASY.001 [ID_Lettrage] Mise à jour de l'ID Lettrage de la ligne VENDOR LEDG. ENTRY
                         //std VendLedgEntry."Applies-to ID" := NextDocNo;
                         VendLedgEntry."Applies-to ID" := CodGNextDocNo;
                         //<<NAVEASY.001 [ID_Lettrage] Mise à jour de l'ID Lettrage de la Ligne VENDOR LEDG. ENTRY
-                        VendLedgEntry.MODIFY();
+                        VendLedgEntry.Modify();
                     end;
                     "Account Type" := "Account Type"::Vendor;
-                    VALIDATE("Account No.", TempPaymentPostBuffer."Account No.");
+                    Validate("Account No.", TempPaymentPostBuffer."Account No.");
                     "Currency Code" := TempPaymentPostBuffer."Currency Code";
                     Amount := TempPaymentPostBuffer.Amount;
                     if Amount > 0 then
@@ -755,9 +749,9 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                     "Currency Factor" := TempPaymentPostBuffer."Currency Factor";
                     if ("Currency Factor" = 0) and (Amount <> 0) then
                         "Currency Factor" := Amount / "Amount (LCY)";
-                    Vend2.GET(GenPayLine."Account No.");
+                    Vend2.Get(GenPayLine."Account No.");
                     //MIG2015 FTA Default Bank Account code n'existe plus en 2015
-                    /*      VALIDATE(GenPayLine."Bank Account Code", Vend2."Default Bank Account Code"); */
+                    /*      Validate(GenPayLine."Bank Account Code", Vend2."Default Bank Account Code"); */
                     //MIG2015 FTA
                     "Payment Class" := GenPayHead."Payment Class";
                     if SummarizePer = SummarizePer::" " then begin
@@ -774,10 +768,10 @@ report 50890 "Suggest Vendor Payments FR 2" // Duplicated from 10862
                     //<<NAVEASY.001 [Multi_Collectif]
 
                     if Amount <> 0 then
-                        INSERT();
+                        Insert();
                     GenPayLineInserted := true;
                 end;
-            until TempPaymentPostBuffer.NEXT() = 0;
+            until TempPaymentPostBuffer.Next() = 0;
 
     end;
 }

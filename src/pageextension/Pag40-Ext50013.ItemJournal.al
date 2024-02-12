@@ -5,11 +5,11 @@ pageextension 50013 ItemJournal extends "Item Journal"//40
 {
     layout
     {
-        modify("Item No.")
+        Modify("Item No.")
         {
             trigger OnAfterValidate()
             begin
-                rec.CALCFIELDS("Shelf No.");
+                rec.CalcFields("Shelf No.");
             end;
         }
         addafter("Description")
@@ -38,9 +38,9 @@ pageextension 50013 ItemJournal extends "Item Journal"//40
                 var
                     CduLItemJnlExplode: Codeunit "Item Jnl.-Explode BOM";
                 begin
-                    CLEAR(CduLItemJnlExplode);
+                    Clear(CduLItemJnlExplode);
                     CduLItemJnlExplode.Run(Rec);
-                    CLEAR(CduLItemJnlExplode);
+                    Clear(CduLItemJnlExplode);
                 end;
             }
             action("Démontage")
@@ -55,9 +55,9 @@ pageextension 50013 ItemJournal extends "Item Journal"//40
                 var
                     CduLItemJnlExplode: Codeunit "Item Jnl.-Explode BOM";
                 begin
-                    CLEAR(CduLItemJnlExplode);
+                    Clear(CduLItemJnlExplode);
                     CduLItemJnlExplode.Run(Rec);
-                    CLEAR(CduLItemJnlExplode);
+                    Clear(CduLItemJnlExplode);
                 end;
             }
         }

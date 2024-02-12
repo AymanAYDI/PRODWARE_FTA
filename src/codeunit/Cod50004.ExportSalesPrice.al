@@ -23,19 +23,19 @@ codeunit 50004 "Export Sales Price"
     begin
         //>> Message structure: EDIFACT GENERIX
         // Get setup
-        RecGSalesSetup.GET();
+        RecGSalesSetup.Get();
 
         // Get file setup for this customer
         TxtLRepertory := RecGSalesSetup."Export Sales Price Repertory";
         //TxtLFileName := 'Item_Export';
 
         TxtLFileName := 'SalesPrice_Export_' +
-          //OLD FORMAT(CURRENTDATETIME,0,'<year4><month,2><Day,2><Hours24,2><Filler Character,0><Minutes,2><Seconds,2>')
-          FORMAT(TODAY, 0, '<year4><month,2><Day,2><Filler Character,0>')
-          + '_' + FORMAT(TIME, 0, '<Hours,2><Minutes,2><Seconds,2><Filler Character,0>')
+          //OLD Format(CURRENTDATETIME,0,'<year4><month,2><Day,2><Hours24,2><Filler Character,0><Minutes,2><Seconds,2>')
+          Format(TODAY, 0, '<year4><month,2><Day,2><Filler Character,0>')
+          + '_' + Format(TIME, 0, '<Hours,2><Minutes,2><Seconds,2><Filler Character,0>')
           + '.csv';
 
-        // STRSUBSTNO(RecPEDICustSetup."File Name",'F' + RecPSalesInvHeader."No.");
+        // StrSubstNo(RecPEDICustSetup."File Name",'F' + RecPSalesInvHeader."No.");
 
         // Create file
         BooGFixedFile := false;
@@ -49,11 +49,11 @@ codeunit 50004 "Export Sales Price"
         IntLCmp := 0;
 
         // Pour les tests
-        RecLSalesPrice.SETRANGE(RecLSalesPrice."Sales Type", RecLSalesPrice."Sales Type"::Customer);
+        RecLSalesPrice.SetRange(RecLSalesPrice."Sales Type", RecLSalesPrice."Sales Type"::Customer);
 
         // ********************************* HEADER ********************************* //
-        CLEAR(TxtLTextFields);
-        if RecLSalesPrice.FINDSET() then
+        Clear(TxtLTextFields);
+        if RecLSalesPrice.FindSet() then
             repeat
 
                 if IntLCmp = 0 then begin
@@ -80,15 +80,15 @@ codeunit 50004 "Export Sales Price"
                 // 2 - Code Article
                 TxtLTextFields[2] := CduGWriteFile.FormatText(RecLSalesPrice."Item No.", 20, false);
                 // 3 - Date début
-                TxtLTextFields[3] := CduGWriteFile.FormatText(FORMAT(RecLSalesPrice."Starting Date"), 10, false);
+                TxtLTextFields[3] := CduGWriteFile.FormatText(Format(RecLSalesPrice."Starting Date"), 10, false);
                 // 4 - Date fin
-                TxtLTextFields[4] := CduGWriteFile.FormatText(FORMAT(RecLSalesPrice."Ending Date"), 10, false);
+                TxtLTextFields[4] := CduGWriteFile.FormatText(Format(RecLSalesPrice."Ending Date"), 10, false);
                 // 5 - Prix Unitaire
-                TxtLTextFields[5] := CduGWriteFile.FormatText(FORMAT(RecLSalesPrice."Unit Price"), 10, false);
+                TxtLTextFields[5] := CduGWriteFile.FormatText(Format(RecLSalesPrice."Unit Price"), 10, false);
 
 
                 CduGWriteFile.FctWriteBigSegment(TxtLTextFields, 5);
-            until RecLSalesPrice.NEXT() = 0;
+            until RecLSalesPrice.Next() = 0;
         //Demande Golda pour MARKRO : ne pas prendre en compte :
         //CduGWriteFile.FctWriteBigSegment(TxtLTextFields,71);
 
@@ -98,7 +98,7 @@ codeunit 50004 "Export Sales Price"
         RecLSalesInvHeader2 := RecPSalesInvHeader;
         RecLSalesInvHeader2."EDI Exported" := TRUE;
         RecLSalesInvHeader2."EDI DateTime Export" := CURRENTDATETIME;
-        RecLSalesInvHeader2.MODIFY;
+        RecLSalesInvHeader2.Modify;
         */
 
         CduGWriteFile.FctEndMessage(TxtLFileName);

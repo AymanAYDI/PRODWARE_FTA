@@ -3,7 +3,7 @@ namespace Prodware.FTA;
 
 page 50015 "Work Time"
 {
-    PageType = List;
+    PaGetype = List;
     SourceTable = "Work Time";
     ApplicationArea = All;
 

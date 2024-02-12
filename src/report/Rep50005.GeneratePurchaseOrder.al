@@ -12,14 +12,14 @@ report 50005 "Generate Purchase Order"
 
             trigger OnAfterGetRecord()
             begin
-                CurrReport.BREAK();
+                CurrReport.Break();
             end;
 
             trigger OnPreDataItem()
             begin
-                if GETFILTER("Vendor No.") = '' then
-                    ERROR(CstG001);
-                RecGVendor.GET(GETFILTER("Vendor No."));
+                if GetFilter("Vendor No.") = '' then
+                    Error(CstG001);
+                RecGVendor.Get(GetFilter("Vendor No."));
                 CodPDocNo := '';
                 FctCreatePurchaseOrderLine(RecPSalesLine, CodPDocNo);
             end;
@@ -45,11 +45,11 @@ report 50005 "Generate Purchase Order"
     trigger OnPostReport()
     begin
         if CodPDocNo <> '' then begin
-            COMMIT();
-            CLEAR(PageGPurchOrder);
-            RecLPurchHeader.SETRANGE("No.", CodPDocNo);
-            PageGPurchOrder.SETTABLEVIEW(RecLPurchHeader);
-            PageGPurchOrder.RUNMODAL();
+            Commit();
+            Clear(PageGPurchOrder);
+            RecLPurchHeader.SetRange("No.", CodPDocNo);
+            PageGPurchOrder.SetTableView(RecLPurchHeader);
+            PageGPurchOrder.RunModal();
         end;
     end;
 

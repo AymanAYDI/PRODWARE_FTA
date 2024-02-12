@@ -44,8 +44,8 @@ pageextension 50069 "AssemblyLines" extends "Assembly Lines"//903
 
                     //>>MIGR NAV 2015
                     if RecGAssToOrder."Document Type" = RecGAssToOrder."Document Type"::Order then
-                        SalesHeader.GET(RecGAssToOrder."Document Type", RecGAssToOrder."Document No.");
-                    PAGE.RUN(PAGE::"Sales Order", SalesHeader);
+                        SalesHeader.Get(RecGAssToOrder."Document Type", RecGAssToOrder."Document No.");
+                    PAGE.Run(PAGE::"Sales Order", SalesHeader);
 
                 end;
             }
@@ -57,8 +57,8 @@ pageextension 50069 "AssemblyLines" extends "Assembly Lines"//903
     trigger OnAfterGetRecord()
     begin
 
-        if not RecGAssToOrder.GET(rec."Document Type", rec."Document No.") then
-            RecGAssToOrder.INIT();
+        if not RecGAssToOrder.Get(rec."Document Type", rec."Document No.") then
+            RecGAssToOrder.Init();
 
     end;
 

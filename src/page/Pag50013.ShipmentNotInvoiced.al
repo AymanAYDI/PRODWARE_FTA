@@ -22,7 +22,7 @@ page 50013 "Shipment Not Invoiced"
 
     Caption = 'Shipment Not Invoiced';
     Editable = true;
-    PageType = List;
+    PaGetype = List;
     SourceTable = "Sales Shipment Line";
     ApplicationArea = All;
 
@@ -153,8 +153,8 @@ page 50013 "Shipment Not Invoiced"
                     ToolTip = 'Executes the Show Document action.';
                     trigger OnAction()
                     begin
-                        SalesShptHeader.GET(Rec."Document No.");
-                        PAGE.RUN(PAGE::"Posted Sales Shipment", SalesShptHeader);
+                        SalesShptHeader.Get(Rec."Document No.");
+                        PAGE.Run(PAGE::"Posted Sales Shipment", SalesShptHeader);
                     end;
                 }
                 action(Dimensions)
@@ -192,34 +192,34 @@ page 50013 "Shipment Not Invoiced"
                 ToolTip = 'Executes the OK action.';
                 trigger OnAction()
                 begin
-                    CurrPage.SETSELECTIONFILTER(Rec);
+                    CurrPage.SetSelectionFilter(Rec);
 
                     //PRM : Controle pour qu'il n'y ait qu'un seul client selectionné
                     SVSell := '';
-                    if Rec.FINDFIRST() then
+                    if Rec.findFirst() then
                         repeat
-                            if Rec.MARKEDONLY() = true then
+                            if Rec.MarkedOnly() = true then
                                 if SVSell = '' then begin
                                     SVSell := Rec."Sell-to Customer No.";
                                     // recherche 1er entete de commande pour chercher l'adresse de livraison
-                                    SalesHeader3.GET(SalesHeader3."Document Type"::Order, Rec."Order No.");
+                                    SalesHeader3.Get(SalesHeader3."Document Type"::Order, Rec."Order No.");
                                 end;
                             if (SVSell <> '') and (SVSell <> Rec."Sell-to Customer No.") then
-                                ERROR(Text100);
-                        until Rec.NEXT() = 0;
+                                Error(Text100);
+                        until Rec.Next() = 0;
 
                     // le n° de cde puis le client et les zones associées
 
                     //PRM : Création entête commande
                     // le n° de cde puis le client et les zones associées
                     if SVSell <> '' then begin
-                        SalesHeader.INIT();
-                        SalesHeader.TRANSFERFIELDS(SalesHeader3);
+                        SalesHeader.Init();
+                        SalesHeader.TransferFields(SalesHeader3);
                         SalesHeader."No." := '';
                         SalesHeader."Document Type" := SalesHeader."Document Type"::Invoice;
                         SalesHeader.Status := SalesHeader.Status::Open;
                         //SalesHeader."Sell-to Customer No.":= "Bill-to Customer No." ;
-                        //SalesHeader.VALIDATE("Sell-to Customer No.",Rec."Bill-to Customer No.");
+                        //SalesHeader.Validate("Sell-to Customer No.",Rec."Bill-to Customer No.");
 
                         SalesHeader."Ship-to Code" := SalesHeader3."Ship-to Code";
                         SalesHeader."Ship-to Name" := SalesHeader3."Ship-to Name";
@@ -231,46 +231,46 @@ page 50013 "Shipment Not Invoiced"
                         SalesHeader."Ship-to Code" := SalesHeader3."Ship-to Code";
                         SalesHeader."Ship-to Code" := SalesHeader3."Ship-to Code";
                         //FGSalesHeader."SAV Order No.":= SalesHeader3."No.";
-                        SalesHeader."Document Date" := WORKDATE();
-                        SalesHeader."Posting Date" := WORKDATE();
-                        SalesHeader.VALIDATE("Payment Terms Code");
-                        SalesHeader.VALIDATE("Document Date");
-                        SalesHeader.VALIDATE("Posting Date");
+                        SalesHeader."Document Date" := WorkDate();
+                        SalesHeader."Posting Date" := WorkDate();
+                        SalesHeader.Validate("Payment Terms Code");
+                        SalesHeader.Validate("Document Date");
+                        SalesHeader.Validate("Posting Date");
 
                         //SalesHeader.Ship :=FALSE;
                         //SalesHeader."Last Shipping No." :='';
 
-                        SalesHeader.INSERT(true);
-                        SalesHeader.VALIDATE("Shortcut Dimension 1 Code");
-                        SalesHeader.VALIDATE("Shortcut Dimension 2 Code");
+                        SalesHeader.Insert(true);
+                        SalesHeader.Validate("Shortcut Dimension 1 Code");
+                        SalesHeader.Validate("Shortcut Dimension 2 Code");
 
-                        COMMIT();
+                        Commit();
                         //PRM : Fin création entête commande
                         SalesGetShpt.SetSalesHeader(SalesHeader);
 
                         //COMMENTAIRE SL 19/10/06 NSC1.13
                         OldDocumentNo := '';
-                        if Rec.FINDFIRST() then
+                        if Rec.findFirst() then
                             repeat
                                 if Rec."Document No." <> OldDocumentNo then begin
-                                    SalesShipLine2.RESET();
-                                    SalesShipLine2.SETRANGE("Document No.", Rec."Document No.");
-                                    //FGIF SalesShipLine2.Findfirst() THEN
+                                    SalesShipLine2.Reset();
+                                    SalesShipLine2.SetRange("Document No.", Rec."Document No.");
+                                    //FGIF SalesShipLine2.findFirst() THEN
                                     //FGSalesGetShpt.CreateInvLinesWithAll(SalesShipLine2);
                                 end;
                                 OldDocumentNo := Rec."Document No.";
-                            until Rec.NEXT() = 0;
+                            until Rec.Next() = 0;
                         //Fin COMMENTAIRE SL 19/10/06 NSC1.13
 
                         //Appel de la facture et de ses lignes...
-                        COMMIT();
-                        PAGE.RUNMODAL(Page::"Sales Invoice", SalesHeader);
+                        Commit();
+                        PAGE.RunModal(Page::"Sales Invoice", SalesHeader);
                     end;
-                    Rec.CLEARMARKS();
-                    Rec.MARKEDONLY(false);
-                    Rec.SETFILTER(Type, '');
+                    Rec.ClearMARKS();
+                    Rec.MarkedOnly(false);
+                    Rec.SetFilter(Type, '');
 
-                    //CurrForm.CLOSE;
+                    //CurrForm.Close;
                 end;
             }
             action(Print)
@@ -284,7 +284,7 @@ page 50013 "Shipment Not Invoiced"
 
                 trigger OnAction()
                 begin
-                    //REPORT.RUN(REPORT::"Shipments not Invoiced",TRUE,FALSE,Rec);
+                    //REPORT.Run(REPORT::"Shipments not Invoiced",TRUE,FALSE,Rec);
                 end;
             }
         }
@@ -293,9 +293,9 @@ page 50013 "Shipment Not Invoiced"
     trigger OnAfterGetRecord()
     begin
         //DESIGN SL 27/09/06 NSC1.08
-        SalesShptHeader.GET(Rec."Document No.");
+        SalesShptHeader.Get(Rec."Document No.");
         //Fin DESIGN SL 27/09/06 NSC1.08
-        DocumentNoOnFormat(FORMAT(Rec."Document No."));
+        DocumentNoOnFormat(Format(Rec."Document No."));
     end;
 
     trigger OnOpenPage()
@@ -303,8 +303,8 @@ page 50013 "Shipment Not Invoiced"
 
         //COMMENTAIRE SL 19/10/06 NSC1.13
         Rec.FILTERGROUP(0);
-        //FGSETRANGE("To be invoiced",TRUE);
-        Rec.SETFILTER("Qty. Shipped Not Invoiced", '<>%1', 0);
+        //FGSetRange("To be invoiced",TRUE);
+        Rec.SetFilter("Qty. Shipped Not Invoiced", '<>%1', 0);
         Rec.FILTERGROUP(2);
         //Fin COMMENTAIRE SL 19/10/06 NSC1.13
     end;
@@ -327,8 +327,8 @@ page 50013 "Shipment Not Invoiced"
 
     procedure SetSalesHeader(var SalesHeader2: Record "Sales Header")
     begin
-        /*SalesHeader.GET(SalesHeader2."Document Type",SalesHeader2."No.");
-        SalesHeader.TESTFIELD("Document Type",SalesHeader."Document Type"::Invoice);  */
+        /*SalesHeader.Get(SalesHeader2."Document Type",SalesHeader2."No.");
+        SalesHeader.TestField("Document Type",SalesHeader."Document Type"::Invoice);  */
 
     end;
 
@@ -337,15 +337,15 @@ page 50013 "Shipment Not Invoiced"
         SalesShptLine: Record "Sales Shipment Line";
     begin
 
-        TempSalesShptLine.RESET();
-        TempSalesShptLine.COPYFILTERS(Rec);
-        TempSalesShptLine.SETRANGE("Document No.", Rec."Document No.");
-        if not TempSalesShptLine.FINDFIRST() then begin
-            SalesShptLine.COPYFILTERS(Rec);
-            SalesShptLine.SETRANGE("Document No.", Rec."Document No.");
-            SalesShptLine.FINDFIRST();
+        TempSalesShptLine.Reset();
+        TempSalesShptLine.CopyFilters(Rec);
+        TempSalesShptLine.SetRange("Document No.", Rec."Document No.");
+        if not TempSalesShptLine.findFirst() then begin
+            SalesShptLine.CopyFilters(Rec);
+            SalesShptLine.SetRange("Document No.", Rec."Document No.");
+            SalesShptLine.findFirst();
             TempSalesShptLine := SalesShptLine;
-            TempSalesShptLine.INSERT();
+            TempSalesShptLine.Insert();
         end;
         if Rec."Line No." = TempSalesShptLine."Line No." then
             exit(true);

@@ -104,7 +104,7 @@ report 90002 "Service - Invoice PW" //8044280
                     column(CompanyInfoPicture; CompanyInfo3.Picture)
                     {
                     }
-                    column(ReportTitleCopyText; STRSUBSTNO(Text004, CopyText))
+                    column(ReportTitleCopyText; StrSubstNo(Text004, CopyText))
                     {
                     }
                     column(CustAddr1; CustAddr[1])
@@ -158,10 +158,10 @@ report 90002 "Service - Invoice PW" //8044280
                     column(BillToCustNo_ServInvHeader; "Service Invoice Header"."Bill-to Customer No.")
                     {
                     }
-                    column(BillToCustNo_ServInvHeaderCaption; "Service Invoice Header".FIELDCAPTION("Bill-to Customer No."))
+                    column(BillToCustNo_ServInvHeaderCaption; "Service Invoice Header".FieldCaption("Bill-to Customer No."))
                     {
                     }
-                    column(PostingDate_ServInvHeader; FORMAT("Service Invoice Header"."Posting Date"))
+                    column(PostingDate_ServInvHeader; Format("Service Invoice Header"."Posting Date"))
                     {
                     }
                     column(VATNoText; VATNoText)
@@ -170,7 +170,7 @@ report 90002 "Service - Invoice PW" //8044280
                     column(VATRegNo_ServInvHeader; "Service Invoice Header"."VAT Registration No.")
                     {
                     }
-                    column(DueDate_ServInvHeader; FORMAT("Service Invoice Header"."Due Date"))
+                    column(DueDate_ServInvHeader; Format("Service Invoice Header"."Due Date"))
                     {
                     }
                     column(SalesPersonText; SalesPersonText)
@@ -206,22 +206,22 @@ report 90002 "Service - Invoice PW" //8044280
                     column(CompanyAddr6; CompanyAddr[6])
                     {
                     }
-                    column(DocDate_ServInvHeader; FORMAT("Service Invoice Header"."Document Date", 0, 4))
+                    column(DocDate_ServInvHeader; Format("Service Invoice Header"."Document Date", 0, 4))
                     {
                     }
                     column(PricesInclVAT_ServInvHeader; "Service Invoice Header"."Prices Including VAT")
                     {
                     }
-                    column(PricesInclVAT_ServInvHeaderCaption; "Service Invoice Header".FIELDCAPTION("Prices Including VAT"))
+                    column(PricesInclVAT_ServInvHeaderCaption; "Service Invoice Header".FieldCaption("Prices Including VAT"))
                     {
                     }
-                    column(PageCaption; STRSUBSTNO(Text005, ''))
+                    column(PageCaption; StrSubstNo(Text005, ''))
                     {
                     }
                     column(OutputNo; OutputNo)
                     {
                     }
-                    column(PricesInclVAT1_ServInvHeader; FORMAT("Service Invoice Header"."Prices Including VAT"))
+                    column(PricesInclVAT1_ServInvHeader; Format("Service Invoice Header"."Prices Including VAT"))
                     {
                     }
                     column(CompanyInfoPhoneNoCaption; CompanyInfoPhoneNoCaptionLbl)
@@ -327,9 +327,9 @@ report 90002 "Service - Invoice PW" //8044280
                         trigger OnPreDataItem()
                         begin
                             if not ShowInternalInfo then
-                                CurrReport.BREAK();
+                                CurrReport.Break();
                             FindDimTxt("Service Invoice Header"."Dimension Set ID");
-                            SETRANGE(Number, 1, DimTxtArrLength);
+                            SetRange(Number, 1, DimTxtArrLength);
                         end;
                     }
                     dataitem("Service Invoice Line"; "Service Invoice Line")
@@ -375,16 +375,16 @@ report 90002 "Service - Invoice PW" //8044280
                         column(UOM_ServInvLine; "Unit of Measure")
                         {
                         }
-                        column(No_ServInvLineCaption; FIELDCAPTION("No."))
+                        column(No_ServInvLineCaption; FieldCaption("No."))
                         {
                         }
-                        column(Description_ServInvLineCaption; FIELDCAPTION(Description))
+                        column(Description_ServInvLineCaption; FieldCaption(Description))
                         {
                         }
-                        column(Quantity_ServInvLineCaption; FIELDCAPTION(Quantity))
+                        column(Quantity_ServInvLineCaption; FieldCaption(Quantity))
                         {
                         }
-                        column(UOM_ServInvLineCaption; FIELDCAPTION("Unit of Measure"))
+                        column(UOM_ServInvLineCaption; FieldCaption("Unit of Measure"))
                         {
                         }
                         column(UnitPrice_ServInvLine; "Unit Price")
@@ -398,10 +398,10 @@ report 90002 "Service - Invoice PW" //8044280
                         column(VATIdentifier_ServInvLine; "VAT Identifier")
                         {
                         }
-                        column(VATIdentifier_ServInvLineCaption; FIELDCAPTION("VAT Identifier"))
+                        column(VATIdentifier_ServInvLineCaption; FieldCaption("VAT Identifier"))
                         {
                         }
-                        column(PostedShipmentDate; FORMAT(PostedShipmentDate))
+                        column(PostedShipmentDate; Format(PostedShipmentDate))
                         {
                         }
                         column(InvDiscountAmount; -"Inv. Discount Amount")
@@ -459,7 +459,7 @@ report 90002 "Service - Invoice PW" //8044280
                         dataitem("Service Shipment Buffer"; Integer)
                         {
                             DataItemTableView = sorting(Number);
-                            column(ServShptBufferPostingDate; FORMAT(TempServiceShipmentBuffer."Posting Date"))
+                            column(ServShptBufferPostingDate; Format(TempServiceShipmentBuffer."Posting Date"))
                             {
                             }
                             column(ServShptBufferQuantity; TempServiceShipmentBuffer.Quantity)
@@ -473,17 +473,17 @@ report 90002 "Service - Invoice PW" //8044280
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then
-                                    TempServiceShipmentBuffer.FINDFIRST()
+                                    TempServiceShipmentBuffer.findFirst()
                                 else
-                                    TempServiceShipmentBuffer.NEXT();
+                                    TempServiceShipmentBuffer.Next();
                             end;
 
                             trigger OnPreDataItem()
                             begin
-                                TempServiceShipmentBuffer.SETRANGE("Document No.", "Service Invoice Line"."Document No.");
-                                TempServiceShipmentBuffer.SETRANGE("Line No.", "Service Invoice Line"."Line No.");
+                                TempServiceShipmentBuffer.SetRange("Document No.", "Service Invoice Line"."Document No.");
+                                TempServiceShipmentBuffer.SetRange("Line No.", "Service Invoice Line"."Line No.");
 
-                                SETRANGE(Number, 1, TempServiceShipmentBuffer.COUNT);
+                                SetRange(Number, 1, TempServiceShipmentBuffer.Count);
                             end;
                         }
                         dataitem(DimensionLoop2; Integer)
@@ -501,19 +501,19 @@ report 90002 "Service - Invoice PW" //8044280
                                 if Number <= DimTxtArrLength then
                                     DimText := DimTxtArr[Number]
                                 else
-                                    DimText := FORMAT("Service Invoice Line".Type) + ' ' + AccNo;
+                                    DimText := Format("Service Invoice Line".Type) + ' ' + AccNo;
                             end;
 
                             trigger OnPreDataItem()
                             begin
                                 if not ShowInternalInfo then
-                                    CurrReport.BREAK();
+                                    CurrReport.Break();
 
                                 FindDimTxt("Service Invoice Line"."Dimension Set ID");
                                 if IsServiceContractLine then
-                                    SETRANGE(Number, 1, DimTxtArrLength + 1)
+                                    SetRange(Number, 1, DimTxtArrLength + 1)
                                 else
-                                    SETRANGE(Number, 1, DimTxtArrLength);
+                                    SetRange(Number, 1, DimTxtArrLength);
                             end;
                         }
 
@@ -529,7 +529,7 @@ report 90002 "Service - Invoice PW" //8044280
                                 "No." := "Service Item No.";
                             end;
 
-                            TempVATAmountLine.INIT();
+                            TempVATAmountLine.Init();
                             TempVATAmountLine."VAT Identifier" := "VAT Identifier";
                             TempVATAmountLine."VAT Calculation Type" := "VAT Calculation Type";
                             TempVATAmountLine."Tax Group Code" := "Tax Group Code";
@@ -552,17 +552,17 @@ report 90002 "Service - Invoice PW" //8044280
 
                         trigger OnPreDataItem()
                         begin
-                            TempVATAmountLine.DELETEALL();
-                            TempServiceShipmentBuffer.RESET();
-                            TempServiceShipmentBuffer.DELETEALL();
+                            TempVATAmountLine.DeleteALL();
+                            TempServiceShipmentBuffer.Reset();
+                            TempServiceShipmentBuffer.DeleteALL();
                             FirstValueEntryNo := 0;
-                            MoreLines := FINDLAST();
+                            MoreLines := FindLast();
                             while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
-                                MoreLines := NEXT(-1) <> 0;
+                                MoreLines := Next(-1) <> 0;
                             if not MoreLines then
-                                CurrReport.BREAK();
-                            SETRANGE("Line No.", 0, "Line No.");
-                            // CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
+                                CurrReport.Break();
+                            SetRange("Line No.", 0, "Line No.");
+                            // CurrReport.CreateTotals("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
 
                             TotalLineAmount := 0;
                             TotalAmount := 0;
@@ -643,8 +643,8 @@ report 90002 "Service - Invoice PW" //8044280
                         begin
                             TempVATAmountLine.GetLine(Number);
                             //>>TDL_TVA.001
-                            if not VATClause.GET(TempVATAmountLine."VAT Clause Code") then
-                                CurrReport.SKIP();
+                            if not VATClause.Get(TempVATAmountLine."VAT Clause Code") then
+                                CurrReport.Skip();
                             VATClause.TranslateDescription("Service Invoice Header"."Language Code");
                             //<<TDL_TVA.001
                         end;
@@ -653,10 +653,10 @@ report 90002 "Service - Invoice PW" //8044280
                         begin
                             //>>TDL_TVA.001
                             //IF VATAmountLine.GetTotalVATAmount = 0 THEN
-                            //  CurrReport.BREAK;
+                            //  CurrReport.Break;
                             //<<TDL_TVA.001
-                            SETRANGE(Number, 1, TempVATAmountLine.COUNT);
-                            // CurrReport.CREATETOTALS(
+                            SetRange(Number, 1, TempVATAmountLine.Count);
+                            // CurrReport.CreateTotals(
                             //   VATAmountLine."Line Amount", VATAmountLine."Inv. Disc. Base Amount",
                             //   VATAmountLine."Invoice Discount Amount", VATAmountLine."VAT Base", VATAmountLine."VAT Amount");
                         end;
@@ -695,17 +695,17 @@ report 90002 "Service - Invoice PW" //8044280
                         begin
                             TempVATAmountLine.GetLine(Number);
                             //>>TDL_TVA.001
-                            //IF NOT VATClause.GET(VATAmountLine."VAT Clause Code") THEN
-                            //  CurrReport.SKIP;
+                            //IF NOT VATClause.Get(VATAmountLine."VAT Clause Code") THEN
+                            //  CurrReport.Skip;
                             //VATClause.TranslateDescription("Service Invoice Header"."Language Code");
                             //<<TDL_TVA.001
                         end;
 
                         trigger OnPreDataItem()
                         begin
-                            CLEAR(VATClause);
-                            SETRANGE(Number, 1, TempVATAmountLine.COUNT);
-                            // CurrReport.CREATETOTALS(VATAmountLine."VAT Amount");
+                            Clear(VATClause);
+                            SetRange(Number, 1, TempVATAmountLine.Count);
+                            // CurrReport.CreateTotals(VATAmountLine."VAT Amount");
                         end;
                     }
                     dataitem(Total; Integer)
@@ -720,7 +720,7 @@ report 90002 "Service - Invoice PW" //8044280
                         column(CustNo_ServInvHeader; "Service Invoice Header"."Customer No.")
                         {
                         }
-                        column(CustNo_ServInvHeaderCaption; "Service Invoice Header".FIELDCAPTION("Customer No."))
+                        column(CustNo_ServInvHeaderCaption; "Service Invoice Header".FieldCaption("Customer No."))
                         {
                         }
                         column(ShipToAddr1; ShipToAddr[1])
@@ -756,7 +756,7 @@ report 90002 "Service - Invoice PW" //8044280
                             //>>PW
                             /*OLD
                             IF NOT ShowShippingAddr THEN
-                              CurrReport.BREAK;
+                              CurrReport.Break;
                             */
                             //>>PW
 
@@ -776,16 +776,16 @@ report 90002 "Service - Invoice PW" //8044280
                 trigger OnPostDataItem()
                 begin
                     if not CurrReport.PREVIEW then
-                        ServiceInvCountPrinted.RUN("Service Invoice Header");
+                        ServiceInvCountPrinted.Run("Service Invoice Header");
                 end;
 
                 trigger OnPreDataItem()
                 begin
-                    NoOfLoops := ABS(NoOfCopies) + Cust."Invoice Copies" + 1;
+                    NoOfLoops := Abs(NoOfCopies) + Cust."Invoice Copies" + 1;
                     if NoOfLoops <= 0 then
                         NoOfLoops := 1;
                     CopyText := '';
-                    SETRANGE(Number, 1, NoOfLoops);
+                    SetRange(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
@@ -796,7 +796,7 @@ report 90002 "Service - Invoice PW" //8044280
             begin
                 CurrReport.LANGUAGE := CULanguage.GetLanguageIDOrDefault("Language Code");
 
-                if RespCenter.GET("Responsibility Center") then begin
+                if RespCenter.Get("Responsibility Center") then begin
                     FormatAddr.RespCenter(CompanyAddr, RespCenter);
                     CompanyInfo."Phone No." := RespCenter."Phone No.";
                     CompanyInfo."Fax No." := RespCenter."Fax No.";
@@ -806,39 +806,39 @@ report 90002 "Service - Invoice PW" //8044280
                 if "Order No." = '' then
                     OrderNoText := ''
                 else
-                    OrderNoText := FIELDCAPTION("Order No.");
+                    OrderNoText := FieldCaption("Order No.");
                 if "Salesperson Code" = '' then begin
-                    SalesPurchPerson.INIT();
+                    SalesPurchPerson.Init();
                     SalesPersonText := '';
                 end else begin
-                    SalesPurchPerson.GET("Salesperson Code");
+                    SalesPurchPerson.Get("Salesperson Code");
                     SalesPersonText := Text000;
                 end;
                 if "Your Reference" = '' then
                     ReferenceText := ''
                 else
-                    ReferenceText := FIELDCAPTION("Your Reference");
+                    ReferenceText := FieldCaption("Your Reference");
                 if "VAT Registration No." = '' then
                     VATNoText := ''
                 else
-                    VATNoText := FIELDCAPTION("VAT Registration No.");
+                    VATNoText := FieldCaption("VAT Registration No.");
                 if "Currency Code" = '' then begin
-                    GLSetup.TESTFIELD("LCY Code");
-                    TotalText := STRSUBSTNO(Text001, GLSetup."LCY Code");
-                    TotalInclVATText := STRSUBSTNO(Text002, GLSetup."LCY Code");
-                    TotalExclVATText := STRSUBSTNO(Text006, GLSetup."LCY Code");
+                    GLSetup.TestField("LCY Code");
+                    TotalText := StrSubstNo(Text001, GLSetup."LCY Code");
+                    TotalInclVATText := StrSubstNo(Text002, GLSetup."LCY Code");
+                    TotalExclVATText := StrSubstNo(Text006, GLSetup."LCY Code");
                 end else begin
-                    TotalText := STRSUBSTNO(Text001, "Currency Code");
-                    TotalInclVATText := STRSUBSTNO(Text002, "Currency Code");
-                    TotalExclVATText := STRSUBSTNO(Text006, "Currency Code");
+                    TotalText := StrSubstNo(Text001, "Currency Code");
+                    TotalInclVATText := StrSubstNo(Text002, "Currency Code");
+                    TotalExclVATText := StrSubstNo(Text006, "Currency Code");
                 end;
                 FormatAddr.ServiceInvBillTo(CustAddr, "Service Invoice Header");
-                Cust.GET("Bill-to Customer No.");
+                Cust.Get("Bill-to Customer No.");
 
                 if "Payment Terms Code" = '' then
-                    PaymentTerms.INIT()
+                    PaymentTerms.Init()
                 else
-                    PaymentTerms.GET("Payment Terms Code");
+                    PaymentTerms.Get("Payment Terms Code");
 
                 FormatAddr.ServiceInvShipTo(ShipToAddr, CustAddr, "Service Invoice Header");
 
@@ -854,18 +854,18 @@ report 90002 "Service - Invoice PW" //8044280
                 if "Customer No." <> "Bill-to Customer No." then
                     TxtGOurReferences := TxtGOurReferences + ' / ' + "Bill-to Customer No.";
 
-                if not RecGContact.GET("Contact No.") then
-                    CLEAR(RecGContact);
+                if not RecGContact.Get("Contact No.") then
+                    Clear(RecGContact);
 
-                CLEAR(RecGPaymentMethod);
-                if "Payment Method Code" <> '' then RecGPaymentMethod.GET("Payment Method Code");
+                Clear(RecGPaymentMethod);
+                if "Payment Method Code" <> '' then RecGPaymentMethod.Get("Payment Method Code");
 
                 if "Currency Code" = '' then
                     TxtGCodeDevise := GLSetup."LCY Code"
                 else
                     TxtGCodeDevise := "Currency Code";
 
-                if RecLCurrency.GET(TxtGCodeDevise) then
+                if RecLCurrency.Get(TxtGCodeDevise) then
                     TxtGLibDevise := RecLCurrency.Description;
 
                 //<<PW
@@ -891,7 +891,7 @@ report 90002 "Service - Invoice PW" //8044280
                     }
                     field(ShowInternalInfo; ShowInternalInfo)
                     {
-                        Caption = 'Show Internal Information';
+                        Caption = 'Show Internal InFormation';
                     }
                 }
             }
@@ -908,36 +908,36 @@ report 90002 "Service - Invoice PW" //8044280
 
     trigger OnInitReport()
     begin
-        GLSetup.GET();
-        CompanyInfo.GET();
-        ServiceSetup.GET();
+        GLSetup.Get();
+        CompanyInfo.Get();
+        ServiceSetup.Get();
 
         case ServiceSetup."Logo Position on Documents" of
             ServiceSetup."Logo Position on Documents"::"No Logo":
                 ;
             ServiceSetup."Logo Position on Documents"::Left:
                 begin
-                    CompanyInfo3.GET();
-                    CompanyInfo3.CALCFIELDS(Picture);
+                    CompanyInfo3.Get();
+                    CompanyInfo3.CalcFields(Picture);
                 end;
             ServiceSetup."Logo Position on Documents"::Center:
                 begin
-                    CompanyInfo1.GET();
-                    CompanyInfo1.CALCFIELDS(Picture);
+                    CompanyInfo1.Get();
+                    CompanyInfo1.CalcFields(Picture);
                 end;
             ServiceSetup."Logo Position on Documents"::Right:
                 begin
-                    CompanyInfo2.GET();
-                    CompanyInfo2.CALCFIELDS(Picture);
+                    CompanyInfo2.Get();
+                    CompanyInfo2.CalcFields(Picture);
                 end;
         end;
     end;
 
     var
-        CompanyInfo: Record "Company Information";
-        CompanyInfo1: Record "Company Information";
-        CompanyInfo2: Record "Company Information";
-        CompanyInfo3: Record "Company Information";
+        CompanyInfo: Record "Company InFormation";
+        CompanyInfo1: Record "Company InFormation";
+        CompanyInfo2: Record "Company InFormation";
+        CompanyInfo3: Record "Company InFormation";
         RecGContact: Record Contact;
         Cust: Record Customer;
         DimSetEntry: Record "Dimension Set Entry";
@@ -1016,7 +1016,7 @@ report 90002 "Service - Invoice PW" //8044280
         Text000: Label 'Salesperson';
         Text001: Label 'Total %1';
         Text002: Label 'Total %1 Incl. VAT';
-        Text003: Label 'COPY';
+        Text003: Label 'Copy';
         Text004: Label 'Service - Invoice %1';
         Text005: Label 'Page %1';
         Text006: Label 'Total %1 Excl. VAT';
@@ -1055,7 +1055,7 @@ report 90002 "Service - Invoice PW" //8044280
     begin
         NextEntryNo := 1;
         if "Service Invoice Line"."Shipment No." <> '' then
-            if ServiceShipmentHeader.GET("Service Invoice Line"."Shipment No.") then
+            if ServiceShipmentHeader.Get("Service Invoice Line"."Shipment No.") then
                 exit(ServiceShipmentHeader."Posting Date");
 
         if "Service Invoice Header"."Order No." = '' then
@@ -1071,20 +1071,20 @@ report 90002 "Service - Invoice PW" //8044280
                 exit(0D);
         end;
 
-        TempServiceShipmentBuffer.RESET();
-        TempServiceShipmentBuffer.SETRANGE("Document No.", "Service Invoice Line"."Document No.");
-        TempServiceShipmentBuffer.SETRANGE("Line No.", "Service Invoice Line"."Line No.");
-        if TempServiceShipmentBuffer.FINDFIRST() then begin
+        TempServiceShipmentBuffer.Reset();
+        TempServiceShipmentBuffer.SetRange("Document No.", "Service Invoice Line"."Document No.");
+        TempServiceShipmentBuffer.SetRange("Line No.", "Service Invoice Line"."Line No.");
+        if TempServiceShipmentBuffer.findFirst() then begin
             TempServiceShipmentBuffer2 := TempServiceShipmentBuffer;
-            if TempServiceShipmentBuffer.NEXT() = 0 then begin
-                TempServiceShipmentBuffer.GET(
+            if TempServiceShipmentBuffer.Next() = 0 then begin
+                TempServiceShipmentBuffer.Get(
                   TempServiceShipmentBuffer2."Document No.", TempServiceShipmentBuffer2."Line No.", TempServiceShipmentBuffer2."Entry No.");
-                TempServiceShipmentBuffer.DELETE();
+                TempServiceShipmentBuffer.Delete();
                 exit(TempServiceShipmentBuffer2."Posting Date");
             end;
-            TempServiceShipmentBuffer.CALCSUMS(Quantity);
+            TempServiceShipmentBuffer.CalcSums(Quantity);
             if TempServiceShipmentBuffer.Quantity <> "Service Invoice Line".Quantity then begin
-                TempServiceShipmentBuffer.DELETEALL();
+                TempServiceShipmentBuffer.DeleteALL();
                 exit("Service Invoice Header"."Posting Date");
             end;
         end else
@@ -1100,14 +1100,14 @@ report 90002 "Service - Invoice PW" //8044280
         TotalQuantity: Decimal;
     begin
         TotalQuantity := ServiceInvoiceLine2."Quantity (Base)";
-        ValueEntry.SETCURRENTKEY("Document No.");
-        ValueEntry.SETRANGE("Document No.", ServiceInvoiceLine2."Document No.");
-        ValueEntry.SETRANGE("Posting Date", "Service Invoice Header"."Posting Date");
-        ValueEntry.SETRANGE("Item Charge No.", '');
-        ValueEntry.SETFILTER("Entry No.", '%1..', FirstValueEntryNo);
-        if ValueEntry.FINDSET() then
+        ValueEntry.SetCurrentKey("Document No.");
+        ValueEntry.SetRange("Document No.", ServiceInvoiceLine2."Document No.");
+        ValueEntry.SetRange("Posting Date", "Service Invoice Header"."Posting Date");
+        ValueEntry.SetRange("Item Charge No.", '');
+        ValueEntry.SetFilter("Entry No.", '%1..', FirstValueEntryNo);
+        if ValueEntry.FindSet() then
             repeat
-                if ItemLedgerEntry.GET(ValueEntry."Item Ledger Entry No.") then begin
+                if ItemLedgerEntry.Get(ValueEntry."Item Ledger Entry No.") then begin
                     if ServiceInvoiceLine2."Qty. per Unit of Measure" <> 0 then
                         Quantity := ValueEntry."Invoiced Quantity" / ServiceInvoiceLine2."Qty. per Unit of Measure"
                     else
@@ -1119,7 +1119,7 @@ report 90002 "Service - Invoice PW" //8044280
                     TotalQuantity := TotalQuantity + ValueEntry."Invoiced Quantity";
                 end;
                 FirstValueEntryNo := ValueEntry."Entry No." + 1;
-            until (ValueEntry.NEXT() = 0) or (TotalQuantity = 0);
+            until (ValueEntry.Next() = 0) or (TotalQuantity = 0);
     end;
 
 
@@ -1133,37 +1133,37 @@ report 90002 "Service - Invoice PW" //8044280
         TotalQuantity: Decimal;
     begin
         TotalQuantity := 0;
-        ServiceInvoiceHeader.SETCURRENTKEY("Order No.");
-        ServiceInvoiceHeader.SETFILTER("No.", '..%1', "Service Invoice Header"."No.");
-        ServiceInvoiceHeader.SETRANGE("Order No.", "Service Invoice Header"."Order No.");
-        if ServiceInvoiceHeader.FINDSET() then
+        ServiceInvoiceHeader.SetCurrentKey("Order No.");
+        ServiceInvoiceHeader.SetFilter("No.", '..%1', "Service Invoice Header"."No.");
+        ServiceInvoiceHeader.SetRange("Order No.", "Service Invoice Header"."Order No.");
+        if ServiceInvoiceHeader.FindSet() then
             repeat
-                ServiceInvoiceLine2.SETRANGE("Document No.", ServiceInvoiceHeader."No.");
-                ServiceInvoiceLine2.SETRANGE("Line No.", ServiceInvoiceLine."Line No.");
-                ServiceInvoiceLine2.SETRANGE(Type, ServiceInvoiceLine.Type);
-                ServiceInvoiceLine2.SETRANGE("No.", ServiceInvoiceLine."No.");
-                ServiceInvoiceLine2.SETRANGE("Unit of Measure Code", ServiceInvoiceLine."Unit of Measure Code");
-                if ServiceInvoiceLine2.FINDSET() then
+                ServiceInvoiceLine2.SetRange("Document No.", ServiceInvoiceHeader."No.");
+                ServiceInvoiceLine2.SetRange("Line No.", ServiceInvoiceLine."Line No.");
+                ServiceInvoiceLine2.SetRange(Type, ServiceInvoiceLine.Type);
+                ServiceInvoiceLine2.SetRange("No.", ServiceInvoiceLine."No.");
+                ServiceInvoiceLine2.SetRange("Unit of Measure Code", ServiceInvoiceLine."Unit of Measure Code");
+                if ServiceInvoiceLine2.FindSet() then
                     repeat
                         TotalQuantity := TotalQuantity + ServiceInvoiceLine2.Quantity;
-                    until ServiceInvoiceLine2.NEXT() = 0;
-            until ServiceInvoiceHeader.NEXT() = 0;
+                    until ServiceInvoiceLine2.Next() = 0;
+            until ServiceInvoiceHeader.Next() = 0;
 
-        ServiceShipmentLine.SETCURRENTKEY("Order No.", "Order Line No.");
-        ServiceShipmentLine.SETRANGE("Order No.", "Service Invoice Header"."Order No.");
-        ServiceShipmentLine.SETRANGE("Order Line No.", ServiceInvoiceLine."Line No.");
-        ServiceShipmentLine.SETRANGE("Line No.", ServiceInvoiceLine."Line No.");
-        ServiceShipmentLine.SETRANGE(Type, ServiceInvoiceLine.Type);
-        ServiceShipmentLine.SETRANGE("No.", ServiceInvoiceLine."No.");
-        ServiceShipmentLine.SETRANGE("Unit of Measure Code", ServiceInvoiceLine."Unit of Measure Code");
-        ServiceShipmentLine.SETFILTER(Quantity, '<>%1', 0);
+        ServiceShipmentLine.SetCurrentKey("Order No.", "Order Line No.");
+        ServiceShipmentLine.SetRange("Order No.", "Service Invoice Header"."Order No.");
+        ServiceShipmentLine.SetRange("Order Line No.", ServiceInvoiceLine."Line No.");
+        ServiceShipmentLine.SetRange("Line No.", ServiceInvoiceLine."Line No.");
+        ServiceShipmentLine.SetRange(Type, ServiceInvoiceLine.Type);
+        ServiceShipmentLine.SetRange("No.", ServiceInvoiceLine."No.");
+        ServiceShipmentLine.SetRange("Unit of Measure Code", ServiceInvoiceLine."Unit of Measure Code");
+        ServiceShipmentLine.SetFilter(Quantity, '<>%1', 0);
 
-        if ServiceShipmentLine.FINDSET() then
+        if ServiceShipmentLine.FindSet() then
             repeat
-                if ABS(ServiceShipmentLine.Quantity) <= ABS(TotalQuantity - ServiceInvoiceLine.Quantity) then
+                if Abs(ServiceShipmentLine.Quantity) <= Abs(TotalQuantity - ServiceInvoiceLine.Quantity) then
                     TotalQuantity := TotalQuantity - ServiceShipmentLine.Quantity
                 else begin
-                    if ABS(ServiceShipmentLine.Quantity) > ABS(TotalQuantity) then
+                    if Abs(ServiceShipmentLine.Quantity) > Abs(TotalQuantity) then
                         ServiceShipmentLine.Quantity := TotalQuantity;
                     Quantity :=
                       ServiceShipmentLine.Quantity - (TotalQuantity - ServiceInvoiceLine.Quantity);
@@ -1171,24 +1171,24 @@ report 90002 "Service - Invoice PW" //8044280
                     TotalQuantity := TotalQuantity - ServiceShipmentLine.Quantity;
                     ServiceInvoiceLine.Quantity := ServiceInvoiceLine.Quantity - Quantity;
 
-                    if ServiceShipmentHeader.GET(ServiceShipmentLine."Document No.") then
+                    if ServiceShipmentHeader.Get(ServiceShipmentLine."Document No.") then
                         AddBufferEntry(
                           ServiceInvoiceLine,
                           Quantity,
                           ServiceShipmentHeader."Posting Date");
                 end;
-            until (ServiceShipmentLine.NEXT() = 0) or (TotalQuantity = 0);
+            until (ServiceShipmentLine.Next() = 0) or (TotalQuantity = 0);
     end;
 
 
     procedure AddBufferEntry(ServiceInvoiceLine: Record "Service Invoice Line"; QtyOnShipment: Decimal; PostingDate: Date)
     begin
-        TempServiceShipmentBuffer.SETRANGE("Document No.", ServiceInvoiceLine."Document No.");
-        TempServiceShipmentBuffer.SETRANGE("Line No.", ServiceInvoiceLine."Line No.");
-        TempServiceShipmentBuffer.SETRANGE("Posting Date", PostingDate);
-        if TempServiceShipmentBuffer.FINDFIRST() then begin
+        TempServiceShipmentBuffer.SetRange("Document No.", ServiceInvoiceLine."Document No.");
+        TempServiceShipmentBuffer.SetRange("Line No.", ServiceInvoiceLine."Line No.");
+        TempServiceShipmentBuffer.SetRange("Posting Date", PostingDate);
+        if TempServiceShipmentBuffer.findFirst() then begin
             TempServiceShipmentBuffer.Quantity := TempServiceShipmentBuffer.Quantity + QtyOnShipment;
-            TempServiceShipmentBuffer.MODIFY();
+            TempServiceShipmentBuffer.Modify();
             exit;
         end;
 
@@ -1200,7 +1200,7 @@ report 90002 "Service - Invoice PW" //8044280
             "No." := ServiceInvoiceLine."No.";
             Quantity := QtyOnShipment;
             "Posting Date" := PostingDate;
-            INSERT();
+            Insert();
             NextEntryNo := NextEntryNo + 1
         end;
     end;
@@ -1213,11 +1213,11 @@ report 90002 "Service - Invoice PW" //8044280
         Separation: Text[5];
         TxtToAdd: Text[120];
     begin
-        DimSetEntry.SETRANGE("Dimension Set ID", DimSetID);
+        DimSetEntry.SetRange("Dimension Set ID", DimSetID);
         DimTxtArrLength := 0;
         for i := 1 to ARRAYLEN(DimTxtArr) do
             DimTxtArr[i] := '';
-        if not DimSetEntry.FINDSET() then
+        if not DimSetEntry.FindSet() then
             exit;
         Separation := '; ';
         repeat
@@ -1225,13 +1225,13 @@ report 90002 "Service - Invoice PW" //8044280
             if DimTxtArrLength = 0 then
                 StartNewLine := true
             else
-                StartNewLine := STRLEN(DimTxtArr[DimTxtArrLength]) + STRLEN(Separation) + STRLEN(TxtToAdd) > MAXSTRLEN(DimTxtArr[1]);
+                StartNewLine := StrLen(DimTxtArr[DimTxtArrLength]) + StrLen(Separation) + StrLen(TxtToAdd) > MaxStrLen(DimTxtArr[1]);
             if StartNewLine then begin
                 DimTxtArrLength += 1;
                 DimTxtArr[DimTxtArrLength] := CopyStr(TxtToAdd, 1, 50);
             end else
                 DimTxtArr[DimTxtArrLength] := DimTxtArr[DimTxtArrLength] + Separation + TxtToAdd;
-        until DimSetEntry.NEXT() = 0;
+        until DimSetEntry.Next() = 0;
     end;
 }
 

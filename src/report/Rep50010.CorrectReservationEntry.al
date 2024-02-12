@@ -19,55 +19,55 @@ report 50010 "Correct Reservation Entry"
             trigger OnAfterGetRecord()
             begin
                 if ("Source Type" = 37) then
-                    if not RecGSalesHeader.GET("Source Subtype", "Source ID") then begin
-                        RecG337.SETRANGE("Entry No.", "Entry No.");
-                        if RecG337.FINDSET() then
+                    if not RecGSalesHeader.Get("Source Subtype", "Source ID") then begin
+                        RecG337.SetRange("Entry No.", "Entry No.");
+                        if RecG337.FindSet() then
                             repeat
-                                RecG337SV.TRANSFERFIELDS(RecG337);
-                                RecG337SV.INSERT();
+                                RecG337SV.TransferFields(RecG337);
+                                RecG337SV.Insert();
                                 IntGCpt += 1;
-                            //RecG337.DELETE;
-                            until RecG337.NEXT() = 0;
+                            //RecG337.Delete;
+                            until RecG337.Next() = 0;
                     end;
                 if ("Source Type" = 39) then
-                    if not RecGPurchHeader.GET("Source Subtype", "Source ID") then begin
-                        RecG337.SETRANGE("Entry No.", "Entry No.");
-                        if RecG337.FINDSET() then
+                    if not RecGPurchHeader.Get("Source Subtype", "Source ID") then begin
+                        RecG337.SetRange("Entry No.", "Entry No.");
+                        if RecG337.FindSet() then
                             repeat
-                                RecG337SV.TRANSFERFIELDS(RecG337);
-                                RecG337SV.INSERT();
+                                RecG337SV.TransferFields(RecG337);
+                                RecG337SV.Insert();
                                 IntGCpt += 1;
-                            //RecG337.DELETE;
-                            until RecG337.NEXT() = 0;
+                            //RecG337.Delete;
+                            until RecG337.Next() = 0;
                     end;
 
 
                 if ("Source Type" = 901) then
-                    if not RecGAssembletoOrderLink.GET("Source Subtype", "Source ID") then begin
-                        RecG337.SETRANGE("Entry No.", "Entry No.");
-                        if RecG337.FINDSET() then
+                    if not RecGAssembletoOrderLink.Get("Source Subtype", "Source ID") then begin
+                        RecG337.SetRange("Entry No.", "Entry No.");
+                        if RecG337.FindSet() then
                             repeat
-                                RecG337SV.TRANSFERFIELDS(RecG337);
-                                RecG337SV.INSERT();
+                                RecG337SV.TransferFields(RecG337);
+                                RecG337SV.Insert();
                                 IntGCpt += 1;
-                            //RecG337.DELETE;
-                            until RecG337.NEXT() = 0;
+                            //RecG337.Delete;
+                            until RecG337.Next() = 0;
                     end else
-                        RecGKitSalesLine.RESET();
-                RecGKitSalesLine.SETRANGE("Document Type", RecGAssembletoOrderLink."Document Type");
-                RecGKitSalesLine.SETRANGE("Document No.", RecGAssembletoOrderLink."Document No.");
-                RecGKitSalesLine.SETRANGE("Line No.", RecGAssembletoOrderLink."Document Line No.");
-                if RecGKitSalesLine.FINDFIRST() then
+                        RecGKitSalesLine.Reset();
+                RecGKitSalesLine.SetRange("Document Type", RecGAssembletoOrderLink."Document Type");
+                RecGKitSalesLine.SetRange("Document No.", RecGAssembletoOrderLink."Document No.");
+                RecGKitSalesLine.SetRange("Line No.", RecGAssembletoOrderLink."Document Line No.");
+                if RecGKitSalesLine.findFirst() then
                     if RecGKitSalesLine."No." <> "Item No." then begin
-                        RecG337.SETRANGE("Entry No.", "Entry No.");
-                        if RecG337.FINDSET() then
+                        RecG337.SetRange("Entry No.", "Entry No.");
+                        if RecG337.FindSet() then
                             repeat
-                                RecG337SV.TRANSFERFIELDS(RecG337);
+                                RecG337SV.TransferFields(RecG337);
                                 RecG337SV."Changed By" := '<> article';
-                                RecG337SV.INSERT();
+                                RecG337SV.Insert();
                                 IntGCpt += 1;
 
-                            until RecG337.NEXT() = 0;
+                            until RecG337.Next() = 0;
 
 
 
@@ -78,14 +78,14 @@ report 50010 "Correct Reservation Entry"
             trigger OnPostDataItem()
             begin
                 if IntGCpt > 0 then
-                    MESSAGE(CstG001, IntGCpt, RecG337SV.TABLENAME)
+                    Message(CstG001, IntGCpt, RecG337SV.TABLENAME)
                 else
-                    MESSAGE(CstG002);
+                    Message(CstG002);
             end;
 
             trigger OnPreDataItem()
             begin
-                //SETRANGE("Entry No.", 65);
+                //SetRange("Entry No.", 65);
             end;
         }
     }

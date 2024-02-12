@@ -28,13 +28,13 @@ codeunit 50000 "Write Text File"
         if not BooPFixedValue then
             TxtGSeparator := TxtPSeparator;
 
-        // File format
+        // File Format
         BooGFixedValue := BooPFixedValue;
 
         // Decimal separator
         BooGCommaDecimal := BooPCommaDecimal;
 
-        // Define carriage return and new line for outstream write
+        // Define carriage return and new line for outstream Write
         ChaGCR := 13;
         ChaGLF := 10;
     end;
@@ -43,46 +43,46 @@ codeunit 50000 "Write Text File"
     var
         IntLCount: Integer;
     begin
-        CLEAR(BigTGExportText);
+        Clear(BigTGExportText);
 
         IntLCount := 1;
         while (IntLCount <= IntPEndSegment) do begin
-            //BigTGExportText.ADDTEXT(CduGConvert.BigAsciiToAnsi(TxtPTextFields[IntLCount]) + TxtGSeparator);
-            BigTGExportText.ADDTEXT(TxtPTextFields[IntLCount] + TxtGSeparator);
+            //BigTGExportText.AddText(CduGConvert.BigAsciiToAnsi(TxtPTextFields[IntLCount]) + TxtGSeparator);
+            BigTGExportText.AddText(TxtPTextFields[IntLCount] + TxtGSeparator);
             IntLCount += 1;
         end;
 
-        BigTGExportText.ADDTEXT(FORMAT(ChaGCR));
-        BigTGExportText.ADDTEXT(FORMAT(ChaGLF));
-        BigTGExportText.WRITE(OusGOutstream);
+        BigTGExportText.AddText(Format(ChaGCR));
+        BigTGExportText.AddText(Format(ChaGLF));
+        BigTGExportText.Write(OusGOutstream);
     end;
 
     procedure FormatText(VarPSource: Variant; IntPFieldLen: Integer; BooPLayoutToRight: Boolean) TxtLResult: Text
     var
         IntLValueLen: Integer;
     begin
-        TxtLResult := FORMAT(VarPSource);
+        TxtLResult := Format(VarPSource);
 
-        IntLValueLen := STRLEN(TxtLResult);
+        IntLValueLen := StrLen(TxtLResult);
         if IntLValueLen > IntPFieldLen then
-            TxtLResult := COPYSTR(TxtLResult, 1, IntPFieldLen)
+            TxtLResult := CopyStr(TxtLResult, 1, IntPFieldLen)
         else begin
             if not BooGFixedValue then
                 exit;
             // Enlarge result value with space character
             if BooPLayoutToRight then
                 // Add to left because real value in on the right side
-                TxtLResult := PADSTR('', IntPFieldLen - IntLValueLen) + TxtLResult
+                TxtLResult := PadStr('', IntPFieldLen - IntLValueLen) + TxtLResult
             else
                 // Add to right because real value in on the left side
-                TxtLResult := PADSTR(TxtLResult, IntPFieldLen);
+                TxtLResult := PadStr(TxtLResult, IntPFieldLen);
         end;
     end;
 
     procedure FctEndMessage(filename: Text)
     begin
-        //*************** Fin du message ***************//
-        // FilGToExport.CLOSE;
+        //*************** Fin du Message ***************//
+        // FilGToExport.Close;
         tempblob.CreateInStream(InsGInstream);
         DownloadFromStream(InsGInstream, '', '', '', filename);
         // specify folder Not used in cloud

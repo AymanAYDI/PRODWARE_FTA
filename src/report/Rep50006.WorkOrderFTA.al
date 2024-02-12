@@ -137,7 +137,7 @@ report 50006 "Work Order FTA"
             column(LblUnitOfMeasure; LblUnitOfMeasure)
             {
             }
-            column(LblType; "Sales Line".FIELDCAPTION(Type))
+            column(LblType; "Sales Line".FieldCaption(Type))
             {
             }
             column(LblQuantity; LblQuantity)
@@ -149,25 +149,25 @@ report 50006 "Work Order FTA"
             column(LblNo; LblNo)
             {
             }
-            column(LblCrossReference; "Sales Line".FIELDCAPTION("Item Reference No.")) //"Cross-Reference No." replaced
+            column(LblCrossReference; "Sales Line".FieldCaption("Item Reference No.")) //"Cross-Reference No." replaced
             {
             }
-            column(LblShipmentDate; "Sales Line".FIELDCAPTION("Shipment Date"))
+            column(LblShipmentDate; "Sales Line".FieldCaption("Shipment Date"))
             {
             }
-            column(LblPrepaType; "Sales Line".FIELDCAPTION("Preparation Type"))
+            column(LblPrepaType; "Sales Line".FieldCaption("Preparation Type"))
             {
             }
             column(ShiptoAddrCaption; ShiptoAddrCaptionLbl)
             {
             }
-            column(Preparer; "Sales Header".FIELDCAPTION(Preparer))
+            column(Preparer; "Sales Header".FieldCaption(Preparer))
             {
             }
-            column(Assembler; "Sales Header".FIELDCAPTION(Assembler))
+            column(Assembler; "Sales Header".FieldCaption(Assembler))
             {
             }
-            column(Packer; "Sales Header".FIELDCAPTION(Packer))
+            column(Packer; "Sales Header".FieldCaption(Packer))
             {
             }
             column(LblCustomerCode; LblCustomerCode)
@@ -198,7 +198,7 @@ report 50006 "Work Order FTA"
                     column(CompanyInfo1Picture; CompanyInfo1.Picture)
                     {
                     }
-                    column(OrderConfirmCopyCaption; STRSUBSTNO(CstG005, "Sales Header"."No."))
+                    column(OrderConfirmCopyCaption; StrSubstNo(CstG005, "Sales Header"."No."))
                     {
                     }
                     column(PintedDateDaption; CstG006)
@@ -262,7 +262,7 @@ report 50006 "Work Order FTA"
                     column(BilltoCustNo_SalesHeader; "Sales Header"."Bill-to Customer No.")
                     {
                     }
-                    column(DocDate_SalesHeader; FORMAT("Sales Header"."Document Date"))
+                    column(DocDate_SalesHeader; Format("Sales Header"."Document Date"))
                     {
                     }
                     column(VATNoText; VATNoText)
@@ -271,7 +271,7 @@ report 50006 "Work Order FTA"
                     column(VATRegNo_SalesHeader; "Sales Header"."VAT Registration No.")
                     {
                     }
-                    column(ShptDate_SalesHeader; FORMAT("Sales Header"."Shipment Date"))
+                    column(ShptDate_SalesHeader; Format("Sales Header"."Shipment Date"))
                     {
                     }
                     column(SalesPersonText; SalesPersonText)
@@ -310,7 +310,7 @@ report 50006 "Work Order FTA"
                     column(ShptMethodDesc; ShipmentMethod.Description)
                     {
                     }
-                    column(PricesInclVATYesNo_SalesHeader; FORMAT("Sales Header"."Prices Including VAT"))
+                    column(PricesInclVATYesNo_SalesHeader; Format("Sales Header"."Prices Including VAT"))
                     {
                     }
                     column(VATRegNoCaption; VATRegNoCaptionLbl)
@@ -337,10 +337,10 @@ report 50006 "Work Order FTA"
                     column(EmailCaption; EmailCaptionLbl)
                     {
                     }
-                    column(BilltoCustNo_SalesHeaderCaption; "Sales Header".FIELDCAPTION("Bill-to Customer No."))
+                    column(BilltoCustNo_SalesHeaderCaption; "Sales Header".FieldCaption("Bill-to Customer No."))
                     {
                     }
-                    column(PricesInclVAT_SalesHeaderCaption; "Sales Header".FIELDCAPTION("Prices Including VAT"))
+                    column(PricesInclVAT_SalesHeaderCaption; "Sales Header".FieldCaption("Prices Including VAT"))
                     {
                     }
                     column(CompanyInfo__SWIFT_Code_; CompanyInfo."SWIFT Code")
@@ -370,7 +370,7 @@ report 50006 "Work Order FTA"
                     column(SalesHeader_PostingDate; "Sales Header"."Posting Date")
                     {
                     }
-                    column(SalesPurchPersonPhoneNoCaption; "Sales Header".FIELDCAPTION("Promised Delivery Date"))
+                    column(SalesPurchPersonPhoneNoCaption; "Sales Header".FieldCaption("Promised Delivery Date"))
                     {
                     }
                     column(SalesPurchPersonPhoneNo; "Sales Header"."Promised Delivery Date")
@@ -400,9 +400,9 @@ report 50006 "Work Order FTA"
                         trigger OnPreDataItem()
                         begin
 
-                            "Sales Comment Line".SETRANGE("Document Type", "Sales Header"."Document Type");
-                            "Sales Comment Line".SETRANGE("No.", "Sales Header"."No.");
-                            "Sales Comment Line".SETRANGE("Document Line No.", 0);
+                            "Sales Comment Line".SetRange("Document Type", "Sales Header"."Document Type");
+                            "Sales Comment Line".SetRange("No.", "Sales Header"."No.");
+                            "Sales Comment Line".SetRange("Document Line No.", 0);
                         end;
                     }
                     dataitem("Sales Line"; "Sales Line")
@@ -417,7 +417,7 @@ report 50006 "Work Order FTA"
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(Type_SalesLine; FORMAT("Sales Line".Type))
+                        column(Type_SalesLine; Format("Sales Line".Type))
                         {
                         }
                         column(Desc_SalesLine; "Sales Line".Description)
@@ -438,10 +438,10 @@ report 50006 "Work Order FTA"
                         column(Qty_SalesLine; "Sales Line"."Outstanding Quantity")
                         {
                         }
-                        column(SalesLinePlannedDeliveryDate; FORMAT("Sales Line"."Shipment Date", 0, 1))
+                        column(SalesLinePlannedDeliveryDate; Format("Sales Line"."Shipment Date", 0, 1))
                         {
                         }
-                        column(SalesLinePreparationType; FORMAT("Preparation Type"))
+                        column(SalesLinePreparationType; Format("Preparation Type"))
                         {
                         }
                         column(SalesLinePreparationTypeRange; IntGPreparationType)
@@ -469,28 +469,28 @@ report 50006 "Work Order FTA"
                         column(AsmInfoExistsForLine; AsmInfoExistsForLine)
                         {
                         }
-                        column(Desc_SalesLineCaption; "Sales Line".FIELDCAPTION(Description))
+                        column(Desc_SalesLineCaption; "Sales Line".FieldCaption(Description))
                         {
                         }
-                        column(No2_SalesLineCaption; "Sales Line".FIELDCAPTION("No."))
+                        column(No2_SalesLineCaption; "Sales Line".FieldCaption("No."))
                         {
                         }
-                        column(Qty_SalesLineCaption; "Sales Line".FIELDCAPTION(Quantity))
+                        column(Qty_SalesLineCaption; "Sales Line".FieldCaption(Quantity))
                         {
                         }
-                        column(UOM_SalesLineCaption; "Sales Line".FIELDCAPTION("Unit of Measure"))
+                        column(UOM_SalesLineCaption; "Sales Line".FieldCaption("Unit of Measure"))
                         {
                         }
-                        column(VATIdentifier_SalesLineCaption; "Sales Line".FIELDCAPTION("VAT Identifier"))
+                        column(VATIdentifier_SalesLineCaption; "Sales Line".FieldCaption("VAT Identifier"))
                         {
                         }
-                        column(AsmLineHeader; STRSUBSTNO(CstG004, FORMAT("Sales Line"."Outstanding Quantity"), "Sales Line".Description, "Sales Line"."Description 2"))
+                        column(AsmLineHeader; StrSubstNo(CstG004, Format("Sales Line"."Outstanding Quantity"), "Sales Line".Description, "Sales Line"."Description 2"))
                         {
                         }
-                        column(AsmLineLevelCaption; AsmLine.FIELDCAPTION("Level No."))
+                        column(AsmLineLevelCaption; AsmLine.FieldCaption("Level No."))
                         {
                         }
-                        column(AsmLineQtyPerCaption; AsmLine.FIELDCAPTION("Quantity per"))
+                        column(AsmLineQtyPerCaption; AsmLine.FieldCaption("Quantity per"))
                         {
                         }
                         column(AsmLineQuantityCaption; LblQuantityAsm)
@@ -528,35 +528,35 @@ report 50006 "Work Order FTA"
                                 lblTxt002: Label '%1, %2 %3', Comment = '%1=DimText %2="Dimension Code" %3="Dimension Value Code"';
                             begin
                                 if Number = 1 then begin
-                                    if not DimSetEntry2.FINDSET() then
-                                        CurrReport.BREAK();
+                                    if not DimSetEntry2.FindSet() then
+                                        CurrReport.Break();
                                 end else
                                     if not Continue then
-                                        CurrReport.BREAK();
+                                        CurrReport.Break();
 
-                                CLEAR(DimText);
+                                Clear(DimText);
                                 Continue := false;
                                 repeat
                                     OldDimText := DimText;
                                     if DimText = '' then
-                                        DimText := STRSUBSTNO(lblTxt001, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
+                                        DimText := StrSubstNo(lblTxt001, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
                                     else
                                         DimText :=
-                                          STRSUBSTNO(lblTxt002, DimText,
+                                          StrSubstNo(lblTxt002, DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
-                                    if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                    if StrLen(DimText) > MaxStrLen(OldDimText) then begin
                                         DimText := OldDimText;
                                         Continue := true;
                                         exit;
                                     end;
-                                until DimSetEntry2.NEXT() = 0;
+                                until DimSetEntry2.Next() = 0;
                             end;
 
                             trigger OnPreDataItem()
                             begin
-                                CurrReport.BREAK();
+                                CurrReport.Break();
 
-                                DimSetEntry2.SETRANGE("Dimension Set ID", "Sales Line"."Dimension Set ID");
+                                DimSetEntry2.SetRange("Dimension Set ID", "Sales Line"."Dimension Set ID");
                             end;
                         }
                         dataitem("Extended Text Line"; "Extended Text Line")
@@ -566,7 +566,7 @@ report 50006 "Work Order FTA"
                             column(ExtendedLine_Text; "Extended Text Line".Text)
                             {
                             }
-                            column(ExtendedLine_TextCaption; "Extended Text Line".FIELDCAPTION(Text))
+                            column(ExtendedLine_TextCaption; "Extended Text Line".FieldCaption(Text))
                             {
                             }
                             column(ExtendedLine_LineNo; "Extended Text Line"."Line No.")
@@ -576,7 +576,7 @@ report 50006 "Work Order FTA"
                             trigger OnPreDataItem()
                             begin
                                 //<<FTA.EXTENDEDTEXT
-                                SETRANGE("Extended Text Line"."Table Name", "Extended Text Line"."Table Name"::Item);
+                                SetRange("Extended Text Line"."Table Name", "Extended Text Line"."Table Name"::Item);
                                 //>>FTA.EXTENDEDTEXT
                             end;
                         }
@@ -620,32 +620,32 @@ report 50006 "Work Order FTA"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then
-                                    AsmLine.FINDSET()
+                                    AsmLine.FindSet()
                                 else
-                                    AsmLine.NEXT();
+                                    AsmLine.Next();
 
 
                                 //>>FExxxx.001
                                 if (AsmLine.Type = AsmLine.Type::Item) and (AsmLine."No." <> '') then
-                                    RecGItem2.GET(AsmLine."No.")
+                                    RecGItem2.Get(AsmLine."No.")
                                 // FTA1.02 Canceled
-                                // AsmLine.CALCFIELDS(Kit);
+                                // AsmLine.CalcFields(Kit);
                                 // IF NOT AsmLine.Kit THEN
                                 //   RecGItem2."Shelf No." := '';
                                 else
-                                    RecGItem2.INIT();
+                                    RecGItem2.Init();
 
                                 //<<FExxxx.001
 
                                 //>>NDBI
-                                CLEAR(TxtGAsmCommentLine);
-                                RecGCommentLine.SETRANGE("Table Name", RecGCommentLine."Table Name"::Item);
-                                RecGCommentLine.SETRANGE("No.", AsmLine."No.");
-                                if RecGCommentLine.FINDFIRST() then begin
+                                Clear(TxtGAsmCommentLine);
+                                RecGCommentLine.SetRange("Table Name", RecGCommentLine."Table Name"::Item);
+                                RecGCommentLine.SetRange("No.", AsmLine."No.");
+                                if RecGCommentLine.findFirst() then begin
                                     repeat
-                                        TxtGAsmCommentLine += FORMAT(Enter) + RecGCommentLine.Comment;
-                                    until RecGCommentLine.NEXT() = 0;
-                                    TxtGAsmCommentLine := COPYSTR(TxtGAsmCommentLine, 2, STRLEN(TxtGAsmCommentLine));
+                                        TxtGAsmCommentLine += Format(Enter) + RecGCommentLine.Comment;
+                                    until RecGCommentLine.Next() = 0;
+                                    TxtGAsmCommentLine := CopyStr(TxtGAsmCommentLine, 2, StrLen(TxtGAsmCommentLine));
                                 end;
 
                                 //<<NDBI
@@ -654,25 +654,25 @@ report 50006 "Work Order FTA"
                             trigger OnPreDataItem()
                             begin
                                 if not AsmInfoExistsForLine then
-                                    CurrReport.BREAK();
-                                AsmLine.SETRANGE("Document Type", AsmHeader."Document Type");
-                                AsmLine.SETRANGE("Document No.", AsmHeader."No.");
-                                SETRANGE(Number, 1, AsmLine.COUNT);
+                                    CurrReport.Break();
+                                AsmLine.SetRange("Document Type", AsmHeader."Document Type");
+                                AsmLine.SetRange("Document No.", AsmHeader."No.");
+                                SetRange(Number, 1, AsmLine.Count);
                             end;
                         }
 
                         trigger OnAfterGetRecord()
                         begin
                             //IF NOT FctctrlKitReservation("Sales Line") THEN
-                            //  CurrReport.SKIP;
+                            //  CurrReport.Skip;
 
                             AsmInfoExistsForLine := AsmToOrderExists(AsmHeader);
 
                             //>>FExxxx.001
                             if ("Sales Line".Type = "Sales Line".Type::Item) and ("Sales Line"."No." <> '') then
-                                RecGItem.GET("Sales Line"."No.")
+                                RecGItem.Get("Sales Line"."No.")
                             else
-                                RecGItem.INIT();
+                                RecGItem.Init();
 
                             //>>NDBI
                             BooGAdditionalInfoVisible := false;
@@ -682,14 +682,14 @@ report 50006 "Work Order FTA"
                                     BooGAdditionalInfoVisible := true;
                             //<<NDBI
 
-                            CLEAR(TxtGCommentLine);
-                            RecGCommentLine.SETRANGE("Table Name", RecGCommentLine."Table Name"::Item);
-                            RecGCommentLine.SETRANGE("No.", "No.");
-                            if RecGCommentLine.FINDFIRST() then begin
+                            Clear(TxtGCommentLine);
+                            RecGCommentLine.SetRange("Table Name", RecGCommentLine."Table Name"::Item);
+                            RecGCommentLine.SetRange("No.", "No.");
+                            if RecGCommentLine.findFirst() then begin
                                 repeat
-                                    TxtGCommentLine += FORMAT(Enter) + RecGCommentLine.Comment;
-                                until RecGCommentLine.NEXT() = 0;
-                                TxtGCommentLine := COPYSTR(TxtGCommentLine, 2, STRLEN(TxtGCommentLine));
+                                    TxtGCommentLine += Format(Enter) + RecGCommentLine.Comment;
+                                until RecGCommentLine.Next() = 0;
+                                TxtGCommentLine := CopyStr(TxtGCommentLine, 2, StrLen(TxtGCommentLine));
                             end;
 
                             //<<FExxxx.001
@@ -701,7 +701,7 @@ report 50006 "Work Order FTA"
                             // afin de garder ces lignes à la suite des articles.
 
                             if Type = Type::Item then begin
-                                EVALUATE(IntGPreparationType, FORMAT("Sales Line"."Preparation Type", 0, '<Number>'));
+                                EVALUATE(IntGPreparationType, Format("Sales Line"."Preparation Type", 0, '<Number>'));
                                 CodGShelfNo := RecGItem."Shelf No.";
                             end;
 
@@ -712,9 +712,9 @@ report 50006 "Work Order FTA"
                         begin
                             Enter := 10;
 
-                            //SETFILTER("Sales Line"."Outstanding Quantity",'<>%1',0);
-                            //SETFILTER("Sales Line"."Planned Delivery Date",'<=%1',TODAY);
-                            SETRANGE("Sales Line".Prepare, true);
+                            //SetFilter("Sales Line"."Outstanding Quantity",'<>%1',0);
+                            //SetFilter("Sales Line"."Planned Delivery Date",'<=%1',TODAY);
+                            SetRange("Sales Line".Prepare, true);
                         end;
                     }
                     dataitem(Total2; Integer)
@@ -748,7 +748,7 @@ report 50006 "Work Order FTA"
                         column(ShipToAddr1; ShipToAddr[1])
                         {
                         }
-                        column(SelltoCustNo_SalesHeaderCaption; "Sales Header".FIELDCAPTION("Sell-to Customer No."))
+                        column(SelltoCustNo_SalesHeaderCaption; "Sales Header".FieldCaption("Sell-to Customer No."))
                         {
                         }
                         column(Total2Number; Number)
@@ -769,9 +769,9 @@ report 50006 "Work Order FTA"
 
                 trigger OnPreDataItem()
                 begin
-                    NoOfLoops := ABS(NoOfCopies) + 1;
+                    NoOfLoops := Abs(NoOfCopies) + 1;
                     CopyText := '';
-                    SETRANGE(Number, 1, NoOfLoops);
+                    SetRange(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
@@ -779,10 +779,10 @@ report 50006 "Work Order FTA"
             trigger OnAfterGetRecord()
             var
             begin
-                CompanyInfo.GET();
+                CompanyInfo.Get();
                 CurrReport.LANGUAGE := Language.GetLanguageIdOrDefault("Language Code");
 
-                if RespCenter.GET("Responsibility Center") then begin
+                if RespCenter.Get("Responsibility Center") then begin
                     FormatAddr.RespCenter(CompanyAddr, RespCenter);
                     CompanyInfo."Phone No." := RespCenter."Phone No.";
                     CompanyInfo."Fax No." := RespCenter."Fax No.";
@@ -791,11 +791,11 @@ report 50006 "Work Order FTA"
 
 
                 if "Salesperson Code" = '' then begin
-                    CLEAR(SalesPurchPerson);
+                    Clear(SalesPurchPerson);
                     SalesPersonText := '';
                 end else
                     //>>FTA1.04
-                    if SalesPurchPerson.GET("Salesperson Code") then
+                    if SalesPurchPerson.Get("Salesperson Code") then
                         SalesPersonText := Text000
                     else
                         SalesPersonText := '';
@@ -803,38 +803,38 @@ report 50006 "Work Order FTA"
                 if "Your Reference" = '' then
                     ReferenceText := ''
                 else
-                    ReferenceText := FIELDCAPTION("Your Reference");
+                    ReferenceText := FieldCaption("Your Reference");
                 if "VAT Registration No." = '' then
                     VATNoText := ''
                 else
-                    VATNoText := FIELDCAPTION("VAT Registration No.");
+                    VATNoText := FieldCaption("VAT Registration No.");
 
                 //FormatAddr.SalesHeaderBillTo(CustAddr,"Sales Header");
 
                 if "Payment Terms Code" = '' then
-                    PaymentTerms.INIT()
+                    PaymentTerms.Init()
                 else begin
-                    PaymentTerms.GET("Payment Terms Code");
+                    PaymentTerms.Get("Payment Terms Code");
                     PaymentTerms.TranslateDescription(PaymentTerms, "Language Code");
                 end;
 
                 if "Shipment Method Code" = '' then
-                    ShipmentMethod.INIT()
+                    ShipmentMethod.Init()
                 else begin
-                    ShipmentMethod.GET("Shipment Method Code");
+                    ShipmentMethod.Get("Shipment Method Code");
                     ShipmentMethod.TranslateDescription(ShipmentMethod, "Language Code");
                 end;
 
                 FormatAddr.SalesHeaderShipTo(ShipToAddr, CustAddr, "Sales Header");
 
-                RecGCustomer.GET("Sell-to Customer No.");
+                RecGCustomer.Get("Sell-to Customer No.");
 
-                if not RecGContact.GET("Sales Header"."Sell-to Contact No.") then
-                    CLEAR(RecGContact);
+                if not RecGContact.Get("Sales Header"."Sell-to Contact No.") then
+                    Clear(RecGContact);
 
 
-                //CLEAR(RecGPaymentMethod) ;
-                //IF "Sales Header"."Payment Method Code" <> '' THEN RecGPaymentMethod.GET("Payment Method Code");
+                //Clear(RecGPaymentMethod) ;
+                //IF "Sales Header"."Payment Method Code" <> '' THEN RecGPaymentMethod.Get("Payment Method Code");
 
                 TxtGOurReferences := "Sell-to Customer No.";
                 if "Sell-to Customer No." <> "Bill-to Customer No." then
@@ -865,7 +865,7 @@ report 50006 "Work Order FTA"
                     }
                     field(ShowInternalInfo; ShowInternalInfo)
                     {
-                        Caption = 'Show Internal Information';
+                        Caption = 'Show Internal InFormation';
                     }
                 }
             }
@@ -882,27 +882,27 @@ report 50006 "Work Order FTA"
 
     trigger OnInitReport()
     begin
-        GLSetup.GET();
+        GLSetup.Get();
 
-        SalesSetup.GET();
+        SalesSetup.Get();
 
         case SalesSetup."Logo Position on Documents" of
             SalesSetup."Logo Position on Documents"::"No Logo":
                 ;
             SalesSetup."Logo Position on Documents"::Left:
                 begin
-                    CompanyInfo3.GET();
-                    CompanyInfo3.CALCFIELDS(Picture);
+                    CompanyInfo3.Get();
+                    CompanyInfo3.CalcFields(Picture);
                 end;
             SalesSetup."Logo Position on Documents"::Center:
                 begin
-                    CompanyInfo1.GET();
-                    CompanyInfo1.CALCFIELDS(Picture);
+                    CompanyInfo1.Get();
+                    CompanyInfo1.CalcFields(Picture);
                 end;
             SalesSetup."Logo Position on Documents"::Right:
                 begin
-                    CompanyInfo2.GET();
-                    CompanyInfo2.CALCFIELDS(Picture);
+                    CompanyInfo2.Get();
+                    CompanyInfo2.CalcFields(Picture);
                 end;
         end;
     end;
@@ -911,8 +911,8 @@ report 50006 "Work Order FTA"
     var
         SalesHeader: Record "Sales Header";
     begin
-        SalesHeader.SETRANGE("Document Type", "Sales Header"."Document Type");
-        SalesHeader.SETRANGE("No.", "Sales Header"."No.");
+        SalesHeader.SetRange("Document Type", "Sales Header"."Document Type");
+        SalesHeader.SetRange("No.", "Sales Header"."No.");
 
 
     end;
@@ -921,10 +921,10 @@ report 50006 "Work Order FTA"
         AsmHeader: Record "Assembly Header";
         AsmLine: Record "Assembly Line";
         RecGCommentLine: Record "Comment Line";
-        CompanyInfo: Record "Company Information";
-        CompanyInfo1: Record "Company Information";
-        CompanyInfo2: Record "Company Information";
-        CompanyInfo3: Record "Company Information";
+        CompanyInfo: Record "Company InFormation";
+        CompanyInfo1: Record "Company InFormation";
+        CompanyInfo2: Record "Company InFormation";
+        CompanyInfo3: Record "Company InFormation";
         RecGContact: Record Contact;
         RecGCustomer: Record Customer;
         DimSetEntry2: Record "Dimension Set Entry";
@@ -992,7 +992,7 @@ report 50006 "Work Order FTA"
         ShipmentMethodCaptionLbl: Label 'Shipment Method';
         ShiptoAddrCaptionLbl: Label 'Ship-to Address';
         Text000: Label 'Salesperson:';
-        Text003: Label 'COPY';
+        Text003: Label 'Copy';
         VATRegNoCaptionLbl: Label 'VAT Registration No.';
         CopyText: Text[30];
         SalesPersonText: Text[30];
@@ -1020,7 +1020,7 @@ report 50006 "Work Order FTA"
     var
         UnitOfMeasure: Record "Unit of Measure";
     begin
-        if not UnitOfMeasure.GET(UOMCode) then
+        if not UnitOfMeasure.Get(UOMCode) then
             exit(UOMCode);
         exit(UnitOfMeasure.Description);
     end;
@@ -1028,7 +1028,7 @@ report 50006 "Work Order FTA"
 
     procedure BlanksForIndent(): Text[10]
     begin
-        exit(PADSTR('', 2, ' '));
+        exit(PadStr('', 2, ' '));
     end;
 }
 

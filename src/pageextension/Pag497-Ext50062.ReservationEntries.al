@@ -43,19 +43,19 @@ pageextension 50062 "ReservationEntries" extends "Reservation Entries" //497
     var
         SalesHeader: Record "Sales Header";
     begin
-        if RecGReservEntry.GET(RecGReservEntry."Entry No.", false) then begin
+        if RecGReservEntry.Get(RecGReservEntry."Entry No.", false) then begin
             if RecGReservEntry."Source Type" = 901 then begin
-                if not RecGAtoLink.GET(RecGReservEntry."Source Subtype", RecGReservEntry."Source ID") then
-                    RecGAtoLink.INIT();
-                TxtGDescription := FORMAT(RecGAtoLink."Document Type") + ' ' + RecGAtoLink."Document No.";
-                if SalesHeader.GET(RecGAtoLink."Document Type", RecGAtoLink."Document No.") then begin
+                if not RecGAtoLink.Get(RecGReservEntry."Source Subtype", RecGReservEntry."Source ID") then
+                    RecGAtoLink.Init();
+                TxtGDescription := Format(RecGAtoLink."Document Type") + ' ' + RecGAtoLink."Document No.";
+                if SalesHeader.Get(RecGAtoLink."Document Type", RecGAtoLink."Document No.") then begin
                     CustomerName := SalesHeader."Sell-to Customer Name";
                     RequestedDeliveryDate := SalesHeader."Requested Delivery Date";
                 end;
 
             end else begin
                 TxtGDescription := '';
-                if SalesHeader.GET(RecGReservEntry."Source Subtype", RecGReservEntry."Source ID") then
+                if SalesHeader.Get(RecGReservEntry."Source Subtype", RecGReservEntry."Source ID") then
                     CustomerName := SalesHeader."Sell-to Customer Name";
             end;
         end else

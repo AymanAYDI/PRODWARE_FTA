@@ -14,7 +14,7 @@ page 50014 "Sales Order total"
 {
 
     Caption = 'Total Lines';
-    PageType = CardPart;
+    PaGetype = CardPart;
     SourceTable = "Sales Line";
     ApplicationArea = All;
 
@@ -37,9 +37,9 @@ page 50014 "Sales Order total"
                     var
                         SalesHeader: Record "Sales Header";
                     begin
-                        SalesHeader.GET(Rec."Document Type", Rec."Document No.");
+                        SalesHeader.Get(Rec."Document Type", Rec."Document No.");
                         SalesCalcDiscByType.ApplyInvDiscBasedOnAmt(TotalSalesLine."Inv. Discount Amount", SalesHeader);
-                        CurrPage.UPDATE(false);
+                        CurrPage.Update(false);
                     end;
                 }
                 field("Invoice Disc. Pct."; SalesCalcDiscByType.GetCustInvoiceDiscountPct(Rec))
@@ -82,7 +82,7 @@ page 50014 "Sales Order total"
                     StyleExpr = TotalAmountStyle;
                     ToolTip = 'Specifies the value of the Total Amount Incl. VAT field.';
                 }
-                field(RefreshTotals; RefreshMessageText)
+                field(RefreshTotals; RefreshMessaGetext)
                 {
                     DrillDown = true;
                     Editable = false;
@@ -92,7 +92,7 @@ page 50014 "Sales Order total"
                     trigger OnDrillDown()
                     begin
                         DocumentTotals.SalesRedistributeInvoiceDiscountAmounts(Rec, VATAmount, TotalSalesLine);
-                        CurrPage.UPDATE(false);
+                        CurrPage.Update(false);
                     end;
                 }
                 field("Tot.WorkTime"; TotWorkTime(Rec, false))
@@ -135,10 +135,10 @@ page 50014 "Sales Order total"
 
     trigger OnAfterGetCurrRecord()
     begin
-        if SalesHeader.GET(Rec."Document Type", Rec."Document No.") then;
+        if SalesHeader.Get(Rec."Document Type", Rec."Document No.") then;
 
         DocumentTotals.SalesUpdateTotalsControls(Rec, TotalSalesHeader, TotalSalesLine, RefreshMessageEnabled,
-          TotalAmountStyle, RefreshMessageText, InvDiscAmountEditable, true, VATAmount); //TODO -> Verif Test
+          TotalAmountStyle, RefreshMessaGetext, InvDiscAmountEditable, true, VATAmount); //TODO -> Verif Test
 
         TypeChosen := Rec.Type <> Rec.Type::" ";
         SetLocationCodeMandatory();
@@ -171,7 +171,7 @@ page 50014 "Sales Order total"
         InvDiscAmountEditable: Boolean;
         TotalAmountStyle: Text;
         RefreshMessageEnabled: Boolean;
-        RefreshMessageText: Text;
+        RefreshMessaGetext: Text;
         DecGxQuantity: Decimal;
         OptGxPreparationType: Option " ",Stock,Assembly,Purchase,Remainder;
         BooGOK: Boolean;
@@ -180,21 +180,21 @@ page 50014 "Sales Order total"
 
     procedure ApproveCalcInvDisc()
     begin
-        CODEUNIT.RUN(CODEUNIT::"Sales-Disc. (Yes/No)", Rec);
+        CODEUNIT.Run(CODEUNIT::"Sales-Disc. (Yes/No)", Rec);
     end;
 
 
     procedure CalcInvDisc()
     begin
-        CODEUNIT.RUN(CODEUNIT::"Sales-Calc. Discount", Rec);
+        CODEUNIT.Run(CODEUNIT::"Sales-Calc. Discount", Rec);
     end;
 
 
     procedure ExplodeBOM()
     begin
         if Rec."Prepmt. Amt. Inv." <> 0 then
-            ERROR(Text001);
-        CODEUNIT.RUN(CODEUNIT::"Sales-Explode BOM", Rec);
+            Error(Text001);
+        CODEUNIT.Run(CODEUNIT::"Sales-Explode BOM", Rec);
     end;
 
 
@@ -203,11 +203,11 @@ page 50014 "Sales Order total"
         PurchHeader: Record "Purchase Header";
         PurchOrder: Page "Purchase Order";
     begin
-        Rec.TESTFIELD("Purchase Order No.");
-        PurchHeader.SETRANGE("No.", Rec."Purchase Order No.");
-        PurchOrder.SETTABLEVIEW(PurchHeader);
-        PurchOrder.EDITABLE := false;
-        PurchOrder.RUN();
+        Rec.TestField("Purchase Order No.");
+        PurchHeader.SetRange("No.", Rec."Purchase Order No.");
+        PurchOrder.SetTableView(PurchHeader);
+        PurchOrder.Editable := false;
+        PurchOrder.Run();
     end;
 
 
@@ -217,18 +217,18 @@ page 50014 "Sales Order total"
         PurchRcptHeader: Record "Purch. Rcpt. Header";
         PurchOrder: Page "Purchase Order";
     begin
-        Rec.TESTFIELD("Special Order Purchase No.");
-        PurchHeader.SETRANGE("No.", Rec."Special Order Purchase No.");
-        if not PurchHeader.ISEMPTY then begin
-            PurchOrder.SETTABLEVIEW(PurchHeader);
-            PurchOrder.EDITABLE := false;
-            PurchOrder.RUN();
+        Rec.TestField("Special Order Purchase No.");
+        PurchHeader.SetRange("No.", Rec."Special Order Purchase No.");
+        if not PurchHeader.IsEmpty then begin
+            PurchOrder.SetTableView(PurchHeader);
+            PurchOrder.Editable := false;
+            PurchOrder.Run();
         end else begin
-            PurchRcptHeader.SETRANGE("Order No.", Rec."Special Order Purchase No.");
-            if PurchRcptHeader.COUNT = 1 then
-                PAGE.RUN(PAGE::"Posted Purchase Receipt", PurchRcptHeader)
+            PurchRcptHeader.SetRange("Order No.", Rec."Special Order Purchase No.");
+            if PurchRcptHeader.Count = 1 then
+                PAGE.Run(PAGE::"Posted Purchase Receipt", PurchRcptHeader)
             else
-                PAGE.RUN(PAGE::"Posted Purchase Receipts", PurchRcptHeader);
+                PAGE.Run(PAGE::"Posted Purchase Receipts", PurchRcptHeader);
         end;
     end;
 
@@ -236,8 +236,8 @@ page 50014 "Sales Order total"
     procedure InsertExtendedText(Unconditionally: Boolean)
     begin
         if TransferExtendedText.SalesCheckIfAnyExtText(Rec, Unconditionally) then begin
-            CurrPage.SAVERECORD();
-            COMMIT();
+            CurrPage.SaveRecord();
+            Commit();
             TransferExtendedText.InsertSalesExtText(Rec);
         end;
         if TransferExtendedText.MakeUpdate() then
@@ -256,7 +256,7 @@ page 50014 "Sales Order total"
         TrackingForm: Page "Order Tracking";
     begin
         TrackingForm.SetSalesLine(Rec);
-        TrackingForm.RUNMODAL();
+        TrackingForm.RunModal();
     end;
 
 
@@ -268,22 +268,22 @@ page 50014 "Sales Order total"
 
     procedure UpdateForm(SetSaveRecord: Boolean)
     begin
-        CurrPage.UPDATE(SetSaveRecord);
+        CurrPage.Update(SetSaveRecord);
     end;
 
 
     procedure ShowPrices()
     begin
-        SalesHeader.GET(Rec."Document Type", Rec."Document No.");
-        CLEAR(SalesPriceCalcMgt);
+        SalesHeader.Get(Rec."Document Type", Rec."Document No.");
+        Clear(SalesPriceCalcMgt);
         SalesPriceCalcMgt.GetSalesLinePrice(SalesHeader, Rec);
     end;
 
 
     procedure ShowLineDisc()
     begin
-        SalesHeader.GET(Rec."Document Type", Rec."Document No.");
-        CLEAR(SalesPriceCalcMgt);
+        SalesHeader.Get(Rec."Document Type", Rec."Document No.");
+        Clear(SalesPriceCalcMgt);
         SalesPriceCalcMgt.GetSalesLineLineDisc(SalesHeader, Rec);
     end;
 
@@ -293,13 +293,13 @@ page 50014 "Sales Order total"
         OrderPromisingLine: Record "Order Promising Line" temporary;
         OrderPromisingLines: Page "Order Promising Lines";
     begin
-        OrderPromisingLine.SETRANGE("Source Type", Rec."Document Type");
-        OrderPromisingLine.SETRANGE("Source ID", Rec."Document No.");
-        OrderPromisingLine.SETRANGE("Source Line No.", Rec."Line No.");
+        OrderPromisingLine.SetRange("Source Type", Rec."Document Type");
+        OrderPromisingLine.SetRange("Source ID", Rec."Document No.");
+        OrderPromisingLine.SetRange("Source Line No.", Rec."Line No.");
 
         OrderPromisingLines.SetSourceType(OrderPromisingLine."Source Type"::Sales);
-        OrderPromisingLines.SETTABLEVIEW(OrderPromisingLine);
-        OrderPromisingLines.RUNMODAL();
+        OrderPromisingLines.SetTableView(OrderPromisingLine);
+        OrderPromisingLines.RunModal();
     end;
 
     local procedure TypeOnAfterValidate()
@@ -313,17 +313,17 @@ page 50014 "Sales Order total"
         if (Rec.Type = Rec.Type::"Charge (Item)") and (Rec."No." <> xRec."No.") and
            (xRec."No." <> '')
         then
-            CurrPage.SAVERECORD();
+            CurrPage.SaveRecord();
 
         if (Rec."Item Base" = Rec."Item Base"::Transitory) then
-            CurrPage.UPDATE();
+            CurrPage.Update();
         SaveAndAutoAsmToOrder();
 
         if Rec.Reserve = Rec.Reserve::Always then begin
-            CurrPage.SAVERECORD();
+            CurrPage.SaveRecord();
             if (Rec."Outstanding Qty. (Base)" <> 0) and (Rec."No." <> xRec."No.") then begin
                 Rec.AutoReserve();
-                CurrPage.UPDATE(false);
+                CurrPage.Update(false);
             end;
         end;
     end;
@@ -346,18 +346,18 @@ page 50014 "Sales Order total"
            (Rec."Outstanding Qty. (Base)" <> 0) and
            (Rec."Location Code" <> xRec."Location Code")
         then begin
-            CurrPage.SAVERECORD();
+            CurrPage.SaveRecord();
             Rec.AutoReserve();
-            CurrPage.UPDATE(false);
+            CurrPage.Update(false);
         end;
     end;
 
     local procedure ReserveOnAfterValidate()
     begin
         if (Rec.Reserve = Rec.Reserve::Always) and (Rec."Outstanding Qty. (Base)" <> 0) then begin
-            CurrPage.SAVERECORD();
+            CurrPage.SaveRecord();
             Rec.AutoReserve();
-            CurrPage.UPDATE(false);
+            CurrPage.Update(false);
         end;
     end;
 
@@ -371,33 +371,33 @@ page 50014 "Sales Order total"
     begin
 
         //>>FED_20090415:PA 15/04/2009
-        RecGInventorySetup.GET();
+        RecGInventorySetup.Get();
         if RecGInventorySetup."Reservation FTA" then begin
             if Rec.Quantity > DecGxQuantity then begin
                 //>>FED_20090415:PA Kit Build up or remove into pieces
-                if RecLItem.GET(Rec."No.") then;
+                if RecLItem.Get(Rec."No.") then;
                 if (Rec.Quantity <> 0) and (Rec."Reserved Quantity" <> Rec.Quantity) and
                     (Rec.Type = Rec.Type::Item) and (Rec."Document Type" <> Rec."Document Type"::Quote) and not (RecLItem."Inventory Value Zero") then begin
 
-                    CurrPage.SAVERECORD();
+                    CurrPage.SaveRecord();
 
-                    CLEAR(PgeLAssignmentItem);
+                    Clear(PgeLAssignmentItem);
                     BoopF12 := false;
                     PgeLAssignmentItem.FctGetParm(Rec, DecGxQuantity, OptGxPreparationType);
-                    PgeLAssignmentItem.SETTABLEVIEW(Rec);
-                    PgeLAssignmentItem.SETRECORD(Rec);
-                    PgeLAssignmentItem.RUN();
+                    PgeLAssignmentItem.SetTableView(Rec);
+                    PgeLAssignmentItem.SetRecord(Rec);
+                    PgeLAssignmentItem.Run();
 
-                    //OK := FORM.RUNmodal(50003,Rec) = ACTION::LookupOK;
+                    //OK := FORM.RunModal(50003,Rec) = ACTION::LookupOK;
                     //IF NOT OK THEN
-                    //  ERROR('abandon');
+                    //  Error('abandon');
 
                     //>> AT Migration
                     /*
-                       CurrPage.UPDATE(FALSE);
+                       CurrPage.Update(FALSE);
                           IF (DecGxQuantity = Quantity) AND
                               (OptGxPreparationType = "Preparation Type") THEN
-                            IF GET("Document Type","Document No.","Line No.") THEN
+                            IF Get("Document Type","Document No.","Line No.") THEN
                               CurrPage.EcrQty.ACTIVATE;
                               */
                     //<< AT
@@ -408,15 +408,15 @@ page 50014 "Sales Order total"
                 case Rec.Reserve of
                     Rec.Reserve::Always:
                         begin
-                            CurrPage.SAVERECORD();
+                            CurrPage.SaveRecord();
                             Rec.AutoReserve();
-                            CurrPage.UPDATE(false);
+                            CurrPage.Update(false);
                             UpdateIsDone := true;
                         end;
                     Rec.Reserve::Optional:
                         if (Rec.Quantity < xRec.Quantity) and (xRec.Quantity > 0) then begin
-                            CurrPage.SAVERECORD();
-                            CurrPage.UPDATE(false);
+                            CurrPage.SaveRecord();
+                            CurrPage.Update(false);
                             UpdateIsDone := true;
                         end;
                 end;
@@ -425,25 +425,25 @@ page 50014 "Sales Order total"
                (Rec.Quantity <> xRec.Quantity) and
                not UpdateIsDone
             then
-                CurrPage.UPDATE(true);
+                CurrPage.Update(true);
         end;
 
     end;
 
     local procedure QtyToAsmToOrderOnAfterValidate()
     begin
-        CurrPage.SAVERECORD();
+        CurrPage.SaveRecord();
         if Rec.Reserve = Rec.Reserve::Always then
             Rec.AutoReserve();
-        CurrPage.UPDATE(true);
+        CurrPage.Update(true);
     end;
 
     local procedure UnitofMeasureCodeOnAfterValida()
     begin
         if Rec.Reserve = Rec.Reserve::Always then begin
-            CurrPage.SAVERECORD();
+            CurrPage.SaveRecord();
             Rec.AutoReserve();
-            CurrPage.UPDATE(false);
+            CurrPage.Update(false);
         end;
     end;
 
@@ -453,18 +453,18 @@ page 50014 "Sales Order total"
            (Rec."Outstanding Qty. (Base)" <> 0) and
            (Rec."Shipment Date" <> xRec."Shipment Date")
         then begin
-            CurrPage.SAVERECORD();
+            CurrPage.SaveRecord();
             Rec.AutoReserve();
-            CurrPage.UPDATE(false);
+            CurrPage.Update(false);
         end;
     end;
 
     local procedure SaveAndAutoAsmToOrder()
     begin
         if (Rec.Type = Rec.Type::Item) and Rec.IsAsmToOrderRequired() then begin
-            CurrPage.SAVERECORD();
+            CurrPage.SaveRecord();
             Rec.AutoAsmToOrder();
-            CurrPage.UPDATE(false);
+            CurrPage.Update(false);
         end;
     end;
 
@@ -472,18 +472,18 @@ page 50014 "Sales Order total"
     var
         InventorySetup: Record "Inventory Setup";
     begin
-        InventorySetup.GET();
+        InventorySetup.Get();
         LocationCodeMandatory := InventorySetup."Location Mandatory" and (Rec.Type = Rec.Type::Item);
     end;
 
     local procedure RedistributeTotalsOnAfterValidate()
     begin
-        CurrPage.SAVERECORD();
+        CurrPage.SaveRecord();
 
-        SalesHeader.GET(Rec."Document Type", Rec."Document No.");
+        SalesHeader.Get(Rec."Document Type", Rec."Document No.");
         if DocumentTotals.SalesCheckNumberOfLinesLimit(SalesHeader) then
             DocumentTotals.SalesRedistributeInvoiceDiscountAmounts(Rec, VATAmount, TotalSalesLine);
-        CurrPage.UPDATE();
+        CurrPage.Update();
     end;
 
     local procedure TotWorkTime(var RecLSalesLine: Record "Sales Line"; pPrepare: Boolean): Decimal
@@ -491,14 +491,14 @@ page 50014 "Sales Order total"
         SalesLine: Record "Sales Line";
         TotWorkTIme: Decimal;
     begin
-        SalesLine.SETRANGE("Document Type", RecLSalesLine."Document Type");
-        SalesLine.SETRANGE("Document No.", RecLSalesLine."Document No.");
+        SalesLine.SetRange("Document Type", RecLSalesLine."Document Type");
+        SalesLine.SetRange("Document No.", RecLSalesLine."Document No.");
         if pPrepare then
-            RecLSalesLine.SETRANGE(Prepare, true);
-        if SalesLine.FINDSET() then
+            RecLSalesLine.SetRange(Prepare, true);
+        if SalesLine.FindSet() then
             repeat
                 TotWorkTIme += SalesLine."Item Work Time" + SalesLine."Item Machining Time";
-            until SalesLine.NEXT() = 0;
+            until SalesLine.Next() = 0;
 
         exit(TotWorkTIme * 0.016667);
     end;
@@ -510,11 +510,11 @@ page 50014 "Sales Order total"
     begin
         TotAmount := 0;
 
-        LRecSalesLine.RESET();
-        LRecSalesLine.SETRANGE("Document Type", SalesLine."Document Type");
-        LRecSalesLine.SETRANGE("Document No.", SalesLine."Document No.");
-        LRecSalesLine.SETRANGE(Prepare, true);
-        LRecSalesLine.CALCSUMS(Amount);
+        LRecSalesLine.Reset();
+        LRecSalesLine.SetRange("Document Type", SalesLine."Document Type");
+        LRecSalesLine.SetRange("Document No.", SalesLine."Document No.");
+        LRecSalesLine.SetRange(Prepare, true);
+        LRecSalesLine.CalcSums(Amount);
         exit(LRecSalesLine.Amount);
     end;
 
@@ -522,11 +522,11 @@ page 50014 "Sales Order total"
     var
         LRecSalesLine: Record "Sales Line";
     begin
-        LRecSalesLine.RESET();
-        LRecSalesLine.SETRANGE("Document Type", SalesLine."Document Type");
-        LRecSalesLine.SETRANGE("Document No.", SalesLine."Document No.");
-        LRecSalesLine.SETRANGE(Prepare, true);
-        LRecSalesLine.CALCSUMS("Amount Including VAT");
+        LRecSalesLine.Reset();
+        LRecSalesLine.SetRange("Document Type", SalesLine."Document Type");
+        LRecSalesLine.SetRange("Document No.", SalesLine."Document No.");
+        LRecSalesLine.SetRange(Prepare, true);
+        LRecSalesLine.CalcSums("Amount Including VAT");
         exit(LRecSalesLine."Amount Including VAT");
     end;
 }

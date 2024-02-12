@@ -7,19 +7,19 @@ codeunit 51001 "Clear FA Ledger"
 
     trigger OnRun()
     begin
-        if not CONFIRM(CstG000)
+        if not Confirm(CstG000)
            then
-            ERROR(CstG001);
+            Error(CstG001);
 
-        FADepreciationBook.DELETEALL();
+        FADepreciationBook.DeleteALL();
 
-        FALedgerEntry.DELETEALL();
+        FALedgerEntry.DeleteALL();
 
-        FixedAsset.DELETEALL(true);
-        FARegister.DELETEALL();
-        RecupImmo.DELETEALL();
+        FixedAsset.DeleteALL(true);
+        FARegister.DeleteALL();
+        RecupImmo.DeleteALL();
 
-        MESSAGE(CstG002);
+        Message(CstG002);
 
     end;
 
@@ -29,7 +29,7 @@ codeunit 51001 "Clear FA Ledger"
         FADepreciationBook: Record "FA Depreciation Book";
         FARegister: Record "FA Register";
         RecupImmo: Record "FA Import Buffer";
-        CstG000: Label 'This processing will delete the posted FA ledger entries. Are you sure you want to continue?';
+        CstG000: Label 'This processing will Delete the posted FA ledger entries. Are you sure you want to continue?';
         CstG001: Label 'Processing stopped.';
         CstG002: Label 'You can now start the recovery process';
 }

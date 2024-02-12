@@ -16,50 +16,50 @@ codeunit 50030 "FTA_Functions"
         PurchCalcDisc: Codeunit "Purch.-Calc.Discount";
         AttachmentFilePath: Text[250];
     begin
-        PurchHeader.SETRANGE("No.", PurchHeader."No.");
-        PurchSetup.GET();
-        SalesSetup.GET();
+        PurchHeader.SetRange("No.", PurchHeader."No.");
+        PurchSetup.Get();
+        SalesSetup.Get();
         if PurchSetup."Calc. Inv. Discount" then begin
-            PurchLine.RESET();
-            PurchLine.SETRANGE("Document Type", PurchHeader."Document Type");
-            PurchLine.SETRANGE("Document No.", PurchHeader."No.");
-            PurchLine.FINDFIRST();
-            PurchCalcDisc.RUN(PurchLine);
-            PurchHeader.GET(PurchHeader."Document Type", PurchHeader."No.");
-            COMMIT();
+            PurchLine.Reset();
+            PurchLine.SetRange("Document Type", PurchHeader."Document Type");
+            PurchLine.SetRange("Document No.", PurchHeader."No.");
+            PurchLine.findFirst();
+            PurchCalcDisc.Run(PurchLine);
+            PurchHeader.Get(PurchHeader."Document Type", PurchHeader."No.");
+            Commit();
         end;
 
         case PurchHeader."Document Type" of
             PurchHeader."Document Type"::Quote:
-                ReportSelection.SETRANGE(Usage, ReportSelection.Usage::"P.Quote");
+                ReportSelection.SetRange(Usage, ReportSelection.Usage::"P.Quote");
             PurchHeader."Document Type"::"Blanket Order":
-                ReportSelection.SETRANGE(Usage, ReportSelection.Usage::"P.Blanket");
+                ReportSelection.SetRange(Usage, ReportSelection.Usage::"P.Blanket");
             PurchHeader."Document Type"::Order:
-                ReportSelection.SETRANGE(Usage, ReportSelection.Usage::"P.Order");
+                ReportSelection.SetRange(Usage, ReportSelection.Usage::"P.Order");
             PurchHeader."Document Type"::"Return Order":
-                ReportSelection.SETRANGE(Usage, ReportSelection.Usage::"P.Return");
+                ReportSelection.SetRange(Usage, ReportSelection.Usage::"P.Return");
             else
                 exit;
         end;
-        ReportSelection.SETFILTER("Report ID", '<>0');
-        ReportSelection.Findfirst();
+        ReportSelection.SetFilter("Report ID", '<>0');
+        ReportSelection.findFirst();
         repeat
-            if not RecLReportUser.GET(USERID, ReportSelection."Report ID") then begin
-                RecLReportUser.INIT();
-                RecLReportUser.UserID := USERID();
+            if not RecLReportUser.Get(UserId, ReportSelection."Report ID") then begin
+                RecLReportUser.Init();
+                RecLReportUser.UserId := UserId();
                 RecLReportUser."Report ID" := ReportSelection."Report ID";
-                RecLReportUser.INSERT();
+                RecLReportUser.Insert();
             end;
             RecLReportUser.Email := SendAsEmail;
-            RecLReportUser.MODIFY();
-            COMMIT();
+            RecLReportUser.Modify();
+            Commit();
             if SendAsEmail then begin
                 AttachmentFilePath := SavePurchHeaderReportAsPdf(PurchHeader, ReportSelection."Report ID", ReportSelection."Report Caption");
                 EmailFileFromPurchHeader(PurchHeader, AttachmentFilePath);
 
             end else
-                REPORT.RUNMODAL(ReportSelection."Report ID", true, false, PurchHeader)
-        until ReportSelection.NEXT() = 0;
+                REPORT.RunModal(ReportSelection."Report ID", true, false, PurchHeader)
+        until ReportSelection.Next() = 0;
     end;
     //<<Migration Codeunit 229 2/1/2024>>
     //todo: verifier 
@@ -85,7 +85,7 @@ codeunit 50030 "FTA_Functions"
           PurchHeader."No.",
           PurchHeader."Buy-from Vendor No.",
           PurchHeader."Buy-from Vendor Name",
-          FORMAT(PurchHeader."Document Type"));
+          Format(PurchHeader."Document Type"));
     end;
     //<<Migration Codeunit 260 2/1/2024>>
     procedure EmailFileVendor(AttachmentFilePath: Text[250]; PostedDocNo: Code[20]; SendEmaillToCustNo: Code[20]; SendEmaillToCustName: Text[50]; EmailDocName: Text[50]);
@@ -96,14 +96,14 @@ codeunit 50030 "FTA_Functions"
         EmailSubjectCapTxt: Label '@@@="%1 = Customer Name. %2 = Document Type %3 = Invoice No.";%1 - %2 %3';
         ReportAsPdfFileNameMsg2: Label '@@@="%1 = Document Type %2 = Invoice No.";Purchases %1 %2.pdf';
     begin
-        AttachmentFileName := STRSUBSTNO(ReportAsPdfFileNameMsg2, EmailDocName, PostedDocNo);
+        AttachmentFileName := StrSubstNo(ReportAsPdfFileNameMsg2, EmailDocName, PostedDocNo);
 
         with TempEmailItem do begin
             "Send to" := DocMailing.GetToAddressFromCustomer(SendEmaillToCustNo);
-            Subject := COPYSTR(
-                STRSUBSTNO(
+            Subject := CopyStr(
+                StrSubstNo(
                   EmailSubjectCapTxt, SendEmaillToCustName, EmailDocName, PostedDocNo), 1,
-                MAXSTRLEN(Subject));
+                MaxStrLen(Subject));
             "Attachment File Path" := AttachmentFilePath;
             "Attachment Name" := AttachmentFileName;
             Send(false);
@@ -115,7 +115,7 @@ codeunit 50030 "FTA_Functions"
         Vendor: Record Vendor;
         ToAddress: Text;
     begin
-        if Vendor.GET(BuyFromVendorNo) then
+        if Vendor.Get(BuyFromVendorNo) then
             ToAddress := Vendor."E-Mail";
         exit(ToAddress);
     end;
@@ -127,16 +127,16 @@ codeunit 50030 "FTA_Functions"
         EmailSubjectCapTxt: Label '%1 - %2 %3', Comment = '%1 = Customer Name. %2 = Document Type %3 = Invoice No.';
         ReportAsPdfFileNameMsg: Label '@@@="%1 = Document Type %2 = Invoice No."; Sales %1 %2.pdf';
     begin
-        AttachmentFileName := STRSUBSTNO(ReportAsPdfFileNameMsg, EmailDocName, PostedDocNo);
+        AttachmentFileName := StrSubstNo(ReportAsPdfFileNameMsg, EmailDocName, PostedDocNo);
 
         with TempEmailItem do begin
             "Send to" := EmailSendTo;
             if EmailSubject = '' then
                 Subject :=
-                  COPYSTR(
-                      STRSUBSTNO(
+                  CopyStr(
+                      StrSubstNo(
                         EmailSubjectCapTxt, SendEmaillToVendName, EmailDocName, PostedDocNo), 1,
-                      MAXSTRLEN(Subject))
+                      MaxStrLen(Subject))
             else
                 Subject := EmailSubject;
             "Attachment File Path" := AttachmentFilePath;
@@ -152,22 +152,22 @@ codeunit 50030 "FTA_Functions"
         ResEngineMgt: Codeunit "Reservation Engine Mgt.";
         LastEntryNo: Integer;
     begin
-        ReservEntry.TESTFIELD("Reservation Status", ReservEntry."Reservation Status"::Reservation);
+        ReservEntry.TestField("Reservation Status", ReservEntry."Reservation Status"::Reservation);
 
-        ReservEntry3.LOCKTABLE();
-        if ReservEntry3.FINDLAST() then
+        ReservEntry3.LockTable();
+        if ReservEntry3.FindLast() then
             LastEntryNo := ReservEntry3."Entry No.";
 
-        ReservEntry3.GET(ReservEntry."Entry No.", not ReservEntry.Positive);
+        ReservEntry3.Get(ReservEntry."Entry No.", not ReservEntry.Positive);
         if (ReservEntry3."Lot No." <> '') or (ReservEntry3."Serial No." <> '') or
            (ReservEntry."Lot No." <> '') or (ReservEntry."Serial No." <> '') then begin
             ReservEntry."Reservation Status" := ReservEntry."Reservation Status"::Surplus;
             ReservEntry3."Reservation Status" := ReservEntry3."Reservation Status"::Surplus;
-            ReservEntry.MODIFY();
-            ReservEntry3.DELETE();
+            ReservEntry.Modify();
+            ReservEntry3.Delete();
             ReservEntry3."Entry No." := LastEntryNo + 1;
-            ReservEntry3.INSERT();
-            TempSurplusEntry.DELETEALL();
+            ReservEntry3.Insert();
+            TempSurplusEntry.DeleteALL();
             UpdateTempSurplusEntry(ReservEntry);
             UpdateTempSurplusEntry(ReservEntry3);
             ResEngineMgt.UpdateOrderTracking(TempSurplusEntry);
@@ -212,8 +212,8 @@ codeunit 50030 "FTA_Functions"
         Text002: Label 'An Item Substitution does not exist for Item No. ''%1''';
         Text003: Label 'There is not enough space to explode the Substitution.';
     begin
-        TempItemSubstitution.RESET();
-        TempItemSubstitution.DELETEALL();
+        TempItemSubstitution.Reset();
+        TempItemSubstitution.DeleteALL();
         NextLineNo := 0;
 
         if RemplaceOk then begin
@@ -230,32 +230,32 @@ codeunit 50030 "FTA_Functions"
 
         with AssemblyLine do begin
 
-            TESTFIELD(Type, Type::Item);
-            TESTFIELD("Consumed Quantity", 0);
-            CALCFIELDS("Reserved Qty. (Base)");
-            TESTFIELD("Reserved Qty. (Base)", 0);
+            TestField(Type, Type::Item);
+            TestField("Consumed Quantity", 0);
+            CalcFields("Reserved Qty. (Base)");
+            TestField("Reserved Qty. (Base)", 0);
             ReqBaseQty := 0;
             ReqBaseQty := "Quantity (Base)";
             SaveItemNo := "No.";
             SaveVariantCode := "Variant Code";
-            Item.GET(AssemblyLine."No.");
-            Item.SETFILTER("Location Filter", "Location Code");
-            Item.SETFILTER("Variant Filter", "Variant Code");
-            Item.SETRANGE("Date Filter", 0D, "Due Date");
-            Item.CALCFIELDS(Inventory);
-            Item.CALCFIELDS("Qty. on Sales Order");
-            Item.CALCFIELDS("Qty. on Service Order");
+            Item.Get(AssemblyLine."No.");
+            Item.SetFilter("Location Filter", "Location Code");
+            Item.SetFilter("Variant Filter", "Variant Code");
+            Item.SetRange("Date Filter", 0D, "Due Date");
+            Item.CalcFields(Inventory);
+            Item.CalcFields("Qty. on Sales Order");
+            Item.CalcFields("Qty. on Service Order");
             OldSalesUOM := Item."Sales Unit of Measure";
 
             NoOfItemSubsLines := 0;
-            ItemSubstitution.RESET();
-            ItemSubstitution.SETRANGE(Type, ItemSubstitution.Type::Item);
-            ItemSubstitution.SETRANGE("No.", AssemblyLine."No.");
-            ItemSubstitution.SETRANGE("Variant Code", "Variant Code");
-            ItemSubstitution.SETRANGE("Location Filter", "Location Code");
-            if ItemSubstitution.Findfirst() then
+            ItemSubstitution.Reset();
+            ItemSubstitution.SetRange(Type, ItemSubstitution.Type::Item);
+            ItemSubstitution.SetRange("No.", AssemblyLine."No.");
+            ItemSubstitution.SetRange("Variant Code", "Variant Code");
+            ItemSubstitution.SetRange("Location Filter", "Location Code");
+            if ItemSubstitution.findFirst() then
                 repeat
-                    TempItemSubstitution.INIT();
+                    TempItemSubstitution.Init();
                     TempItemSubstitution."No." := ItemSubstitution."No.";
                     TempItemSubstitution."Variant Code" := ItemSubstitution."Variant Code";
                     TempItemSubstitution."Substitute No." := ItemSubstitution."Substitute No.";
@@ -266,8 +266,8 @@ codeunit 50030 "FTA_Functions"
                     TempItemSubstitution.Condition := ItemSubstitution.Condition;
                     TempItemSubstitution."Shipment Date" := AssemblyLine."Due Date";
                     if ItemSubstitution."Substitute Type" = ItemSubstitution."Substitute Type"::Item then begin
-                        Item.GET(ItemSubstitution."Substitute No.");
-                        Item.CALCFIELDS(Inventory);
+                        Item.Get(ItemSubstitution."Substitute No.");
+                        Item.CalcFields(Inventory);
                         TempItemSubstitution.Inventory := Item.Inventory;
                         TempItemSubstitution."Avaibility no reserved" := ItemSubstitution.CalcAvailableNoReserv();
                     end else begin
@@ -279,38 +279,38 @@ codeunit 50030 "FTA_Functions"
                     if (not OnlyAvailableQty) or
                        ((TempItemSubstitution."Avaibility no reserved" > 0) and
                         (TempItemSubstitution."Avaibility no reserved" >= ReqBaseQty)) then
-                        TempItemSubstitution.INSERT();
-                until ItemSubstitution.NEXT() = 0;
+                        TempItemSubstitution.Insert();
+                until ItemSubstitution.Next() = 0;
 
-            NoOfItemSubsLines := TempItemSubstitution.COUNT;
+            NoOfItemSubsLines := TempItemSubstitution.Count;
             if NoOfItemSubsLines = 0 then
                 if ErrorOk then
-                    ERROR(Text002, "No.");
+                    Error(Text002, "No.");
 
-            ToAssemblyLine.RESET();
-            ToAssemblyLine.SETRANGE("Document Type", "Document Type");
-            ToAssemblyLine.SETRANGE("Document No.", "Document No.");
-            ToAssemblyLine.GET("Document Type", "Document No.", "Line No.");
+            ToAssemblyLine.Reset();
+            ToAssemblyLine.SetRange("Document Type", "Document Type");
+            ToAssemblyLine.SetRange("Document No.", "Document No.");
+            ToAssemblyLine.Get("Document Type", "Document No.", "Line No.");
             LineSpacing := 10000;
-            if ToAssemblyLine.FIND('>') then begin
+            if ToAssemblyLine.Find('>') then begin
                 LineSpacing := (ToAssemblyLine."Line No." - "Line No.") div (1 + NoOfItemSubsLines);
                 if LineSpacing = 0 then
-                    ERROR(Text003);
+                    Error(Text003);
             end;
 
             NextLineNo := "Line No.";
         end;
 
-        TempItemSubstitution.RESET();
-        if TempItemSubstitution.Findfirst() then begin
+        TempItemSubstitution.Reset();
+        if TempItemSubstitution.findFirst() then begin
             repeat
-                TempAssemblyLine.INIT();
+                TempAssemblyLine.Init();
                 TempAssemblyLine := AssemblyLine;
                 TempAssemblyLine."Document Type" := AssemblyLine."Document Type";
                 TempAssemblyLine."Document No." := AssemblyLine."Document No.";
                 NextLineNo := NextLineNo + LineSpacing;
                 TempAssemblyLine."Line No." := NextLineNo;
-                TempAssemblyLine.INSERT(true);
+                TempAssemblyLine.Insert(true);
 
                 TempAssemblyLine."No." := TempItemSubstitution."Substitute No.";
                 TempAssemblyLine."Variant Code" := TempItemSubstitution."Substitute Variant Code";
@@ -318,32 +318,32 @@ codeunit 50030 "FTA_Functions"
                 SaveLocation := TempAssemblyLine."Location Code";
 
                 TempAssemblyLine.Quantity := 0;
-                TempAssemblyLine.VALIDATE("No.", TempItemSubstitution."Substitute No.");
-                TempAssemblyLine.VALIDATE("Variant Code", TempItemSubstitution."Substitute Variant Code");
+                TempAssemblyLine.Validate("No.", TempItemSubstitution."Substitute No.");
+                TempAssemblyLine.Validate("Variant Code", TempItemSubstitution."Substitute Variant Code");
                 TempAssemblyLine."Originally Ordered No." := SaveItemNo;
                 TempAssemblyLine."Originally Ordered Var. Code" := SaveVariantCode;
                 TempAssemblyLine."Location Code" := SaveLocation;
-                TempAssemblyLine.VALIDATE(Quantity, SaveQty);
-                TempAssemblyLine.VALIDATE("Unit of Measure Code", OldSalesUOM);
-                TempAssemblyLine.MODIFY(true);
-            until OnlyOneSubstOk or (TempItemSubstitution.NEXT() = 0);
+                TempAssemblyLine.Validate(Quantity, SaveQty);
+                TempAssemblyLine.Validate("Unit of Measure Code", OldSalesUOM);
+                TempAssemblyLine.Modify(true);
+            until OnlyOneSubstOk or (TempItemSubstitution.Next() = 0);
 
-            TempAssemblyLine.RESET();
-            if TempAssemblyLine.FINDSET() then begin
+            TempAssemblyLine.Reset();
+            if TempAssemblyLine.FindSet() then begin
                 repeat
-                    ToAssemblyLine.INIT();
+                    ToAssemblyLine.Init();
                     ToAssemblyLine := TempAssemblyLine;
-                    ToAssemblyLine.INSERT();
+                    ToAssemblyLine.Insert();
                     if AutoReserveOk then
                         ToAssemblyLine.FctAutoReserveFTA();
 
-                until TempAssemblyLine.NEXT() = 0;
+                until TempAssemblyLine.Next() = 0;
                 if DeleteOriginalAssLineOk then
-                    AssemblyLine.DELETE(true);
+                    AssemblyLine.Delete(true);
             end;
         end else
             if ErrorOk then
-                ERROR(Text002, AssemblyLine."No.");
+                Error(Text002, AssemblyLine."No.");
     end;
     //<<Dupliquer de codeunit "CRM Integration Management"
     procedure IsIntegrationEnabled(): Boolean
@@ -369,7 +369,7 @@ codeunit 50030 "FTA_Functions"
     begin
         //Check if all entries have same posting group
         if RecOldCustLedgEntry."Customer Posting Group" <> RecNewCVLedgEntryBuf."CV Posting Group" then
-            ERROR(CstL001);
+            Error(CstL001);
     end;//Codeunit 12
 
     //Codeunit 12
@@ -378,8 +378,8 @@ codeunit 50030 "FTA_Functions"
         GenJnlLine: Record "Gen. Journal Line";
         PaymentLine: Record "Payment Line";
     begin
-        PaymentLine.SETRANGE("No.", GenJnlLine."Document No.");
-        if PaymentLine.FINDFIRST() then
+        PaymentLine.SetRange("No.", GenJnlLine."Document No.");
+        if PaymentLine.findFirst() then
             exit(true)
         else
             exit(false);
@@ -393,7 +393,7 @@ codeunit 50030 "FTA_Functions"
     begin
         //Check if all entries have same posting group
         if RecOldVendLedgEntry."Vendor Posting Group" <> RecNewCVLedgEntryBuf."CV Posting Group" then
-            ERROR(CstL001);
+            Error(CstL001);
     end;//Codeunit 12
 
     procedure FctFromPaymentMgt(BooPPaymentMgt: Boolean);
@@ -421,15 +421,15 @@ codeunit 50030 "FTA_Functions"
     begin
         //>> MIGR NAV 2015 - ADAPATATION DEMONTAGE
         with Rec do begin
-            TESTFIELD("Item No.");
-            CALCFIELDS("Reserved Qty. (Base)");
-            TESTFIELD("Reserved Qty. (Base)", 0);
-            TESTFIELD("Entry Type", "Entry Type"::"Negative Adjmt.");
-            FromBOMComp.SETRANGE("Parent Item No.", "Item No.");
-            FromBOMComp.SETRANGE(Type, FromBOMComp.Type::Item);
-            NoOfBOMComp := FromBOMComp.COUNT;
+            TestField("Item No.");
+            CalcFields("Reserved Qty. (Base)");
+            TestField("Reserved Qty. (Base)", 0);
+            TestField("Entry Type", "Entry Type"::"Negative Adjmt.");
+            FromBOMComp.SetRange("Parent Item No.", "Item No.");
+            FromBOMComp.SetRange(Type, FromBOMComp.Type::Item);
+            NoOfBOMComp := FromBOMComp.Count;
             if NoOfBOMComp = 0 then
-                ERROR(
+                Error(
                   Text000,
                   "Item No.");
 
@@ -437,25 +437,25 @@ codeunit 50030 "FTA_Functions"
             if Selection = 0 then
                 exit;
 
-            ToItemJnlLine.RESET();
-            ToItemJnlLine.SETRANGE("Journal Template Name", "Journal Template Name");
-            ToItemJnlLine.SETRANGE("Journal Batch Name", "Journal Batch Name");
-            ToItemJnlLine.SETRANGE("Document No.", "Document No.");
-            ToItemJnlLine.SETRANGE("Posting Date", "Posting Date");
-            ToItemJnlLine.SETRANGE("Entry Type", "Entry Type");
+            ToItemJnlLine.Reset();
+            ToItemJnlLine.SetRange("Journal Template Name", "Journal Template Name");
+            ToItemJnlLine.SetRange("Journal Batch Name", "Journal Batch Name");
+            ToItemJnlLine.SetRange("Document No.", "Document No.");
+            ToItemJnlLine.SetRange("Posting Date", "Posting Date");
+            ToItemJnlLine.SetRange("Entry Type", "Entry Type");
             ToItemJnlLine := Rec;
-            if ToItemJnlLine.FIND('>') then begin
+            if ToItemJnlLine.Find('>') then begin
                 LineSpacing := (ToItemJnlLine."Line No." - "Line No.") div (1 + NoOfBOMComp);
                 if LineSpacing = 0 then
-                    ERROR(Text002);
+                    Error(Text002);
             end else
                 LineSpacing := 10000;
 
             ToItemJnlLine := Rec;
-            FromBOMComp.SETFILTER("No.", '<>%1', '');
-            if FromBOMComp.Findfirst() then
+            FromBOMComp.SetFilter("No.", '<>%1', '');
+            if FromBOMComp.findFirst() then
                 repeat
-                    Item.GET(FromBOMComp."No.");
+                    Item.Get(FromBOMComp."No.");
                     ToItemJnlLine."Line No." := 0;
                     ToItemJnlLine."Entry Type" := "Entry Type"::"Positive Adjmt.";
                     ToItemJnlLine."Item No." := FromBOMComp."No.";
@@ -463,53 +463,53 @@ codeunit 50030 "FTA_Functions"
                     ToItemJnlLine."Unit of Measure Code" := FromBOMComp."Unit of Measure Code";
                     ToItemJnlLine."Qty. per Unit of Measure" :=
                       UOMMgt.GetQtyPerUnitOfMeasure(Item, FromBOMComp."Unit of Measure Code");
-                    ToItemJnlLine.Quantity := ROUND("Quantity (Base)" * FromBOMComp."Quantity per", 0.00001);
+                    ToItemJnlLine.Quantity := Round("Quantity (Base)" * FromBOMComp."Quantity per", 0.00001);
                     if ToItemJnlLine.Quantity > 0 then
                         if ItemCheckAvail.ItemJnlCheckLine(ToItemJnlLine) then
                             ItemCheckAvail.RaiseUpdateInterruptedError();
-                until FromBOMComp.NEXT() = 0;
+                until FromBOMComp.Next() = 0;
 
             ToItemJnlLine := Rec;
-            //ToItemJnlLine.INIT;
+            //ToItemJnlLine.Init;
             //ToItemJnlLine.Description := Description;
-            ToItemJnlLine.MODIFY();
+            ToItemJnlLine.Modify();
 
-            FromBOMComp.RESET();
-            FromBOMComp.SETRANGE("Parent Item No.", "Item No.");
-            FromBOMComp.SETRANGE(Type, FromBOMComp.Type::Item);
-            FromBOMComp.FINDSET();
+            FromBOMComp.Reset();
+            FromBOMComp.SetRange("Parent Item No.", "Item No.");
+            FromBOMComp.SetRange(Type, FromBOMComp.Type::Item);
+            FromBOMComp.FindSet();
             NextLineNo := "Line No.";
 
             repeat
-                ToItemJnlLine.INIT();
+                ToItemJnlLine.Init();
                 ToItemJnlLine."Journal Template Name" := "Journal Template Name";
                 ToItemJnlLine."Document No." := "Document No.";
                 ToItemJnlLine."Document Date" := "Document Date";
                 ToItemJnlLine."Posting Date" := "Posting Date";
                 ToItemJnlLine."External Document No." := "External Document No.";
-                ToItemJnlLine.VALIDATE("Entry Type", "Entry Type"::"Positive Adjmt.");
+                ToItemJnlLine.Validate("Entry Type", "Entry Type"::"Positive Adjmt.");
                 ToItemJnlLine."Location Code" := "Location Code";
                 NextLineNo := NextLineNo + LineSpacing;
                 ToItemJnlLine."Line No." := NextLineNo;
                 ToItemJnlLine."Drop Shipment" := "Drop Shipment";
                 ToItemJnlLine."Source Code" := "Source Code";
                 ToItemJnlLine."Reason Code" := "Reason Code";
-                ToItemJnlLine.VALIDATE("Item No.", FromBOMComp."No.");
-                ToItemJnlLine.VALIDATE("Variant Code", FromBOMComp."Variant Code");
-                ToItemJnlLine.VALIDATE("Unit of Measure Code", FromBOMComp."Unit of Measure Code");
-                ToItemJnlLine.VALIDATE(
+                ToItemJnlLine.Validate("Item No.", FromBOMComp."No.");
+                ToItemJnlLine.Validate("Variant Code", FromBOMComp."Variant Code");
+                ToItemJnlLine.Validate("Unit of Measure Code", FromBOMComp."Unit of Measure Code");
+                ToItemJnlLine.Validate(
                   Quantity,
-                  ROUND("Quantity (Base)" * FromBOMComp."Quantity per", 0.00001));
+                  Round("Quantity (Base)" * FromBOMComp."Quantity per", 0.00001));
                 ToItemJnlLine.Description := FromBOMComp.Description;
-                ToItemJnlLine.INSERT();
+                ToItemJnlLine.Insert();
 
                 if Selection = 1 then begin
                     ToItemJnlLine."Shortcut Dimension 1 Code" := "Shortcut Dimension 1 Code";
                     ToItemJnlLine."Shortcut Dimension 2 Code" := "Shortcut Dimension 2 Code";
                     ToItemJnlLine."Dimension Set ID" := "Dimension Set ID";
-                    ToItemJnlLine.MODIFY();
+                    ToItemJnlLine.Modify();
                 end;
-            until FromBOMComp.NEXT() = 0;
+            until FromBOMComp.Next() = 0;
         end;
 
         //<< MIGR NAV 2015 - ADAPATATION DEMONTAGE
@@ -534,15 +534,15 @@ codeunit 50030 "FTA_Functions"
     begin
         //>> MIGR NAV 2015 - ADAPATATION DEMONTAGE
         with Rec do begin
-            TESTFIELD("Item No.");
-            CALCFIELDS("Reserved Qty. (Base)");
-            TESTFIELD("Reserved Qty. (Base)", 0);
-            TESTFIELD("Entry Type", "Entry Type"::"Positive Adjmt.");
-            FromBOMComp.SETRANGE("Parent Item No.", "Item No.");
-            FromBOMComp.SETRANGE(Type, FromBOMComp.Type::Item);
-            NoOfBOMComp := FromBOMComp.COUNT;
+            TestField("Item No.");
+            CalcFields("Reserved Qty. (Base)");
+            TestField("Reserved Qty. (Base)", 0);
+            TestField("Entry Type", "Entry Type"::"Positive Adjmt.");
+            FromBOMComp.SetRange("Parent Item No.", "Item No.");
+            FromBOMComp.SetRange(Type, FromBOMComp.Type::Item);
+            NoOfBOMComp := FromBOMComp.Count;
             if NoOfBOMComp = 0 then
-                ERROR(
+                Error(
                   Text000,
                   "Item No.");
 
@@ -550,25 +550,25 @@ codeunit 50030 "FTA_Functions"
             if Selection = 0 then
                 exit;
 
-            ToItemJnlLine.RESET();
-            ToItemJnlLine.SETRANGE("Journal Template Name", "Journal Template Name");
-            ToItemJnlLine.SETRANGE("Journal Batch Name", "Journal Batch Name");
-            ToItemJnlLine.SETRANGE("Document No.", "Document No.");
-            ToItemJnlLine.SETRANGE("Posting Date", "Posting Date");
-            ToItemJnlLine.SETRANGE("Entry Type", "Entry Type");
+            ToItemJnlLine.Reset();
+            ToItemJnlLine.SetRange("Journal Template Name", "Journal Template Name");
+            ToItemJnlLine.SetRange("Journal Batch Name", "Journal Batch Name");
+            ToItemJnlLine.SetRange("Document No.", "Document No.");
+            ToItemJnlLine.SetRange("Posting Date", "Posting Date");
+            ToItemJnlLine.SetRange("Entry Type", "Entry Type");
             ToItemJnlLine := Rec;
-            if ToItemJnlLine.FIND('>') then begin
+            if ToItemJnlLine.Find('>') then begin
                 LineSpacing := (ToItemJnlLine."Line No." - "Line No.") div (1 + NoOfBOMComp);
                 if LineSpacing = 0 then
-                    ERROR(Text002);
+                    Error(Text002);
             end else
                 LineSpacing := 10000;
 
             ToItemJnlLine := Rec;
-            FromBOMComp.SETFILTER("No.", '<>%1', '');
-            if FromBOMComp.Findfirst() then
+            FromBOMComp.SetFilter("No.", '<>%1', '');
+            if FromBOMComp.findFirst() then
                 repeat
-                    Item.GET(FromBOMComp."No.");
+                    Item.Get(FromBOMComp."No.");
                     ToItemJnlLine."Line No." := 0;
                     ToItemJnlLine."Entry Type" := "Entry Type"::"Negative Adjmt.";
                     ToItemJnlLine."Item No." := FromBOMComp."No.";
@@ -576,53 +576,53 @@ codeunit 50030 "FTA_Functions"
                     ToItemJnlLine."Unit of Measure Code" := FromBOMComp."Unit of Measure Code";
                     ToItemJnlLine."Qty. per Unit of Measure" :=
                       UOMMgt.GetQtyPerUnitOfMeasure(Item, FromBOMComp."Unit of Measure Code");
-                    ToItemJnlLine.Quantity := ROUND("Quantity (Base)" * FromBOMComp."Quantity per", 0.00001);
+                    ToItemJnlLine.Quantity := Round("Quantity (Base)" * FromBOMComp."Quantity per", 0.00001);
                     if ToItemJnlLine.Quantity > 0 then
                         if ItemCheckAvail.ItemJnlCheckLine(ToItemJnlLine) then
                             ItemCheckAvail.RaiseUpdateInterruptedError();
-                until FromBOMComp.NEXT() = 0;
+                until FromBOMComp.Next() = 0;
 
             ToItemJnlLine := Rec;
-            //ToItemJnlLine.INIT;
+            //ToItemJnlLine.Init;
             //ToItemJnlLine.Description := Description;
-            ToItemJnlLine.MODIFY();
+            ToItemJnlLine.Modify();
 
-            FromBOMComp.RESET();
-            FromBOMComp.SETRANGE("Parent Item No.", "Item No.");
-            FromBOMComp.SETRANGE(Type, FromBOMComp.Type::Item);
-            FromBOMComp.FINDSET();
+            FromBOMComp.Reset();
+            FromBOMComp.SetRange("Parent Item No.", "Item No.");
+            FromBOMComp.SetRange(Type, FromBOMComp.Type::Item);
+            FromBOMComp.FindSet();
             NextLineNo := "Line No.";
 
             repeat
-                ToItemJnlLine.INIT();
+                ToItemJnlLine.Init();
                 ToItemJnlLine."Journal Template Name" := "Journal Template Name";
                 ToItemJnlLine."Document No." := "Document No.";
                 ToItemJnlLine."Document Date" := "Document Date";
                 ToItemJnlLine."Posting Date" := "Posting Date";
                 ToItemJnlLine."External Document No." := "External Document No.";
-                ToItemJnlLine.VALIDATE("Entry Type", "Entry Type"::"Negative Adjmt.");
+                ToItemJnlLine.Validate("Entry Type", "Entry Type"::"Negative Adjmt.");
                 ToItemJnlLine."Location Code" := "Location Code";
                 NextLineNo := NextLineNo + LineSpacing;
                 ToItemJnlLine."Line No." := NextLineNo;
                 ToItemJnlLine."Drop Shipment" := "Drop Shipment";
                 ToItemJnlLine."Source Code" := "Source Code";
                 ToItemJnlLine."Reason Code" := "Reason Code";
-                ToItemJnlLine.VALIDATE("Item No.", FromBOMComp."No.");
-                ToItemJnlLine.VALIDATE("Variant Code", FromBOMComp."Variant Code");
-                ToItemJnlLine.VALIDATE("Unit of Measure Code", FromBOMComp."Unit of Measure Code");
-                ToItemJnlLine.VALIDATE(
+                ToItemJnlLine.Validate("Item No.", FromBOMComp."No.");
+                ToItemJnlLine.Validate("Variant Code", FromBOMComp."Variant Code");
+                ToItemJnlLine.Validate("Unit of Measure Code", FromBOMComp."Unit of Measure Code");
+                ToItemJnlLine.Validate(
                   Quantity,
-                  ROUND("Quantity (Base)" * FromBOMComp."Quantity per", 0.00001));
+                  Round("Quantity (Base)" * FromBOMComp."Quantity per", 0.00001));
                 ToItemJnlLine.Description := FromBOMComp.Description;
-                ToItemJnlLine.INSERT();
+                ToItemJnlLine.Insert();
 
                 if Selection = 1 then begin
                     ToItemJnlLine."Shortcut Dimension 1 Code" := "Shortcut Dimension 1 Code";
                     ToItemJnlLine."Shortcut Dimension 2 Code" := "Shortcut Dimension 2 Code";
                     ToItemJnlLine."Dimension Set ID" := "Dimension Set ID";
-                    ToItemJnlLine.MODIFY();
+                    ToItemJnlLine.Modify();
                 end;
-            until FromBOMComp.NEXT() = 0;
+            until FromBOMComp.Next() = 0;
         end;
 
         //<< MIGR NAV 2015 - ADAPATATION DEMONTAGE
@@ -661,65 +661,65 @@ codeunit 50030 "FTA_Functions"
 
         with AsmLine do
             if AsmLine."Kit Action" = AsmLine."Kit Action"::Disassembly then begin
-                TESTFIELD(Type, Type::Item);
-                //TESTFIELD("Consumed Quantity",0);
-                //CALCFIELDS("Reserved Qty. (Base)");
-                //TESTFIELD("Reserved Qty. (Base)",0);
+                TestField(Type, Type::Item);
+                //TestField("Consumed Quantity",0);
+                //CalcFields("Reserved Qty. (Base)");
+                //TestField("Reserved Qty. (Base)",0);
 
-                AssemblyHeader.GET("Document Type", "Document No.");
-                FromBOMComp.SETRANGE("Parent Item No.", "No.");
-                NoOfBOMCompLines := FromBOMComp.COUNT;
+                AssemblyHeader.Get("Document Type", "Document No.");
+                FromBOMComp.SetRange("Parent Item No.", "No.");
+                NoOfBOMCompLines := FromBOMComp.Count;
                 if NoOfBOMCompLines = 0 then
-                    ERROR(Text006, "No.");
+                    Error(Text006, "No.");
 
-                ToAssemblyLine.RESET();
-                ToAssemblyLine.SETRANGE("Document Type", "Document Type");
-                ToAssemblyLine.SETRANGE("Document No.", "Document No.");
+                ToAssemblyLine.Reset();
+                ToAssemblyLine.SetRange("Document Type", "Document Type");
+                ToAssemblyLine.SetRange("Document No.", "Document No.");
                 ToAssemblyLine := AsmLine;
                 LineSpacing := 10000;
-                if ToAssemblyLine.FIND('>') then begin
+                if ToAssemblyLine.Find('>') then begin
                     LineSpacing := (ToAssemblyLine."Line No." - "Line No.") div (1 + NoOfBOMCompLines);
                     if LineSpacing = 0 then
-                        ERROR(Text007);
+                        Error(Text007);
                 end;
 
-                TempAssemblyLine.INIT();
+                TempAssemblyLine.Init();
                 TempAssemblyLine := AsmLine;
                 TempAssemblyLine."x Quantity per" := AsmLine."Quantity per";
                 //TempAssemblyLine."x Quantity per (Base)" := AsmLine."Quantity per (Base)";
                 //TempAssemblyLine."x Extended Quantity" := AsmLine."Extended Quantity";
                 //TempAssemblyLine."x Extended Quantity (Base)" := AsmLine."Extended Quantity (Base)";
                 TempAssemblyLine."Quantity per" := 0;
-                TempAssemblyLine.VALIDATE(Quantity, 0);
+                TempAssemblyLine.Validate(Quantity, 0);
                 //TempAssemblyLine."Extended Quantity" := 0;
                 //TempAssemblyLine."Extended Quantity (Base)" := 0;
-                TempAssemblyLine.VALIDATE("Remaining Quantity (Base)", 0);
-                TempAssemblyLine.VALIDATE("Remaining Quantity", 0);
+                TempAssemblyLine.Validate("Remaining Quantity (Base)", 0);
+                TempAssemblyLine.Validate("Remaining Quantity", 0);
                 TempAssemblyLine."x Outstanding Quantity" := AsmLine."Remaining Quantity";
                 TempAssemblyLine."x Outstanding Qty. (Base)" := AsmLine."Remaining Quantity (Base)";
-                TempAssemblyLine.INSERT();
+                TempAssemblyLine.Insert();
 
-                RecLReservEntry.SETRANGE("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
-                RecLReservEntry.SETRANGE("Source Type", DATABASE::"Assembly Line");
-                RecLReservEntry.SETRANGE("Source ID", AsmLine."Document No.");
-                RecLReservEntry.SETRANGE("Source Prod. Order Line", AsmLine."Line No.");
-                RecLReservEntry.SETRANGE("Source Ref. No.", AsmLine."Line No.");
+                RecLReservEntry.SetRange("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
+                RecLReservEntry.SetRange("Source Type", DATABASE::"Assembly Line");
+                RecLReservEntry.SetRange("Source ID", AsmLine."Document No.");
+                RecLReservEntry.SetRange("Source Prod. Order Line", AsmLine."Line No.");
+                RecLReservEntry.SetRange("Source Ref. No.", AsmLine."Line No.");
                 //Delete reservation
-                if RecLReservEntry.FINDFIRST() then
+                if RecLReservEntry.findFirst() then
                     repeat
                         CloseReservEntry2(RecLReservEntry);
-                    until RecLReservEntry.NEXT() = 0;
+                    until RecLReservEntry.Next() = 0;
 
 
                 NextLineNo := "Line No.";
-                FromBOMComp.FINDSET();
+                FromBOMComp.FindSet();
                 repeat
-                    TempAssemblyLine.INIT();
+                    TempAssemblyLine.Init();
                     TempAssemblyLine."Document Type" := "Document Type";
                     TempAssemblyLine."Document No." := "Document No.";
                     NextLineNo := NextLineNo + LineSpacing;
                     TempAssemblyLine."Line No." := NextLineNo;
-                    TempAssemblyLine.INSERT(true);
+                    TempAssemblyLine.Insert(true);
                     AssemblyLineMgt.AddBOMLine(AssemblyHeader, TempAssemblyLine, true, FromBOMComp, false, "Qty. per Unit of Measure");//TODO Verif
                     TempAssemblyLine.Quantity := TempAssemblyLine.Quantity * "Quantity per" * "Qty. per Unit of Measure";
                     TempAssemblyLine."Quantity (Base)" := TempAssemblyLine."Quantity (Base)" * "Quantity per" * "Qty. per Unit of Measure";
@@ -737,20 +737,20 @@ codeunit 50030 "FTA_Functions"
                     TempAssemblyLine."Shortcut Dimension 2 Code" := "Shortcut Dimension 2 Code";
                     TempAssemblyLine."Level No." := AsmLine."Level No." + 1;
 
-                    TempAssemblyLine.MODIFY(true);
-                until FromBOMComp.NEXT() = 0;
+                    TempAssemblyLine.Modify(true);
+                until FromBOMComp.Next() = 0;
 
-                TempAssemblyLine.RESET();
-                TempAssemblyLine.FINDSET();
+                TempAssemblyLine.Reset();
+                TempAssemblyLine.FindSet();
                 ToAssemblyLine := TempAssemblyLine;
-                ToAssemblyLine.MODIFY();
+                ToAssemblyLine.Modify();
                 // FTA1.02b
                 AsmLine := ToAssemblyLine;
 
-                while TempAssemblyLine.NEXT() <> 0 do begin
+                while TempAssemblyLine.Next() <> 0 do begin
                     ToAssemblyLine := TempAssemblyLine;
-                    ToAssemblyLine.INSERT();
-                    if ToAssemblyLine."Due Date" < WORKDATE() then begin
+                    ToAssemblyLine.Insert();
+                    if ToAssemblyLine."Due Date" < WorkDate() then begin
                         DueDateBeforeWorkDate := true;
                         NewLineDueDate := ToAssemblyLine."Due Date";
                     end;
@@ -764,7 +764,7 @@ codeunit 50030 "FTA_Functions"
                 if DueDateBeforeWorkDate then
                     AssemblyLineMgt.ShowDueDateBeforeWorkDateMsg(NewLineDueDate);
             end else begin
-                TempAssemblyLine.INIT();
+                TempAssemblyLine.Init();
                 TempAssemblyLine := AsmLine;
                 TempAssemblyLine."Quantity per" := AsmLine."x Quantity per";
                 TempAssemblyLine."Remaining Quantity" := AsmLine."x Outstanding Quantity";
@@ -776,31 +776,31 @@ codeunit 50030 "FTA_Functions"
                 TempAssemblyLine."x Quantity per" := 0;
                 TempAssemblyLine."x Outstanding Quantity" := 0;
                 TempAssemblyLine."x Outstanding Qty. (Base)" := 0;
-                TempAssemblyLine.INSERT();
+                TempAssemblyLine.Insert();
 
-                TempAssemblyLine.RESET();
-                TempAssemblyLine.FINDSET();
+                TempAssemblyLine.Reset();
+                TempAssemblyLine.FindSet();
                 ToAssemblyLine := TempAssemblyLine;
-                ToAssemblyLine.MODIFY();
+                ToAssemblyLine.Modify();
 
                 IntLAfterCompLineNo := 0;
                 //Deletion of enreg
                 BooLEndLoop := false;
-                RecLAsmLine.SETRANGE("Document No.", AsmLine."Document No.");
+                RecLAsmLine.SetRange("Document No.", AsmLine."Document No.");
                 //>>TI298979
-                RecLAsmLine.SETRANGE("Document Type", AsmLine."Document Type");
+                RecLAsmLine.SetRange("Document Type", AsmLine."Document Type");
                 //<<TI298979
-                //RecLAsmLine.SETRANGE("Document Line No.","Document line no.");
-                RecLAsmLine.SETFILTER("Line No.", '>%1', AsmLine."Line No.");
-                if RecLAsmLine.FINDSET() then
+                //RecLAsmLine.SetRange("Document Line No.","Document line no.");
+                RecLAsmLine.SetFilter("Line No.", '>%1', AsmLine."Line No.");
+                if RecLAsmLine.FindSet() then
                     repeat
                         if RecLAsmLine."Level No." > AsmLine."Level No." then
-                            RecLAsmLine.DELETE(true)
+                            RecLAsmLine.Delete(true)
                         else begin
                             IntLAfterCompLineNo := RecLAsmLine."Line No.";
                             BooLEndLoop := true;
                         end;
-                    until (RecLAsmLine.NEXT() = 0) or (BooLEndLoop = true);
+                    until (RecLAsmLine.Next() = 0) or (BooLEndLoop = true);
             end;
         //<<MIGR NAV 2015
     end;
@@ -824,18 +824,18 @@ codeunit 50030 "FTA_Functions"
         ScheduledReceipts: Decimal;
     begin
         //>>MIGR NAV 2015
-        AssemblySetup.GET();
+        AssemblySetup.Get();
         if not GUIALLOWED or
-           TempAssemblyLine.ISEMPTY or
+           TempAssemblyLine.IsEmpty or
            (not AssemblySetup."Stockout Warning") //or not AssemblyLineManagement.GetWarningMode
         then
             exit(0);
-        TmpAssemblyHeader.TESTFIELD("Item No.");
-        Item.GET(TmpAssemblyHeader."Item No.");
+        TmpAssemblyHeader.TestField("Item No.");
+        Item.Get(TmpAssemblyHeader."Item No.");
 
         ItemCheckAvail.AsmOrderCalculate(TmpAssemblyHeader, Inventory,
           GrossRequirement, ReservedRequirement, ScheduledReceipts, ReservedReceipts);
-        TempAssemblyLine2.COPY(TempAssemblyLine, true);
+        TempAssemblyLine2.Copy(TempAssemblyLine, true);
         AvailToPromise(TmpAssemblyHeader, TempAssemblyLine2, QtyAvailToMake, EarliestAvailableDateX);
         exit(QtyAvailToMake);
         //<<MIGR NAV 2015
@@ -939,23 +939,23 @@ codeunit 50030 "FTA_Functions"
             (not SalesLine."Allow Line Disc.") or
             (SalesLine."Item Base" = SalesLine."Item Base"::Transitory) then
             exit;
-        Item.GET(SalesLine."No.");
+        Item.Get(SalesLine."No.");
         if (Item."Inventory Value Zero") then
             exit;
 
         if SalesLine."Line Discount %" = 0 then begin
-            RecLSalesReceivablesSetup.GET();
+            RecLSalesReceivablesSetup.Get();
             if RecLSalesReceivablesSetup."Discount All Item" <> '' then begin
                 if SalesHeader."Document Type" in [SalesLine."Document Type"::Invoice, SalesLine."Document Type"::"Credit Memo"] then
                     DatLWorkDate := SalesHeader."Posting Date"
                 else
                     DatLWorkDate := SalesHeader."Order Date";
-                RecLSalesLineDisc.SETRANGE(Type, RecLSalesLineDisc.Type::"Item Disc. Group");
-                RecLSalesLineDisc.SETRANGE("Sales Type", RecLSalesLineDisc."Sales Type"::Customer);
-                RecLSalesLineDisc.SETRANGE("Sales Code", SalesLine."Sell-to Customer No.");
-                RecLSalesLineDisc.SETRANGE(Code, RecLSalesReceivablesSetup."Discount All Item");
-                RecLSalesLineDisc.SETFILTER("Minimum Quantity", '<=%1', SalesLine.Quantity);
-                if RecLSalesLineDisc.FINDSET() then
+                RecLSalesLineDisc.SetRange(Type, RecLSalesLineDisc.Type::"Item Disc. Group");
+                RecLSalesLineDisc.SetRange("Sales Type", RecLSalesLineDisc."Sales Type"::Customer);
+                RecLSalesLineDisc.SetRange("Sales Code", SalesLine."Sell-to Customer No.");
+                RecLSalesLineDisc.SetRange(Code, RecLSalesReceivablesSetup."Discount All Item");
+                RecLSalesLineDisc.SetFilter("Minimum Quantity", '<=%1', SalesLine.Quantity);
+                if RecLSalesLineDisc.FindSet() then
                     repeat
                         BooLRecOK := true;
                         if (SalesLine."Unit of Measure Code" <> RecLSalesLineDisc."Unit of Measure Code") and
@@ -969,7 +969,7 @@ codeunit 50030 "FTA_Functions"
                             SalesLine."Line Discount %" := RecLSalesLineDisc."Line Discount %";
                             SalesLine."Allow Line Disc." := true;
                         end;
-                    until RecLSalesLineDisc.NEXT() = 0;
+                    until RecLSalesLineDisc.Next() = 0;
             end;
         end;
         //<<FED_20090415:PA 15/04/2009
@@ -984,30 +984,30 @@ codeunit 50030 "FTA_Functions"
         RecLSalesLine: Record "Sales Line";
     begin
         //>>TI040889.001
-        RecLSalesLine.RESET();
-        RecLSalesLine.SETCURRENTKEY(Type, "No.");
+        RecLSalesLine.Reset();
+        RecLSalesLine.SetCurrentKey(Type, "No.");
         //<<TI040889.001
-        RecLSalesLine.SETRANGE(Type, RecPSalesLine.Type::Item);
-        RecLSalesLine.SETRANGE("No.", RecPSalesLine."No.");
-        //RecLSalesLine.SETRANGE("Build Kit",FALSE);
-        RecLSalesLine.SETFILTER("Outstanding Quantity", '<>0');
+        RecLSalesLine.SetRange(Type, RecPSalesLine.Type::Item);
+        RecLSalesLine.SetRange("No.", RecPSalesLine."No.");
+        //RecLSalesLine.SetRange("Build Kit",FALSE);
+        RecLSalesLine.SetFilter("Outstanding Quantity", '<>0');
         DecPAmount := 0;
-        if RecLSalesLine.FINDSET() then
+        if RecLSalesLine.FindSet() then
             repeat
                 DecPAmount += RecLSalesLine."Outstanding Quantity";
-            until RecLSalesLine.NEXT() = 0;
+            until RecLSalesLine.Next() = 0;
 
         //>>TI040889.001
-        RecLKitSalesLine.RESET();
-        RecLKitSalesLine.SETCURRENTKEY(Type, "No.");
+        RecLKitSalesLine.Reset();
+        RecLKitSalesLine.SetCurrentKey(Type, "No.");
         //<<TI040889.001
-        RecLKitSalesLine.SETRANGE(Type, RecLKitSalesLine.Type::Item);
-        RecLKitSalesLine.SETRANGE("No.", RecPSalesLine."No.");
-        RecLKitSalesLine.SETFILTER("Remaining Quantity", '<>0');
-        if RecLKitSalesLine.FINDSET() then
+        RecLKitSalesLine.SetRange(Type, RecLKitSalesLine.Type::Item);
+        RecLKitSalesLine.SetRange("No.", RecPSalesLine."No.");
+        RecLKitSalesLine.SetFilter("Remaining Quantity", '<>0');
+        if RecLKitSalesLine.FindSet() then
             repeat
                 DecPAmount += RecLKitSalesLine."Remaining Quantity";
-            until RecLKitSalesLine.NEXT() = 0;
+            until RecLKitSalesLine.Next() = 0;
     end;
     //Codeunit 7171
     procedure FctLookupPrepa(var RecPSalesLine: Record "Sales Line")
@@ -1015,29 +1015,29 @@ codeunit 50030 "FTA_Functions"
         RecLSalesLine: Record "Sales Line";
         FrmLSalesLines: Page "Sales Lines";
     begin
-        CLEAR(FrmLSalesLines);
-        RecLSalesLine.SETRANGE(Type, RecPSalesLine.Type::Item);
-        RecLSalesLine.SETRANGE("No.", RecPSalesLine."No.");
-        //RecLSalesLine.SETRANGE("Build Kit",FALSE);
-        RecLSalesLine.SETFILTER("Outstanding Quantity", '<>0');
-        FrmLSalesLines.SETTABLEVIEW(RecLSalesLine);
-        FrmLSalesLines.EDITABLE(false);
-        FrmLSalesLines.RUNMODAL();
+        Clear(FrmLSalesLines);
+        RecLSalesLine.SetRange(Type, RecPSalesLine.Type::Item);
+        RecLSalesLine.SetRange("No.", RecPSalesLine."No.");
+        //RecLSalesLine.SetRange("Build Kit",FALSE);
+        RecLSalesLine.SetFilter("Outstanding Quantity", '<>0');
+        FrmLSalesLines.SetTableView(RecLSalesLine);
+        FrmLSalesLines.Editable(false);
+        FrmLSalesLines.RunModal();
     end;
     //Codeunit 7171
     procedure FctCalcAffectedOnPurchOrder(var RecPSalesLine: Record "Sales Line") DecPAmount: Decimal;
     var
         RecLPurchLine: Record "Purchase Line";
     begin
-        RecLPurchLine.SETRANGE(Type, RecPSalesLine.Type::Item);
-        RecLPurchLine.SETRANGE("No.", RecPSalesLine."No.");
-        RecLPurchLine.SETFILTER("Reserved Quantity", '<>0');
+        RecLPurchLine.SetRange(Type, RecPSalesLine.Type::Item);
+        RecLPurchLine.SetRange("No.", RecPSalesLine."No.");
+        RecLPurchLine.SetFilter("Reserved Quantity", '<>0');
         DecPAmount := 0;
-        if RecLPurchLine.FINDSET() then
+        if RecLPurchLine.FindSet() then
             repeat
-                RecLPurchLine.CALCFIELDS("Reserved Quantity");
+                RecLPurchLine.CalcFields("Reserved Quantity");
                 DecPAmount += RecLPurchLine."Reserved Quantity";
-            until RecLPurchLine.NEXT() = 0;
+            until RecLPurchLine.Next() = 0;
     end;
     //Codeunit 7171
     procedure FctLookupAffectedOnPurchOrder(var RecPSalesLine: Record "Sales Line");
@@ -1045,28 +1045,28 @@ codeunit 50030 "FTA_Functions"
         RecLPurchLine: Record "Purchase Line";
         FrmLPurchLines: Page "Purchase Lines";
     begin
-        CLEAR(FrmLPurchLines);
-        RecLPurchLine.SETRANGE(Type, RecPSalesLine.Type::Item);
-        RecLPurchLine.SETRANGE("No.", RecPSalesLine."No.");
-        RecLPurchLine.SETFILTER("Reserved Quantity", '<>0');
-        FrmLPurchLines.SETTABLEVIEW(RecLPurchLine);
-        FrmLPurchLines.EDITABLE(false);
-        FrmLPurchLines.RUNMODAL();
+        Clear(FrmLPurchLines);
+        RecLPurchLine.SetRange(Type, RecPSalesLine.Type::Item);
+        RecLPurchLine.SetRange("No.", RecPSalesLine."No.");
+        RecLPurchLine.SetFilter("Reserved Quantity", '<>0');
+        FrmLPurchLines.SetTableView(RecLPurchLine);
+        FrmLPurchLines.Editable(false);
+        FrmLPurchLines.RunModal();
     end;
     //Codeunit 7171
     procedure FctCalcNoAffectedOnPurchOrder(var RecPSalesLine: Record "Sales Line") DecPAmount: Decimal;
     var
         RecLPurchLine: Record "Purchase Line";
     begin
-        RecLPurchLine.SETRANGE(Type, RecPSalesLine.Type::Item);
-        RecLPurchLine.SETRANGE("No.", RecPSalesLine."No.");
-        RecLPurchLine.SETFILTER("Reserved Quantity", '<>0');
+        RecLPurchLine.SetRange(Type, RecPSalesLine.Type::Item);
+        RecLPurchLine.SetRange("No.", RecPSalesLine."No.");
+        RecLPurchLine.SetFilter("Reserved Quantity", '<>0');
         DecPAmount := 0;
-        if RecLPurchLine.FINDSET() then
+        if RecLPurchLine.FindSet() then
             repeat
-                RecLPurchLine.CALCFIELDS("Reserved Quantity");
+                RecLPurchLine.CalcFields("Reserved Quantity");
                 DecPAmount += RecLPurchLine."Outstanding Quantity" - RecLPurchLine."Reserved Quantity";
-            until RecLPurchLine.NEXT() = 0;
+            until RecLPurchLine.Next() = 0;
     end;
     //Codeunit 7171
     procedure FctLookupNoAffectedOnPurchOrd(var RecPSalesLine: Record "Sales Line");
@@ -1075,14 +1075,14 @@ codeunit 50030 "FTA_Functions"
         FrmLPurchLines: Page "Purchase Lines";
         OptGProcess: enum "Option Process";
     begin
-        CLEAR(FrmLPurchLines);
-        RecLPurchLine.SETRANGE(Type, RecPSalesLine.Type::Item);
-        RecLPurchLine.SETRANGE("No.", RecPSalesLine."No.");
-        RecLPurchLine.SETFILTER("Outstanding Quantity", '<>0');
-        FrmLPurchLines.SETTABLEVIEW(RecLPurchLine);
-        FrmLPurchLines.EDITABLE(false);
+        Clear(FrmLPurchLines);
+        RecLPurchLine.SetRange(Type, RecPSalesLine.Type::Item);
+        RecLPurchLine.SetRange("No.", RecPSalesLine."No.");
+        RecLPurchLine.SetFilter("Outstanding Quantity", '<>0');
+        FrmLPurchLines.SetTableView(RecLPurchLine);
+        FrmLPurchLines.Editable(false);
         FrmLPurchLines.FctGetParm(RecPSalesLine."No.", OptGProcess::NoAffected);
-        FrmLPurchLines.RUNMODAL();
+        FrmLPurchLines.RunModal();
     end;
     //Codeunit 7171
     procedure FctCalcAvailability(var SalesLine: Record "Sales Line"): Decimal;
@@ -1095,14 +1095,14 @@ codeunit 50030 "FTA_Functions"
             if SalesLine."Shipment Date" <> 0D then
                 AvailabilityDate := SalesLine."Shipment Date"
             else
-                AvailabilityDate := WORKDATE();
+                AvailabilityDate := WorkDate();
 
-            Item.RESET();
-            Item.SETRANGE("Date Filter", 0D, AvailabilityDate);
-            Item.SETRANGE("Variant Filter", SalesLine."Variant Code");
-            Item.SETRANGE("Location Filter", SalesLine."Location Code");
-            Item.SETRANGE("Drop Shipment Filter", false);
-            Item.CALCFIELDS(Inventory);
+            Item.Reset();
+            Item.SetRange("Date Filter", 0D, AvailabilityDate);
+            Item.SetRange("Variant Filter", SalesLine."Variant Code");
+            Item.SetRange("Location Filter", SalesLine."Location Code");
+            Item.SetRange("Drop Shipment Filter", false);
+            Item.CalcFields(Inventory);
             exit(Item.Inventory);
         end;
     end;
@@ -1114,8 +1114,8 @@ codeunit 50030 "FTA_Functions"
         DecPAmount := 0;
         //>>FED_20090415:PA 15/04/2009
         if RecPSalesLine.Type = RecPSalesLine.Type::Item then
-            if RecLItem.GET(RecPSalesLine."No.") then begin
-                RecLItem.CALCFIELDS(Inventory, "Qty. on Sales Order", "Qty. on Assembly Order", "Reserved Qty. on Purch. Orders");
+            if RecLItem.Get(RecPSalesLine."No.") then begin
+                RecLItem.CalcFields(Inventory, "Qty. on Sales Order", "Qty. on Assembly Order", "Reserved Qty. on Purch. Orders");
                 DecPAmount := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + RecLItem."Qty. on Assembly Order") + RecLItem."Reserved Qty. on Purch. Orders";
             end;
         //<<FED_20090415:PA 15/04/2009
@@ -1259,11 +1259,11 @@ codeunit 50030 "FTA_Functions"
                         ToSalesLine.Validate("No.", FromSalesLine."No.");
                 end else
                     if CopyThisLine then begin
-                        ToSalesLine.VALIDATE("Item Base", FromSalesLine."Item Base");
-                        ToSalesLine.VALIDATE("No.", FromSalesLine."No.");
+                        ToSalesLine.Validate("Item Base", FromSalesLine."Item Base");
+                        ToSalesLine.Validate("No.", FromSalesLine."No.");
                     end
             end else begin
-                ToSalesLine.VALIDATE("Item Base", FromSalesLine."Item Base");
+                ToSalesLine.Validate("Item Base", FromSalesLine."Item Base");
                 ToSalesLine.Validate("No.", FromSalesLine."No.");
             end;
 
@@ -1313,17 +1313,17 @@ codeunit 50030 "FTA_Functions"
         ATOLink: Record "Assemble-to-Order Link";
         SalesLine: Record "Sales Line";
     begin
-        SalesLine.SETRANGE("Document Type", SalesHeader."Document Type");
-        SalesLine.SETRANGE("Document No.", SalesHeader."No.");
-        SalesLine.SETFILTER(Type, '>0');
-        SalesLine.SETFILTER(Quantity, '<>0');
+        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        SalesLine.SetRange("Document No.", SalesHeader."No.");
+        SalesLine.SetFilter(Type, '>0');
+        SalesLine.SetFilter(Quantity, '<>0');
 
-        SalesLine.SETFILTER(SalesLine."Qty. to Assemble to Order", '<>0');
+        SalesLine.SetFilter(SalesLine."Qty. to Assemble to Order", '<>0');
 
-        if SalesLine.FINDSET() then
+        if SalesLine.FindSet() then
             repeat
                 ATOLink.RollUpCost(SalesLine);
-            until SalesLine.NEXT() = 0;
+            until SalesLine.Next() = 0;
     end;
     //****************************************************************************************
     var

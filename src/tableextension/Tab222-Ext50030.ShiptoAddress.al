@@ -40,7 +40,7 @@ tableextension 50030 ShiptoAddress extends "Ship-to Address" //222
     var
         Cust: Record Customer;
     begin
-        Cust.GET("Customer No.");
+        Cust.Get("Customer No.");
         "Transaction Type" := Cust."Transaction Type";
         "Transaction Specification" := Cust."Transaction Specification";
         "Transport Method" := Cust."Transport Method";

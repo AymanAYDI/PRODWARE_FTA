@@ -111,7 +111,7 @@ tableextension 50003 Customer extends Customer //18
     begin
         "Creation Date" := WorkDate();
         User := UserId;
-        SalesSetup.GET();
+        SalesSetup.Get();
         "Transaction Type" := SalesSetup."Transaction Type";
         "Transaction Specification" := SalesSetup."Transaction Specification";
         "Transport Method" := SalesSetup."Transport Method";

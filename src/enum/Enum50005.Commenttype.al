@@ -34,7 +34,7 @@ enum 50005 "Comment type"
     {
         Caption = 'Autres commentaires';
     }
-    value(8; "Setting information")
+    value(8; "Setting inFormation")
     {
         Caption = 'Réglage sur banc';
     }

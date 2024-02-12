@@ -3,7 +3,7 @@ page 50018 "TestPage"
 {
     ApplicationArea = All;
     Caption = 'TestPage';
-    PageType = Card;
+    PaGetype = Card;
     UsageCategory = Administration;
 
     actions

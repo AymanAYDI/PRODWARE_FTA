@@ -8,7 +8,7 @@ pageextension 50018 SalesInvoiceSubform extends "Sales Invoice Subform" //47
     // DelayedInsert = true;
     // LinksAllowed = false;
     // MultipleNewLines = true;
-    // PageType = ListPart;
+    // PaGetype = ListPart;
     // SourceTable = "Sales Line";
     // SourceTableView = WHERE("Document Type"=FILTER(Invoice));
 

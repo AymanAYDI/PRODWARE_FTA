@@ -73,7 +73,7 @@ page 50017 "Bored Blocks Item Card"
     // ------------------------------------------------------------------------
 
     Caption = 'Bored Blocks Item Card';
-    PageType = Card;
+    PaGetype = Card;
     RefreshOnActivate = true;
     SourceTable = Item;
     SourceTableView = where("Item Base" = filter("Bored blocks"));
@@ -92,7 +92,7 @@ page 50017 "Bored Blocks Item Card"
                     trigger OnAssistEdit()
                     begin
                         if Rec.AssistEdit() then
-                            CurrPage.UPDATE();
+                            CurrPage.Update();
                     end;
                 }
                 field("No. 2"; Rec."No. 2")
@@ -328,7 +328,7 @@ page 50017 "Bored Blocks Item Card"
                             ItemStatistics: page "Item Statistics";
                         begin
                             ItemStatistics.SetItem(Rec);
-                            ItemStatistics.RUNMODAL();
+                            ItemStatistics.RunModal();
                         end;
                     }
                     action("Entry Statistics")
@@ -369,8 +369,8 @@ page 50017 "Bored Blocks Item Card"
                     var
                         ItemsByLocation: page "Items by Location";
                     begin
-                        ItemsByLocation.SETRECORD(Rec);
-                        ItemsByLocation.RUN();
+                        ItemsByLocation.SetRecord(Rec);
+                        ItemsByLocation.Run();
                     end;
                 }
                 action("Historique de l'article")
@@ -546,8 +546,8 @@ page 50017 "Bored Blocks Item Card"
                         var
                             ProdBOMWhereUsed: page "Prod. BOM Where-Used";
                         begin
-                            ProdBOMWhereUsed.SetItem(Rec, WORKDATE());
-                            ProdBOMWhereUsed.RUNMODAL();
+                            ProdBOMWhereUsed.SetItem(Rec, WorkDate());
+                            ProdBOMWhereUsed.RunModal();
                         end;
                     }
                     action("K.Calc. Stan&dard Cost")
@@ -558,7 +558,7 @@ page 50017 "Bored Blocks Item Card"
 
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcItem(Rec."No.", true);
                         end;
                     }
@@ -577,8 +577,8 @@ page 50017 "Bored Blocks Item Card"
                         var
                             ProdBOMWhereUsed: page "Prod. BOM Where-Used";
                         begin
-                            ProdBOMWhereUsed.SetItem(Rec, WORKDATE());
-                            ProdBOMWhereUsed.RUNMODAL();
+                            ProdBOMWhereUsed.SetItem(Rec, WorkDate());
+                            ProdBOMWhereUsed.RunModal();
                         end;
                     }
                     action("Calc. Stan&dard Cost")
@@ -589,7 +589,7 @@ page 50017 "Bored Blocks Item Card"
 
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcItem(Rec."No.", false);
                         end;
                     }
@@ -655,9 +655,9 @@ page 50017 "Bored Blocks Item Card"
                         var
                             ResourceSkill: Record "Resource Skill";
                         begin
-                            CLEAR(SkilledResourceList);
+                            Clear(SkilledResourceList);
                             SkilledResourceList.Initialize(ResourceSkill.Type::Item, Rec."No.", Rec.Description);
-                            SkilledResourceList.RUNMODAL();
+                            SkilledResourceList.RunModal();
                         end;
                     }
                 }
@@ -697,11 +697,11 @@ page 50017 "Bored Blocks Item Card"
                     begin
                         CreateItemProductionCost();
 
-                        CLEAR(ItemProductionCost);
-                        CLEAR(BoredBlocksItemCard);
-                        ItemProductionCost.SETRANGE("Item No.", Rec."No.");
-                        BoredBlocksItemCard.SETTABLEVIEW(ItemProductionCost);
-                        BoredBlocksItemCard.RUN();
+                        Clear(ItemProductionCost);
+                        Clear(BoredBlocksItemCard);
+                        ItemProductionCost.SetRange("Item No.", Rec."No.");
+                        BoredBlocksItemCard.SetTableView(ItemProductionCost);
+                        BoredBlocksItemCard.Run();
                     end;
                 }
                 action("Line Discounts")
@@ -747,20 +747,20 @@ page 50017 "Bored Blocks Item Card"
                         BOMStructure: page "BOM Structure";
                     begin
                         BOMStructure.InitItem(Rec);
-                        BOMStructure.RUN();
+                        BOMStructure.Run();
                     end;
                 }
                 action("Cost Shares")
                 {
                     Caption = 'Cost Shares';
-                    Image = CostBudget;
+                    Image = CostBudGet;
 
                     trigger OnAction()
                     var
                         BOMCostShares: page "BOM Cost Shares";
                     begin
                         BOMCostShares.InitItem(Rec);
-                        BOMCostShares.RUN();
+                        BOMCostShares.Run();
                     end;
                 }
                 group("Assemb&ly")
@@ -792,7 +792,7 @@ page 50017 "Bored Blocks Item Card"
 
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcItem(Rec."No.", true);
                         end;
                     }
@@ -804,7 +804,7 @@ page 50017 "Bored Blocks Item Card"
 
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcAssemblyItemPrice(Rec."No.")
                         end;
                     }
@@ -830,8 +830,8 @@ page 50017 "Bored Blocks Item Card"
                         var
                             ProdBOMWhereUsed: page "Prod. BOM Where-Used";
                         begin
-                            ProdBOMWhereUsed.SetItem(Rec, WORKDATE());
-                            ProdBOMWhereUsed.RUNMODAL();
+                            ProdBOMWhereUsed.SetItem(Rec, WorkDate());
+                            ProdBOMWhereUsed.RunModal();
                         end;
                     }
                     action("Calc. Standard Cost ")
@@ -843,7 +843,7 @@ page 50017 "Bored Blocks Item Card"
 
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcItem(Rec."No.", false);
                         end;
                     }
@@ -870,7 +870,7 @@ page 50017 "Bored Blocks Item Card"
                     RecLProdBOMHeader: Record "Production BOM Header";
                 begin
                     Rec.FctBOM(Rec);
-                    CurrPage.UPDATE(true);
+                    CurrPage.Update(true);
                     //FctBOMtoValidate(Rec);
                 end;
             }
@@ -883,9 +883,9 @@ page 50017 "Bored Blocks Item Card"
                 var
                     RecLItem: Record Item;
                 begin
-                    CLEAR(RecLItem);
-                    RecLItem.SETRANGE("No.", Rec."No.");
-                    report.RUNMODAL(Report::"Calculate Kit Price Item", true, false, RecLItem);
+                    Clear(RecLItem);
+                    RecLItem.SetRange("No.", Rec."No.");
+                    report.RunModal(Report::"Calculate Kit Price Item", true, false, RecLItem);
                 end;
             }
             action(" Calc. Standard Cost ")
@@ -895,7 +895,7 @@ page 50017 "Bored Blocks Item Card"
 
                 trigger OnAction()
                 begin
-                    CLEAR(CalculateStdCost);
+                    Clear(CalculateStdCost);
                     CalculateStdCost.CalcItem(Rec."No.", true);
                 end;
             }
@@ -908,12 +908,12 @@ page 50017 "Bored Blocks Item Card"
                 var
                     RecLItem: Record Item;
                 begin
-                    CLEAR(RecLItem);
+                    Clear(RecLItem);
                     RecLItem := Rec;
-                    RecLItem.SETRANGE("No.", Rec."No.");
-                    RecLItem.SETRECFILTER();
-                    //Report.SETTABLEVIEW(Reclitem)
-                    report.RUNMODAL(50009, true, false, RecLItem);
+                    RecLItem.SetRange("No.", Rec."No.");
+                    RecLItem.SetRecFilter();
+                    //Report.SetTableView(Reclitem)
+                    report.RunModal(50009, true, false, RecLItem);
                 end;
             }
             action("Apply Template")
@@ -937,7 +937,7 @@ page 50017 "Bored Blocks Item Card"
                 begin
                     if Rec."Quote Associated" then begin
                         Rec."Quote Associated" := false;
-                        Rec.MODIFY();
+                        Rec.Modify();
                     end;
                 end;
             }
@@ -946,7 +946,7 @@ page 50017 "Bored Blocks Item Card"
 
     trigger OnAfterGetRecord()
     begin
-        Rec.SETRANGE("No.");
+        Rec.SetRange("No.");
         EnablePlanningControls();
         EnableCostingControls();
     end;
@@ -993,47 +993,47 @@ page 50017 "Bored Blocks Item Card"
     var
         RecLItem: Record Item;
     begin
-        CLEAR(RecLItem);
+        Clear(RecLItem);
         RecLItem := Rec;
-        RecLItem.SETRANGE("No.", Rec."No.");
-        RecLItem.SETRECFILTER();
-        //Report.SETTABLEVIEW(Reclitem)
-        REPORT.RUNMODAL(50009, false, false, RecLItem);
+        RecLItem.SetRange("No.", Rec."No.");
+        RecLItem.SetRecFilter();
+        //Report.SetTableView(Reclitem)
+        REPORT.RunModal(50009, false, false, RecLItem);
     end;
 
     local procedure CreateItemProductionCost()
     var
         ItemProductionCost: Record "Item Production Cost";
     begin
-        ItemProductionCost.INIT();
+        ItemProductionCost.Init();
         ItemProductionCost."Item No." := Rec."No.";
         ItemProductionCost."Sales Min Qty" := 0;
-        if ItemProductionCost.INSERT() then;
+        if ItemProductionCost.Insert() then;
 
-        ItemProductionCost.INIT();
+        ItemProductionCost.Init();
         ItemProductionCost."Item No." := Rec."No.";
         ItemProductionCost."Sales Min Qty" := 2;
-        if ItemProductionCost.INSERT() then;
+        if ItemProductionCost.Insert() then;
 
-        ItemProductionCost.INIT();
+        ItemProductionCost.Init();
         ItemProductionCost."Item No." := Rec."No.";
         ItemProductionCost."Sales Min Qty" := 5;
-        if ItemProductionCost.INSERT() then;
+        if ItemProductionCost.Insert() then;
 
-        ItemProductionCost.INIT();
+        ItemProductionCost.Init();
         ItemProductionCost."Item No." := Rec."No.";
         ItemProductionCost."Sales Min Qty" := 10;
-        if ItemProductionCost.INSERT() then;
+        if ItemProductionCost.Insert() then;
 
-        ItemProductionCost.INIT();
+        ItemProductionCost.Init();
         ItemProductionCost."Item No." := Rec."No.";
         ItemProductionCost."Sales Min Qty" := 25;
-        if ItemProductionCost.INSERT() then;
+        if ItemProductionCost.Insert() then;
 
-        ItemProductionCost.INIT();
+        ItemProductionCost.Init();
         ItemProductionCost."Item No." := Rec."No.";
         ItemProductionCost."Sales Min Qty" := 50;
-        if ItemProductionCost.INSERT() then;
+        if ItemProductionCost.Insert() then;
     end;
 }
 

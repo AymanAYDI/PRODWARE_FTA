@@ -24,19 +24,19 @@ report 50000 "Suggest Purch. Price on Wksh."
             trigger OnAfterGetRecord()
             begin
                 if Item."No." <> "Item No." then begin
-                    Item.GET("Item No.");
-                    Window.UPDATE(1, "Item No.");
+                    Item.Get("Item No.");
+                    Window.Update(1, "Item No.");
                 end;
 
 
-                CLEAR(PurchPriceWksh);
+                Clear(PurchPriceWksh);
 
 
                 if ToSalesCode <> '' then
-                    PurchPriceWksh.VALIDATE("Vendor No.", ToSalesCode)
+                    PurchPriceWksh.Validate("Vendor No.", ToSalesCode)
                 else
-                    PurchPriceWksh.VALIDATE("Vendor No.", "Vendor No.");
-                PurchPriceWksh.VALIDATE("Item No.", "Item No.");
+                    PurchPriceWksh.Validate("Vendor No.", "Vendor No.");
+                PurchPriceWksh.Validate("Item No.", "Item No.");
                 PurchPriceWksh."New Unit Cost" := "Direct Unit Cost";
                 PurchPriceWksh."Minimum Quantity" := "Minimum Quantity";
 
@@ -45,15 +45,15 @@ report 50000 "Suggest Purch. Price on Wksh."
                 else begin
                     PurchPriceWksh."Unit of Measure Code" := ToUnitOfMeasure.Code;
                     if not (PurchPriceWksh."Unit of Measure Code" in ['', Item."Base Unit of Measure"]) then
-                        if not ItemUnitOfMeasure.GET("Item No.", PurchPriceWksh."Unit of Measure Code") then
-                            CurrReport.SKIP();
+                        if not ItemUnitOfMeasure.Get("Item No.", PurchPriceWksh."Unit of Measure Code") then
+                            CurrReport.Skip();
                     PurchPriceWksh."New Unit Cost" :=
                       PurchPriceWksh."New Unit Cost" *
                       UOMMgt.GetQtyPerUnitOfMeasure(Item, PurchPriceWksh."Unit of Measure Code") /
                       UOMMgt.GetQtyPerUnitOfMeasure(Item, "Unit of Measure Code");
                 end;
-                PurchPriceWksh.VALIDATE("Unit of Measure Code");
-                PurchPriceWksh.VALIDATE("Variant Code", "Variant Code");
+                PurchPriceWksh.Validate("Unit of Measure Code");
+                PurchPriceWksh.Validate("Variant Code", "Variant Code");
 
                 if not ReplaceCurrency then
                     PurchPriceWksh."Currency Code" := "Currency Code"
@@ -61,53 +61,53 @@ report 50000 "Suggest Purch. Price on Wksh."
                     PurchPriceWksh."Currency Code" := ToCurrency.Code;
 
                 if not ReplaceStartingDate then
-                    PurchPriceWksh.VALIDATE("Starting Date", "Starting Date")
+                    PurchPriceWksh.Validate("Starting Date", "Starting Date")
                 else
-                    PurchPriceWksh.VALIDATE("Starting Date", ToStartDate);
+                    PurchPriceWksh.Validate("Starting Date", ToStartDate);
                 if not ReplaceEndingDate then
-                    PurchPriceWksh.VALIDATE("Ending Date", "Ending Date")
+                    PurchPriceWksh.Validate("Ending Date", "Ending Date")
                 else
-                    PurchPriceWksh.VALIDATE("Ending Date", ToEndDate);
+                    PurchPriceWksh.Validate("Ending Date", ToEndDate);
 
                 if "Currency Code" <> PurchPriceWksh."Currency Code" then begin
                     if "Currency Code" <> '' then begin
-                        FromCurrency.GET("Currency Code");
-                        FromCurrency.TESTFIELD(Code);
+                        FromCurrency.Get("Currency Code");
+                        FromCurrency.TestField(Code);
                         PurchPriceWksh."New Unit Cost" :=
                           CurrExchRate.ExchangeAmtFCYToLCY(
-                            WORKDATE(), "Currency Code", PurchPriceWksh."New Unit Cost",
+                            WorkDate(), "Currency Code", PurchPriceWksh."New Unit Cost",
                             CurrExchRate.ExchangeRate(
-                              WORKDATE(), "Currency Code"));
+                              WorkDate(), "Currency Code"));
                     end;
                     if PurchPriceWksh."Currency Code" <> '' then
                         PurchPriceWksh."New Unit Cost" :=
                           CurrExchRate.ExchangeAmtLCYToFCY(
-                            WORKDATE(), PurchPriceWksh."Currency Code",
+                            WorkDate(), PurchPriceWksh."Currency Code",
                             PurchPriceWksh."New Unit Cost", CurrExchRate.ExchangeRate(
-                              WORKDATE(), PurchPriceWksh."Currency Code"));
+                              WorkDate(), PurchPriceWksh."Currency Code"));
                 end;
 
                 if PurchPriceWksh."Currency Code" = '' then
                     Currency2.InitRoundingPrecision()
                 else begin
-                    Currency2.GET(PurchPriceWksh."Currency Code");
-                    Currency2.TESTFIELD("Unit-Amount Rounding Precision");
+                    Currency2.Get(PurchPriceWksh."Currency Code");
+                    Currency2.TestField("Unit-Amount Rounding Precision");
                 end;
                 PurchPriceWksh."New Unit Cost" :=
-                  ROUND(PurchPriceWksh."New Unit Cost", Currency2."Unit-Amount Rounding Precision");
+                  Round(PurchPriceWksh."New Unit Cost", Currency2."Unit-Amount Rounding Precision");
 
                 if PurchPriceWksh."New Unit Cost" > PriceLowerLimit then
                     PurchPriceWksh."New Unit Cost" := PurchPriceWksh."New Unit Cost" * UnitPriceFactor;
                 if RoundingMethod.Code <> '' then begin
                     RoundingMethod."Minimum Amount" := PurchPriceWksh."New Unit Cost";
-                    if RoundingMethod.FIND('=<') then begin
+                    if RoundingMethod.Find('=<') then begin
                         PurchPriceWksh."New Unit Cost" :=
                           PurchPriceWksh."New Unit Cost" + RoundingMethod."Amount Added Before";
                         if RoundingMethod.Precision > 0 then
                             PurchPriceWksh."New Unit Cost" :=
-                              ROUND(
+                              Round(
                                 PurchPriceWksh."New Unit Cost",
-                                RoundingMethod.Precision, COPYSTR('=><', RoundingMethod.Type + 1, 1));
+                                RoundingMethod.Precision, CopyStr('=><', RoundingMethod.Type + 1, 1));
                         PurchPriceWksh."New Unit Cost" := PurchPriceWksh."New Unit Cost" +
                           RoundingMethod."Amount Added After";
                     end;
@@ -118,16 +118,16 @@ report 50000 "Suggest Purch. Price on Wksh."
 
                 if PriceAlreadyExists or CreateNewPrices then begin
                     PurchPriceWksh2 := PurchPriceWksh;
-                    if PurchPriceWksh2.FIND('=') then
-                        PurchPriceWksh.MODIFY(true)
+                    if PurchPriceWksh2.Find('=') then
+                        PurchPriceWksh.Modify(true)
                     else
-                        PurchPriceWksh.INSERT(true);
+                        PurchPriceWksh.Insert(true);
                 end;
             end;
 
             trigger OnPreDataItem()
             begin
-                Window.OPEN(Text001);
+                Window.Open(Text001);
             end;
         }
     }
@@ -164,10 +164,10 @@ report 50000 "Suggest Purch. Price on Wksh."
                             case ToSalesType of
                                 ToSalesType::Vendor:
                                     begin
-                                        VendList.LOOKUPMODE(true);
-                                        VendList.SETRECORD(ToVend);
-                                        if VendList.RUNMODAL() = ACTION::LookupOK then begin
-                                            VendList.GETRECORD(ToVend);
+                                        VendList.LookupMode(true);
+                                        VendList.SetRecord(ToVend);
+                                        if VendList.RunModal() = ACTION::LookupOK then begin
+                                            VendList.GetRecord(ToVend);
                                             ToSalesCode := ToVend."No.";
                                         end;
                                     end;
@@ -183,7 +183,7 @@ report 50000 "Suggest Purch. Price on Wksh."
                         trigger OnValidate()
                         begin
                             if ToUnitOfMeasure.Code <> '' then
-                                ToUnitOfMeasure.FIND();
+                                ToUnitOfMeasure.Find();
                         end;
                     }
                     field("ToCurrency.Code";
@@ -194,7 +194,7 @@ report 50000 "Suggest Purch. Price on Wksh."
                         trigger OnValidate()
                         begin
                             if ToCurrency.Code <> '' then
-                                ToCurrency.FIND();
+                                ToCurrency.Find();
                         end;
                     }
                     field(ToStartDateCtrl; ToStartDate)
@@ -256,10 +256,10 @@ report 50000 "Suggest Purch. Price on Wksh."
                 begin
                     ToVend."No." := ToSalesCode;
                     if ToVend."No." <> '' then
-                        ToVend.FIND()
+                        ToVend.Find()
                     else begin
-                        if not ToVend.FIND() then
-                            ToVend.INIT();
+                        if not ToVend.Find() then
+                            ToVend.Init();
                         ToSalesCode := ToVend."No.";
                     end;
                 end;
@@ -272,9 +272,9 @@ report 50000 "Suggest Purch. Price on Wksh."
         ReplaceEndingDate := ToEndDate <> 0D;
 
         if ReplaceUnitOfMeasure and (ToUnitOfMeasure.Code <> '') then
-            ToUnitOfMeasure.FIND();
+            ToUnitOfMeasure.Find();
 
-        RoundingMethod.SETRANGE(Code, RoundingMethod.Code);
+        RoundingMethod.SetRange(Code, RoundingMethod.Code);
 
     end;
 

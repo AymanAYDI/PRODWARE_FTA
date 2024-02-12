@@ -6,11 +6,11 @@ pageextension 50056 "PhysInventoryJournal" extends "Phys. Inventory Journal" //3
 {
     layout
     {
-        modify("Item No.")
+        Modify("Item No.")
         {
             trigger OnAfterValidate()
             begin
-                rec.CALCFIELDS("Shelf No.");
+                rec.CalcFields("Shelf No.");
             end;
         }
         addafter(Description)

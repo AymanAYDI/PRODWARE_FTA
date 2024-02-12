@@ -21,7 +21,7 @@ report 50040 TI357187
                     "Value Entry"."Cost Amount (Actual)" := "Value Entry"."Cost Amount (Expected)";
                     "Value Entry"."Cost Amount (Expected)" := 0;
                     "Value Entry"."Expected Cost" := false;
-                    MODIFY();
+                    Modify();
                 end;
             }
 
@@ -29,7 +29,7 @@ report 50040 TI357187
             begin
                 "Item Ledger Entry"."Invoiced Quantity" := "Item Ledger Entry".Quantity;
                 "Item Ledger Entry"."Completely Invoiced" := true;
-                MODIFY();
+                Modify();
             end;
         }
     }

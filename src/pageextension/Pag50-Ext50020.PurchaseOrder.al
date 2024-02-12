@@ -29,19 +29,19 @@ pageextension 50020 PurchaseOrder extends "Purchase Order" //50
                 ToolTip = 'Specifies the value of the Sujet Mail field.';
             }
         }
-        modify("No. of Archived Versions")
+        Modify("No. of Archived Versions")
         {
             Visible = false;
         }
-        modify("Responsibility Center")
+        Modify("Responsibility Center")
         {
             Visible = false;
         }
-        modify("Shortcut Dimension 1 Code")
+        Modify("Shortcut Dimension 1 Code")
         {
             Visible = false;
         }
-        modify("Shortcut Dimension 2 Code")
+        Modify("Shortcut Dimension 2 Code")
         {
             Visible = false;
         }
@@ -108,28 +108,28 @@ pageextension 50020 PurchaseOrder extends "Purchase Order" //50
                         TextCdeTransport003: Label 'Order type cannot be "Transport" for Purchase header %1.';
                     begin
 
-                        if Rec."Order Type" in [Rec."Order Type"::Transport] then ERROR(STRSUBSTNO(TextCdeTransport003, Rec."No."));
+                        if Rec."Order Type" in [Rec."Order Type"::Transport] then Error(StrSubstNo(TextCdeTransport003, Rec."No."));
 
                         Rec."Shipping Agent Code" := '';  //ne pas mettre le Modify s'il n'y a pas de création de cde achat transport
 
                         //Recherche Tarif transporteur pour affichage de la page
-                        RecLShippingPrice.RESET();
-                        RecLShippingPrice.SETRANGE("Country Code", Rec."Ship-to Country/Region Code");
-                        RecLShippingPrice.SETRANGE("Departement Code", COPYSTR(Rec."Ship-to Post Code", 1, 2));
-                        RecLShippingPrice.SETRANGE("Pallet Nb", Rec."Nb Total Pallets");
-                        RecLShippingPrice.SETFILTER("Beginning Date", '..%1', Rec."Posting Date");
-                        if RecLShippingPrice.FINDSET() then
-                            //RecLShippingPrice.CALCFIELDS(Status);
-                            //RecLShippingPrice.SETFILTER(Status,'%1|%2',RecLShippingPrice.Status::"Referencing in progress",
+                        RecLShippingPrice.Reset();
+                        RecLShippingPrice.SetRange("Country Code", Rec."Ship-to Country/Region Code");
+                        RecLShippingPrice.SetRange("Departement Code", CopyStr(Rec."Ship-to Post Code", 1, 2));
+                        RecLShippingPrice.SetRange("Pallet Nb", Rec."Nb Total Pallets");
+                        RecLShippingPrice.SetFilter("Beginning Date", '..%1', Rec."Posting Date");
+                        if RecLShippingPrice.FindSet() then
+                            //RecLShippingPrice.CalcFields(Status);
+                            //RecLShippingPrice.SetFilter(Status,'%1|%2',RecLShippingPrice.Status::"Referencing in progress",
                             //                                           RecLShippingPrice.Status::Referred);
-                            RecLShippingPrice.SETCURRENTKEY("Currency Code", Price);
+                            RecLShippingPrice.SetCurrentKey("Currency Code", Price);
                         RecLShippingPrice.FILTERGROUP(2);
-                        PgeLShippingPrice.SETTABLEVIEW(RecLShippingPrice);
+                        PgeLShippingPrice.SetTableView(RecLShippingPrice);
 
 
-                        //IF FORM.RUNMODAL(50026,RecLShippingPrice,RecLShippingPrice."Shipping Agent")=ACTION::LookupOK THEN BEGIN
-                        if PAGE.RUNMODAL(Page::"Shipping agent prices", RecLShippingPrice, RecLShippingPrice."Shipping Agent") = ACTION::LookupOK then begin
-                            Rec.VALIDATE("Shipping Agent Code", RecLShippingPrice."Shipping Agent");
+                        //IF FORM.RunModal(50026,RecLShippingPrice,RecLShippingPrice."Shipping Agent")=ACTION::LookupOK THEN BEGIN
+                        if PAGE.RunModal(Page::"Shipping agent prices", RecLShippingPrice, RecLShippingPrice."Shipping Agent") = ACTION::LookupOK then begin
+                            Rec.Validate("Shipping Agent Code", RecLShippingPrice."Shipping Agent");
                             DecLPrice := RecLShippingPrice.Price;
                             CodLCurrency := RecLShippingPrice."Currency Code";
                         end;
@@ -139,8 +139,8 @@ pageextension 50020 PurchaseOrder extends "Purchase Order" //50
                             Rec."Shipping Order No." := Rec.CreatePurchaseTransport(Rec."Shipping Agent Code", Rec."No.", DecLPrice, CodLCurrency, Rec."Requested Receipt Date",
                                                                             Rec."Promised Receipt Date", Rec."Planned Receipt Date", OptLTypeInitialOrder::Purchase);
 
-                            Rec.MODIFY();
-                            MESSAGE(STRSUBSTNO(TextCdeTransport002, Rec."Shipping Order No."));
+                            Rec.Modify();
+                            Message(StrSubstNo(TextCdeTransport002, Rec."Shipping Order No."));
                         end;
                     end;
                 }
@@ -158,34 +158,34 @@ pageextension 50020 PurchaseOrder extends "Purchase Order" //50
                     begin
 
                         if Rec."Shipping Order No." <> '' then begin
-                            RecLPurchHeader.RESET();
-                            RecLPurchHeader.SETRANGE("Document Type", RecLPurchHeader."Document Type"::Order);
-                            RecLPurchHeader.SETRANGE("No.", Rec."Shipping Order No.");
-                            if RecLPurchHeader.FINDFIRST() then begin //Commande achat
+                            RecLPurchHeader.Reset();
+                            RecLPurchHeader.SetRange("Document Type", RecLPurchHeader."Document Type"::Order);
+                            RecLPurchHeader.SetRange("No.", Rec."Shipping Order No.");
+                            if RecLPurchHeader.findFirst() then begin //Commande achat
                                 RecLPurchHeader.FILTERGROUP(2);
-                                PgeLPurchaseOrder.SETTABLEVIEW(RecLPurchHeader);
-                                PgeLPurchaseOrder.RUNMODAL();
+                                PgeLPurchaseOrder.SetTableView(RecLPurchHeader);
+                                PgeLPurchaseOrder.RunModal();
                             end
                             else begin //Facture achat
-                                RecLInvoicePurchHeader.RESET();
-                                RecLInvoicePurchHeader.SETCURRENTKEY("Order No.");
-                                RecLInvoicePurchHeader.SETRANGE("Order No.", Rec."Shipping Order No.");
-                                if RecLInvoicePurchHeader.FINDFIRST() then begin
+                                RecLInvoicePurchHeader.Reset();
+                                RecLInvoicePurchHeader.SetCurrentKey("Order No.");
+                                RecLInvoicePurchHeader.SetRange("Order No.", Rec."Shipping Order No.");
+                                if RecLInvoicePurchHeader.findFirst() then begin
                                     RecLInvoicePurchHeader.FILTERGROUP(2);
-                                    PgeLInvoicePurchHeader.SETTABLEVIEW(RecLInvoicePurchHeader);
-                                    PgeLInvoicePurchHeader.RUNMODAL();
+                                    PgeLInvoicePurchHeader.SetTableView(RecLInvoicePurchHeader);
+                                    PgeLInvoicePurchHeader.RunModal();
                                 end
                                 else
-                                    ERROR(TextCdeTransport001);
+                                    Error(TextCdeTransport001);
                             end;
                         end
                         else
-                            ERROR(TextCdeTransport001);
+                            Error(TextCdeTransport001);
                     end;
                 }
-                action("Voir Commande Vente / Achat initiale")
+                action("Voir Commande Vente / Achat Initiale")
                 {
-                    Caption = 'Voir Commande Vente / Achat initiale';
+                    Caption = 'Voir Commande Vente / Achat Initiale';
 
                     trigger OnAction()
                     var
@@ -206,51 +206,51 @@ pageextension 50020 PurchaseOrder extends "Purchase Order" //50
                             case Rec."Initial Order Type" of
                                 Rec."Initial Order Type"::Sale:
                                     begin //Commande vente
-                                        RecLSaleHeader.RESET();
-                                        RecLSaleHeader.SETRANGE("Document Type", RecLSaleHeader."Document Type"::Order);
-                                        RecLSaleHeader.SETRANGE("No.", Rec."Initial Order No.");
-                                        if RecLSaleHeader.FINDFIRST() then begin
+                                        RecLSaleHeader.Reset();
+                                        RecLSaleHeader.SetRange("Document Type", RecLSaleHeader."Document Type"::Order);
+                                        RecLSaleHeader.SetRange("No.", Rec."Initial Order No.");
+                                        if RecLSaleHeader.findFirst() then begin
                                             RecLSaleHeader.FILTERGROUP(2);
-                                            PgeLSaleOrder.SETTABLEVIEW(RecLSaleHeader);
-                                            PgeLSaleOrder.RUNMODAL();
+                                            PgeLSaleOrder.SetTableView(RecLSaleHeader);
+                                            PgeLSaleOrder.RunModal();
                                         end else begin //Facture vente
-                                            RecLInvoiceHeader.RESET();
-                                            RecLInvoiceHeader.SETCURRENTKEY("Order No.");
-                                            RecLInvoiceHeader.SETRANGE("Order No.", Rec."Initial Order No.");
-                                            if RecLInvoiceHeader.FINDFIRST() then begin
+                                            RecLInvoiceHeader.Reset();
+                                            RecLInvoiceHeader.SetCurrentKey("Order No.");
+                                            RecLInvoiceHeader.SetRange("Order No.", Rec."Initial Order No.");
+                                            if RecLInvoiceHeader.findFirst() then begin
                                                 RecLInvoiceHeader.FILTERGROUP(2);
-                                                PgeLInvoiceHeader.SETTABLEVIEW(RecLInvoiceHeader);
-                                                PgeLInvoiceHeader.RUNMODAL();
+                                                PgeLInvoiceHeader.SetTableView(RecLInvoiceHeader);
+                                                PgeLInvoiceHeader.RunModal();
                                             end else
-                                                ERROR(TextCdeTransport004);
+                                                Error(TextCdeTransport004);
                                         end;
                                     end;
 
                                 Rec."Initial Order Type"::Purchase:
                                     begin //Commande achat
-                                        RecLPurchHeader.RESET();
-                                        RecLPurchHeader.SETRANGE("Document Type", RecLPurchHeader."Document Type"::Order);
-                                        RecLPurchHeader.SETRANGE("No.", Rec."Initial Order No.");
-                                        if RecLPurchHeader.FINDFIRST() then begin
+                                        RecLPurchHeader.Reset();
+                                        RecLPurchHeader.SetRange("Document Type", RecLPurchHeader."Document Type"::Order);
+                                        RecLPurchHeader.SetRange("No.", Rec."Initial Order No.");
+                                        if RecLPurchHeader.findFirst() then begin
                                             RecLPurchHeader.FILTERGROUP(2);
-                                            PgeLPurchaseOrder.SETTABLEVIEW(RecLPurchHeader);
-                                            PgeLPurchaseOrder.RUNMODAL();
+                                            PgeLPurchaseOrder.SetTableView(RecLPurchHeader);
+                                            PgeLPurchaseOrder.RunModal();
                                         end
                                         else begin //Facture achat
-                                            RecLInvoicePurchHeader.RESET();
-                                            RecLInvoicePurchHeader.SETCURRENTKEY("Order No.");
-                                            RecLInvoicePurchHeader.SETRANGE("Order No.", Rec."Initial Order No.");
-                                            if RecLInvoicePurchHeader.FINDFIRST() then begin
+                                            RecLInvoicePurchHeader.Reset();
+                                            RecLInvoicePurchHeader.SetCurrentKey("Order No.");
+                                            RecLInvoicePurchHeader.SetRange("Order No.", Rec."Initial Order No.");
+                                            if RecLInvoicePurchHeader.findFirst() then begin
                                                 RecLInvoicePurchHeader.FILTERGROUP(2);
-                                                PgeLInvoicePurchHeader.SETTABLEVIEW(RecLInvoicePurchHeader);
-                                                PgeLInvoicePurchHeader.RUNMODAL();
+                                                PgeLInvoicePurchHeader.SetTableView(RecLInvoicePurchHeader);
+                                                PgeLInvoicePurchHeader.RunModal();
                                             end
                                             else
-                                                ERROR(TextCdeTransport005);
+                                                Error(TextCdeTransport005);
                                         end;
                                     end;
                             end else
-                            ERROR(TextCdeTransport006);
+                            Error(TextCdeTransport006);
                     end;
                 }
             }

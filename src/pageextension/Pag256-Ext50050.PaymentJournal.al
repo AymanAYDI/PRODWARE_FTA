@@ -19,7 +19,7 @@ pageextension 50050 PaymentJournal extends "Payment Journal" //256
     }
     actions
     {
-        modify(SuggestVendorPayments)
+        Modify(SuggestVendorPayments)
         {
             Visible = false;
         }

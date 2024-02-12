@@ -5,7 +5,7 @@ reportextension 51001 InventoryValuation extends "Inventory Valuation" //1001
 {
     dataset
     {
-        modify(Item)
+        Modify(Item)
         {
             RequestFilterFields = "No.", "Inventory Posting Group", "Statistics Group", "Vendor No.";
             //DataItemTableView = SORTING("Search Description") ORDER(Ascending); //TODO

@@ -18,9 +18,9 @@ pageextension 50055 "BankAccountCard" extends "Bank Account Card" //370
                 var
                     PagLBankRecStat: Page "Bank Recon. Statement";
                 begin
-                    CLEAR(PagLBankRecStat);
+                    Clear(PagLBankRecStat);
                     PagLBankRecStat.GetBancAccountCode(rec."No.");
-                    PagLBankRecStat.RUN();
+                    PagLBankRecStat.Run();
                 end;
             }
         }

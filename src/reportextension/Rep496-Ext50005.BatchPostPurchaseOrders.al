@@ -6,7 +6,7 @@ reportextension 50005 "BatchPostPurchaseOrders" extends "Batch Post Purchase Ord
 {
     dataset
     {
-        modify("Purchase Header")
+        Modify("Purchase Header")
         {
             RequestFilterFields = "No.", Status, "Order Type";
             CalcFields = "Order Type";
@@ -28,17 +28,17 @@ reportextension 50005 "BatchPostPurchaseOrders" extends "Batch Post Purchase Ord
                 if ("Purchase Header"."Document Type" = "Purchase Header"."Document Type"::Order) and
                    ("Purchase Header".Receive) and
                    (CodGNumDoc <> '') then
-                    if (RecGPurchHeader.GET(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
-                        RecGPurchHeader.CALCFIELDS("Order Type");
+                    if (RecGPurchHeader.Get(RecGPurchHeader."Document Type"::Order, CodGNumDoc)) then begin
+                        RecGPurchHeader.CalcFields("Order Type");
                         if (RecGPurchHeader."Order Type" = RecGPurchHeader."Order Type"::Transport) then begin
 
                             //Cas 1 : 1 Cde achat transport li‚e … 1 seule Cde achat marchandise
                             if (RecGPurchHeader."Initial Order No." <> '') and
                                (RecGPurchHeader."Initial Order Type" <> RecGPurchHeader."Initial Order Type"::" ") then begin
                                 RecGPurchHeader.Receive := true;
-                                CLEAR(CuGPurchPost);
+                                Clear(CuGPurchPost);
                                 // CuGPurchPost.SetPostingDate(ReplacePostingDate, ReplaceDocumentDate, PostingDateReq);
-                                // CuGPurchPost.RUN(RecGPurchHeader); //TODO : verifier
+                                // CuGPurchPost.Run(RecGPurchHeader); //TODO : verifier
                                 PurchaseBatchPostMgt.RunBatch(RecGPurchHeader, ReplacePostingDate, PostingDateReq, ReplaceDocumentDate, CalcInvDisc, false, true);
                             end;
 
@@ -54,32 +54,32 @@ reportextension 50005 "BatchPostPurchaseOrders" extends "Batch Post Purchase Ord
                                 end;
 
                                 //Modification des lignes de la cde achat transport pour ne recevoir que la ligne achat li‚e … la cde achat marchandise
-                                RecGPurchLine.RESET();
-                                RecGPurchLine.SETRANGE("Document Type", RecGPurchHeader."Document Type");
-                                RecGPurchLine.SETRANGE("Document No.", RecGPurchHeader."No.");
-                                if RecGPurchLine.FINDSET(true) then
+                                RecGPurchLine.Reset();
+                                RecGPurchLine.SetRange("Document Type", RecGPurchHeader."Document Type");
+                                RecGPurchLine.SetRange("Document No.", RecGPurchHeader."No.");
+                                if RecGPurchLine.FindSet(true) then
                                     repeat
                                         if RecGPurchLine."Initial Order No." = CodGNumDocMarchandise then begin
                                             DecGQty := RecGPurchLine.Quantity;
-                                            RecGPurchLine.VALIDATE(Quantity, DecGQty);             //on valide la Qt‚ … recevoir pour la ligne achat li‚e
+                                            RecGPurchLine.Validate(Quantity, DecGQty);             //on valide la Qt‚ … recevoir pour la ligne achat li‚e
                                         end;
 
                                         if RecGPurchLine."Initial Order No." <> CodGNumDocMarchandise then
-                                            RecGPurchLine.VALIDATE("Qty. to Receive", 0);          //on met … 0 la Qt‚ … recevoir pr les autres lignes
+                                            RecGPurchLine.Validate("Qty. to Receive", 0);          //on met … 0 la Qt‚ … recevoir pr les autres lignes
 
-                                        RecGPurchLine.MODIFY();
-                                    until RecGPurchLine.NEXT() = 0;
+                                        RecGPurchLine.Modify();
+                                    until RecGPurchLine.Next() = 0;
 
                                 //Si la cde achat transport ‚tait lanc‚e, on referme la cde
                                 if BooGARefermer then
-                                    CuGReleasePurchaseDoc.RUN(RecGPurchHeader);
+                                    CuGReleasePurchaseDoc.Run(RecGPurchHeader);
 
                                 //On lance la r‚ception de la cde achat transport
                                 RecGPurchHeader.Receive := true;
-                                CLEAR(CuGPurchPost);
+                                Clear(CuGPurchPost);
                                 PurchaseBatchPostMgt.RunBatch(RecGPurchHeader, ReplacePostingDate, PostingDateReq, ReplaceDocumentDate, CalcInvDisc, false, true);
                                 // CuGPurchPost.SetPostingDate(ReplacePostingDate, ReplaceDocumentDate, PostingDateReq);
-                                // CuGPurchPost.RUN(RecGPurchHeader);//TODO : verifier
+                                // CuGPurchPost.Run(RecGPurchHeader);//TODO : verifier
 
                             end;  //Fin Cas 2
                         end;

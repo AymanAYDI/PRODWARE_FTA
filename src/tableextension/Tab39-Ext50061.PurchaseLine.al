@@ -57,30 +57,30 @@ tableextension 50061 PurchaseLine extends "Purchase Line" //39
                 BooLARefermer2: Boolean;
             begin
                 TestStatusOpen();
-                if RecLPurchHeader2.GET("Document Type", "Document No.") then
+                if RecLPurchHeader2.Get("Document Type", "Document No.") then
                     if (RecLPurchHeader2."Initial Order No." <> '') and
                        (RecLPurchHeader2."Initial Order Type" <> RecLPurchHeader2."Initial Order Type"::" ") then
-                        ERROR(STRSUBSTNO(TextCdeTransp001, RecLPurchHeader2."Initial Order Type", RecLPurchHeader2."Initial Order No."));
-                TESTFIELD("Qty. Rcd. Not Invoiced", 0);
-                TESTFIELD("Quantity Received", 0);
-                TESTFIELD("Receipt No.", '');
+                        Error(StrSubstNo(TextCdeTransp001, RecLPurchHeader2."Initial Order Type", RecLPurchHeader2."Initial Order No."));
+                TestField("Qty. Rcd. Not Invoiced", 0);
+                TestField("Quantity Received", 0);
+                TestField("Receipt No.", '');
 
-                TESTFIELD("Return Qty. Shipped Not Invd.", 0);
-                TESTFIELD("Return Qty. Shipped", 0);
-                TESTFIELD("Return Shipment No.", '');
+                TestField("Return Qty. Shipped Not Invd.", 0);
+                TestField("Return Qty. Shipped", 0);
+                TestField("Return Shipment No.", '');
                 BooLARefermer := false;
                 BooLARefermer2 := false;
 
-                if RecLPurchHeader.GET(RecLPurchHeader."Document Type"::Order, "Initial Order No.") then begin
+                if RecLPurchHeader.Get(RecLPurchHeader."Document Type"::Order, "Initial Order No.") then begin
                     if RecLPurchHeader.Status = RecLPurchHeader.Status::Released then begin
                         CuLReleasePurchDoc.Reopen(RecLPurchHeader);
                         BooLARefermer := true;
                     end;
-                    RecLPurchHeader.VALIDATE("Shipping Agent Code", "Buy-from Vendor No.");
-                    RecLPurchHeader.VALIDATE("Shipping Order No.", "Document No.");
-                    RecLPurchHeader.MODIFY();
+                    RecLPurchHeader.Validate("Shipping Agent Code", "Buy-from Vendor No.");
+                    RecLPurchHeader.Validate("Shipping Order No.", "Document No.");
+                    RecLPurchHeader.Modify();
                     if (xRec."Initial Order No." <> '') then begin
-                        if RecLPurchHeader3.GET(RecLPurchHeader3."Document Type"::Order, xRec."Initial Order No.") then begin
+                        if RecLPurchHeader3.Get(RecLPurchHeader3."Document Type"::Order, xRec."Initial Order No.") then begin
                             if RecLPurchHeader3.Status = RecLPurchHeader3.Status::Released then begin
                                 CuLReleasePurchDoc.Reopen(RecLPurchHeader3);
                                 BooLARefermer2 := true;
@@ -89,13 +89,13 @@ tableextension 50061 PurchaseLine extends "Purchase Line" //39
                             RecLPurchHeader3."Shipping Agent Name" := '';
                             RecLPurchHeader3."Shipping Order No." := '';
 
-                            RecLPurchHeader3.MODIFY();
+                            RecLPurchHeader3.Modify();
                         end;
                     end;
                 end
                 else
                     if (xRec."Initial Order No." <> '') and ("Initial Order No." = '') then begin
-                        if RecLPurchHeader.GET(RecLPurchHeader."Document Type"::Order, xRec."Initial Order No.") then begin
+                        if RecLPurchHeader.Get(RecLPurchHeader."Document Type"::Order, xRec."Initial Order No.") then begin
                             if RecLPurchHeader.Status = RecLPurchHeader.Status::Released then begin
                                 CuLReleasePurchDoc.Reopen(RecLPurchHeader);
                                 BooLARefermer := true;
@@ -104,13 +104,13 @@ tableextension 50061 PurchaseLine extends "Purchase Line" //39
                             RecLPurchHeader."Shipping Agent Name" := '';
                             RecLPurchHeader."Shipping Order No." := '';
 
-                            RecLPurchHeader.MODIFY();
+                            RecLPurchHeader.Modify();
                         end;
                     end;
                 if BooLARefermer then
-                    CuLReleasePurchDoc.RUN(RecLPurchHeader);
+                    CuLReleasePurchDoc.Run(RecLPurchHeader);
                 if BooLARefermer2 then
-                    CuLReleasePurchDoc.RUN(RecLPurchHeader3);
+                    CuLReleasePurchDoc.Run(RecLPurchHeader3);
             end;
         }
     }
@@ -127,23 +127,23 @@ tableextension 50061 PurchaseLine extends "Purchase Line" //39
         RecLPurchaseHeader: Record "Purchase Header";
     begin
         if ("Promised Receipt Date" <> xRec."Promised Receipt Date") and (Rec."Promised Receipt Date" <> 0D) then begin
-            RecLPurchaseHeader.GET("Document Type", "Document No.");
+            RecLPurchaseHeader.Get("Document Type", "Document No.");
 
-            RecLPurchaseLine.RESET();
-            RecLPurchaseLine.SETRANGE("Document Type", "Document Type");
-            RecLPurchaseLine.SETRANGE("Document No.", "Document No.");
-            RecLPurchaseLine.SETFILTER("Line No.", '<>%1', Rec."Line No.");
-            RecLPurchaseLine.SETRANGE("Promised Receipt Date", 0D);
-            RecLPurchaseLine.SETFILTER(Quantity, '<>%1', 0);
-            if not RecLPurchaseLine.ISEMPTY then
+            RecLPurchaseLine.Reset();
+            RecLPurchaseLine.SetRange("Document Type", "Document Type");
+            RecLPurchaseLine.SetRange("Document No.", "Document No.");
+            RecLPurchaseLine.SetFilter("Line No.", '<>%1', Rec."Line No.");
+            RecLPurchaseLine.SetRange("Promised Receipt Date", 0D);
+            RecLPurchaseLine.SetFilter(Quantity, '<>%1', 0);
+            if not RecLPurchaseLine.IsEmpty then
                 RecLPurchaseHeader."Confirmed AR Order" := false
             else
                 RecLPurchaseHeader."Confirmed AR Order" := true;
-            RecLPurchaseHeader.MODIFY(false);
+            RecLPurchaseHeader.Modify(false);
         end else begin
-            RecLPurchaseHeader.GET("Document Type", "Document No.");
+            RecLPurchaseHeader.Get("Document Type", "Document No.");
             RecLPurchaseHeader."Confirmed AR Order" := false;
-            RecLPurchaseHeader.MODIFY(false);
+            RecLPurchaseHeader.Modify(false);
         end;
     end;
 
@@ -152,12 +152,12 @@ tableextension 50061 PurchaseLine extends "Purchase Line" //39
         PurchasePrice: Record "Purchase Price";
         TxtCstMinPriceExist: Label 'There is a minimum quantity for the purchase price.';
     begin
-        PurchasePrice.RESET();
-        PurchasePrice.SETRANGE("Item No.", "No.");
-        PurchasePrice.SETRANGE("Vendor No.", VendorNo);
-        PurchasePrice.SETFILTER("Minimum Quantity", '>%1', 0);
-        if not PurchasePrice.ISEMPTY() then
-            MESSAGE(TxtCstMinPriceExist);
+        PurchasePrice.Reset();
+        PurchasePrice.SetRange("Item No.", "No.");
+        PurchasePrice.SetRange("Vendor No.", VendorNo);
+        PurchasePrice.SetFilter("Minimum Quantity", '>%1', 0);
+        if not PurchasePrice.IsEmpty() then
+            Message(TxtCstMinPriceExist);
     end;
 }
 

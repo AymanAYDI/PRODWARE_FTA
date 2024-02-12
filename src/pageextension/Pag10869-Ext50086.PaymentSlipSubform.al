@@ -4,16 +4,6 @@ using Microsoft.Bank.Payment;
 
 pageextension 50086 PaymentSlipSubform extends "Payment Slip Subform" //10869
 {
-    // ------------------------------------------------------------------------
-    // Prodware - www.prodware.fr
-    // ------------------------------------------------------------------------
-    // //>>EASY1.00
-    // NAVEASY:NI 20/06/2008 [Multi_Collectif]
-    //                           - Modification of Properties of Field "Posting Gr
-    //                             VISIBLE No => Yes
-    //                           - Add column "ID Lettrage"
-    // 
-    // ------------------------------------------------------------------------
     layout
     {
         addbefore("Account Type")

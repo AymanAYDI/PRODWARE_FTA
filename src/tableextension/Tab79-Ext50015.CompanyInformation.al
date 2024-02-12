@@ -1,6 +1,6 @@
 namespace Prodware.FTA;
 using Microsoft.Foundation.Company;
-tableextension 50015 CompanyInformation extends "Company Information" //79
+tableextension 50015 CompanyInFormation extends "Company InFormation" //79
 {
     fields
     {

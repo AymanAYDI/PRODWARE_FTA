@@ -6,11 +6,11 @@ pageextension 50098 "ApplyGLEntries" extends "Apply G/L Entries" //10842
 {
     actions
     {
-        modify(SetAppliesToID)
+        Modify(SetAppliesToID)
         {
             trigger OnAfterAction()
             begin
-                // EVALUATE(EntryApplID,USERID);
+                // EVALUATE(EntryApplID,UserId);
             end;
         }
     }

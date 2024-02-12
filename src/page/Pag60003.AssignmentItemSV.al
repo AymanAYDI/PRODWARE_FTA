@@ -17,8 +17,8 @@ page 60003 "Assignment ItemSV"
     //                              - Creation  g
 
     Caption = 'Assignment Item';
-    DataCaptionExpression = STRSUBSTNO('%1 %2 %3 %4 %5', FORMAT(Rec."Document Type"), Rec."Document No.", Rec.Type, Rec."No.", Rec.Description);
-    PageType = Card;
+    DataCaptionExpression = StrSubstNo('%1 %2 %3 %4 %5', Format(Rec."Document Type"), Rec."Document No.", Rec.Type, Rec."No.", Rec.Description);
+    PaGetype = Card;
     SourceTable = "Sales Line";
 
     layout
@@ -54,14 +54,14 @@ page 60003 "Assignment ItemSV"
                     FrmLItemLedgerEntries: Page "Item Ledger Entries";
 
                 begin
-                    RecLItemLedgerEntry.RESET();
-                    //ReclItemLedgerEntry.SETRANGE(Type,Type::Item);
-                    RecLItemLedgerEntry.SETRANGE("Item No.", Rec."No.");
+                    RecLItemLedgerEntry.Reset();
+                    //ReclItemLedgerEntry.SetRange(Type,Type::Item);
+                    RecLItemLedgerEntry.SetRange("Item No.", Rec."No.");
                     if Rec."Location Code" <> '' then
-                        RecLItemLedgerEntry.SETFILTER("Location Code", Rec."Location Code");
-                    RecLItemLedgerEntry.SETRANGE(Open, true);
-                    RecLItemLedgerEntry.SETFILTER("Drop Shipment", FORMAT(false));
-                    PAGE.RUNMODAL(Page::"Item Ledger Entries", RecLItemLedgerEntry);
+                        RecLItemLedgerEntry.SetFilter("Location Code", Rec."Location Code");
+                    RecLItemLedgerEntry.SetRange(Open, true);
+                    RecLItemLedgerEntry.SetFilter("Drop Shipment", Format(false));
+                    PAGE.RunModal(Page::"Item Ledger Entries", RecLItemLedgerEntry);
                 end;
             }
             field(DecGDisposalQtyPurchOrder; DecGDisposalQtyPurchOrder)
@@ -72,15 +72,15 @@ page 60003 "Assignment ItemSV"
                 ToolTip = 'Specifies the value of the Purchase not Reserved field.';
                 trigger OnLookup(var Text: Text): Boolean
                 begin
-                    RecGPurchLine.RESET();
-                    RecGPurchLine.SETRANGE(Type, Rec.Type::Item);
-                    RecGPurchLine.SETRANGE("No.", Rec."No.");
+                    RecGPurchLine.Reset();
+                    RecGPurchLine.SetRange(Type, Rec.Type::Item);
+                    RecGPurchLine.SetRange("No.", Rec."No.");
                     if Rec."Location Code" <> '' then
-                        RecGPurchLine.SETFILTER("Location Code", Rec."Location Code");
+                        RecGPurchLine.SetFilter("Location Code", Rec."Location Code");
                     if Rec."Shipment Date" <> 0D then
-                        RecGPurchLine.SETFILTER("Promised Receipt Date", '..%1', Rec."Shipment Date");
-                    RecGPurchLine.SETFILTER("Drop Shipment", FORMAT(false));
-                    PAGE.RUNMODAL(Page::"Purchase Lines", RecGPurchLine);
+                        RecGPurchLine.SetFilter("Promised Receipt Date", '..%1', Rec."Shipment Date");
+                    RecGPurchLine.SetFilter("Drop Shipment", Format(false));
+                    PAGE.RunModal(Page::"Purchase Lines", RecGPurchLine);
                 end;
             }
             field(EcrQtyKit; DecGQtyKit)
@@ -207,7 +207,7 @@ page 60003 "Assignment ItemSV"
                     AssignmentItem: Page "Assignment Item";
                 begin
                     //DecGxrecQuantityBase := "Quantity (Base)";
-                    RecLSalesLine.GET(Rec."Document Type", Rec."Document No.", Rec."Line No.");
+                    RecLSalesLine.Get(Rec."Document Type", Rec."Document No.", Rec."Line No.");
                     RecLSalesLine."Quantity (Base)" := Rec."Quantity (Base)" / Rec.Quantity * DecGQtyKit;
                     RecLSalesLine."Outstanding Qty. (Base)" := Rec."Outstanding Qty. (Base)" / Rec.Quantity * DecGQtyKit;
                     AssignmentItem.UpdateKitSales(RecLSalesLine, TempKitSalesLine);
@@ -281,69 +281,69 @@ page 60003 "Assignment ItemSV"
     begin
         FctCalcTotal();
         if DecGTotal > Rec.Quantity then
-            ERROR(CstG014, DecGTotal, Rec.Quantity);
+            Error(CstG014, DecGTotal, Rec.Quantity);
         BooGLineToBeCreate := false;
 
         //Assignment on stock,mono and multilevel Assembly,Disassembling,Assignment on order purchase,Remainder Generation
         if BooGAssemblyKit and (DecGQtyKit <> 0) then begin
             //IF DecGQtyKit > DecGDisposalQtyKit THEN
-            //  ERROR(CstG001,DecGQtyKit,CstG011,DecGDisposalQtyKit);
+            //  Error(CstG001,DecGQtyKit,CstG011,DecGDisposalQtyKit);
             if DecGQtyKit > Rec.Quantity then
-                ERROR(CstG002, DecGQtyKit, CstG011, Rec.Quantity);
+                Error(CstG002, DecGQtyKit, CstG011, Rec.Quantity);
             Rec.FctReserveOnKit(Rec, DecGQtyKit);
             BooGLineToBeCreate := true;
         end;
         if BooGAssignOnStock and (DecGQtyStock <> 0) then begin
             if DecGQtyStock > DecGDisposalQtyStock then
-                ERROR(CstG001, DecGQtyStock, CstG010, DecGDisposalQtyStock);
+                Error(CstG001, DecGQtyStock, CstG010, DecGDisposalQtyStock);
             if DecGQtyStock > Rec.Quantity then
-                ERROR(CstG002, DecGQtyStock, CstG010, Rec.Quantity);
+                Error(CstG002, DecGQtyStock, CstG010, Rec.Quantity);
             if BooGLineToBeCreate then begin
                 Rec.FctCreateSalesLine(Rec, DecGQtyStock, IntLLineNo);
-                if RecLSalesLine.GET(Rec."Document Type", Rec."Document No.", IntLLineNo) then
+                if RecLSalesLine.Get(Rec."Document Type", Rec."Document No.", IntLLineNo) then
                     Rec.FctReserveOnStock(RecLSalesLine, DecGQtyStock, RemainingQtyToReserveBase);
             end else begin
-                KitSalesLine.SETRANGE("Document Type", Rec."Document Type");
-                KitSalesLine.SETRANGE("Document No.", Rec."Document No.");
-                //KitSalesLine.SETRANGE("Document Line No.", Rec."Line No."); //TODO->Can't find Field 
-                KitSalesLine.DELETEALL();
+                KitSalesLine.SetRange("Document Type", Rec."Document Type");
+                KitSalesLine.SetRange("Document No.", Rec."Document No.");
+                //KitSalesLine.SetRange("Document Line No.", Rec."Line No."); //TODO->Can't Find Field 
+                KitSalesLine.DeleteALL();
                 Rec.FctReserveOnStock(Rec, DecGQtyStock, RemainingQtyToReserveBase);
             end;
             BooGLineToBeCreate := true;
         end;
         if BooGAssignOnOrder and (DecGQtyPurchOrder <> 0) then begin
             if DecGQtyPurchOrder > DecGDisposalQtyPurchOrder then
-                ERROR(CstG001, DecGQtyPurchOrder, CstG012, DecGDisposalQtyPurchOrder);
+                Error(CstG001, DecGQtyPurchOrder, CstG012, DecGDisposalQtyPurchOrder);
             if DecGQtyPurchOrder > Rec.Quantity then
-                ERROR(CstG002, DecGQtyPurchOrder, CstG012, Rec.Quantity);
+                Error(CstG002, DecGQtyPurchOrder, CstG012, Rec.Quantity);
             if BooGLineToBeCreate then begin
                 Rec.FctCreateSalesLine(Rec, DecGQtyPurchOrder, IntLLineNo);
-                if RecLSalesLine.GET(Rec."Document Type", Rec."Document No.", IntLLineNo) then
+                if RecLSalesLine.Get(Rec."Document Type", Rec."Document No.", IntLLineNo) then
                     Rec.FctReserveOnPurchLine(RecLSalesLine, DecGQtyPurchOrder);
             end else begin
-                KitSalesLine.SETRANGE("Document Type", Rec."Document Type");
-                KitSalesLine.SETRANGE("Document No.", Rec."Document No.");
-                // KitSalesLine.SETRANGE("Document Line No.", Rec."Line No.");//TODO->Can't find Field
-                KitSalesLine.DELETEALL();
+                KitSalesLine.SetRange("Document Type", Rec."Document Type");
+                KitSalesLine.SetRange("Document No.", Rec."Document No.");
+                // KitSalesLine.SetRange("Document Line No.", Rec."Line No.");//TODO->Can't Find Field
+                KitSalesLine.DeleteALL();
                 Rec.FctReserveOnPurchLine(Rec, DecGQtyPurchOrder);
             end;
             BooGLineToBeCreate := true;
         end;
         if DecGQtyRemainder > 0 then begin
             if DecGQtyRemainder > Rec.Quantity then
-                ERROR(CstG001, DecGQtyRemainder, CstG013, Rec.Quantity);
+                Error(CstG001, DecGQtyRemainder, CstG013, Rec.Quantity);
             if DecGQtyRemainder > Rec.Quantity then
-                ERROR(CstG002, DecGQtyRemainder, CstG013, Rec.Quantity);
+                Error(CstG002, DecGQtyRemainder, CstG013, Rec.Quantity);
             if BooGLineToBeCreate then
                 Rec.FctCreateSalesLine(Rec, DecGQtyRemainder, IntLLineNo)
             else begin
-                KitSalesLine.SETRANGE("Document Type", Rec."Document Type");
-                KitSalesLine.SETRANGE("Document No.", Rec."Document No.");
-                // KitSalesLine.SETRANGE("Document Line No.", Rec."Line No.");//TODO->Can't find Field
-                KitSalesLine.DELETEALL();
-                // "Build Kit" := false;//TODO->Can't find
+                KitSalesLine.SetRange("Document Type", Rec."Document Type");
+                KitSalesLine.SetRange("Document No.", Rec."Document No.");
+                // KitSalesLine.SetRange("Document Line No.", Rec."Line No.");//TODO->Can't Find Field
+                KitSalesLine.DeleteALL();
+                // "Build Kit" := false;//TODO->Can't Find
                 Rec."Preparation Type" := Rec."Preparation Type"::Remainder;
-                Rec.MODIFY();
+                Rec.Modify();
             end;
 
 
@@ -381,7 +381,7 @@ page 60003 "Assignment ItemSV"
     begin
         if DecGQtyKit <> 0 then begin
             BooGAssemblyKit := true;
-            RecLSalesLine.GET(Rec."Document Type", Rec."Document No.", Rec."Line No.");
+            RecLSalesLine.Get(Rec."Document Type", Rec."Document No.", Rec."Line No.");
             RecLSalesLine."Quantity (Base)" := Rec."Quantity (Base)" / Rec.Quantity * DecGQtyKit;
             RecLSalesLine."Outstanding Qty. (Base)" := Rec."Outstanding Qty. (Base)" / Rec.Quantity * DecGQtyKit;
             AssignmentItem.UpdateKitSales(RecLSalesLine, TempKitSalesLine);
@@ -397,24 +397,24 @@ page 60003 "Assignment ItemSV"
     local procedure LookupOKOnPush()
     begin
         FctButtonOK();
-        CurrPage.CLOSE();
+        CurrPage.Close();
     end;
 
     local procedure LookupCancelOnPush()
     var
         CstL001: Label 'Process cancelled';
     begin
-        KitSalesLine.SETRANGE("Document Type", Rec."Document Type");
-        KitSalesLine.SETRANGE("Document No.", Rec."Document No.");
-        // KitSalesLine.SETRANGE("Document Line No.", Rec."Line No.");//TODO->Can't find Field
-        KitSalesLine.DELETEALL();
-        // "Build Kit" := false;//TODO->Can't find
-        //MESSAGE(FORMAT(DecGxQuantity));
+        KitSalesLine.SetRange("Document Type", Rec."Document Type");
+        KitSalesLine.SetRange("Document No.", Rec."Document No.");
+        // KitSalesLine.SetRange("Document Line No.", Rec."Line No.");//TODO->Can't Find Field
+        KitSalesLine.DeleteALL();
+        // "Build Kit" := false;//TODO->Can't Find
+        //Message(Format(DecGxQuantity));
         Rec."Preparation Type" := OptGxPreparationType;
-        Rec.VALIDATE(Quantity, DecGxQuantity);
-        Rec.MODIFY();
-        MESSAGE(CstL001);
-        CurrPage.CLOSE();
+        Rec.Validate(Quantity, DecGxQuantity);
+        Rec.Modify();
+        Message(CstL001);
+        CurrPage.Close();
     end;
 }
 

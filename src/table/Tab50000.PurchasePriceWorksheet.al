@@ -34,7 +34,7 @@ table 50000 "Purchase Price Worksheet"
             var
                 Vend: Record Vendor;
             begin
-                if Vend.GET("Vendor No.") then
+                if Vend.Get("Vendor No.") then
                     "Currency Code" := Vend."Currency Code";
             end;
         }
@@ -52,7 +52,7 @@ table 50000 "Purchase Price Worksheet"
                 Text000: Label '%1 ne peut pas être postérieur(e) à %2';
             begin
                 if ("Starting Date" > "Ending Date") and ("Ending Date" <> 0D) then
-                    ERROR(Text000, FIELDCAPTION("Starting Date"), FIELDCAPTION("Ending Date"));
+                    Error(Text000, FieldCaption("Starting Date"), FieldCaption("Ending Date"));
             end;
         }
         field(5; "Current Unit Cost"; Decimal)
@@ -81,7 +81,7 @@ table 50000 "Purchase Price Worksheet"
 
             trigger OnValidate()
             begin
-                VALIDATE("Starting Date");
+                Validate("Starting Date");
             end;
         }
         field(5400; "Unit of Measure Code"; Code[10])
@@ -127,20 +127,20 @@ table 50000 "Purchase Price Worksheet"
 
     trigger OnRename()
     begin
-        TESTFIELD("Item No.");
+        TestField("Item No.");
     end;
 
     procedure CalcCurrentPrice(var PriceAlreadyExists: Boolean)
     var
         PurchPrice: Record "Purchase Price";
     begin
-        PurchPrice.SETRANGE("Item No.", "Item No.");
-        PurchPrice.SETRANGE("Currency Code", "Currency Code");
-        PurchPrice.SETRANGE("Unit of Measure Code", "Unit of Measure Code");
-        PurchPrice.SETRANGE("Starting Date", 0D, "Starting Date");
-        PurchPrice.SETRANGE("Minimum Quantity", 0, "Minimum Quantity");
-        PurchPrice.SETRANGE("Variant Code", "Variant Code");
-        if PurchPrice.FINDLAST() then begin
+        PurchPrice.SetRange("Item No.", "Item No.");
+        PurchPrice.SetRange("Currency Code", "Currency Code");
+        PurchPrice.SetRange("Unit of Measure Code", "Unit of Measure Code");
+        PurchPrice.SetRange("Starting Date", 0D, "Starting Date");
+        PurchPrice.SetRange("Minimum Quantity", 0, "Minimum Quantity");
+        PurchPrice.SetRange("Variant Code", "Variant Code");
+        if PurchPrice.FindLast() then begin
             "Current Unit Cost" := PurchPrice."Direct Unit Cost";
             PriceAlreadyExists := PurchPrice."Starting Date" = "Starting Date";
         end else begin

@@ -5,7 +5,7 @@ tableextension 50029 UnitofMeasure extends "Unit of Measure" //204
 {
     fields
     {
-        modify(Description)
+        Modify(Description)
         {
             Caption = 'Description';
         }

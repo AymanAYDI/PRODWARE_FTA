@@ -25,19 +25,19 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
                 //>>FED_20090415:PA 15/04/2009
                 if "Sell-to Customer No." <> '' then
                     if not ("Document Type" = "Document Type"::Invoice) and not ("Document Type" = "Document Type"::"Credit Memo") then begin
-                        if RecLSalesHeader.GET("Document Type", "No.") then begin
-                            //MESSAGE( "Sell-to Customer No.");
-                            RecLCommentLine.SETRANGE("Table Name", RecLCommentLine."Table Name"::Customer);
-                            RecLCommentLine.SETRANGE("No.", "Sell-to Customer No.");
-                            if RecLCommentLine.FINDFIRST() then
-                                CLEAR(FrmLCommentSheet);
-                            FrmLCommentSheet.SETTABLEVIEW(RecLCommentLine);
-                            FrmLCommentSheet.EDITABLE(false);
-                            FrmLCommentSheet.RUN();
+                        if RecLSalesHeader.Get("Document Type", "No.") then begin
+                            //Message( "Sell-to Customer No.");
+                            RecLCommentLine.SetRange("Table Name", RecLCommentLine."Table Name"::Customer);
+                            RecLCommentLine.SetRange("No.", "Sell-to Customer No.");
+                            if RecLCommentLine.findFirst() then
+                                Clear(FrmLCommentSheet);
+                            FrmLCommentSheet.SetTableView(RecLCommentLine);
+                            FrmLCommentSheet.Editable(false);
+                            FrmLCommentSheet.Run();
 
                         end;
 
-                        if RecGContact.GET("Sell-to Contact No.") then begin
+                        if RecGContact.Get("Sell-to Contact No.") then begin
                             "E-Mail" := RecGContact."E-Mail";
                             "Fax No." := RecGContact."Fax No.";
                             "Subject Mail" := '';
@@ -58,7 +58,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
             var
                 RecGContact: Record Contact;
             begin
-                if RecGContact.GET("Sell-to Contact No.") then begin
+                if RecGContact.Get("Sell-to Contact No.") then begin
                     "E-Mail" := RecGContact."E-Mail";
                     "Fax No." := RecGContact."Fax No.";
                     "Subject Mail" := '';
@@ -78,7 +78,7 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
         {
 
 
-            Description = 'NAVEASY.001 [Multi_Collectif] Propriété EDITABLE No => Yes';
+            Description = 'NAVEASY.001 [Multi_Collectif] Propriété Editable No => Yes';
         }
         modify("Promised Delivery Date")
         {
@@ -88,13 +88,13 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
 
 
                 if "Promised Delivery Date" <> 0D then
-                    "Planned Shipment Date" := CALCDATE("Shipping Time", "Promised Delivery Date")
+                    "Planned Shipment Date" := CalcDate("Shipping Time", "Promised Delivery Date")
                 else
                     if "Requested Delivery Date" <> 0D then
-                        "Planned Shipment Date" := CALCDATE("Shipping Time", "Requested Delivery Date");
+                        "Planned Shipment Date" := CalcDate("Shipping Time", "Requested Delivery Date");
 
                 if "Promised Delivery Date" <> 0D then
-                    VALIDATE("Order Shipment Date", CALCDATE('<-2D>', "Promised Delivery Date"));
+                    Validate("Order Shipment Date", CalcDate('<-2D>', "Promised Delivery Date"));
 
             end;
 
@@ -106,15 +106,15 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
 
 
                 if "Promised Delivery Date" <> 0D then
-                    "Planned Shipment Date" := CALCDATE("Shipping Time", "Promised Delivery Date")
+                    "Planned Shipment Date" := CalcDate("Shipping Time", "Promised Delivery Date")
                 else
                     if "Requested Delivery Date" <> 0D then
-                        "Planned Shipment Date" := CALCDATE("Shipping Time", "Requested Delivery Date");
+                        "Planned Shipment Date" := CalcDate("Shipping Time", "Requested Delivery Date");
 
 
 
                 if "Requested Delivery Date" <> 0D then
-                    VALIDATE("Order Shipment Date", CALCDATE('<-2D>', "Requested Delivery Date"));
+                    Validate("Order Shipment Date", CalcDate('<-2D>', "Requested Delivery Date"));
 
 
 
@@ -194,31 +194,31 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
                     exit;
 
                 if "Sell-to Customer No." <> '' then
-                    if Cont.GET("Sell-to Contact No.") then
-                        Cont.SETRANGE("Company No.", Cont."Company No.")
+                    if Cont.Get("Sell-to Contact No.") then
+                        Cont.SetRange("Company No.", Cont."Company No.")
                     else begin
-                        ContBusinessRelation.RESET();
-                        ContBusinessRelation.SETCURRENTKEY("Link to Table", "No.");
-                        ContBusinessRelation.SETRANGE("Link to Table", ContBusinessRelation."Link to Table"::Customer);
-                        ContBusinessRelation.SETRANGE("No.", "Sell-to Customer No.");
-                        if ContBusinessRelation.FINDFIRST() then
-                            Cont.SETRANGE("Company No.", ContBusinessRelation."Contact No.")
+                        ContBusinessRelation.Reset();
+                        ContBusinessRelation.SetCurrentKey("Link to Table", "No.");
+                        ContBusinessRelation.SetRange("Link to Table", ContBusinessRelation."Link to Table"::Customer);
+                        ContBusinessRelation.SetRange("No.", "Sell-to Customer No.");
+                        if ContBusinessRelation.findFirst() then
+                            Cont.SetRange("Company No.", ContBusinessRelation."Contact No.")
                         else
-                            Cont.SETRANGE("No.", '');
+                            Cont.SetRange("No.", '');
                     end;
                 if "Sell-to Contact No." <> '' then
-                    if Cont.GET("Sell-to Contact No.") then;
+                    if Cont.Get("Sell-to Contact No.") then;
 
 
-                ContactListPage.SETTABLEVIEW(Cont);
-                ContactListPage.SETRECORD(Cont);
-                ContactListPage.LOOKUPMODE(true);
-                ContactListPage.EDITABLE(false);
-                if ContactListPage.RUNMODAL() = ACTION::LookupOK then begin
-                    // IF PAGE.RUNMODAL(0,Cont) = ACTION::LookupOK THEN BEGIN
+                ContactListPage.SetTableView(Cont);
+                ContactListPage.SetRecord(Cont);
+                ContactListPage.LookupMode(true);
+                ContactListPage.Editable(false);
+                if ContactListPage.RunModal() = ACTION::LookupOK then begin
+                    // IF PAGE.RunModal(0,Cont) = ACTION::LookupOK THEN BEGIN
                     // xRec := Rec;
-                    ContactListPage.GETRECORD(Cont);
-                    VALIDATE("E-Mail", Cont."E-Mail");
+                    ContactListPage.GetRecord(Cont);
+                    Validate("E-Mail", Cont."E-Mail");
                 end;
             end;
         }
@@ -250,8 +250,8 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
             var
                 RecLUserSetup: Record "User Setup";
             begin
-                RecLUserSetup.GET(USERID);
-                RecLUserSetup.TESTFIELD("Allowed To Modify Cust Dispute");
+                RecLUserSetup.Get(UserId);
+                RecLUserSetup.TestField("Allowed To Modify Cust Dispute");
             end;
         }
         field(50012; Preparer; Text[30])
@@ -356,31 +356,31 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
     local procedure CalcShipment(): Boolean
 
     begin
-        if ShippingAgent.GET("Shipping Agent Code") then
+        if ShippingAgent.Get("Shipping Agent Code") then
             case ShippingAgent."Shipping Costs" of
                 ShippingAgent."Shipping Costs"::" ":
                     begin
                         DeleteOpenShipCostLine();
-                        MESSAGE('Pas de frais de port et d''emballage.');
+                        Message('Pas de frais de port et d''emballage.');
                         exit(true);
                     end;
                 ShippingAgent."Shipping Costs"::Manual:
                     begin
                         DeleteOpenShipCostLine();
-                        MESSAGE('Veuillez ajouter manuellement les frais de port.');
+                        Message('Veuillez ajouter manuellement les frais de port.');
                         exit(true);
                     end;
                 ShippingAgent."Shipping Costs"::"Pick-up":
                     begin
                         DeleteOpenShipCostLine();
-                        MESSAGE('Enlèvement, ajout des frais d''emballage.');
+                        Message('Enlèvement, ajout des frais d''emballage.');
                         exit(true);
                     end;
                 ShippingAgent."Shipping Costs"::Automatic:
                     begin
                         if "Total weight" >= 30 then
                             DeleteOpenShipCostLine();
-                        MESSAGE('Poids dépassé. Ajouter un colis ou changer de transporteur.');
+                        Message('Poids dépassé. Ajouter un colis ou changer de transporteur.');
                         exit(true);
                     end else
                             InsertShipLineToOrder();
@@ -394,12 +394,12 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
     begin
 
 
-        LRecSalesLine.RESET();
-        LRecSalesLine.SETRANGE("Document Type", Rec."Document Type");
-        LRecSalesLine.SETRANGE("Document No.", Rec."No.");
+        LRecSalesLine.Reset();
+        LRecSalesLine.SetRange("Document Type", Rec."Document Type");
+        LRecSalesLine.SetRange("Document No.", Rec."No.");
 
-        LRecSalesLine.SETRANGE("Prepare", true);
-        LRecSalesLine.CALCSUMS(Amount);
+        LRecSalesLine.SetRange("Prepare", true);
+        LRecSalesLine.CalcSums(Amount);
         exit(LRecSalesLine.Amount);
     end;
 
@@ -408,12 +408,12 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
     var
         SalesLIne: Record "Sales line";
     begin
-        SalesLIne.RESET();
-        SalesLIne.SETRANGE("Document Type", Rec."Document Type");
-        SalesLIne.SETRANGE("Document No.", Rec."No.");
-        SalesLIne.SETRANGE("Shipping Costs", true);
-        SalesLIne.SETFILTER("Outstanding Quantity", '<>%1', 0);
-        SalesLIne.DELETEALL(false);
+        SalesLIne.Reset();
+        SalesLIne.SetRange("Document Type", Rec."Document Type");
+        SalesLIne.SetRange("Document No.", Rec."No.");
+        SalesLIne.SetRange("Shipping Costs", true);
+        SalesLIne.SetFilter("Outstanding Quantity", '<>%1', 0);
+        SalesLIne.DeleteALL(false);
     end;
 
     local procedure InsertShipLineToOrder()
@@ -426,41 +426,41 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
 
     begin
 
-        ShippingCostsCarrier.RESET();
-        ShippingCostsCarrier.SETRANGE("Shipping Agent Code", Rec."Shipping Agent Code");
-        ShippingCostsCarrier.SETFILTER("Min. Weight", '<=%1', Rec."Total weight");
-        ShippingCostsCarrier.SETFILTER("Max. Weight", '>=%1', Rec."Total weight");
-        if ShippingCostsCarrier.FINDFIRST() then begin
-            if CONFIRM('Une ligne de frais de port va être ajoutée. Voulez-vous continuer ?', true, true) then
-                SalesLine.RESET();
-            SalesLine.SETRANGE("Document Type", Rec."Document Type");
-            SalesLine.SETRANGE("Document No.", Rec."No.");
-            if SalesLine.FINDLAST() then
+        ShippingCostsCarrier.Reset();
+        ShippingCostsCarrier.SetRange("Shipping Agent Code", Rec."Shipping Agent Code");
+        ShippingCostsCarrier.SetFilter("Min. Weight", '<=%1', Rec."Total weight");
+        ShippingCostsCarrier.SetFilter("Max. Weight", '>=%1', Rec."Total weight");
+        if ShippingCostsCarrier.findFirst() then begin
+            if Confirm('Une ligne de frais de port va être ajoutée. Voulez-vous continuer ?', true, true) then
+                SalesLine.Reset();
+            SalesLine.SetRange("Document Type", Rec."Document Type");
+            SalesLine.SetRange("Document No.", Rec."No.");
+            if SalesLine.FindLast() then
                 LineNo := SalesLine."Line No."
             else
                 LineNo := 0;
 
-            ShippingCostsCarrier.TESTFIELD("Item No.");
+            ShippingCostsCarrier.TestField("Item No.");
 
-            SalesLine.SETRANGE("No.", ShippingCostsCarrier."Item No.");
-            SalesLine.SETFILTER("Outstanding Quantity", '<>%1', 0);
-            if SalesLine.FINDFIRST() then begin
+            SalesLine.SetRange("No.", ShippingCostsCarrier."Item No.");
+            SalesLine.SetFilter("Outstanding Quantity", '<>%1', 0);
+            if SalesLine.findFirst() then begin
                 ReleaseSalesDoc.PerformManualReopen(Rec);
                 SalesLine.Quantity := 1;
-                SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
-                SalesLine.MODIFY();
+                SalesLine.Validate("Unit Price", ShippingCostsCarrier."Cost Amount");
+                SalesLine.Modify();
             end else begin
                 ReleaseSalesDoc.PerformManualReopen(Rec);
-                SalesLine.INIT();
+                SalesLine.Init();
                 SalesLine."Document Type" := Rec."Document Type";
                 SalesLine."Document No." := Rec."No.";
                 SalesLine."Line No." := LineNo + 10000;
                 SalesLine.Type := SalesLine.Type::Item;
-                SalesLine.VALIDATE("No.", ShippingCostsCarrier."Item No.");
-                SalesLine.VALIDATE(Quantity, 1);
-                SalesLine.VALIDATE("Unit Price", ShippingCostsCarrier."Cost Amount");
+                SalesLine.Validate("No.", ShippingCostsCarrier."Item No.");
+                SalesLine.Validate(Quantity, 1);
+                SalesLine.Validate("Unit Price", ShippingCostsCarrier."Cost Amount");
                 SalesLine."Shipping Costs" := true;
-                SalesLine.INSERT();
+                SalesLine.Insert();
             end;
         end;
 
@@ -480,41 +480,41 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
         //IF ("Total Weight" <>  0) AND ("Total Parcels" <> 0) THEN
         if "Total Parcels" > 1 then begin
             DeleteOpenShipCostLine();
-            MESSAGE('2 colis et plus, veuillez ajouter manuellement les frais de port.');
+            Message('2 colis et plus, veuillez ajouter manuellement les frais de port.');
             exit(true);
         end;
 
         if "Sell-to Country/Region Code" <> 'FR' then begin
             DeleteOpenShipCostLine();
-            MESSAGE('Livraison à l''etrangé, veuillez ajouter manuellement les frais de port.');
+            Message('Livraison à l''etrangé, veuillez ajouter manuellement les frais de port.');
             exit(true);
         end;
 
         if "Shipment Method Code" <> '' then
-            if ShipmentMethod.GET("Shipment Method Code") then
+            if ShipmentMethod.Get("Shipment Method Code") then
                 case ShipmentMethod."Shipping Costs" of
                     ShipmentMethod."Shipping Costs"::" ":
                         begin
                             DeleteOpenShipCostLine();
-                            MESSAGE('Pas de frais de port et d''emballage.');
+                            Message('Pas de frais de port et d''emballage.');
                             exit(true);
                             TotalSalesLineAmountPrepare()
                         end;
                     ShipmentMethod."Shipping Costs"::Manual:
                         begin
                             DeleteOpenShipCostLine();
-                            MESSAGE('Veuillez ajouter manuellement les frais de port.');
+                            Message('Veuillez ajouter manuellement les frais de port.');
                             exit(true);
                         end;
                     ShipmentMethod."Shipping Costs"::Franco:
                         begin
-                            Rec.CALCFIELDS("Franco Amount");
+                            Rec.CalcFields("Franco Amount");
 
                             if (TotalSalesLineAmountPrepare() > Rec."Franco Amount") and
                             (TotalSalesLineAmountPrepare() = Rec."Franco Amount")
                              then begin
                                 DeleteOpenShipCostLine();
-                                MESSAGE('Franco dépassé, pas de frais de port et d''emballage');
+                                Message('Franco dépassé, pas de frais de port et d''emballage');
                                 exit(true);
                             end else
                                 CalcShipment();
@@ -539,12 +539,12 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
     var
         RecLPurchHeader: Record "Purchase Header";
         //"--NAVEASY.001  Integer ;
-        TextCdeTransp002: label 'ENU=There is a Shipping Purchase order linked (Order %1), do you want to delete this order?;FRA=Il existe une commande d''achat tranport li‚e (Commande %1), voulez-vous supprimer cette commande?';
+        TextCdeTransp002: label 'ENU=There is a Shipping Purchase order linked (Order %1), do you want to Delete this order?;FRA=Il existe une commande d''achat tranport li‚e (Commande %1), voulez-vous supprimer cette commande?';
     begin
 
         if "Shipping Order No." <> '' then
-            if CONFIRM(STRSUBSTNO(TextCdeTransp002, "Shipping Order No.")) then
-                if RecLPurchHeader.GET(RecLPurchHeader."Document Type"::Order, "Shipping Order No.") then RecLPurchHeader.DELETE(true);
+            if Confirm(StrSubstNo(TextCdeTransp002, "Shipping Order No.")) then
+                if RecLPurchHeader.Get(RecLPurchHeader."Document Type"::Order, "Shipping Order No.") then RecLPurchHeader.Delete(true);
 
     end;
 
@@ -562,11 +562,11 @@ tableextension 50009 SalesHeader extends "Sales Header" //36
         specFrmGLignesCommentaires: Page "Comment Sheet";
 
 
-        CstL001: Label 'This change can delete the reservation of the lines : do want to continue?';
+        CstL001: Label 'This change can Delete the reservation of the lines : do want to continue?';
         CstL002: Label 'Canceled operation';
 
 
-        TextCdeTransp003: Label 'You cannot modify Shipping Code agent because there is a Shipping Purchase Order linked (Order %1) !!';
+        TextCdeTransp003: Label 'You cannot Modify Shipping Code agent because there is a Shipping Purchase Order linked (Order %1) !!';
 
 
 

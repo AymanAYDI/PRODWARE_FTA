@@ -78,7 +78,7 @@ report 51018 "Sales - Quote FTA"
                     column(CompanyInfo1Picture; CompanyInfo1.Picture)
                     {
                     }
-                    column(SalesCopyText; STRSUBSTNO(Text004, CopyText))
+                    column(SalesCopyText; StrSubstNo(Text004, CopyText))
                     {
                     }
                     column(CustAddr1; CustAddr[1])
@@ -135,7 +135,7 @@ report 51018 "Sales - Quote FTA"
                     column(BilltoCustNo_SalesHeader; "Sales Header"."Bill-to Customer No.")
                     {
                     }
-                    column(DocDate_SalesHeader; FORMAT("Sales Header"."Document Date"))
+                    column(DocDate_SalesHeader; Format("Sales Header"."Document Date"))
                     {
                     }
                     column(VATNoText; VATNoText)
@@ -144,7 +144,7 @@ report 51018 "Sales - Quote FTA"
                     column(VATRegNo_SalesHeader; "Sales Header"."VAT Registration No.")
                     {
                     }
-                    column(ShipmentDate_SalesHeader; FORMAT("Sales Header"."Shipment Date"))
+                    column(ShipmentDate_SalesHeader; Format("Sales Header"."Shipment Date"))
                     {
                     }
                     column(SalesPersonText; SalesPersonText)
@@ -153,13 +153,13 @@ report 51018 "Sales - Quote FTA"
                     column(SalesPurchPersonName; SalesPurchPerson.Name)
                     {
                     }
-                    column(SalesPurchPersonPhoneNoCaption; SalesPurchPerson.FIELDCAPTION("Phone No."))
+                    column(SalesPurchPersonPhoneNoCaption; SalesPurchPerson.FieldCaption("Phone No."))
                     {
                     }
                     column(SalesPurchPersonPhoneNo; SalesPurchPerson."Phone No.")
                     {
                     }
-                    column(SalesPurchPersonEMailCaption; SalesPurchPerson.FIELDCAPTION("E-Mail"))
+                    column(SalesPurchPersonEMailCaption; SalesPurchPerson.FieldCaption("E-Mail"))
                     {
                     }
                     column(SalesPurchPersonEMail; SalesPurchPerson."E-Mail")
@@ -189,13 +189,13 @@ report 51018 "Sales - Quote FTA"
                     column(PricesIncludingVAT_SalesHdr; "Sales Header"."Prices Including VAT")
                     {
                     }
-                    column(PageCaption; STRSUBSTNO(Text005, ''))
+                    column(PageCaption; StrSubstNo(Text005, ''))
                     {
                     }
                     column(OutputNo; OutputNo)
                     {
                     }
-                    column(PricesInclVATYesNo_SalesHdr; FORMAT("Sales Header"."Prices Including VAT"))
+                    column(PricesInclVATYesNo_SalesHdr; Format("Sales Header"."Prices Including VAT"))
                     {
                     }
                     column(CompanyInfoPhoneNoCaption; CompanyInfoPhoneNoCaptionLbl)
@@ -219,10 +219,10 @@ report 51018 "Sales - Quote FTA"
                     column(SalesHeaderNoCaption; SalesHeaderNoCaptionLbl)
                     {
                     }
-                    column(BilltoCustNo_SalesHeaderCaption; "Sales Header".FIELDCAPTION("Bill-to Customer No."))
+                    column(BilltoCustNo_SalesHeaderCaption; "Sales Header".FieldCaption("Bill-to Customer No."))
                     {
                     }
-                    column(PricesIncludingVAT_SalesHdrCaption; "Sales Header".FIELDCAPTION("Prices Including VAT"))
+                    column(PricesIncludingVAT_SalesHdrCaption; "Sales Header".FieldCaption("Prices Including VAT"))
                     {
                     }
                     column(CompanyInfoFaxNo; CompanyInfo."Fax No.")
@@ -384,34 +384,34 @@ report 51018 "Sales - Quote FTA"
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then begin
-                                if not DimSetEntry1.FINDSET then
-                                    CurrReport.BREAK;
+                                if not DimSetEntry1.FindSet() then
+                                    CurrReport.Break();
                             end else
                                 if not Continue then
-                                    CurrReport.BREAK;
+                                    CurrReport.Break();
 
-                            CLEAR(DimText);
+                            Clear(DimText);
                             Continue := false;
                             repeat
                                 OldDimText := DimText;
                                 if DimText = '' then
-                                    DimText := STRSUBSTNO('%1 %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                    DimText := StrSubstNo('%1 %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
                                 else
                                     DimText :=
-                                      STRSUBSTNO(
+                                      StrSubstNo(
                                         '%1, %2 %3', DimText, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
-                                if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                if StrLen(DimText) > MaxStrLen(OldDimText) then begin
                                     DimText := OldDimText;
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry1.NEXT = 0;
+                            until DimSetEntry1.Next() = 0;
                         end;
 
                         trigger OnPreDataItem()
                         begin
                             if not ShowInternalInfo then
-                                CurrReport.BREAK;
+                                CurrReport.Break();
                         end;
                     }
                     dataitem("Sales Line"; "Sales Line")
@@ -423,7 +423,7 @@ report 51018 "Sales - Quote FTA"
 
                         trigger OnPreDataItem()
                         begin
-                            CurrReport.BREAK;
+                            CurrReport.Break();
                         end;
                     }
                     dataitem(RoundLoop; Integer)
@@ -446,7 +446,7 @@ report 51018 "Sales - Quote FTA"
                         column(RecGItemNo2; RecGItem."No. 2")
                         {
                         }
-                        column(SalesLinePlannedDeliveryDate; FORMAT("Sales Line"."Planned Delivery Date", 0, 1))
+                        column(SalesLinePlannedDeliveryDate; Format("Sales Line"."Planned Delivery Date", 0, 1))
                         {
                         }
                         column(Quantity_SalesLine; "Sales Line".Quantity)
@@ -478,13 +478,13 @@ report 51018 "Sales - Quote FTA"
                         column(VATIdentifier_SalesLine; "Sales Line"."VAT Identifier")
                         {
                         }
-                        column(Type_SalesLine; FORMAT("Sales Line".Type))
+                        column(Type_SalesLine; Format("Sales Line".Type))
                         {
                         }
                         column(No1_SalesLine; "Sales Line"."Line No.")
                         {
                         }
-                        column(AllowInvoiceDisYesNo; FORMAT("Sales Line"."Allow Invoice Disc."))
+                        column(AllowInvoiceDisYesNo; Format("Sales Line"."Allow Invoice Disc."))
                         {
                         }
                         column(InvDiscountAmount_SalesLine; -SalesLine."Inv. Discount Amount")
@@ -500,7 +500,7 @@ report 51018 "Sales - Quote FTA"
                             AutoFormatExpression = "Sales Header"."Currency Code";
                             AutoFormatType = 1;
                         }
-                        column(VATAmtLineVATAmtTxt; VATAmountLine.VATAmountText)
+                        column(VATAmtLineVATAmtTxt; VATAmountLine.VATAmountText())
                         {
                         }
                         column(TotalExclVATText; TotalExclVATText)
@@ -547,16 +547,16 @@ report 51018 "Sales - Quote FTA"
                         column(VATDiscountAmountCaption; VATDiscountAmountCaptionLbl)
                         {
                         }
-                        column(No_SalesLineCaption; "Sales Line".FIELDCAPTION("No."))
+                        column(No_SalesLineCaption; "Sales Line".FieldCaption("No."))
                         {
                         }
-                        column(Desc_SalesLineCaption; "Sales Line".FIELDCAPTION(Description))
+                        column(Desc_SalesLineCaption; "Sales Line".FieldCaption(Description))
                         {
                         }
-                        column(Quantity_SalesLineCaption; "Sales Line".FIELDCAPTION(Quantity))
+                        column(Quantity_SalesLineCaption; "Sales Line".FieldCaption(Quantity))
                         {
                         }
-                        column(UnitofMeasure_SalesLineCaption; "Sales Line".FIELDCAPTION("Unit of Measure"))
+                        column(UnitofMeasure_SalesLineCaption; "Sales Line".FieldCaption("Unit of Measure"))
                         {
                         }
                         column(ItemNo2; RecGItem."No. 2")
@@ -588,46 +588,46 @@ report 51018 "Sales - Quote FTA"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then begin
-                                    if not DimSetEntry2.FINDSET then
-                                        CurrReport.BREAK;
+                                    if not DimSetEntry2.FindSet() then
+                                        CurrReport.Break();
                                 end else
                                     if not Continue then
-                                        CurrReport.BREAK;
+                                        CurrReport.Break();
 
-                                CLEAR(DimText);
+                                Clear(DimText);
                                 Continue := false;
                                 repeat
                                     OldDimText := DimText;
                                     if DimText = '' then
-                                        DimText := STRSUBSTNO('%1 %2', DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
+                                        DimText := StrSubstNo('%1 %2', DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
                                     else
                                         DimText :=
-                                          STRSUBSTNO(
+                                          StrSubstNo(
                                             '%1, %2 %3', DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
-                                    if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                    if StrLen(DimText) > MaxStrLen(OldDimText) then begin
                                         DimText := OldDimText;
                                         Continue := true;
                                         exit;
                                     end;
-                                until DimSetEntry2.NEXT = 0;
+                                until DimSetEntry2.Next() = 0;
                             end;
 
                             trigger OnPreDataItem()
                             begin
                                 if not ShowInternalInfo then
-                                    CurrReport.BREAK;
+                                    CurrReport.Break();
 
-                                DimSetEntry2.SETRANGE("Dimension Set ID", "Sales Line"."Dimension Set ID");
+                                DimSetEntry2.SetRange("Dimension Set ID", "Sales Line"."Dimension Set ID");
                             end;
                         }
 
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then
-                                SalesLine.Findfirst()
+                                SalesLine.findFirst()
                             else
-                                SalesLine.NEXT;
+                                SalesLine.Next();
                             "Sales Line" := SalesLine;
 
                             if not "Sales Header"."Prices Including VAT" and
@@ -646,19 +646,19 @@ report 51018 "Sales - Quote FTA"
 
                             //>>FExxxx.001
                             if ("Sales Line".Type = "Sales Line".Type::Item) and ("Sales Line"."No." <> '') then begin
-                                RecGItem.GET("Sales Line"."No.");
+                                RecGItem.Get("Sales Line"."No.");
                                 //>>FTA.REPORTS2018-0607
                                 //item description
                                 SalesLineDescription := RecGItem.Description;
                                 //<<FTA.REPORTS2018-0607
 
                             end else begin
-                                RecGItem.INIT;
+                                RecGItem.Init();
                             end;
 
-                            CLEAR(DecGNetUnitPriceExcludingVAT);
+                            Clear(DecGNetUnitPriceExcludingVAT);
                             if ("Sales Line"."Line Discount %" <> 0) and ("Sales Line".Quantity <> 0) then begin
-                                DecGNetUnitPriceExcludingVAT := ROUND(("Sales Line"."Line Amount" / "Sales Line".Quantity), GLSetup."Amount Rounding Precision");
+                                DecGNetUnitPriceExcludingVAT := Round(("Sales Line"."Line Amount" / "Sales Line".Quantity), GLSetup."Amount Rounding Precision");
                             end else begin
                                 DecGNetUnitPriceExcludingVAT := "Sales Line"."Unit Price";
                             end;
@@ -671,7 +671,7 @@ report 51018 "Sales - Quote FTA"
 
                         trigger OnPostDataItem()
                         begin
-                            SalesLine.DELETEALL;
+                            SalesLine.DeleteALL();
                         end;
 
                         trigger OnPreDataItem()
@@ -681,12 +681,12 @@ report 51018 "Sales - Quote FTA"
                                   (SalesLine."No." = '') and (SalesLine.Quantity = 0) and
                                   (SalesLine.Amount = 0)
                             do
-                                MoreLines := SalesLine.NEXT(-1) <> 0;
+                                MoreLines := SalesLine.Next(-1) <> 0;
                             if not MoreLines then
-                                CurrReport.BREAK;
-                            SalesLine.SETRANGE("Line No.", 0, SalesLine."Line No.");
-                            SETRANGE(Number, 1, SalesLine.COUNT);
-                            CurrReport.CREATETOTALS(SalesLine."Line Amount", SalesLine."Inv. Discount Amount");
+                                CurrReport.Break();
+                            SalesLine.SetRange("Line No.", 0, SalesLine."Line No.");
+                            SetRange(Number, 1, SalesLine.Count);
+                            CurrReport.CreateTotals(SalesLine."Line Amount", SalesLine."Inv. Discount Amount");
                         end;
                     }
                     dataitem(VATCounter; Integer)
@@ -757,9 +757,9 @@ report 51018 "Sales - Quote FTA"
                         trigger OnPreDataItem()
                         begin
                             if VATAmount = 0 then
-                                CurrReport.BREAK;
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
-                            CurrReport.CREATETOTALS(
+                                CurrReport.Break();
+                            SetRange(Number, 1, VATAmountLine.Count);
+                            CurrReport.CreateTotals(
                               VATAmountLine."Line Amount", VATAmountLine."Inv. Disc. Base Amount",
                               VATAmountLine."Invoice Discount Amount", VATAmountLine."VAT Base", VATAmountLine."VAT Amount");
                         end;
@@ -804,20 +804,20 @@ report 51018 "Sales - Quote FTA"
                         begin
                             if (not GLSetup."Print VAT specification in LCY") or
                                ("Sales Header"."Currency Code" = '') or
-                               (VATAmountLine.GetTotalVATAmount = 0)
+                               (VATAmountLine.GetTotalVATAmount() = 0)
                             then
-                                CurrReport.BREAK;
+                                CurrReport.Break();
 
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
-                            CurrReport.CREATETOTALS(VALVATBaseLCY, VALVATAmountLCY);
+                            SetRange(Number, 1, VATAmountLine.Count);
+                            CurrReport.CreateTotals(VALVATBaseLCY, VALVATAmountLCY);
 
                             if GLSetup."LCY Code" = '' then
                                 VALSpecLCYHeader := Text008 + Text009
                             else
-                                VALSpecLCYHeader := Text008 + FORMAT(GLSetup."LCY Code");
+                                VALSpecLCYHeader := Text008 + Format(GLSetup."LCY Code");
 
                             CurrExchRate.FindCurrency("Sales Header"."Order Date", "Sales Header"."Currency Code", 1);
-                            VALExchRate := STRSUBSTNO(Text010, CurrExchRate."Relational Exch. Rate Amount", CurrExchRate."Exchange Rate Amount");
+                            VALExchRate := StrSubstNo(Text010, CurrExchRate."Relational Exch. Rate Amount", CurrExchRate."Exchange Rate Amount");
                         end;
                     }
                     dataitem(Total; Integer)
@@ -856,7 +856,7 @@ report 51018 "Sales - Quote FTA"
                         column(ShipToAddr8; ShipToAddr[8])
                         {
                         }
-                        column(SelltoCustNo_SalesHeaderCaption; "Sales Header".FIELDCAPTION("Sell-to Customer No."))
+                        column(SelltoCustNo_SalesHeaderCaption; "Sales Header".FieldCaption("Sell-to Customer No."))
                         {
                         }
 
@@ -865,7 +865,7 @@ report 51018 "Sales - Quote FTA"
                             //>>PW
                             /*//OLD
                             IF NOT ShowShippingAddr THEN
-                              CurrReport.BREAK;
+                              CurrReport.Break;
                             */
                             //<<PW
 
@@ -877,18 +877,18 @@ report 51018 "Sales - Quote FTA"
                 var
                     SalesPost: Codeunit "80";
                 begin
-                    CLEAR(SalesLine);
-                    CLEAR(SalesPost);
-                    SalesLine.DELETEALL;
-                    VATAmountLine.DELETEALL;
+                    Clear(SalesLine);
+                    Clear(SalesPost);
+                    SalesLine.DeleteALL();
+                    VATAmountLine.DeleteALL();
                     SalesPost.GetSalesLines("Sales Header", SalesLine, 0);
                     SalesLine.CalcVATAmountLines(0, "Sales Header", SalesLine, VATAmountLine);
                     SalesLine.UpdateVATOnLines(0, "Sales Header", SalesLine, VATAmountLine);
-                    VATAmount := VATAmountLine.GetTotalVATAmount;
-                    VATBaseAmount := VATAmountLine.GetTotalVATBase;
+                    VATAmount := VATAmountLine.GetTotalVATAmount();
+                    VATBaseAmount := VATAmountLine.GetTotalVATBase();
                     VATDiscountAmount :=
                       VATAmountLine.GetTotalVATDiscount("Sales Header"."Currency Code", "Sales Header"."Prices Including VAT");
-                    TotalAmountInclVAT := VATAmountLine.GetTotalAmountInclVAT;
+                    TotalAmountInclVAT := VATAmountLine.GetTotalAmountInclVAT();
 
                     if Number > 1 then begin
                         CopyText := Text003;
@@ -900,14 +900,14 @@ report 51018 "Sales - Quote FTA"
                 trigger OnPostDataItem()
                 begin
                     if Print then
-                        SalesCountPrinted.RUN("Sales Header");
+                        SalesCountPrinted.Run("Sales Header");
                 end;
 
                 trigger OnPreDataItem()
                 begin
-                    NoOfLoops := ABS(NoOfCopies) + 1;
+                    NoOfLoops := Abs(NoOfCopies) + 1;
                     CopyText := '';
-                    SETRANGE(Number, 1, NoOfLoops);
+                    SetRange(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
@@ -919,56 +919,56 @@ report 51018 "Sales - Quote FTA"
             begin
                 CurrReport.LANGUAGE := Language.GetLanguageIDOrDefault("Language Code");
 
-                if RespCenter.GET("Responsibility Center") then begin
+                if RespCenter.Get("Responsibility Center") then begin
                     FormatAddr.RespCenter(CompanyAddr, RespCenter);
                     CompanyInfo."Phone No." := RespCenter."Phone No.";
                     CompanyInfo."Fax No." := RespCenter."Fax No.";
                 end else
                     FormatAddr.Company(CompanyAddr, CompanyInfo);
 
-                DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
+                DimSetEntry1.SetRange("Dimension Set ID", "Dimension Set ID");
 
                 if "Salesperson Code" = '' then begin
-                    SalesPurchPerson.INIT;
+                    SalesPurchPerson.Init();
                     SalesPersonText := '';
                 end else begin
-                    SalesPurchPerson.GET("Salesperson Code");
+                    SalesPurchPerson.Get("Salesperson Code");
                     SalesPersonText := Text000;
                 end;
                 if "Your Reference" = '' then
                     ReferenceText := ''
                 else
-                    ReferenceText := FIELDCAPTION("Your Reference");
+                    ReferenceText := FieldCaption("Your Reference");
                 if "VAT Registration No." = '' then
                     VATNoText := ''
                 else
-                    VATNoText := FIELDCAPTION("VAT Registration No.");
+                    VATNoText := FieldCaption("VAT Registration No.");
                 if "Currency Code" = '' then begin
-                    GLSetup.TESTFIELD("LCY Code");
-                    TotalText := STRSUBSTNO(Text001, GLSetup."LCY Code");
-                    TotalInclVATText := STRSUBSTNO(Text002, GLSetup."LCY Code");
-                    TotalExclVATText := STRSUBSTNO(Text006, GLSetup."LCY Code");
+                    GLSetup.TestField("LCY Code");
+                    TotalText := StrSubstNo(Text001, GLSetup."LCY Code");
+                    TotalInclVATText := StrSubstNo(Text002, GLSetup."LCY Code");
+                    TotalExclVATText := StrSubstNo(Text006, GLSetup."LCY Code");
                 end else begin
-                    TotalText := STRSUBSTNO(Text001, "Currency Code");
-                    TotalInclVATText := STRSUBSTNO(Text002, "Currency Code");
-                    TotalExclVATText := STRSUBSTNO(Text006, "Currency Code");
+                    TotalText := StrSubstNo(Text001, "Currency Code");
+                    TotalInclVATText := StrSubstNo(Text002, "Currency Code");
+                    TotalExclVATText := StrSubstNo(Text006, "Currency Code");
                 end;
                 FormatAddr.SalesHeaderBillTo(CustAddr, "Sales Header");
 
                 if "Payment Terms Code" = '' then
-                    PaymentTerms.INIT
+                    PaymentTerms.Init()
                 else begin
-                    PaymentTerms.GET("Payment Terms Code");
+                    PaymentTerms.Get("Payment Terms Code");
                     PaymentTerms.TranslateDescription(PaymentTerms, "Language Code");
                 end;
                 if "Shipment Method Code" = '' then
-                    ShipmentMethod.INIT
+                    ShipmentMethod.Init()
                 else begin
-                    ShipmentMethod.GET("Shipment Method Code");
+                    ShipmentMethod.Get("Shipment Method Code");
                     ShipmentMethod.TranslateDescription(ShipmentMethod, "Language Code");
                 end;
 
-                if Country.GET("Sell-to Country/Region Code") then
+                if Country.Get("Sell-to Country/Region Code") then
                     "Sell-to Country" := Country.Name;
                 FormatAddr.SalesHeaderShipTo(ShipToAddr, CustAddr, "Sales Header");//TODO VErifier
 
@@ -985,7 +985,7 @@ report 51018 "Sales - Quote FTA"
                         ArchiveManagement.StoreSalesDocument("Sales Header", LogInteraction);
 
                     if LogInteraction then begin
-                        CALCFIELDS("No. of Archived Versions");
+                        CalcFields("No. of Archived Versions");
                         if "Bill-to Contact No." <> '' then
                             SegManagement.LogDocument(
                               1, "No.", "Doc. No. Occurrence",
@@ -998,46 +998,46 @@ report 51018 "Sales - Quote FTA"
                               "Salesperson Code", "Campaign No.", "Posting Description", "Opportunity No.");
                     end;
                 end;
-                MARK(true);
+                Mark(true);
 
                 //>>PW
                 TxtGOurReferences := "Sell-to Customer No.";
                 if "Sell-to Customer No." <> "Bill-to Customer No." then
                     TxtGOurReferences := TxtGOurReferences + ' / ' + "Bill-to Customer No.";
 
-                CLEAR(RecGPaymentMethod);
-                if "Sales Header"."Payment Method Code" <> '' then RecGPaymentMethod.GET("Payment Method Code");
+                Clear(RecGPaymentMethod);
+                if "Sales Header"."Payment Method Code" <> '' then RecGPaymentMethod.Get("Payment Method Code");
 
                 if "Currency Code" = '' then
                     TxtGCodeDevise := GLSetup."LCY Code"
                 else
                     TxtGCodeDevise := "Currency Code";
 
-                if RecLCurrency.GET(TxtGCodeDevise) then
+                if RecLCurrency.Get(TxtGCodeDevise) then
                     TxtGLibDevise := RecLCurrency.Description;
 
                 if "Prepmt. Payment Terms Code" = '' then
-                    PrepmtPaymentTerms.INIT
+                    PrepmtPaymentTerms.Init()
                 else begin
-                    PrepmtPaymentTerms.GET("Prepmt. Payment Terms Code");
+                    PrepmtPaymentTerms.Get("Prepmt. Payment Terms Code");
                     PrepmtPaymentTerms.TranslateDescription(PrepmtPaymentTerms, "Language Code");
                 end;
 
-                if not RecGCustomer.GET("Sell-to Customer No.") then
-                    RecGCustomer.INIT;
+                if not RecGCustomer.Get("Sell-to Customer No.") then
+                    RecGCustomer.Init();
 
                 //Read Contact
-                if not RecGContact.GET("Sales Header"."Sell-to Contact No.") then
-                    CLEAR(RecGContact);
+                if not RecGContact.Get("Sales Header"."Sell-to Contact No.") then
+                    Clear(RecGContact);
 
-                CLEAR(TxtGMailFax);
+                Clear(TxtGMailFax);
                 if BoolGPrintFax then begin
 
-                    CompanyInfo.TESTFIELD(CompanyInfo."ECOM ID");
-                    RecGUserSetup.GET(USERID);
-                    RecGUserSetup.TESTFIELD("E-Mail");
+                    CompanyInfo.TestField(CompanyInfo."ECOM ID");
+                    RecGUserSetup.Get(UserId);
+                    RecGUserSetup.TestField("E-Mail");
                     TxtGMailFax[1] := 'ID:' + CompanyInfo."ECOM ID" + ' ' + '!';
-                    TESTFIELD("Fax No.");
+                    TestField("Fax No.");
                     TxtGMailFax[2] := 'Email:' + RecGUserSetup."E-Mail" + ' ' + '!';
                     TxtGMailFax[3] := 'Fax:' + "Fax No." + ' ' + '!';
 
@@ -1052,19 +1052,19 @@ report 51018 "Sales - Quote FTA"
             //     ToDo: Record "5080";
             //     FileManagement: Codeunit "419";
             // begin
-            //     MARKEDONLY := TRUE;
-            //     COMMIT;
+            //     MarkedOnly := TRUE;
+            //     Commit;
             //     CurrReport.LANGUAGE := GLOBALLANGUAGE;
             //     IF NOT FileManagement.IsWebClient THEN
-            //         IF Findfirst() AND ToDo.WRITEPERMISSION THEN
+            //         IF findFirst() AND ToDo.WritePERMISSION THEN
             //             IF Print AND (NoOfRecords = 1) THEN
-            //                 IF CONFIRM(Text007) THEN
+            //                 IF Confirm(Text007) THEN
             //                     CreateTodo;
             // end;
 
             trigger OnPreDataItem()
             begin
-                NoOfRecords := COUNT;
+                NoOfRecords := Count;
                 Print := Print or not CurrReport.PREVIEW;
             end;
         }
@@ -1087,7 +1087,7 @@ report 51018 "Sales - Quote FTA"
                     }
                     field(ShowInternalInfo; ShowInternalInfo)
                     {
-                        Caption = 'Show Internal Information';
+                        Caption = 'Show Internal InFormation';
                     }
                     field(ArchiveDocument; ArchiveDocument)
                     {
@@ -1148,34 +1148,34 @@ report 51018 "Sales - Quote FTA"
 
     trigger OnInitReport()
     begin
-        GLSetup.GET;
-        CompanyInfo.GET;
-        SalesSetup.GET;
+        GLSetup.Get();
+        CompanyInfo.Get();
+        SalesSetup.Get();
 
         case SalesSetup."Logo Position on Documents" of
             SalesSetup."Logo Position on Documents"::"No Logo":
                 ;
             SalesSetup."Logo Position on Documents"::Left:
                 begin
-                    CompanyInfo3.GET;
-                    CompanyInfo3.CALCFIELDS(Picture);
+                    CompanyInfo3.Get();
+                    CompanyInfo3.CalcFields(Picture);
                 end;
             SalesSetup."Logo Position on Documents"::Center:
                 begin
-                    CompanyInfo1.GET;
-                    CompanyInfo1.CALCFIELDS(Picture);
+                    CompanyInfo1.Get();
+                    CompanyInfo1.CalcFields(Picture);
                 end;
             SalesSetup."Logo Position on Documents"::Right:
                 begin
-                    CompanyInfo2.GET;
-                    CompanyInfo2.CALCFIELDS(Picture);
+                    CompanyInfo2.Get();
+                    CompanyInfo2.CalcFields(Picture);
                 end;
         end;
 
-        if RecGUserReport.GET(USERID, 51018) then begin
+        if RecGUserReport.Get(UserId, 51018) then begin
             if RecGUserReport.Email then begin
-                CompanyInfo3.GET;
-                CompanyInfo3.CALCFIELDS(Picture);
+                CompanyInfo3.Get();
+                CompanyInfo3.CalcFields(Picture);
             end;
         end;
     end;
@@ -1186,8 +1186,8 @@ report 51018 "Sales - Quote FTA"
             BooGPrintLogo := true;
 
         if BooGPrintLogo then begin
-            CompanyInfo3.GET;
-            CompanyInfo3.CALCFIELDS(Picture);
+            CompanyInfo3.Get();
+            CompanyInfo3.CalcFields(Picture);
         end;
     end;
 
@@ -1195,7 +1195,7 @@ report 51018 "Sales - Quote FTA"
         Text000: Label 'Salesperson';
         Text001: Label 'Total %1';
         Text002: Label 'Total %1 Incl. VAT';
-        Text003: Label 'COPY';
+        Text003: Label 'Copy';
         Text004: Label 'Quote %1';
         Text005: Label 'Page %1';
         Text006: Label 'Total %1 Excl. VAT';
@@ -1344,7 +1344,7 @@ report 51018 "Sales - Quote FTA"
         SalesLineDescription: Text[50];
         LblFrancoAmount: Label 'Franco Amount: ';
 
-    [Scope('Internal')]
+
     procedure InitializeRequest(NoOfCopiesFrom: Integer; ShowInternalInfoFrom: Boolean; ArchiveDocumentFrom: Boolean; LogInteractionFrom: Boolean; PrintFrom: Boolean)
     begin
         NoOfCopies := NoOfCopiesFrom;

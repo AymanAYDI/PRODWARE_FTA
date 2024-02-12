@@ -23,7 +23,7 @@ pageextension 50049 CashReceiptJournal extends "Cash Receipt Journal" //255
             }
 
         }
-        modify("Reason Code")
+        Modify("Reason Code")
         {
             Visible = true;
         }

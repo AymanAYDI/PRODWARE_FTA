@@ -206,7 +206,7 @@ table 60014 "Rep Ecr Compta"
         RecLRepBalTiers: Record "Rep Bal Cli";
     begin
         if "Entry No." = 0 then
-            if RecLRepBalTiers.FINDLAST() then
+            if RecLRepBalTiers.FindLast() then
                 "Entry No." := RecLRepBalTiers."Entry No." + 1
             else
                 "Entry No." := 1;

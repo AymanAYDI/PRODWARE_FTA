@@ -22,7 +22,7 @@ pageextension 50045 ApplyVendorEntries extends "Apply Vendor Entries" //233
 
         addafter("Vendor No.")
         {
-            field(VendorName; Rec.getVendorName(Rec."Vendor No."))
+            field(VendorName; Rec.GetVendorName(Rec."Vendor No."))
             {
                 Caption = 'Name';
                 ApplicationArea = All;
@@ -51,11 +51,11 @@ pageextension 50045 ApplyVendorEntries extends "Apply Vendor Entries" //233
     begin
         if (CodLPostingGroup <> '') then
             if CodLAppliesID <> '' then begin
-                RecLVendorLedgEntry.RESET();
-                RecLVendorLedgEntry.SETCURRENTKEY("Applies-to ID");
-                RecLVendorLedgEntry.SETRANGE("Applies-to ID", CodLAppliesID);
-                RecLVendorLedgEntry.SETFILTER("Vendor Posting Group", '<>%1', CodLPostingGroup);
-                if RecLVendorLedgEntry.FINDFIRST() then ERROR(STRSUBSTNO(TxtErrorPostingGroup001, CodLPostingGroup));
+                RecLVendorLedgEntry.Reset();
+                RecLVendorLedgEntry.SetCurrentKey("Applies-to ID");
+                RecLVendorLedgEntry.SetRange("Applies-to ID", CodLAppliesID);
+                RecLVendorLedgEntry.SetFilter("Vendor Posting Group", '<>%1', CodLPostingGroup);
+                if RecLVendorLedgEntry.findFirst() then Error(StrSubstNo(TxtErrorPostingGroup001, CodLPostingGroup));
             end;
     end;
 }

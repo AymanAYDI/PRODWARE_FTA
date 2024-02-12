@@ -5,7 +5,7 @@ reportextension 50001 "CloseIncomeStatement" extends "Close Income Statement" //
 {
     dataset
     {
-        modify("G/L Entry")
+        Modify("G/L Entry")
         {
             trigger OnAfterPreDataItem()
             begin

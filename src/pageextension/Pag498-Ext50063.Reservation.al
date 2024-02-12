@@ -26,7 +26,7 @@ pageextension 50063 Reservation extends Reservation //498
     }
     // actions
     // {
-    //     modify("Reserve from Current Line")
+    //     Modify("Reserve from Current Line")
     //     {
     //         trigger On()
     //         var
@@ -35,7 +35,7 @@ pageextension 50063 Reservation extends Reservation //498
 
     //         end;
     //     }
-    //     modify(CancelReservationCurrentLine)
+    //     Modify(CancelReservationCurrentLine)
     //     {
     //         Visible = false;
     //     }

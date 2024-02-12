@@ -6,7 +6,7 @@ page 50002 "Purchase Price Worksheet"
     Caption = 'Purchase Price Worksheet';
     DelayedInsert = true;
     UsageCategory = Lists;
-    PageType = List;
+    PaGetype = List;
     SaveValues = true;
     SourceTable = "Purchase Price Worksheet";
     ApplicationArea = All;
@@ -87,7 +87,7 @@ page 50002 "Purchase Price Worksheet"
                     ToolTip = 'Executes the Suggest &Item Price on Wksh. action.';
                     trigger OnAction()
                     begin
-                        REPORT.RUNMODAL(REPORT::"Suggest Item Price on Wksh.", true, true);
+                        REPORT.RunModal(REPORT::"Suggest Item Price on Wksh.", true, true);
                     end;
                 }
                 action("Suggest &Purchase Price on Wksh.")
@@ -97,7 +97,7 @@ page 50002 "Purchase Price Worksheet"
                     ToolTip = 'Executes the Suggest &Purchase Price on Wksh. action.';
                     trigger OnAction()
                     begin
-                        REPORT.RUNMODAL(REPORT::"Suggest Purch. Price on Wksh.", true, true);
+                        REPORT.RunModal(REPORT::"Suggest Purch. Price on Wksh.", true, true);
                     end;
                 }
                 action("I&mplement Price Change")
@@ -107,7 +107,7 @@ page 50002 "Purchase Price Worksheet"
                     ToolTip = 'Executes the I&mplement Price Change action.';
                     trigger OnAction()
                     begin
-                        REPORT.RUNMODAL(REPORT::"Implement Purch. Price Change", true, true, Rec);
+                        REPORT.RunModal(REPORT::"Implement Purch. Price Change", true, true, Rec);
                     end;
                 }
             }

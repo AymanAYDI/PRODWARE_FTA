@@ -18,20 +18,20 @@ report 50014 "TPL Update Order"
 
 
 
-                RecLPurchaseLine.RESET();
-                RecLPurchaseLine.SETRANGE("Document Type", "Document Type");
-                RecLPurchaseLine.SETRANGE("Document No.", "No.");
-                RecLPurchaseLine.SETRANGE("Promised Receipt Date", 0D);
-                RecLPurchaseLine.SETFILTER(Quantity, '<>%1', 0);
-                if RecLPurchaseLine.ISEMPTY then begin
+                RecLPurchaseLine.Reset();
+                RecLPurchaseLine.SetRange("Document Type", "Document Type");
+                RecLPurchaseLine.SetRange("Document No.", "No.");
+                RecLPurchaseLine.SetRange("Promised Receipt Date", 0D);
+                RecLPurchaseLine.SetFilter(Quantity, '<>%1', 0);
+                if RecLPurchaseLine.IsEmpty then begin
                     "Confirmed AR Order" := true;
-                    MODIFY(false);
+                    Modify(false);
                 end;
             end;
 
             trigger OnPostDataItem()
             begin
-                MESSAGE('Terminé');
+                Message('Terminé');
             end;
         }
     }

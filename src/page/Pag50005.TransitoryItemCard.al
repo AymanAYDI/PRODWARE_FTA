@@ -28,7 +28,7 @@ page 50005 "Transitory Item Card"
 {
 
     Caption = 'Transitory Item Card';
-    PageType = Card;
+    PaGetype = Card;
     RefreshOnActivate = true;
     SourceTable = Item;
     SourceTableView = where("Item Base" = filter(Transitory));
@@ -47,7 +47,7 @@ page 50005 "Transitory Item Card"
                     trigger OnAssistEdit()
                     begin
                         if Rec.AssistEdit() then
-                            CurrPage.UPDATE();
+                            CurrPage.Update();
                     end;
 
                     trigger OnValidate()
@@ -61,7 +61,7 @@ page 50005 "Transitory Item Card"
                 }
                 field("Shelf No."; Rec."Shelf No.")
                 {
-                    ToolTip = 'Specifies where to find the item in the warehouse. This is informational only.';
+                    ToolTip = 'Specifies where to Find the item in the warehouse. This is inFormational only.';
                 }
                 field(Description; Rec.Description)
                 {
@@ -69,11 +69,11 @@ page 50005 "Transitory Item Card"
                 }
                 field("Description 2"; Rec."Description 2")
                 {
-                    ToolTip = 'Specifies information in addition to the description.';
+                    ToolTip = 'Specifies inFormation in addition to the description.';
                 }
                 field("Search Description"; Rec."Search Description")
                 {
-                    ToolTip = 'Specifies a search description that you use to find the item in lists.';
+                    ToolTip = 'Specifies a search description that you use to Find the item in lists.';
                 }
                 field("Customer Code"; Rec."Customer Code")
                 {
@@ -254,7 +254,7 @@ page 50005 "Transitory Item Card"
                 field("Dampener Period"; Rec."Dampener Period")
                 {
                     Enabled = DampenerPeriodEnable;
-                    ToolTip = 'Specifies a period of time during which you do not want the planning system to propose to reschedule existing supply orders forward. The dampener period limits the number of insignificant rescheduling of existing supply to a later date if that new date is within the dampener period. The dampener period function is only initiated if the supply can be rescheduled to a later date and not if the supply can be rescheduled to an earlier date. Accordingly, if the suggested new supply date is after the dampener period, then the rescheduling suggestion is not blocked. If the lot accumulation period is less than the dampener period, then the dampener period is dynamically set to equal the lot accumulation period. This is not shown in the value that you enter in the Dampener Period field. The last demand in the lot accumulation period is used to determine whether a potential supply date is in the dampener period. If this field is empty, then the value in the Default Dampener Period field in the Manufacturing Setup window applies. The value that you enter in the Dampener Period field must be a date formula, and one day (1D) is the shortest allowed period.';
+                    ToolTip = 'Specifies a period of time during which you do not want the planning system to propose to reschedule existing supply orders forward. The dampener period limits the number of insignificant rescheduling of existing supply to a later date if that new date is within the dampener period. The dampener period function is only Initiated if the supply can be rescheduled to a later date and not if the supply can be rescheduled to an earlier date. Accordingly, if the suggested new supply date is after the dampener period, then the rescheduling suggestion is not blocked. If the lot accumulation period is less than the dampener period, then the dampener period is dynamically set to equal the lot accumulation period. This is not shown in the value that you enter in the Dampener Period field. The last demand in the lot accumulation period is used to determine whether a potential supply date is in the dampener period. If this field is empty, then the value in the Default Dampener Period field in the Manufacturing Setup window applies. The value that you enter in the Dampener Period field must be a date formula, and one day (1D) is the shortest allowed period.';
                 }
                 field("Dampener Quantity"; Rec."Dampener Quantity")
                 {
@@ -357,7 +357,7 @@ page 50005 "Transitory Item Card"
                             field("Order Multiple"; Rec."Order Multiple")
                             {
                                 Enabled = OrderMultipleEnable;
-                                ToolTip = 'Specifies a parameter used by the planning system to modify the quantity of planned supply orders.';
+                                ToolTip = 'Specifies a parameter used by the planning system to Modify the quantity of planned supply orders.';
                             }
                         }
                     }
@@ -431,7 +431,7 @@ page 50005 "Transitory Item Card"
                         ToolTip = 'Executes the &Value Entries action.';
                     }
                     action("Item &Tracking Entries")
-                    {  //TODO -> can't find CallItemTrackingEntryForm
+                    {  //TODO -> can't Find CallItemTrackingEntryForm
                         Caption = 'Item &Tracking Entries';
                         Image = ItemTrackingLedger;
                         Visible = false;
@@ -483,7 +483,7 @@ page 50005 "Transitory Item Card"
                             ItemStatistics: Page "Item Statistics";
                         begin
                             ItemStatistics.SetItem(Rec);
-                            ItemStatistics.RUNMODAL();
+                            ItemStatistics.RunModal();
                         end;
                     }
                     action("Entry Statistics")
@@ -526,8 +526,8 @@ page 50005 "Transitory Item Card"
                     var
                         ItemsByLocation: Page "Items by Location";
                     begin
-                        ItemsByLocation.SETRECORD(Rec);
-                        ItemsByLocation.RUN();
+                        ItemsByLocation.SetRecord(Rec);
+                        ItemsByLocation.Run();
                     end;
                 }
                 group("&Item Availability by")
@@ -706,8 +706,8 @@ page 50005 "Transitory Item Card"
                         var
                             ProdBOMWhereUsed: Page "Prod. BOM Where-Used";
                         begin
-                            ProdBOMWhereUsed.SetItem(Rec, WORKDATE());
-                            ProdBOMWhereUsed.RUNMODAL();
+                            ProdBOMWhereUsed.SetItem(Rec, WorkDate());
+                            ProdBOMWhereUsed.RunModal();
                         end;
                     }
                     action("K-Calc. Stan&dard Cost")
@@ -718,7 +718,7 @@ page 50005 "Transitory Item Card"
                         ToolTip = 'Executes the Calc. Stan&dard Cost action.';
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcItem(Rec."No.", true);
                         end;
                     }
@@ -737,8 +737,8 @@ page 50005 "Transitory Item Card"
                         var
                             ProdBOMWhereUsed: Page "Prod. BOM Where-Used";
                         begin
-                            ProdBOMWhereUsed.SetItem(Rec, WORKDATE());
-                            ProdBOMWhereUsed.RUNMODAL();
+                            ProdBOMWhereUsed.SetItem(Rec, WorkDate());
+                            ProdBOMWhereUsed.RunModal();
                         end;
                     }
                     action("M-Calc. Stan&dard Cost")
@@ -749,7 +749,7 @@ page 50005 "Transitory Item Card"
                         ToolTip = 'Executes the Calc. Stan&dard Cost action.';
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcItem(Rec."No.", false);
                         end;
                     }
@@ -818,9 +818,9 @@ page 50005 "Transitory Item Card"
                         var
                             ResourceSkill: Record "Resource Skill";
                         begin
-                            CLEAR(SkilledResourceList);
+                            Clear(SkilledResourceList);
                             SkilledResourceList.Initialize(ResourceSkill.Type::Item, Rec."No.", Rec.Description);
-                            SkilledResourceList.RUNMODAL();
+                            SkilledResourceList.RunModal();
                         end;
                     }
                 }
@@ -897,8 +897,8 @@ page 50005 "Transitory Item Card"
                     var
                         Item: Record "Item";
                     begin
-                        Item.SETRANGE("No.", Rec."No.");
-                        REPORT.RUNMODAL(REPORT::"Create Stockkeeping Unit", true, false, Item);
+                        Item.SetRange("No.", Rec."No.");
+                        REPORT.RunModal(REPORT::"Create Stockkeeping Unit", true, false, Item);
                     end;
                 }
                 action("C&alculate Counting Period")
@@ -928,7 +928,7 @@ page 50005 "Transitory Item Card"
                         TemplateMgt: Codeunit "Config. Template Management";
                         RecRef: RecordRef;
                     begin
-                        RecRef.GETTABLE(Rec);
+                        RecRef.GetTable(Rec);
                         TemplateMgt.UpdateFromTemplateSelection(RecRef);
                     end;
                 }
@@ -941,11 +941,11 @@ page 50005 "Transitory Item Card"
                     var
                         RecLItem: Record "Item";
                     begin
-                        CLEAR(RecLItem);
-                        RecLItem.SETRANGE("No.", Rec."No.");
-                        //Record.SETRECFILTER()
-                        //Report.SETTABLEVIEW(Reclitem)
-                        REPORT.RUNMODAL(50004, true, false, RecLItem)
+                        Clear(RecLItem);
+                        RecLItem.SetRange("No.", Rec."No.");
+                        //Record.SetRecFilter()
+                        //Report.SetTableView(Reclitem)
+                        REPORT.RunModal(50004, true, false, RecLItem)
                     end;
                 }
                 action("Calulation Unit price")
@@ -957,11 +957,11 @@ page 50005 "Transitory Item Card"
                     var
                         RecLItem: Record "Item";
                     begin
-                        CLEAR(RecLItem);
-                        RecLItem.SETRANGE("No.", Rec."No.");
-                        //Record.SETRECFILTER()
-                        //Report.SETTABLEVIEW(Reclitem)
-                        REPORT.RUNMODAL(50007, true, false, RecLItem)
+                        Clear(RecLItem);
+                        RecLItem.SetRange("No.", Rec."No.");
+                        //Record.SetRecFilter()
+                        //Report.SetTableView(Reclitem)
+                        REPORT.RunModal(50007, true, false, RecLItem)
                     end;
                 }
                 action("Calculation Kit Price")
@@ -974,9 +974,9 @@ page 50005 "Transitory Item Card"
                     var
                         RecLItem: Record "Item";
                     begin
-                        CLEAR(RecLItem);
-                        RecLItem.SETRANGE("No.", Rec."No.");
-                        REPORT.RUNMODAL(50008, true, false, RecLItem);
+                        Clear(RecLItem);
+                        RecLItem.SetRange("No.", Rec."No.");
+                        REPORT.RunModal(50008, true, false, RecLItem);
                     end;
                 }
                 action("Calc. Stan&dard Cost")
@@ -987,7 +987,7 @@ page 50005 "Transitory Item Card"
                     ToolTip = 'Executes the Calc. Stan&dard Cost action.';
                     trigger OnAction()
                     begin
-                        CLEAR(CalculateStdCost);
+                        Clear(CalculateStdCost);
                         CalculateStdCost.CalcItem(Rec."No.", true);
                     end;
                 }
@@ -1000,12 +1000,12 @@ page 50005 "Transitory Item Card"
                     var
                         RecLItem: Record "Item";
                     begin
-                        CLEAR(RecLItem);
+                        Clear(RecLItem);
                         RecLItem := Rec;
-                        RecLItem.SETRANGE("No.", Rec."No.");
-                        RecLItem.SETRECFILTER();
-                        //Report.SETTABLEVIEW(Reclitem)
-                        REPORT.RUNMODAL(50009, true, false, RecLItem);
+                        RecLItem.SetRange("No.", Rec."No.");
+                        RecLItem.SetRecFilter();
+                        //Report.SetTableView(Reclitem)
+                        REPORT.RunModal(50009, true, false, RecLItem);
                     end;
                 }
             }
@@ -1026,7 +1026,7 @@ page 50005 "Transitory Item Card"
 
     trigger OnAfterGetRecord()
     begin
-        Rec.SETRANGE(Rec."No.");
+        Rec.SetRange(Rec."No.");
         EnablePlanningControls();
         EnableCostingControls();
     end;
@@ -1123,12 +1123,12 @@ page 50005 "Transitory Item Card"
     var
         RecLItem: Record "Item";
     begin
-        CLEAR(RecLItem);
+        Clear(RecLItem);
         RecLItem := Rec;
-        RecLItem.SETRANGE("No.", Rec."No.");
-        RecLItem.SETRECFILTER();
-        //Report.SETTABLEVIEW(Reclitem)
-        REPORT.RUNMODAL(50009, false, false, RecLItem);
+        RecLItem.SetRange("No.", Rec."No.");
+        RecLItem.SetRecFilter();
+        //Report.SetTableView(Reclitem)
+        REPORT.RunModal(50009, false, false, RecLItem);
     end;
 
 }

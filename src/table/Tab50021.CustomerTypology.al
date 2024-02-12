@@ -34,9 +34,9 @@ table 50021 "Customer Typology"
 
     trigger OnDelete()
     begin
-        ExtTextHeader.SETRANGE("Table Name", ExtTextHeader."Table Name"::"Standard Text");
-        ExtTextHeader.SETRANGE("No.", Code);
-        ExtTextHeader.DELETEALL(true);
+        ExtTextHeader.SetRange("Table Name", ExtTextHeader."Table Name"::"Standard Text");
+        ExtTextHeader.SetRange("No.", Code);
+        ExtTextHeader.DeleteALL(true);
     end;
 
     var

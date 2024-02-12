@@ -129,7 +129,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                     column(CompanyInfo3Picture; CompanyInfo3.Picture)
                     {
                     }
-                    column(SalesShptCopyText; STRSUBSTNO(Text002, CopyText))
+                    column(SalesShptCopyText; StrSubstNo(Text002, CopyText))
                     {
                     }
                     column(ShipToAddr1; ShipToAddr[1])
@@ -189,7 +189,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                     column(SelltoCustNo_SalesShptHeader; "Sales Shipment Header"."Sell-to Customer No.")
                     {
                     }
-                    column(DocDate_SalesShptHeader; FORMAT("Sales Shipment Header"."Document Date", 0, 4))
+                    column(DocDate_SalesShptHeader; Format("Sales Shipment Header"."Document Date", 0, 4))
                     {
                     }
                     column(SalesPersonText; SalesPersonText)
@@ -219,7 +219,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                     column(CompanyAddr6; CompanyAddr[6])
                     {
                     }
-                    column(ShptDate_SalesShptHeader; FORMAT("Sales Shipment Header"."Shipment Date"))
+                    column(ShptDate_SalesShptHeader; Format("Sales Shipment Header"."Shipment Date"))
                     {
                     }
                     column(OutputNo; OutputNo)
@@ -258,7 +258,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                     column(DocumentDateCaption; DocumentDateCaptionLbl)
                     {
                     }
-                    column(SelltoCustNo_SalesShptHeaderCaption; "Sales Shipment Header".FIELDCAPTION("Sell-to Customer No."))
+                    column(SelltoCustNo_SalesShptHeaderCaption; "Sales Shipment Header".FieldCaption("Sell-to Customer No."))
                     {
                     }
                     column(CompanyInfo__SWIFT_Code_; CompanyInfo."SWIFT Code")
@@ -312,13 +312,13 @@ report 51023 "Sales - Shipment FTA By Parcel"
                     column(CustAddr8; CustAddr[8])
                     {
                     }
-                    column(SalesPurchPersonPhoneNoCaption; SalesPurchPerson.FIELDCAPTION("Phone No."))
+                    column(SalesPurchPersonPhoneNoCaption; SalesPurchPerson.FieldCaption("Phone No."))
                     {
                     }
                     column(SalesPurchPersonPhoneNo; SalesPurchPerson."Phone No.")
                     {
                     }
-                    column(SalesPurchPersonEMailCaption; SalesPurchPerson.FIELDCAPTION("E-Mail"))
+                    column(SalesPurchPersonEMailCaption; SalesPurchPerson.FieldCaption("E-Mail"))
                     {
                     }
                     column(SalesPurchPersonEMail; SalesPurchPerson."E-Mail")
@@ -330,25 +330,25 @@ report 51023 "Sales - Shipment FTA By Parcel"
                     column(TotalWeight_SalesShptHeader; "Sales Shipment Header"."Total weight")
                     {
                     }
-                    column(TotalWeight_SalesShptHeaderCaption; "Sales Shipment Header".FIELDCAPTION("Total weight"))
+                    column(TotalWeight_SalesShptHeaderCaption; "Sales Shipment Header".FieldCaption("Total weight"))
                     {
                     }
                     column(TotalParcels_SalesShptHeader; "Sales Shipment Header"."Total Parcels")
                     {
                     }
-                    column(TotalParcels_SalesShptHeaderCaption; "Sales Shipment Header".FIELDCAPTION("Total Parcels"))
+                    column(TotalParcels_SalesShptHeaderCaption; "Sales Shipment Header".FieldCaption("Total Parcels"))
                     {
                     }
                     column(ShippingAgent_SalesShptHeader; RecGShippingAgent.Name)
                     {
                     }
-                    column(ShippingAgent_SalesShptHeaderCaption; "Sales Shipment Header".FIELDCAPTION("Shipping Agent Code"))
+                    column(ShippingAgent_SalesShptHeaderCaption; "Sales Shipment Header".FieldCaption("Shipping Agent Code"))
                     {
                     }
                     column(TransportMethode_SalesShptHeader; "Sales Shipment Header"."Transport Method")
                     {
                     }
-                    column(TransportMethode_SalesShptHeaderCaption; "Sales Shipment Header".FIELDCAPTION("Transport Method"))
+                    column(TransportMethode_SalesShptHeaderCaption; "Sales Shipment Header".FieldCaption("Transport Method"))
                     {
                     }
                     column(LblSignTransp; LblSignTransp)
@@ -407,35 +407,35 @@ report 51023 "Sales - Shipment FTA By Parcel"
 
                         begin
                             if Number = 1 then begin
-                                if not DimSetEntry1.FINDSET() then
-                                    CurrReport.BREAK();
+                                if not DimSetEntry1.FindSet() then
+                                    CurrReport.Break();
                             end else
                                 if not Continue then
-                                    CurrReport.BREAK();
+                                    CurrReport.Break();
 
-                            CLEAR(DimText);
+                            Clear(DimText);
                             Continue := false;
                             repeat
                                 OldDimText := DimText;
                                 if DimText = '' then
-                                    DimText := STRSUBSTNO(Text022, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                    DimText := StrSubstNo(Text022, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
                                 else
                                     DimText :=
-                                      STRSUBSTNO(
+                                      StrSubstNo(
                                         Text023, DimText,
                                         DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
-                                if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                if StrLen(DimText) > MaxStrLen(OldDimText) then begin
                                     DimText := OldDimText;
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry1.NEXT() = 0;
+                            until DimSetEntry1.Next() = 0;
                         end;
 
                         trigger OnPreDataItem()
                         begin
                             if not ShowInternalInfo then
-                                CurrReport.BREAK();
+                                CurrReport.Break();
                         end;
                     }
                     dataitem("Sales Shipment Line"; "Sales Shipment Line")
@@ -452,7 +452,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                         column(ShowCorrectionLines; ShowCorrectionLines)
                         {
                         }
-                        column(Type_SalesShptLine; FORMAT(Type, 0, 2))
+                        column(Type_SalesShptLine; Format(Type, 0, 2))
                         {
                         }
                         column(AsmHeaderExists; AsmHeaderExists)
@@ -476,16 +476,16 @@ report 51023 "Sales - Shipment FTA By Parcel"
                         column(LineNo_SalesShptLine; "Line No.")
                         {
                         }
-                        column(Description_SalesShptLineCaption; FIELDCAPTION(Description))
+                        column(Description_SalesShptLineCaption; FieldCaption(Description))
                         {
                         }
-                        column(Qty_SalesShptLineCaption; FIELDCAPTION(Quantity))
+                        column(Qty_SalesShptLineCaption; FieldCaption(Quantity))
                         {
                         }
-                        column(UOM_SalesShptLineCaption; FIELDCAPTION("Unit of Measure"))
+                        column(UOM_SalesShptLineCaption; FieldCaption("Unit of Measure"))
                         {
                         }
-                        column(No_SalesShptLineCaption; FIELDCAPTION("No."))
+                        column(No_SalesShptLineCaption; FieldCaption("No."))
                         {
                         }
                         column(SalesShptLine_UnitPrice; "Unit Price" * (1 - "Line Discount %" / 100))
@@ -493,7 +493,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                             AutoFormatExpression = "Sales Shipment Line".GetCurrencyCode();
                             AutoFormatType = 1;
                         }
-                        column(UnitPrice_Caption; FIELDCAPTION("Unit Price"))
+                        column(UnitPrice_Caption; FieldCaption("Unit Price"))
                         {
                         }
                         column(LblPrice; LblPrice)
@@ -549,35 +549,35 @@ report 51023 "Sales - Shipment FTA By Parcel"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then begin
-                                    if not DimSetEntry2.FINDSET() then
-                                        CurrReport.BREAK();
+                                    if not DimSetEntry2.FindSet() then
+                                        CurrReport.Break();
                                 end else
                                     if not Continue then
-                                        CurrReport.BREAK();
+                                        CurrReport.Break();
 
-                                CLEAR(DimText);
+                                Clear(DimText);
                                 Continue := false;
                                 repeat
                                     OldDimText := DimText;
                                     if DimText = '' then
-                                        DimText := STRSUBSTNO(Text020, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
+                                        DimText := StrSubstNo(Text020, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
                                     else
                                         DimText :=
-                                          STRSUBSTNO(
+                                          StrSubstNo(
                                             Text021, DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
-                                    if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                    if StrLen(DimText) > MaxStrLen(OldDimText) then begin
                                         DimText := OldDimText;
                                         Continue := true;
                                         exit;
                                     end;
-                                until DimSetEntry2.NEXT() = 0;
+                                until DimSetEntry2.Next() = 0;
                             end;
 
                             trigger OnPreDataItem()
                             begin
                                 if not ShowInternalInfo then
-                                    CurrReport.BREAK();
+                                    CurrReport.Break();
                             end;
                         }
                         dataitem(DisplayAsmInfo; Integer)
@@ -600,20 +600,20 @@ report 51023 "Sales - Shipment FTA By Parcel"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then
-                                    PostedAsmLine.FINDSET()
+                                    PostedAsmLine.FindSet()
                                 else
-                                    PostedAsmLine.NEXT();
+                                    PostedAsmLine.Next();
                             end;
 
                             trigger OnPreDataItem()
                             begin
-                                if not DisplayAssemblyInformation then
-                                    CurrReport.BREAK();
+                                if not DisplayAssemblyInFormation then
+                                    CurrReport.Break();
                                 if not AsmHeaderExists then
-                                    CurrReport.BREAK();
+                                    CurrReport.Break();
 
-                                PostedAsmLine.SETRANGE("Document No.", PostedAsmHeader."No.");
-                                SETRANGE(Number, 1, PostedAsmLine.COUNT);
+                                PostedAsmLine.SetRange("Document No.", PostedAsmHeader."No.");
+                                SetRange(Number, 1, PostedAsmLine.Count);
                             end;
                         }
 
@@ -623,10 +623,10 @@ report 51023 "Sales - Shipment FTA By Parcel"
                         begin
                             LinNo := "Line No.";
                             if not ShowCorrectionLines and Correction then
-                                CurrReport.SKIP();
+                                CurrReport.Skip();
 
-                            DimSetEntry2.SETRANGE("Dimension Set ID", "Dimension Set ID");
-                            if DisplayAssemblyInformation then
+                            DimSetEntry2.SetRange("Dimension Set ID", "Dimension Set ID");
+                            if DisplayAssemblyInFormation then
                                 AsmHeaderExists := AsmToShipmentExists(PostedAsmHeader);
 
                             DecGAmtLine := Quantity * "Unit Price" * (1 - ("Line Discount %" / 100));
@@ -638,29 +638,29 @@ report 51023 "Sales - Shipment FTA By Parcel"
 
                             if (Type = Type::Item) and ("No." <> '') then begin
                                 TexGRefFou := '';
-                                RecGItem.GET("No.");
-                                RecLItemCrossReference.RESET();
-                                RecLItemCrossReference.SETRANGE("Item No.", "No.");
-                                RecLItemCrossReference.SETRANGE("Unit of Measure", "Unit of Measure Code");
-                                RecLItemCrossReference.SETRANGE("Reference Type", RecLItemCrossReference."Reference Type"::Customer);
-                                RecLItemCrossReference.SETRANGE("Reference Type No.", "Sales Shipment Header"."Bill-to Customer No.");
-                                if RecLItemCrossReference.FINDSET() then
-                                    TexGRefFou := STRSUBSTNO(CstG002, RecLItemCrossReference."Reference No.") + ' - ';
+                                RecGItem.Get("No.");
+                                RecLItemCrossReference.Reset();
+                                RecLItemCrossReference.SetRange("Item No.", "No.");
+                                RecLItemCrossReference.SetRange("Unit of Measure", "Unit of Measure Code");
+                                RecLItemCrossReference.SetRange("Reference Type", RecLItemCrossReference."Reference Type"::Customer);
+                                RecLItemCrossReference.SetRange("Reference Type No.", "Sales Shipment Header"."Bill-to Customer No.");
+                                if RecLItemCrossReference.FindSet() then
+                                    TexGRefFou := StrSubstNo(CstG002, RecLItemCrossReference."Reference No.") + ' - ';
                                 TexGRefFou += RecGItem."No. 2";
                                 SalesLineDescription := RecGItem.Description;
                             end else begin
-                                RecGItem.INIT();
+                                RecGItem.Init();
                                 TexGRefFou := '';
                             end;
                             RefClient := '-';
                             if (Type = Type::Item) and ("No." <> '') then begin
 
-                                RecLItemCrossReference.RESET();
-                                RecLItemCrossReference.SETRANGE("Item No.", "Sales Shipment Line"."No.");
-                                RecLItemCrossReference.SETRANGE("Unit of Measure", "Sales Shipment Line"."Unit of Measure Code");
-                                RecLItemCrossReference.SETRANGE("Reference Type", RecLItemCrossReference."Reference Type"::Customer);
-                                RecLItemCrossReference.SETRANGE("Reference Type No.", "Sales Shipment Header"."Bill-to Customer No.");
-                                if RecLItemCrossReference.FINDFIRST() then RefClient := RecLItemCrossReference."Reference No.";
+                                RecLItemCrossReference.Reset();
+                                RecLItemCrossReference.SetRange("Item No.", "Sales Shipment Line"."No.");
+                                RecLItemCrossReference.SetRange("Unit of Measure", "Sales Shipment Line"."Unit of Measure Code");
+                                RecLItemCrossReference.SetRange("Reference Type", RecLItemCrossReference."Reference Type"::Customer);
+                                RecLItemCrossReference.SetRange("Reference Type No.", "Sales Shipment Header"."Bill-to Customer No.");
+                                if RecLItemCrossReference.findFirst() then RefClient := RecLItemCrossReference."Reference No.";
                             end;
 
                             RefFournisseur := RecGItem."No. 2";
@@ -680,10 +680,10 @@ report 51023 "Sales - Shipment FTA By Parcel"
                         begin
                             MoreLines := Findlast();
                             while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) do
-                                MoreLines := NEXT(-1) <> 0;
+                                MoreLines := Next(-1) <> 0;
                             if not MoreLines then
-                                CurrReport.BREAK();
-                            SETRANGE("Line No.", 0, "Line No.");
+                                CurrReport.Break();
+                            SetRange("Line No.", 0, "Line No.");
                         end;
                     }
                     dataitem(Total; Integer)
@@ -701,7 +701,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                         column(BilltoAddressCaption; BilltoAddressCaptionLbl)
                         {
                         }
-                        column(BilltoCustNo_SalesShptHeaderCaption; "Sales Shipment Header".FIELDCAPTION("Bill-to Customer No."))
+                        column(BilltoCustNo_SalesShptHeaderCaption; "Sales Shipment Header".FieldCaption("Bill-to Customer No."))
                         {
                         }
 
@@ -761,9 +761,9 @@ report 51023 "Sales - Shipment FTA By Parcel"
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then
-                                TrackingSpecBuffer.FINDSET()
+                                TrackingSpecBuffer.FindSet()
                             else
-                                TrackingSpecBuffer.NEXT();
+                                TrackingSpecBuffer.Next();
 
                             ShowTotal := false;
                             if ItemTrackingAppendix.IsStartNewGroup(TrackingSpecBuffer) then
@@ -784,10 +784,10 @@ report 51023 "Sales - Shipment FTA By Parcel"
                         trigger OnPreDataItem()
                         begin
                             if TrackingSpecCount = 0 then
-                                CurrReport.BREAK();
+                                CurrReport.Break();
                             CurrReport.NEWPAGE();
-                            SETRANGE(Number, 1, TrackingSpecCount);
-                            TrackingSpecBuffer.SETCURRENTKEY("Source ID", "Source Type", "Source Subtype", "Source Batch Name",
+                            SetRange(Number, 1, TrackingSpecCount);
+                            TrackingSpecBuffer.SetCurrentKey("Source ID", "Source Type", "Source Subtype", "Source Batch Name",
                               "Source Prod. Order Line", "Source Ref. No.");
                         end;
                     }
@@ -815,14 +815,14 @@ report 51023 "Sales - Shipment FTA By Parcel"
                 trigger OnPostDataItem()
                 begin
                     if not CurrReport.PREVIEW then
-                        ShptCountPrinted.RUN("Sales Shipment Header");
+                        ShptCountPrinted.Run("Sales Shipment Header");
                 end;
 
                 trigger OnPreDataItem()
                 begin
-                    NoOfLoops := 1 + ABS(NoOfCopies);
+                    NoOfLoops := 1 + Abs(NoOfCopies);
                     CopyText := '';
-                    SETRANGE(Number, 1, NoOfLoops);
+                    SetRange(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
@@ -831,26 +831,26 @@ report 51023 "Sales - Shipment FTA By Parcel"
             begin
                 CurrReport.LANGUAGE := Language.GetLanguageIdOrDefault("Language Code");
 
-                if RespCenter.GET("Responsibility Center") then begin
+                if RespCenter.Get("Responsibility Center") then begin
                     FormatAddr.RespCenter(CompanyAddr, RespCenter);
                     CompanyInfo."Phone No." := RespCenter."Phone No.";
                     CompanyInfo."Fax No." := RespCenter."Fax No.";
                 end else
                     FormatAddr.Company(CompanyAddr, CompanyInfo);
 
-                DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
+                DimSetEntry1.SetRange("Dimension Set ID", "Dimension Set ID");
 
                 if "Salesperson Code" = '' then begin
-                    SalesPurchPerson.INIT();
+                    SalesPurchPerson.Init();
                     SalesPersonText := '';
                 end else begin
-                    SalesPurchPerson.GET("Salesperson Code");
+                    SalesPurchPerson.Get("Salesperson Code");
                     SalesPersonText := Text000;
                 end;
                 if "Your Reference" = '' then
                     ReferenceText := ''
                 else
-                    ReferenceText := FIELDCAPTION("Your Reference");
+                    ReferenceText := FieldCaption("Your Reference");
                 FormatAddr.SalesShptBillTo(CustAddr, ShipToAddr, "Sales Shipment Header");
 
                 FormatAddr.SalesShptShipTo(CustAddr, "Sales Shipment Header");
@@ -864,24 +864,24 @@ report 51023 "Sales - Shipment FTA By Parcel"
                 if "Sell-to Customer No." <> "Bill-to Customer No." then
                     TxtGOurReferences := TxtGOurReferences + ' / ' + "Bill-to Customer No.";
 
-                if not RecGCustomer.GET("Sell-to Customer No.") then
-                    CLEAR(RecGCustomer);
+                if not RecGCustomer.Get("Sell-to Customer No.") then
+                    Clear(RecGCustomer);
 
                 //Read Contact
-                if not RecGContact.GET("Sell-to Contact No.") then
-                    CLEAR(RecGContact);
+                if not RecGContact.Get("Sell-to Contact No.") then
+                    Clear(RecGContact);
 
-                if not RecGShippingAgent.GET("Shipping Agent Code") then
-                    RecGShippingAgent.INIT();
+                if not RecGShippingAgent.Get("Shipping Agent Code") then
+                    RecGShippingAgent.Init();
 
-                CLEAR(TxtGMailFax);
+                Clear(TxtGMailFax);
                 if BoolGPrintFax then begin
 
-                    CompanyInfo.TESTFIELD(CompanyInfo."ECOM ID");
-                    RecGUserSetup.GET(USERID);
-                    RecGUserSetup.TESTFIELD("E-Mail");
+                    CompanyInfo.TestField(CompanyInfo."ECOM ID");
+                    RecGUserSetup.Get(UserId);
+                    RecGUserSetup.TestField("E-Mail");
                     TxtGMailFax[1] := 'ID:' + CompanyInfo."ECOM ID" + ' ' + '!';
-                    TESTFIELD("Fax No.");
+                    TestField("Fax No.");
                     TxtGMailFax[2] := 'Email:' + RecGUserSetup."E-Mail" + ' ' + '!';
                     TxtGMailFax[3] := 'Fax:' + "Fax No." + ' ' + '!';
 
@@ -908,7 +908,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                     }
                     field(ShowInternalInfo; ShowInternalInfo)
                     {
-                        Caption = 'Show Internal Information';
+                        Caption = 'Show Internal InFormation';
                     }
                     field(LogInteraction; LogInteraction)
                     {
@@ -923,7 +923,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
                     {
                         Caption = 'Show Serial/Lot Number Appendix';
                     }
-                    field(DisplayAsmInfo; DisplayAssemblyInformation)
+                    field(DisplayAsmInfo; DisplayAssemblyInFormation)
                     {
                         Caption = 'Show Assembly Components';
                     }
@@ -965,35 +965,35 @@ report 51023 "Sales - Shipment FTA By Parcel"
 
     trigger OnInitReport()
     begin
-        CompanyInfo.GET();
-        SalesSetup.GET();
+        CompanyInfo.Get();
+        SalesSetup.Get();
 
         case SalesSetup."Logo Position on Documents" of
             SalesSetup."Logo Position on Documents"::"No Logo":
                 ;
             SalesSetup."Logo Position on Documents"::Left:
                 begin
-                    CompanyInfo3.GET();
-                    CompanyInfo3.CALCFIELDS(Picture);
+                    CompanyInfo3.Get();
+                    CompanyInfo3.CalcFields(Picture);
                 end;
             SalesSetup."Logo Position on Documents"::Center:
                 begin
-                    CompanyInfo1.GET();
-                    CompanyInfo1.CALCFIELDS(Picture);
+                    CompanyInfo1.Get();
+                    CompanyInfo1.CalcFields(Picture);
                 end;
             SalesSetup."Logo Position on Documents"::Right:
                 begin
-                    CompanyInfo2.GET();
-                    CompanyInfo2.CALCFIELDS(Picture);
+                    CompanyInfo2.Get();
+                    CompanyInfo2.CalcFields(Picture);
                 end;
         end;
 
-        if RecGUserReport.GET(USERID, 51021) then
+        if RecGUserReport.Get(UserId, 51021) then
             if RecGUserReport.Email then begin
-                CompanyInfo3.GET();
-                CompanyInfo3.CALCFIELDS(Picture);
+                CompanyInfo3.Get();
+                CompanyInfo3.CalcFields(Picture);
             end;
-        CLEAR(TxtGInvoiceText);
+        Clear(TxtGInvoiceText);
         if SalesSetup."Print Shipment Text" then
             TxtGInvoiceText := SalesSetup."Shipment Text";
     end;
@@ -1004,8 +1004,8 @@ report 51023 "Sales - Shipment FTA By Parcel"
             BooGPrintLogo := true;
 
         if BooGPrintLogo then begin
-            CompanyInfo3.GET();
-            CompanyInfo3.CALCFIELDS(Picture);
+            CompanyInfo3.Get();
+            CompanyInfo3.CalcFields(Picture);
         end;
 
         if not CurrReport.USEREQUESTPAGE then
@@ -1015,10 +1015,10 @@ report 51023 "Sales - Shipment FTA By Parcel"
 
     var
         SalesPurchPerson: Record "Salesperson/Purchaser";
-        CompanyInfo: Record "Company Information";
-        CompanyInfo1: Record "Company Information";
-        CompanyInfo2: Record "Company Information";
-        CompanyInfo3: Record "Company Information";
+        CompanyInfo: Record "Company InFormation";
+        CompanyInfo1: Record "Company InFormation";
+        CompanyInfo2: Record "Company InFormation";
+        CompanyInfo3: Record "Company InFormation";
         SalesSetup: Record "Sales & Receivables Setup";
         DimSetEntry1: Record "Dimension Set Entry";
         DimSetEntry2: Record "Dimension Set Entry";
@@ -1046,7 +1046,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
         OldNo: Code[20];
         CopyText: Text[30];
         Text000: Label 'Salesperson';
-        Text001: Label 'COPY';
+        Text001: Label 'Copy';
         Text002: Label 'Product List';
         ShowCustAddr: Boolean;
         i: Integer;
@@ -1063,7 +1063,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
         TotalQty: Decimal;
         [InDataSet]
         LogInteractionEnable: Boolean;
-        DisplayAssemblyInformation: Boolean;
+        DisplayAssemblyInFormation: Boolean;
         AsmHeaderExists: Boolean;
         LinNo: Integer;
         ItemTrackingAppendixCaptionLbl: Label 'Item Tracking - Appendix';
@@ -1156,21 +1156,21 @@ report 51023 "Sales - Shipment FTA By Parcel"
         LogInteraction := NewLogInteraction;
         ShowCorrectionLines := NewShowCorrectionLines;
         ShowLotSN := NewShowLotSN;
-        DisplayAssemblyInformation := DisplayAsmInfo;
+        DisplayAssemblyInFormation := DisplayAsmInfo;
     end;
 
     procedure GetUnitOfMeasureDescr(UOMCode: Code[10]): Text[10]
     var
         UnitOfMeasure: Record "Unit of Measure";
     begin
-        if not UnitOfMeasure.GET(UOMCode) then
+        if not UnitOfMeasure.Get(UOMCode) then
             exit(UOMCode);
         exit(UnitOfMeasure.Description);
     end;
 
     procedure BlanksForIndent(): Text[10]
     begin
-        exit(PADSTR('', 2, ' '));
+        exit(PadStr('', 2, ' '));
     end;
 }
 

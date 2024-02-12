@@ -5,7 +5,7 @@ page 50016 "Item Production Cost"
     DelayedInsert = false;
     DeleteAllowed = false;
     InsertAllowed = false;
-    PageType = List;
+    PaGetype = List;
     SourceTable = "Item Production Cost";
     ApplicationArea = All;
 

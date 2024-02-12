@@ -20,17 +20,17 @@ tableextension 50018 BOMComponent extends "BOM Component" //90
         RecLFromBOM: Record "BOM Component";
         RecLToBOM: Record "BOM Component";
     begin
-        RecLToBOM.SETRANGE("Parent Item No.", CodPToParentItemNo);
-        RecLToBOM.DELETEALL();
+        RecLToBOM.SetRange("Parent Item No.", CodPToParentItemNo);
+        RecLToBOM.DeleteALL();
 
-        RecLFromBOM.SETRANGE("Parent Item No.", CodPFromParentItemNo);
-        if RecLFromBOM.FINDFIRST() then
+        RecLFromBOM.SetRange("Parent Item No.", CodPFromParentItemNo);
+        if RecLFromBOM.findFirst() then
             repeat
-                RecLToBOM.INIT();
-                RecLToBOM.TRANSFERFIELDS(RecLFromBOM);
+                RecLToBOM.Init();
+                RecLToBOM.TransferFields(RecLFromBOM);
                 RecLToBOM."Parent Item No." := CodPToParentItemNo;
-                RecLToBOM.INSERT();
-            until RecLFromBOM.NEXT() = 0;
+                RecLToBOM.Insert();
+            until RecLFromBOM.Next() = 0;
     end;
 }
 

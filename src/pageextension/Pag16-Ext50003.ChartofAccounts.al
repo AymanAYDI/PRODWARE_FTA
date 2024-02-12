@@ -16,13 +16,13 @@ pageextension 50003 ChartofAccounts extends "Chart of Accounts" //16
     //>>>> ORIGINAL CODE:
     //begin
     /*
-    SETRANGE("G/L Entry Type Filter","G/L Entry Type Filter"::Definitive);
+    SetRange("G/L Entry Type Filter","G/L Entry Type Filter"::DefInitive);
     */
     //end;
     //>>>> MODIFIED CODE:
     //begin
     /*
-    SETRANGE("G/L Entry Type Filter","G/L Entry Type Filter"::Definitives);
+    SetRange("G/L Entry Type Filter","G/L Entry Type Filter"::DefInitives);
     */
     //end;
 }

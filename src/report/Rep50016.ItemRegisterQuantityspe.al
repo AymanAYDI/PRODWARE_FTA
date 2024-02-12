@@ -76,7 +76,7 @@ report 50016 "Item Register - Quantityspe" //dupliquer de 703
                 column(ItemShelfNo; Item."Shelf No.")
                 {
                 }
-                column(ItemShelfNoCaption; Item.FIELDCAPTION("Shelf No."))
+                column(ItemShelfNoCaption; Item.FieldCaption("Shelf No."))
                 {
                 }
                 trigger OnAfterGetRecord()

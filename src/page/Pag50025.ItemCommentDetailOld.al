@@ -8,7 +8,7 @@ page 50025 "Item Comment Detail Old"
     Caption = 'Ancienne désignation';
     DelayedInsert = true;
     MultipleNewLines = true;
-    PageType = ListPart;
+    PaGetype = ListPart;
     SourceTable = "Item Comment Detail";
     SourceTableView = sorting("Parent Entry No.", "Entry No.")
                       where("Comment Type" = const(Old));

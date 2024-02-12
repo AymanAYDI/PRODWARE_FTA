@@ -13,13 +13,13 @@ report 50009 "Calculate FTA Prices"
             var
                 NewUseAssemblyList: Boolean;
             begin
-                Window.UPDATE(1, "No.");
+                Window.Update(1, "No.");
 
                 FctCalcPurchasePriceFTA(Item);
                 FctCalcSalesPriceFTA(Item);
                 FctCalcKitPriceFTA(Item, BooGMonoLevel);
-                MODIFY(true);
-                CALCFIELDS("Assembly BOM");
+                Modify(true);
+                CalcFields("Assembly BOM");
                 NewUseAssemblyList := "Assembly BOM";
                 if BooGMonoLevel then
                     FTAEvent.SetParms(true, false)
@@ -33,7 +33,7 @@ report 50009 "Calculate FTA Prices"
 
             trigger OnPreDataItem()
             begin
-                Window.OPEN(
+                Window.Open(
                   Text000 +
                   Text007);
             end;
@@ -74,7 +74,7 @@ report 50009 "Calculate FTA Prices"
 
     var
         Text000: Label 'Updating Unit Prices...\\';
-        Text005: Label 'The item prices have now been updated in accordance with the suggested price changes.\\Do you want to delete the suggested price changes?';
+        Text005: Label 'The item prices have now been updated in accordance with the suggested price changes.\\Do you want to Delete the suggested price changes?';
         Text007: Label 'Item No.               #1##########\';
         Text008: Label 'Vendor No.             #2##########\';
         Text009: Label 'Sales Code             #3##########\';

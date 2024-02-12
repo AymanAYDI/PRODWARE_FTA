@@ -19,20 +19,20 @@ report 50003 "Implement Purch. Disc. Change"
 
             trigger OnAfterGetRecord()
             begin
-                Window.UPDATE(1, "Item No.");
-                Window.UPDATE(2, "Vendor No.");
-                //Window.UPDATE(3,"Sales Code");
-                Window.UPDATE(3, "Currency Code");
-                Window.UPDATE(4, "Starting Date");
+                Window.Update(1, "Item No.");
+                Window.Update(2, "Vendor No.");
+                //Window.Update(3,"Sales Code");
+                Window.Update(3, "Currency Code");
+                Window.Update(4, "Starting Date");
 
-                PurchLineDiscount.INIT();
-                PurchLineDiscount.VALIDATE("Item No.", "Item No.");
-                PurchLineDiscount.VALIDATE("Vendor No.", "Vendor No.");
-                //PurchLineDiscount.VALIDATE("Sales Code","Sales Code");
-                PurchLineDiscount.VALIDATE("Unit of Measure Code", "Unit of Measure Code");
-                PurchLineDiscount.VALIDATE("Variant Code", "Variant Code");
-                PurchLineDiscount.VALIDATE("Starting Date", "Starting Date");
-                PurchLineDiscount.VALIDATE("Ending Date", "Ending Date");
+                PurchLineDiscount.Init();
+                PurchLineDiscount.Validate("Item No.", "Item No.");
+                PurchLineDiscount.Validate("Vendor No.", "Vendor No.");
+                //PurchLineDiscount.Validate("Sales Code","Sales Code");
+                PurchLineDiscount.Validate("Unit of Measure Code", "Unit of Measure Code");
+                PurchLineDiscount.Validate("Variant Code", "Variant Code");
+                PurchLineDiscount.Validate("Starting Date", "Starting Date");
+                PurchLineDiscount.Validate("Ending Date", "Ending Date");
                 PurchLineDiscount."Minimum Quantity" := "Minimum Quantity";
                 PurchLineDiscount."Currency Code" := "Currency Code";
                 PurchLineDiscount."Line Discount %" := "New Line Discount %";
@@ -42,28 +42,28 @@ report 50003 "Implement Purch. Disc. Change"
                 //PurchLineDiscount."VAT Bus. Posting Gr. (Price)" := "VAT Bus. Posting Gr. (Price)";
                 if PurchLineDiscount."Line Discount %" <> 0 then begin
                     if PurchLineDiscount."Starting Date" <> 0D then begin
-                        RecGPuchLineDisc.SETRANGE("Item No.", "Item No.");
-                        RecGPuchLineDisc.SETRANGE("Vendor No.", "Vendor No.");
-                        RecGPuchLineDisc.SETRANGE("Unit of Measure Code", "Unit of Measure Code");
-                        RecGPuchLineDisc.SETRANGE("Variant Code", "Variant Code");
-                        RecGPuchLineDisc.SETRANGE("Minimum Quantity", "Minimum Quantity");
-                        RecGPuchLineDisc.SETRANGE("Currency Code", "Currency Code");
-                        RecGPuchLineDisc.SETFILTER("Ending Date", '%1', 0D);
-                        if RecGPuchLineDisc.FINDSET() then
+                        RecGPuchLineDisc.SetRange("Item No.", "Item No.");
+                        RecGPuchLineDisc.SetRange("Vendor No.", "Vendor No.");
+                        RecGPuchLineDisc.SetRange("Unit of Measure Code", "Unit of Measure Code");
+                        RecGPuchLineDisc.SetRange("Variant Code", "Variant Code");
+                        RecGPuchLineDisc.SetRange("Minimum Quantity", "Minimum Quantity");
+                        RecGPuchLineDisc.SetRange("Currency Code", "Currency Code");
+                        RecGPuchLineDisc.SetFilter("Ending Date", '%1', 0D);
+                        if RecGPuchLineDisc.FindSet() then
                             repeat
-                                RecGPuchLineDisc.VALIDATE("Ending Date", CALCDATE('<-1D>', PurchLineDiscount."Starting Date"));
-                                RecGPuchLineDisc.MODIFY(true);
-                            until RecGPuchLineDisc.NEXT() = 0;
+                                RecGPuchLineDisc.Validate("Ending Date", CalcDate('<-1D>', PurchLineDiscount."Starting Date"));
+                                RecGPuchLineDisc.Modify(true);
+                            until RecGPuchLineDisc.Next() = 0;
                     end;
 
-                    if not PurchLineDiscount.INSERT(true) then
-                        PurchLineDiscount.MODIFY(true);
+                    if not PurchLineDiscount.Insert(true) then
+                        PurchLineDiscount.Modify(true);
                 end;
             end;
 
             trigger OnPreDataItem()
             begin
-                Window.OPEN(
+                Window.Open(
                   Text000 +
                   Text007 +
                   Text008 +

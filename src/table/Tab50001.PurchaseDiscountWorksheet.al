@@ -28,7 +28,7 @@ table 50001 "Purchase Discount Worksheet"
             var
                 Vend: Record Vendor;
             begin
-                if Vend.GET("Vendor No.") then
+                if Vend.Get("Vendor No.") then
                     "Currency Code" := Vend."Currency Code";
             end;
         }
@@ -46,7 +46,7 @@ table 50001 "Purchase Discount Worksheet"
                 Text000: Label '%1 ne peut pas être postérieur(e) à %2';
             begin
                 if ("Starting Date" > "Ending Date") and ("Ending Date" <> 0D) then
-                    ERROR(Text000, FIELDCAPTION("Starting Date"), FIELDCAPTION("Ending Date"));
+                    Error(Text000, FieldCaption("Starting Date"), FieldCaption("Ending Date"));
             end;
         }
         field(5; "Line Discount %"; Decimal)
@@ -75,7 +75,7 @@ table 50001 "Purchase Discount Worksheet"
 
             trigger OnValidate()
             begin
-                VALIDATE("Starting Date");
+                Validate("Starting Date");
             end;
         }
         field(5400; "Unit of Measure Code"; Code[10])
@@ -121,7 +121,7 @@ table 50001 "Purchase Discount Worksheet"
 
     trigger OnRename()
     begin
-        TESTFIELD("Item No.");
+        TestField("Item No.");
 
     end;
 
@@ -129,13 +129,13 @@ table 50001 "Purchase Discount Worksheet"
     var
         PurchLineDiscount: Record "Purchase Line Discount";
     begin
-        PurchLineDiscount.SETRANGE("Item No.", "Item No.");
-        PurchLineDiscount.SETRANGE("Vendor No.", "Vendor No.");
-        PurchLineDiscount.SETRANGE("Currency Code", "Currency Code");
-        PurchLineDiscount.SETRANGE("Unit of Measure Code", "Unit of Measure Code");
-        PurchLineDiscount.SETRANGE("Starting Date", 0D, "Starting Date");
-        PurchLineDiscount.SETRANGE("Minimum Quantity", 0, "Minimum Quantity");
-        PurchLineDiscount.SETRANGE("Variant Code", "Variant Code");
+        PurchLineDiscount.SetRange("Item No.", "Item No.");
+        PurchLineDiscount.SetRange("Vendor No.", "Vendor No.");
+        PurchLineDiscount.SetRange("Currency Code", "Currency Code");
+        PurchLineDiscount.SetRange("Unit of Measure Code", "Unit of Measure Code");
+        PurchLineDiscount.SetRange("Starting Date", 0D, "Starting Date");
+        PurchLineDiscount.SetRange("Minimum Quantity", 0, "Minimum Quantity");
+        PurchLineDiscount.SetRange("Variant Code", "Variant Code");
         if PurchLineDiscount.Findlast() then begin
             "New Line Discount %" := PurchLineDiscount."Line Discount %";
             PriceAlreadyExists := PurchLineDiscount."Starting Date" = "Starting Date";

@@ -13,7 +13,7 @@ page 51000 "FA Import Buffer"
 
     Caption = 'FA Import Buffer';
     Editable = false;
-    PageType = List;
+    PaGetype = List;
     SourceTable = "FA Import Buffer";
     ApplicationArea = All;
 
@@ -113,11 +113,11 @@ page 51000 "FA Import Buffer"
                     ToolTip = 'Specifies the value of the Dimension 8 Code field.';
                 }
             }
-            field(COUNT; Rec.COUNT())
+            field(Count; Rec.Count())
             {
                 Caption = 'Count';
                 Editable = false;
-                ToolTip = 'Specifies the value of the COUNT field.';
+                ToolTip = 'Specifies the value of the Count field.';
             }
         }
     }

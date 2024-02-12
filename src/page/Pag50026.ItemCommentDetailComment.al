@@ -8,7 +8,7 @@ page 50026 "Item Comment Detail Comment"
     Caption = 'Commentaires';
     DelayedInsert = true;
     MultipleNewLines = true;
-    PageType = ListPart;
+    PaGetype = ListPart;
     SourceTable = "Item Comment Detail";
     SourceTableView = sorting("Parent Entry No.", "Entry No.")
                       where("Comment Type" = const(Comment));

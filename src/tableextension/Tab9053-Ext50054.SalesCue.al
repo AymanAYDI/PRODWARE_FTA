@@ -7,7 +7,7 @@ tableextension 50054 SalesCue extends "Sales Cue" //9053
     {
 
         //TODO: CalcFormula cannot be costomized
-        // modify("Delayed")
+        // Modify("Delayed")
         // {
 
         //     CalcFormula = Count("Sales Header" WHERE("Document Type"=FILTER(Order),

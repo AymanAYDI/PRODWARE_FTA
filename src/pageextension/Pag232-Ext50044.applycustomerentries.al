@@ -7,7 +7,7 @@ pageextension 50044 "applycustomerentries" extends "apply customer entries" //23
     {
         addafter("customer no.")
         {
-            field(customername; rec.getcustomername(rec."customer no."))
+            field(customername; rec.Getcustomername(rec."customer no."))
             {
                 caption = 'name';
                 ApplicationArea = All;
@@ -31,15 +31,15 @@ pageextension 50044 "applycustomerentries" extends "apply customer entries" //23
     procedure verifpostinggroup(codlappliesid: code[20]; codlpostinggroup: code[10]);
     var
         reclcustledgentry: record "cust. ledger entry";
-        txterrorpostinggroup001: label 'posting group must be identical by applies-to id.\you cannot select a ledger entry with a posting group %1.';
+        txtErrorpostinggroup001: label 'posting group must be identical by applies-to id.\you cannot select a ledger entry with a posting group %1.';
     begin
         if (codlpostinggroup <> '') then
             if codlappliesid <> '' then begin
-                reclcustledgentry.reset();
-                reclcustledgentry.setcurrentkey("applies-to id");
-                reclcustledgentry.setrange("applies-to id", codlappliesid);
-                reclcustledgentry.setfilter("customer posting group", '<>%1', codlpostinggroup);
-                if reclcustledgentry.findfirst() then error(strsubstno(txterrorpostinggroup001, codlpostinggroup));
+                reclcustledgentry.Reset();
+                reclcustledgentry.SetCurrentKey("applies-to id");
+                reclcustledgentry.SetRange("applies-to id", codlappliesid);
+                reclcustledgentry.SetFilter("customer posting group", '<>%1', codlpostinggroup);
+                if reclcustledgentry.findFirst() then Error(StrSubstNo(txtErrorpostinggroup001, codlpostinggroup));
             end;
     end;
 }

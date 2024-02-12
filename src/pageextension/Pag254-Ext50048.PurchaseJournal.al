@@ -15,7 +15,7 @@ pageextension 50048 PurchaseJournal extends "Purchase Journal" //254
                 ToolTip = 'Specifies the value of the Posting Group field.';
             }
         }
-        modify("Reason Code")
+        Modify("Reason Code")
         {
             Visible = true;
         }

@@ -7,7 +7,7 @@ pageextension 50023 "PurchaseList" extends "Purchase List"//53
     {
 
 
-        modify("No.")
+        Modify("No.")
         {
             Style = StandardAccent;
             StyleExpr = BooGTransportType;

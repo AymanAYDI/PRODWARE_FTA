@@ -186,10 +186,10 @@ report 51003 "Purchases - Order FTA"
                     column(CompanyInfo1Picture; CompanyInfo1.Picture)
                     {
                     }
-                    column(ReportTitleCopyText; STRSUBSTNO(Text004, CopyText))
+                    column(ReportTitleCopyText; StrSubstNo(Text004, CopyText))
                     {
                     }
-                    column(CurrRepPageNo; STRSUBSTNO(Text005, FORMAT(CurrReport.PAGENO())))
+                    column(CurrRepPageNo; StrSubstNo(Text005, Format(CurrReport.PAGENO())))
                     {
                     }
                     column(CompanyAddr1; CompanyAddr[1])
@@ -222,7 +222,7 @@ report 51003 "Purchases - Order FTA"
                     column(CompanyInfoBankAccNo; CompanyInfo."Bank Account No.")
                     {
                     }
-                    column(DocDate_PurchHeader; FORMAT("Purchase Header"."Document Date", 0, 4))
+                    column(DocDate_PurchHeader; Format("Purchase Header"."Document Date", 0, 4))
                     {
                     }
                     column(VATNoText; VATNoText)
@@ -330,10 +330,10 @@ report 51003 "Purchases - Order FTA"
                     column(DocumentDateCaption; DocumentDateCaptionLbl)
                     {
                     }
-                    column(BuyFrmVendNo_PurchHeaderCaption; "Purchase Header".FIELDCAPTION("Buy-from Vendor No."))
+                    column(BuyFrmVendNo_PurchHeaderCaption; "Purchase Header".FieldCaption("Buy-from Vendor No."))
                     {
                     }
-                    column(PricesInclVAT_PurchHeaderCaption; "Purchase Header".FIELDCAPTION("Prices Including VAT"))
+                    column(PricesInclVAT_PurchHeaderCaption; "Purchase Header".FieldCaption("Prices Including VAT"))
                     {
                     }
                     column(CompanyInfo__SWIFT_Code_; CompanyInfo."SWIFT Code")
@@ -381,13 +381,13 @@ report 51003 "Purchases - Order FTA"
                     column(CompanyInfo_Picture; CompanyInfo.Picture)
                     {
                     }
-                    column(SalesPurchPersonPhoneNoCaption; SalesPurchPerson.FIELDCAPTION("Phone No."))
+                    column(SalesPurchPersonPhoneNoCaption; SalesPurchPerson.FieldCaption("Phone No."))
                     {
                     }
                     column(SalesPurchPersonPhoneNo; SalesPurchPerson."Phone No.")
                     {
                     }
-                    column(SalesPurchPersonEMailCaption; SalesPurchPerson.FIELDCAPTION("E-Mail"))
+                    column(SalesPurchPersonEMailCaption; SalesPurchPerson.FieldCaption("E-Mail"))
                     {
                     }
                     column(SalesPurchPersonEMail; SalesPurchPerson."E-Mail")
@@ -405,10 +405,10 @@ report 51003 "Purchases - Order FTA"
                     column(CstG002; CstG002)
                     {
                     }
-                    column(PurchaseHeaderRequestedReceiptDateCaption; "Purchase Header".FIELDCAPTION("Requested Receipt Date"))
+                    column(PurchaseHeaderRequestedReceiptDateCaption; "Purchase Header".FieldCaption("Requested Receipt Date"))
                     {
                     }
-                    column(PurchaseHeaderRequestedReceiptDate; FORMAT("Purchase Header"."Requested Receipt Date", 0, 1))
+                    column(PurchaseHeaderRequestedReceiptDate; Format("Purchase Header"."Requested Receipt Date", 0, 1))
                     {
                     }
                     column(TxtGMailFax_1; TxtGMailFax[1])
@@ -432,35 +432,35 @@ report 51003 "Purchases - Order FTA"
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then begin
-                                if not DimSetEntry1.FINDSET() then
-                                    CurrReport.BREAK();
+                                if not DimSetEntry1.FindSet() then
+                                    CurrReport.Break();
                             end else
                                 if not Continue then
-                                    CurrReport.BREAK();
+                                    CurrReport.Break();
 
-                            CLEAR(DimText);
+                            Clear(DimText);
                             Continue := false;
                             repeat
                                 OldDimText := DimText;
                                 if DimText = '' then
-                                    DimText := STRSUBSTNO(Text022, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                    DimText := StrSubstNo(Text022, DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
                                 else
                                     DimText :=
-                                      STRSUBSTNO(
+                                      StrSubstNo(
                                         Text023, DimText,
                                         DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
-                                if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                if StrLen(DimText) > MaxStrLen(OldDimText) then begin
                                     DimText := OldDimText;
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry1.NEXT() = 0;
+                            until DimSetEntry1.Next() = 0;
                         end;
 
                         trigger OnPreDataItem()
                         begin
                             if not ShowInternalInfo then
-                                CurrReport.BREAK();
+                                CurrReport.Break();
                         end;
                     }
                     dataitem("Purchase Line"; "Purchase Line")
@@ -472,7 +472,7 @@ report 51003 "Purchases - Order FTA"
 
                         trigger OnPreDataItem()
                         begin
-                            CurrReport.BREAK();
+                            CurrReport.Break();
                         end;
                     }
                     dataitem(RoundLoop; Integer)
@@ -489,7 +489,7 @@ report 51003 "Purchases - Order FTA"
                         column(AllowInvDisctxt; AllowInvDisctxt)
                         {
                         }
-                        column(Type_PurchLine; FORMAT("Purchase Line".Type, 0, 2))
+                        column(Type_PurchLine; Format("Purchase Line".Type, 0, 2))
                         {
                         }
                         column(No_PurchLine; "Purchase Line"."No.")
@@ -586,19 +586,19 @@ report 51003 "Purchases - Order FTA"
                         column(VATDiscountAmountCaption; VATDiscountAmountCaptionLbl)
                         {
                         }
-                        column(No_PurchLineCaption; "Purchase Line".FIELDCAPTION("No."))
+                        column(No_PurchLineCaption; "Purchase Line".FieldCaption("No."))
                         {
                         }
-                        column(Desc_PurchLineCaption; "Purchase Line".FIELDCAPTION(Description))
+                        column(Desc_PurchLineCaption; "Purchase Line".FieldCaption(Description))
                         {
                         }
-                        column(Qty_PurchLineCaption; "Purchase Line".FIELDCAPTION(Quantity))
+                        column(Qty_PurchLineCaption; "Purchase Line".FieldCaption(Quantity))
                         {
                         }
-                        column(UOM_PurchLineCaption; "Purchase Line".FIELDCAPTION("Unit of Measure"))
+                        column(UOM_PurchLineCaption; "Purchase Line".FieldCaption("Unit of Measure"))
                         {
                         }
-                        column(VATIdentifier_PurchLineCaption; "Purchase Line".FIELDCAPTION("VAT Identifier"))
+                        column(VATIdentifier_PurchLineCaption; "Purchase Line".FieldCaption("VAT Identifier"))
                         {
                         }
                         column(SalesLineDescription2; "Purchase Line"."Description 2")
@@ -607,7 +607,7 @@ report 51003 "Purchases - Order FTA"
                         column(RecGItemNo2; RecGItem."No. 2")
                         {
                         }
-                        column(SalesLinePlannedDeliveryDate; FORMAT("Purchase Line"."Expected Receipt Date", 0, 1))
+                        column(SalesLinePlannedDeliveryDate; Format("Purchase Line"."Expected Receipt Date", 0, 1))
                         {
                         }
                         column(DecGNetDirectUnitCostExcludingVAT; DecGNetDirectUnitCostExcludingVAT)
@@ -633,37 +633,37 @@ report 51003 "Purchases - Order FTA"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then begin
-                                    if not DimSetEntry2.FINDSET() then
-                                        CurrReport.BREAK();
+                                    if not DimSetEntry2.FindSet() then
+                                        CurrReport.Break();
                                 end else
                                     if not Continue then
-                                        CurrReport.BREAK();
+                                        CurrReport.Break();
 
-                                CLEAR(DimText);
+                                Clear(DimText);
                                 Continue := false;
                                 repeat
                                     OldDimText := DimText;
                                     if DimText = '' then
-                                        DimText := STRSUBSTNO(Text024, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
+                                        DimText := StrSubstNo(Text024, DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
                                     else
                                         DimText :=
-                                          STRSUBSTNO(
+                                          StrSubstNo(
                                             Text025, DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
-                                    if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                    if StrLen(DimText) > MaxStrLen(OldDimText) then begin
                                         DimText := OldDimText;
                                         Continue := true;
                                         exit;
                                     end;
-                                until DimSetEntry2.NEXT() = 0;
+                                until DimSetEntry2.Next() = 0;
                             end;
 
                             trigger OnPreDataItem()
                             begin
                                 if not ShowInternalInfo then
-                                    CurrReport.BREAK();
+                                    CurrReport.Break();
 
-                                DimSetEntry2.SETRANGE("Dimension Set ID", "Purchase Line"."Dimension Set ID");
+                                DimSetEntry2.SetRange("Dimension Set ID", "Purchase Line"."Dimension Set ID");
                             end;
                         }
 
@@ -672,9 +672,9 @@ report 51003 "Purchases - Order FTA"
                             RecLItemCrossReference: Record "Item Reference";
                         begin
                             if Number = 1 then
-                                PurchLine.Findfirst()
+                                PurchLine.findFirst()
                             else
-                                PurchLine.NEXT();
+                                PurchLine.Next();
                             "Purchase Line" := PurchLine;
 
                             if not "Purchase Header"."Prices Including VAT" and
@@ -684,7 +684,7 @@ report 51003 "Purchases - Order FTA"
 
                             if (PurchLine.Type = PurchLine.Type::"G/L Account") and (not ShowInternalInfo) then
                                 "Purchase Line"."No." := '';
-                            AllowInvDisctxt := FORMAT("Purchase Line"."Allow Invoice Disc.");
+                            AllowInvDisctxt := Format("Purchase Line"."Allow Invoice Disc.");
                             TotalSubTotal += "Purchase Line"."Line Amount";
                             TotalInvoiceDiscountAmount -= "Purchase Line"."Inv. Discount Amount";
                             TotalAmount += "Purchase Line".Amount;
@@ -698,7 +698,7 @@ report 51003 "Purchases - Order FTA"
 
                             //>>FExxxx.001
                             if ("Purchase Line".Type = "Purchase Line".Type::Item) and ("Purchase Line"."No." <> '') then begin
-                                RecGItem.GET("Purchase Line"."No.");
+                                RecGItem.Get("Purchase Line"."No.");
 
                                 //>>FTA.REPORTS2018-0607
                                 //item description
@@ -706,29 +706,29 @@ report 51003 "Purchases - Order FTA"
                                 //<<FTA.REPORTS2018-0607
 
                             end else
-                                RecGItem.INIT();
+                                RecGItem.Init();
 
-                            CLEAR(DecGNetDirectUnitCostExcludingVAT);
+                            Clear(DecGNetDirectUnitCostExcludingVAT);
                             if ("Purchase Line"."Line Discount %" <> 0) and ("Purchase Line".Quantity <> 0) then
-                                DecGNetDirectUnitCostExcludingVAT := ROUND(("Purchase Line"."Line Amount" / "Purchase Line".Quantity), GLSetup."Amount Rounding Precision")
+                                DecGNetDirectUnitCostExcludingVAT := Round(("Purchase Line"."Line Amount" / "Purchase Line".Quantity), GLSetup."Amount Rounding Precision")
                             else
                                 DecGNetDirectUnitCostExcludingVAT := "Purchase Line"."Direct Unit Cost";
                             RefClient := '-';
                             if ("Purchase Line".Type = "Purchase Line".Type::Item) and ("Purchase Line"."No." <> '') then begin
 
-                                RecLItemCrossReference.RESET();
-                                RecLItemCrossReference.SETRANGE("Item No.", PurchLine."No.");
-                                RecLItemCrossReference.SETRANGE("Unit of Measure", PurchLine."Unit of Measure Code");
-                                RecLItemCrossReference.SETRANGE("Reference Type", RecLItemCrossReference."Reference Type"::Customer);
-                                RecLItemCrossReference.SETRANGE("Reference Type No.", "Purchase Header"."Buy-from Vendor No.");
-                                if RecLItemCrossReference.FINDFIRST() then RefClient := RecLItemCrossReference."Reference No.";
+                                RecLItemCrossReference.Reset();
+                                RecLItemCrossReference.SetRange("Item No.", PurchLine."No.");
+                                RecLItemCrossReference.SetRange("Unit of Measure", PurchLine."Unit of Measure Code");
+                                RecLItemCrossReference.SetRange("Reference Type", RecLItemCrossReference."Reference Type"::Customer);
+                                RecLItemCrossReference.SetRange("Reference Type No.", "Purchase Header"."Buy-from Vendor No.");
+                                if RecLItemCrossReference.findFirst() then RefClient := RecLItemCrossReference."Reference No.";
                             end;
                             RefFournisseur := RecGItem."Vendor Item No.";
                         end;
 
                         trigger OnPostDataItem()
                         begin
-                            PurchLine.DELETEALL();
+                            PurchLine.DeleteALL();
                         end;
 
                         trigger OnPreDataItem()
@@ -738,12 +738,12 @@ report 51003 "Purchases - Order FTA"
                                   (PurchLine."No." = '') and (PurchLine.Quantity = 0) and
                                   (PurchLine.Amount = 0)
                             do
-                                MoreLines := PurchLine.NEXT(-1) <> 0;
+                                MoreLines := PurchLine.Next(-1) <> 0;
                             if not MoreLines then
-                                CurrReport.BREAK();
-                            PurchLine.SETRANGE("Line No.", 0, PurchLine."Line No.");
-                            SETRANGE(Number, 1, PurchLine.COUNT);
-                            // CurrReport.CREATETOTALS(PurchLine."Line Amount", PurchLine."Inv. Discount Amount");
+                                CurrReport.Break();
+                            PurchLine.SetRange("Line No.", 0, PurchLine."Line No.");
+                            SetRange(Number, 1, PurchLine.Count);
+                            // CurrReport.CreateTotals(PurchLine."Line Amount", PurchLine."Inv. Discount Amount");
                         end;
                     }
                     dataitem(VATCounter; Integer)
@@ -790,9 +790,9 @@ report 51003 "Purchases - Order FTA"
                         trigger OnPreDataItem()
                         begin
                             if VATAmount = 0 then
-                                CurrReport.BREAK();
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
-                            // CurrReport.CREATETOTALS(
+                                CurrReport.Break();
+                            SetRange(Number, 1, VATAmountLine.Count);
+                            // CurrReport.CreateTotals(
                             //   VATAmountLine."Line Amount", VATAmountLine."Inv. Disc. Base Amount",
                             //   VATAmountLine."Invoice Discount Amount", VATAmountLine."VAT Base", VATAmountLine."VAT Amount");
                         end;
@@ -832,18 +832,18 @@ report 51003 "Purchases - Order FTA"
                                ("Purchase Header"."Currency Code" = '') or
                                (VATAmountLine.GetTotalVATAmount() = 0)
                             then
-                                CurrReport.BREAK();
+                                CurrReport.Break();
 
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
-                            CurrReport.CREATETOTALS(VALVATBaseLCY, VALVATAmountLCY);
+                            SetRange(Number, 1, VATAmountLine.Count);
+                            CurrReport.CreateTotals(VALVATBaseLCY, VALVATAmountLCY);
 
                             if GLSetup."LCY Code" = '' then
                                 VALSpecLCYHeader := Text007 + Text008
                             else
-                                VALSpecLCYHeader := Text007 + FORMAT(GLSetup."LCY Code");
+                                VALSpecLCYHeader := Text007 + Format(GLSetup."LCY Code");
 
                             CurrExchRate.FindCurrency("Purchase Header"."Posting Date", "Purchase Header"."Currency Code", 1);
-                            VALExchRate := STRSUBSTNO(Text009, CurrExchRate."Relational Exch. Rate Amount", CurrExchRate."Exchange Rate Amount");
+                            VALExchRate := StrSubstNo(Text009, CurrExchRate."Relational Exch. Rate Amount", CurrExchRate."Exchange Rate Amount");
                         end;
                     }
                     dataitem(Total2; Integer)
@@ -887,7 +887,7 @@ report 51003 "Purchases - Order FTA"
                         trigger OnPreDataItem()
                         begin
                             if "Purchase Header"."Buy-from Vendor No." = "Purchase Header"."Pay-to Vendor No." then
-                                CurrReport.BREAK();
+                                CurrReport.Break();
                         end;
                     }
                     dataitem(Total3; Integer)
@@ -921,14 +921,14 @@ report 51003 "Purchases - Order FTA"
                         column(ShipToAddr8; ShipToAddr[8])
                         {
                         }
-                        column(SellToCustNo_PurchHeaderCaption; "Purchase Header".FIELDCAPTION("Sell-to Customer No."))
+                        column(SellToCustNo_PurchHeaderCaption; "Purchase Header".FieldCaption("Sell-to Customer No."))
                         {
                         }
 
                         trigger OnPreDataItem()
                         begin
                             if ("Purchase Header"."Sell-to Customer No." = '') and (ShipToAddr[1] = '') then
-                                CurrReport.BREAK();
+                                CurrReport.Break();
                         end;
                     }
                     dataitem(PrepmtLoop; Integer)
@@ -992,43 +992,43 @@ report 51003 "Purchases - Order FTA"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then begin
-                                    if not PrepmtDimSetEntry.FINDSET() then
-                                        CurrReport.BREAK();
+                                    if not PrepmtDimSetEntry.FindSet() then
+                                        CurrReport.Break();
                                 end else
                                     if not Continue then
-                                        CurrReport.BREAK();
+                                        CurrReport.Break();
 
-                                CLEAR(DimText);
+                                Clear(DimText);
                                 Continue := false;
                                 repeat
                                     OldDimText := DimText;
                                     if DimText = '' then
-                                        DimText := STRSUBSTNO(Text020, PrepmtDimSetEntry."Dimension Code", PrepmtDimSetEntry."Dimension Value Code")
+                                        DimText := StrSubstNo(Text020, PrepmtDimSetEntry."Dimension Code", PrepmtDimSetEntry."Dimension Value Code")
                                     else
                                         DimText :=
-                                          STRSUBSTNO(
+                                          StrSubstNo(
                                             Text021, DimText,
                                             PrepmtDimSetEntry."Dimension Code", PrepmtDimSetEntry."Dimension Value Code");
-                                    if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                    if StrLen(DimText) > MaxStrLen(OldDimText) then begin
                                         DimText := OldDimText;
                                         Continue := true;
                                         exit;
                                     end;
-                                until PrepmtDimSetEntry.NEXT() = 0;
+                                until PrepmtDimSetEntry.Next() = 0;
                             end;
                         }
 
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then begin
-                                if not PrepmtInvBuf.Findfirst() then
-                                    CurrReport.BREAK();
+                                if not PrepmtInvBuf.findFirst() then
+                                    CurrReport.Break();
                             end else
-                                if PrepmtInvBuf.NEXT() = 0 then
-                                    CurrReport.BREAK();
+                                if PrepmtInvBuf.Next() = 0 then
+                                    CurrReport.Break();
 
                             if ShowInternalInfo then
-                                PrepmtDimSetEntry.SETRANGE("Dimension Set ID", PrepmtInvBuf."Dimension Set ID");
+                                PrepmtDimSetEntry.SetRange("Dimension Set ID", PrepmtInvBuf."Dimension Set ID");
 
                             if "Purchase Header"."Prices Including VAT" then
                                 PrepmtLineAmount := PrepmtInvBuf."Amount Incl. VAT"
@@ -1038,7 +1038,7 @@ report 51003 "Purchases - Order FTA"
 
                         // trigger OnPreDataItem()
                         // begin
-                        //     CurrReport.CREATETOTALS(
+                        //     CurrReport.CreateTotals(
                         //       PrepmtInvBuf.Amount, PrepmtInvBuf."Amount Incl. VAT",
                         //       PrepmtVATAmountLine."Line Amount", PrepmtVATAmountLine."VAT Base",
                         //       PrepmtVATAmountLine."VAT Amount",
@@ -1081,7 +1081,7 @@ report 51003 "Purchases - Order FTA"
 
                         trigger OnPreDataItem()
                         begin
-                            SETRANGE(Number, 1, PrepmtVATAmountLine.COUNT);
+                            SetRange(Number, 1, PrepmtVATAmountLine.Count);
                         end;
                     }
                 }
@@ -1091,10 +1091,10 @@ report 51003 "Purchases - Order FTA"
                     PrepmtPurchLine: Record "Purchase Line" temporary;
                     TempPurchLine: Record "Purchase Line" temporary;
                 begin
-                    CLEAR(PurchLine);
-                    CLEAR(PurchPost);
-                    PurchLine.DELETEALL();
-                    VATAmountLine.DELETEALL();
+                    Clear(PurchLine);
+                    Clear(PurchPost);
+                    PurchLine.DeleteALL();
+                    VATAmountLine.DeleteALL();
                     PurchPost.GetPurchLines("Purchase Header", PurchLine, 0);
                     PurchLine.CalcVATAmountLines(0, "Purchase Header", PurchLine, VATAmountLine);
                     PurchLine.UpdateVATOnLines(0, "Purchase Header", PurchLine, VATAmountLine);
@@ -1104,18 +1104,18 @@ report 51003 "Purchases - Order FTA"
                       VATAmountLine.GetTotalVATDiscount("Purchase Header"."Currency Code", "Purchase Header"."Prices Including VAT");
                     TotalAmountInclVAT := VATAmountLine.GetTotalAmountInclVAT();
 
-                    PrepmtInvBuf.DELETEALL();
+                    PrepmtInvBuf.DeleteALL();
                     PurchPostPrepmt.GetPurchLines("Purchase Header", 0, PrepmtPurchLine);
-                    if not PrepmtPurchLine.ISEMPTY then begin
+                    if not PrepmtPurchLine.IsEmpty then begin
                         PurchPostPrepmt.GetPurchLinesToDeduct("Purchase Header", TempPurchLine);
-                        if not TempPurchLine.ISEMPTY then
+                        if not TempPurchLine.IsEmpty then
                             PurchPostPrepmt.CalcVATAmountLines("Purchase Header", TempPurchLine, PrePmtVATAmountLineDeduct, 1);
                     end;
                     PurchPostPrepmt.CalcVATAmountLines("Purchase Header", PrepmtPurchLine, PrepmtVATAmountLine, 0);
-                    if PrepmtVATAmountLine.FINDSET() then
+                    if PrepmtVATAmountLine.FindSet() then
                         repeat
                             PrePmtVATAmountLineDeduct := PrepmtVATAmountLine;
-                            if PrePmtVATAmountLineDeduct.FIND() then begin
+                            if PrePmtVATAmountLineDeduct.Find() then begin
                                 PrepmtVATAmountLine."VAT Base" := PrepmtVATAmountLine."VAT Base" - PrePmtVATAmountLineDeduct."VAT Base";
                                 PrepmtVATAmountLine."VAT Amount" := PrepmtVATAmountLine."VAT Amount" - PrePmtVATAmountLineDeduct."VAT Amount";
                                 PrepmtVATAmountLine."Amount Including VAT" := PrepmtVATAmountLine."Amount Including VAT" -
@@ -1127,9 +1127,9 @@ report 51003 "Purchases - Order FTA"
                                   PrePmtVATAmountLineDeduct."Invoice Discount Amount";
                                 PrepmtVATAmountLine."Calculated VAT Amount" := PrepmtVATAmountLine."Calculated VAT Amount" -
                                   PrePmtVATAmountLineDeduct."Calculated VAT Amount";
-                                PrepmtVATAmountLine.MODIFY();
+                                PrepmtVATAmountLine.Modify();
                             end;
-                        until PrepmtVATAmountLine.NEXT() = 0;
+                        until PrepmtVATAmountLine.Next() = 0;
                     PurchPostPrepmt.UpdateVATOnLines("Purchase Header", PrepmtPurchLine, PrepmtVATAmountLine, 0);
                     //todo : verifier je remplace BuildInvLineBuffer2 par BuildInvLineBuffer
                     PurchPostPrepmt.BuildInvLineBuffer("Purchase Header", PrepmtPurchLine, 0, PrepmtInvBuf);
@@ -1149,14 +1149,14 @@ report 51003 "Purchases - Order FTA"
                 trigger OnPostDataItem()
                 begin
                     if not CurrReport.PREVIEW then
-                        PurchCountPrinted.RUN("Purchase Header");
+                        PurchCountPrinted.Run("Purchase Header");
                 end;
 
                 trigger OnPreDataItem()
                 begin
-                    NoOfLoops := ABS(NoOfCopies) + 1;
+                    NoOfLoops := Abs(NoOfCopies) + 1;
                     CopyText := '';
-                    SETRANGE(Number, 1, NoOfLoops);
+                    SetRange(Number, 1, NoOfLoops);
                     OutputNo := 0;
                 end;
             }
@@ -1167,62 +1167,62 @@ report 51003 "Purchases - Order FTA"
             begin
                 CurrReport.LANGUAGE := Language.GetLanguageIDOrDefault("Language Code");
 
-                CompanyInfo.GET();
+                CompanyInfo.Get();
 
-                if RespCenter.GET("Responsibility Center") then begin
+                if RespCenter.Get("Responsibility Center") then begin
                     FormatAddr.RespCenter(CompanyAddr, RespCenter);
                     CompanyInfo."Phone No." := RespCenter."Phone No.";
                     CompanyInfo."Fax No." := RespCenter."Fax No.";
                 end else
                     FormatAddr.Company(CompanyAddr, CompanyInfo);
 
-                DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
+                DimSetEntry1.SetRange("Dimension Set ID", "Dimension Set ID");
 
                 if "Purchaser Code" = '' then begin
-                    SalesPurchPerson.INIT();
+                    SalesPurchPerson.Init();
                     PurchaserText := '';
                 end else begin
-                    SalesPurchPerson.GET("Purchaser Code");
+                    SalesPurchPerson.Get("Purchaser Code");
                     PurchaserText := Text000
                 end;
                 if "Your Reference" = '' then
                     ReferenceText := ''
                 else
-                    ReferenceText := FIELDCAPTION("Your Reference");
+                    ReferenceText := FieldCaption("Your Reference");
                 if "VAT Registration No." = '' then
                     VATNoText := ''
                 else
-                    VATNoText := FIELDCAPTION("VAT Registration No.");
+                    VATNoText := FieldCaption("VAT Registration No.");
                 if "Currency Code" = '' then begin
-                    GLSetup.TESTFIELD("LCY Code");
-                    TotalText := STRSUBSTNO(Text001, GLSetup."LCY Code");
-                    TotalInclVATText := STRSUBSTNO(Text002, GLSetup."LCY Code");
-                    TotalExclVATText := STRSUBSTNO(Text006, GLSetup."LCY Code");
+                    GLSetup.TestField("LCY Code");
+                    TotalText := StrSubstNo(Text001, GLSetup."LCY Code");
+                    TotalInclVATText := StrSubstNo(Text002, GLSetup."LCY Code");
+                    TotalExclVATText := StrSubstNo(Text006, GLSetup."LCY Code");
                 end else begin
-                    TotalText := STRSUBSTNO(Text001, "Currency Code");
-                    TotalInclVATText := STRSUBSTNO(Text002, "Currency Code");
-                    TotalExclVATText := STRSUBSTNO(Text006, "Currency Code");
+                    TotalText := StrSubstNo(Text001, "Currency Code");
+                    TotalInclVATText := StrSubstNo(Text002, "Currency Code");
+                    TotalExclVATText := StrSubstNo(Text006, "Currency Code");
                 end;
 
                 FormatAddr.PurchHeaderBuyFrom(BuyFromAddr, "Purchase Header");
                 if "Buy-from Vendor No." <> "Pay-to Vendor No." then
                     FormatAddr.PurchHeaderPayTo(VendAddr, "Purchase Header");
                 if "Payment Terms Code" = '' then
-                    PaymentTerms.INIT()
+                    PaymentTerms.Init()
                 else begin
-                    PaymentTerms.GET("Payment Terms Code");
+                    PaymentTerms.Get("Payment Terms Code");
                     PaymentTerms.TranslateDescription(PaymentTerms, "Language Code");
                 end;
                 if "Prepmt. Payment Terms Code" = '' then
-                    PrepmtPaymentTerms.INIT()
+                    PrepmtPaymentTerms.Init()
                 else begin
-                    PrepmtPaymentTerms.GET("Prepmt. Payment Terms Code");
+                    PrepmtPaymentTerms.Get("Prepmt. Payment Terms Code");
                     PrepmtPaymentTerms.TranslateDescription(PrepmtPaymentTerms, "Language Code");
                 end;
                 if "Shipment Method Code" = '' then
-                    ShipmentMethod.INIT()
+                    ShipmentMethod.Init()
                 else begin
-                    ShipmentMethod.GET("Shipment Method Code");
+                    ShipmentMethod.Get("Shipment Method Code");
                     ShipmentMethod.TranslateDescription(ShipmentMethod, "Language Code");
                 end;
 
@@ -1233,25 +1233,25 @@ report 51003 "Purchases - Order FTA"
                         ArchiveManagement.StorePurchDocument("Purchase Header", LogInteraction);
 
                     if LogInteraction then begin
-                        CALCFIELDS("No. of Archived Versions");
+                        CalcFields("No. of Archived Versions");
                         SegManagement.LogDocument(
                           13, "No.", "Doc. No. Occurrence", "No. of Archived Versions", DATABASE::Vendor, "Buy-from Vendor No.",
                           "Purchaser Code", '', "Posting Description", '');
                     end;
                 end;
-                PricesInclVATtxt := FORMAT("Prices Including VAT");
-                if not RecGContact.GET("Purchase Header"."Buy-from Contact No.") then
-                    CLEAR(RecGContact);
+                PricesInclVATtxt := Format("Prices Including VAT");
+                if not RecGContact.Get("Purchase Header"."Buy-from Contact No.") then
+                    Clear(RecGContact);
 
 
                 TxtGOurReferences := "Buy-from Vendor No.";
                 if "Buy-from Vendor No." <> "Pay-to Vendor No." then
                     TxtGOurReferences += ' / ' + "Pay-to Vendor No.";
 
-                RecGVendor.GET("Buy-from Vendor No.");
+                RecGVendor.Get("Buy-from Vendor No.");
 
-                CLEAR(RecGPaymentMethod);
-                if "Purchase Header"."Payment Method Code" <> '' then RecGPaymentMethod.GET("Payment Method Code");
+                Clear(RecGPaymentMethod);
+                if "Purchase Header"."Payment Method Code" <> '' then RecGPaymentMethod.Get("Payment Method Code");
 
 
                 if "Currency Code" = '' then
@@ -1259,17 +1259,17 @@ report 51003 "Purchases - Order FTA"
                 else
                     TxtGCodeDevise := "Currency Code";
 
-                if RecLCurrency.GET(TxtGCodeDevise) then
+                if RecLCurrency.Get(TxtGCodeDevise) then
                     TxtGLibDevise := RecLCurrency.Description;
 
-                CLEAR(TxtGMailFax);
+                Clear(TxtGMailFax);
                 if BoolGPrintFax then begin
 
-                    CompanyInfo.TESTFIELD(CompanyInfo."ECOM ID");
-                    RecGUserSetup.GET(USERID);
-                    RecGUserSetup.TESTFIELD("E-Mail");
+                    CompanyInfo.TestField(CompanyInfo."ECOM ID");
+                    RecGUserSetup.Get(UserId);
+                    RecGUserSetup.TestField("E-Mail");
                     TxtGMailFax[1] := 'ID:' + CompanyInfo."ECOM ID" + ' ' + '!';
-                    TESTFIELD("Fax No.");
+                    TestField("Fax No.");
                     TxtGMailFax[2] := 'Email:' + RecGUserSetup."E-Mail" + ' ' + '!';
                     TxtGMailFax[3] := 'Fax:' + "Fax No." + ' ' + '!';
 
@@ -1293,9 +1293,9 @@ report 51003 "Purchases - Order FTA"
                     {
                         Caption = 'No. of Copies';
                     }
-                    field(ShowInternalInformation; ShowInternalInfo)
+                    field(ShowInternalInFormation; ShowInternalInfo)
                     {
-                        Caption = 'Show Internal Information';
+                        Caption = 'Show Internal InFormation';
                     }
                     field(ArchiveDocument; ArchiveDocument)
                     {
@@ -1359,34 +1359,34 @@ report 51003 "Purchases - Order FTA"
 
     trigger OnInitReport()
     begin
-        GLSetup.GET();
-        PurchSetup.GET();
-        SalesSetup.GET();
+        GLSetup.Get();
+        PurchSetup.Get();
+        SalesSetup.Get();
 
         case SalesSetup."Logo Position on Documents" of
             SalesSetup."Logo Position on Documents"::"No Logo":
                 ;
             SalesSetup."Logo Position on Documents"::Left:
                 begin
-                    CompanyInfo3.GET();
-                    CompanyInfo3.CALCFIELDS(Picture);
+                    CompanyInfo3.Get();
+                    CompanyInfo3.CalcFields(Picture);
                 end;
             SalesSetup."Logo Position on Documents"::Center:
                 begin
-                    CompanyInfo1.GET();
-                    CompanyInfo1.CALCFIELDS(Picture);
+                    CompanyInfo1.Get();
+                    CompanyInfo1.CalcFields(Picture);
                 end;
             SalesSetup."Logo Position on Documents"::Right:
                 begin
-                    CompanyInfo2.GET();
-                    CompanyInfo2.CALCFIELDS(Picture);
+                    CompanyInfo2.Get();
+                    CompanyInfo2.CalcFields(Picture);
                 end;
         end;
 
-        if RecGUserReport.GET(USERID, 51003) then
+        if RecGUserReport.Get(UserId, 51003) then
             if RecGUserReport.Email then begin
-                CompanyInfo3.GET();
-                CompanyInfo3.CALCFIELDS(Picture);
+                CompanyInfo3.Get();
+                CompanyInfo3.CalcFields(Picture);
             end;
     end;
 
@@ -1396,14 +1396,14 @@ report 51003 "Purchases - Order FTA"
             BooGPrintLogo := true;
 
         if BooGPrintLogo then begin
-            CompanyInfo3.GET();
-            CompanyInfo3.CALCFIELDS(Picture);
+            CompanyInfo3.Get();
+            CompanyInfo3.CalcFields(Picture);
         end;
     end;
 
     var
         GLSetup: Record "General Ledger Setup";
-        CompanyInfo: Record "Company Information";
+        CompanyInfo: Record "Company InFormation";
         ShipmentMethod: Record "Shipment Method";
         PaymentTerms: Record "Payment Terms";
         PrepmtPaymentTerms: Record "Payment Terms";
@@ -1461,7 +1461,7 @@ report 51003 "Purchases - Order FTA"
         Text000: Label 'Purchaser';
         Text001: Label 'Total %1';
         Text002: Label 'Total %1 Incl. VAT';
-        Text003: Label ' COPY';
+        Text003: Label ' Copy';
         Text004: Label 'Order%1';
         Text005: Label 'Page %1';
         Text006: Label 'Total %1 Excl. VAT';
@@ -1549,9 +1549,9 @@ report 51003 "Purchases - Order FTA"
         LblDescription: Label 'Description';
         LblNo: Label 'No.';
         SalesSetup: Record "Sales & Receivables Setup";
-        CompanyInfo1: Record "Company Information";
-        CompanyInfo2: Record "Company Information";
-        CompanyInfo3: Record "Company Information";
+        CompanyInfo1: Record "Company InFormation";
+        CompanyInfo2: Record "Company InFormation";
+        CompanyInfo3: Record "Company InFormation";
         RecGItem: Record Item;
         DecGNetDirectUnitCostExcludingVAT: Decimal;
         LblRefInt: Label 'No.';

@@ -14,7 +14,7 @@ pageextension 50047 SalesJournal extends "Sales Journal" //253
                 ToolTip = 'Specifies the value of the Posting Group field.';
             }
         }
-        modify("Due Date")
+        Modify("Due Date")
         {
             Visible = true;
         }

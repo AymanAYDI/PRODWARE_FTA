@@ -74,7 +74,7 @@ page 50010 "Transitory Kit Item Card"
     // ------------------------------------------------------------------------
 
     Caption = 'Transitory Kit Item Card';
-    PageType = Card;
+    PaGetype = Card;
     RefreshOnActivate = true;
     SourceTable = Item;
     SourceTableView = where("Item Base" = filter("Transitory Kit"));
@@ -93,7 +93,7 @@ page 50010 "Transitory Kit Item Card"
                     trigger OnAssistEdit()
                     begin
                         if Rec.AssistEdit() then
-                            CurrPage.UPDATE();
+                            CurrPage.Update();
                     end;
                 }
                 field("No. 2"; Rec."No. 2")
@@ -328,7 +328,7 @@ page 50010 "Transitory Kit Item Card"
                             ItemStatistics: Page "Item Statistics";
                         begin
                             ItemStatistics.SetItem(Rec);
-                            ItemStatistics.RUNMODAL();
+                            ItemStatistics.RunModal();
                         end;
                     }
                     action("Entry Statistics")
@@ -369,8 +369,8 @@ page 50010 "Transitory Kit Item Card"
                     var
                         ItemsByLocation: Page "Items by Location";
                     begin
-                        ItemsByLocation.SETRECORD(Rec);
-                        ItemsByLocation.RUN();
+                        ItemsByLocation.SetRecord(Rec);
+                        ItemsByLocation.Run();
                     end;
                 }
                 action("Historique de l'article")
@@ -546,8 +546,8 @@ page 50010 "Transitory Kit Item Card"
                         var
                             ProdBOMWhereUsed: Page "Prod. BOM Where-Used";//99000811
                         begin
-                            ProdBOMWhereUsed.SetItem(Rec, WORKDATE());
-                            ProdBOMWhereUsed.RUNMODAL();
+                            ProdBOMWhereUsed.SetItem(Rec, WorkDate());
+                            ProdBOMWhereUsed.RunModal();
                         end;
                     }
                     action("K-Calc. Stan&dard Cost")
@@ -560,7 +560,7 @@ page 50010 "Transitory Kit Item Card"
                         var
                             CalculateStdCost: Codeunit "Calculate Standard Cost";
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcItem(Rec."No.", true);
                         end;
                     }
@@ -579,8 +579,8 @@ page 50010 "Transitory Kit Item Card"
                         var
                             ProdBOMWhereUsed: Page "Prod. BOM Where-Used";
                         begin
-                            ProdBOMWhereUsed.SetItem(Rec, WORKDATE());
-                            ProdBOMWhereUsed.RUNMODAL();
+                            ProdBOMWhereUsed.SetItem(Rec, WorkDate());
+                            ProdBOMWhereUsed.RunModal();
                         end;
                     }
                     action("Calc.Stan&dard Cost")
@@ -591,7 +591,7 @@ page 50010 "Transitory Kit Item Card"
 
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcItem(Rec."No.", false);
                         end;
                     }
@@ -657,9 +657,9 @@ page 50010 "Transitory Kit Item Card"
                         var
                             ResourceSkill: Record "Resource Skill";
                         begin
-                            CLEAR(SkilledResourceList);
+                            Clear(SkilledResourceList);
                             SkilledResourceList.Initialize(ResourceSkill.Type::Item, Rec."No.", Rec.Description);
-                            SkilledResourceList.RUNMODAL();
+                            SkilledResourceList.RunModal();
                         end;
                     }
                 }
@@ -730,20 +730,20 @@ page 50010 "Transitory Kit Item Card"
                         BOMStructure: Page "BOM Structure";
                     begin
                         BOMStructure.InitItem(Rec);
-                        BOMStructure.RUN();
+                        BOMStructure.Run();
                     end;
                 }
                 action("Cost Shares")
                 {
                     Caption = 'Cost Shares';
-                    Image = CostBudget;
+                    Image = CostBudGet;
 
                     trigger OnAction()
                     var
                         BOMCostShares: Page "BOM Cost Shares";
                     begin
                         BOMCostShares.InitItem(Rec);
-                        BOMCostShares.RUN();
+                        BOMCostShares.Run();
                     end;
                 }
                 group("Assemb&ly")
@@ -775,7 +775,7 @@ page 50010 "Transitory Kit Item Card"
 
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcItem(Rec."No.", true);
                         end;
                     }
@@ -787,7 +787,7 @@ page 50010 "Transitory Kit Item Card"
 
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcAssemblyItemPrice(Rec."No.")
                         end;
                     }
@@ -813,8 +813,8 @@ page 50010 "Transitory Kit Item Card"
                         var
                             ProdBOMWhereUsed: Page "Prod. BOM Where-Used";
                         begin
-                            ProdBOMWhereUsed.SetItem(Rec, WORKDATE());
-                            ProdBOMWhereUsed.RUNMODAL();
+                            ProdBOMWhereUsed.SetItem(Rec, WorkDate());
+                            ProdBOMWhereUsed.RunModal();
                         end;
                     }
                     action("Calc. Stan&dard-Cost")
@@ -826,7 +826,7 @@ page 50010 "Transitory Kit Item Card"
 
                         trigger OnAction()
                         begin
-                            CLEAR(CalculateStdCost);
+                            Clear(CalculateStdCost);
                             CalculateStdCost.CalcItem(Rec."No.", false);
                         end;
                     }
@@ -853,7 +853,7 @@ page 50010 "Transitory Kit Item Card"
                     RecLProdBOMHeader: Record "Production BOM Header";
                 begin
                     Rec.FctBOM(Rec);
-                    CurrPage.UPDATE(true);
+                    CurrPage.Update(true);
                     //FctBOMtoValidate(Rec);
                 end;
             }
@@ -866,9 +866,9 @@ page 50010 "Transitory Kit Item Card"
                 var
                     RecLItem: Record "Item";
                 begin
-                    CLEAR(RecLItem);
-                    RecLItem.SETRANGE("No.", Rec."No.");
-                    REPORT.RUNMODAL(Report::"Calculate Kit Price Item", true, false, RecLItem);
+                    Clear(RecLItem);
+                    RecLItem.SetRange("No.", Rec."No.");
+                    REPORT.RunModal(Report::"Calculate Kit Price Item", true, false, RecLItem);
                 end;
             }
             action("Calc. Stan&dard Cost")
@@ -878,7 +878,7 @@ page 50010 "Transitory Kit Item Card"
 
                 trigger OnAction()
                 begin
-                    CLEAR(CalculateStdCost);
+                    Clear(CalculateStdCost);
                     CalculateStdCost.CalcItem(Rec."No.", true);
                 end;
             }
@@ -891,12 +891,12 @@ page 50010 "Transitory Kit Item Card"
                 var
                     RecLItem: Record "Item";
                 begin
-                    CLEAR(RecLItem);
+                    Clear(RecLItem);
                     RecLItem := Rec;
-                    RecLItem.SETRANGE("No.", Rec."No.");
-                    RecLItem.SETRECFILTER();
-                    //Report.SETTABLEVIEW(Reclitem)
-                    REPORT.RUNMODAL(50009, true, false, RecLItem);
+                    RecLItem.SetRange("No.", Rec."No.");
+                    RecLItem.SetRecFilter();
+                    //Report.SetTableView(Reclitem)
+                    REPORT.RunModal(50009, true, false, RecLItem);
                 end;
             }
             action("Apply Template")
@@ -920,7 +920,7 @@ page 50010 "Transitory Kit Item Card"
                 begin
                     if Rec."Quote Associated" then begin
                         Rec."Quote Associated" := false;
-                        Rec.MODIFY();
+                        Rec.Modify();
                     end;
                 end;
             }
@@ -929,7 +929,7 @@ page 50010 "Transitory Kit Item Card"
 
     trigger OnAfterGetRecord()
     begin
-        Rec.SETRANGE("No.");
+        Rec.SetRange("No.");
         EnablePlanningControls();
         EnableCostingControls();
     end;
@@ -975,12 +975,12 @@ page 50010 "Transitory Kit Item Card"
     var
         RecLItem: Record Item;
     begin
-        CLEAR(RecLItem);
+        Clear(RecLItem);
         RecLItem := Rec;
-        RecLItem.SETRANGE("No.", Rec."No.");
-        RecLItem.SETRECFILTER();
-        //Report.SETTABLEVIEW(Reclitem)
-        REPORT.RUNMODAL(50009, false, false, RecLItem);
+        RecLItem.SetRange("No.", Rec."No.");
+        RecLItem.SetRecFilter();
+        //Report.SetTableView(Reclitem)
+        REPORT.RunModal(50009, false, false, RecLItem);
     end;
 }
 

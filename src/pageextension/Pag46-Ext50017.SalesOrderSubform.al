@@ -13,7 +13,7 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             trigger OnAfterValidate()
             begin
                 if (rec."Item Base" = rec."Item Base"::Transitory) then
-                    CurrPage.UPDATE();
+                    CurrPage.Update();
             end;
         }
         modify("No.")
@@ -23,7 +23,7 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             trigger OnAfterValidate()
             begin
                 if (rec."Item Base" = rec."Item Base"::Transitory) then
-                    CurrPage.UPDATE();
+                    CurrPage.Update();
             end;
         }
         modify(Description)
@@ -33,7 +33,7 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             trigger OnAfterValidate()
             begin
                 if (rec."Item Base" = rec."Item Base"::Transitory) then
-                    CurrPage.UPDATE();
+                    CurrPage.Update();
             end;
         }
         modify("Item Reference No.")
@@ -41,13 +41,13 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             trigger OnAfterValidate()
             begin
                 if (rec."Item Base" = rec."Item Base"::Transitory) then
-                    CurrPage.UPDATE();
+                    CurrPage.Update();
             end;
 
             trigger OnLookup(var Text: Text): Boolean
             begin
                 if (rec."Item Base" = rec."Item Base"::Transitory) then
-                    CurrPage.UPDATE();
+                    CurrPage.Update();
             end;
         }
         modify("Location Code")
@@ -64,7 +64,7 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
             //     CstL001: Label 'The Entered quantity is greather than the existing quantity, please entered this quantity in a new line.';
             // begin
             //     if (xRec.Quantity <> 0) and (xRec.Quantity < rec.Quantity) then
-            //         ERROR(CstL001);
+            //         Error(CstL001);
             //     DecGxQuantity := xRec.Quantity;
             //     OptGxPreparationType := xRec."Preparation Type";
             // end;
@@ -107,7 +107,7 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
                 ToolTip = 'Specifies the value of the Item Base field.';
                 trigger OnValidate()
                 begin
-                    CurrPage.UPDATE(true);
+                    CurrPage.Update(true);
                 end;
             }
         }
@@ -189,7 +189,7 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
     {
         addafter("&Line")
         {
-            group("Information Article")
+            group("InFormation Article")
             {
                 action("Item Card")
                 {
@@ -212,7 +212,7 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
                 ToolTip = 'Executes the Afficher ligne expédier uniquement action.';
                 trigger OnAction()
                 begin
-                    Rec.SETFILTER("Outstanding Quantity", '<>%1', 0);
+                    Rec.SetFilter("Outstanding Quantity", '<>%1', 0);
                 end;
             }
             action("Afficher ligne expédier mois en cours")
@@ -227,10 +227,10 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
                     EndingDate: Date;
 
                 begin
-                    SalesLine.SETFILTER("Outstanding Quantity", '<>%1', 0);
-                    StartingDate := CALCDATE('<-CM>', TODAY);
-                    EndingDate := CALCDATE('<CM>', TODAY);
-                    SalesLine.SETFILTER("Shipment Date", '%1..%2', StartingDate, EndingDate, 0D);
+                    SalesLine.SetFilter("Outstanding Quantity", '<>%1', 0);
+                    StartingDate := CalcDate('<-CM>', TODAY);
+                    EndingDate := CalcDate('<CM>', TODAY);
+                    SalesLine.SetFilter("Shipment Date", '%1..%2', StartingDate, EndingDate, 0D);
                 end;
             }
         }
@@ -260,7 +260,7 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
     begin
         BooGOK := rec.FctctrlKitReservation(Rec);
         PrepareEnable := true;
-        if UserSetup.GET(USERID) then
+        if UserSetup.Get(UserId) then
             PrepareEnable := not UserSetup."Prepared Only";
     end;
 
@@ -268,8 +268,8 @@ pageextension 50017 "SalesOrderSubform" extends "Sales Order Subform" //46
     var
         UserSetup: Record "User Setup";
     begin
-        if UserSetup.GET(USERID) then
+        if UserSetup.Get(UserId) then
             if UserSetup."Prepared Only" then
-                rec.SETRANGE(rec.Prepare, true);
+                rec.SetRange(rec.Prepare, true);
     end;
 }

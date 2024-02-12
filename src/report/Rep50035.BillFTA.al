@@ -41,7 +41,7 @@ report 50035 "Bill FTA"
             column(CompanyInfo_City; CompanyInfo.City)
             {
             }
-            column(FORMAT_PostingDate_0_4_; FORMAT(PostingDate, 0, 4))
+            column(Format_PostingDate_0_4_; Format(PostingDate, 0, 4))
             {
             }
             column(PrintCurrencyCode; PrintCurrencyCode())
@@ -70,7 +70,7 @@ report 50035 "Bill FTA"
             column(PrintCurrencyCode_Control1120061; PrintCurrencyCode())
             {
             }
-            column(Payment_Line__Due_Date_; FORMAT("Due Date"))
+            column(Payment_Line__Due_Date_; Format("Due Date"))
             {
             }
             column(Payment_Line__No__; "No.")
@@ -103,7 +103,7 @@ report 50035 "Bill FTA"
             column(Vendor_NameCaption; Vendor_NameCaptionLbl)
             {
             }
-            column(Payment_Line__Account_No__Caption; FIELDCAPTION("Bill-to Customer No."))
+            column(Payment_Line__Account_No__Caption; FieldCaption("Bill-to Customer No."))
             {
             }
             column(Payment_Line__Bank_Branch_No__Caption; Bank_Branch_No__CaptionLbl)
@@ -142,16 +142,16 @@ report 50035 "Bill FTA"
             column(IssueCity; IssueCity)
             {
             }
-            column(FORMAT_IssueDate; FORMAT(IssueDate))
+            column(Format_IssueDate; Format(IssueDate))
             {
             }
-            column(ValueMontantPourControle; '****' + FORMAT("Amount Including VAT", 0, '<Precision,2:><Standard Format,0>'))
+            column(ValueMontantPourControle; '****' + Format("Amount Including VAT", 0, '<Precision,2:><Standard Format,0>'))
             {
             }
-            column(FORMAT_PostingDate; FORMAT(PostingDate))
+            column(Format_PostingDate; Format(PostingDate))
             {
             }
-            column(FORMAT_DueDate; FORMAT("Due Date"))
+            column(Format_DueDate; Format("Due Date"))
             {
             }
             column(AmountText; AmountText)
@@ -172,7 +172,7 @@ report 50035 "Bill FTA"
             column(BankAccountNo; CustBankAcc_Grc."Bank Account No.")
             {
             }
-            column(RIBKey; CONVERTSTR(FORMAT(CustBankAcc_Grc."RIB Key", 2), ' ', '0'))
+            column(RIBKey; ConvertStr(Format(CustBankAcc_Grc."RIB Key", 2), ' ', '0'))
             {
             }
             column(CstTxt001; CstTxt001)
@@ -184,16 +184,16 @@ report 50035 "Bill FTA"
                 VendorPaymentAddr: Record "Payment Address";
                 FormatAddress: Codeunit "Format Address";
             begin
-                Customer.GET("Bill-to Customer No.");
+                Customer.Get("Bill-to Customer No.");
 
 
-                CustBankAcc_Grc.SETRANGE("Customer No.", "Sales Invoice Header"."Bill-to Customer No.");
-                if not CustBankAcc_Grc.FINDFIRST() then
-                    CustBankAcc_Grc.INIT();
+                CustBankAcc_Grc.SetRange("Customer No.", "Sales Invoice Header"."Bill-to Customer No.");
+                if not CustBankAcc_Grc.findFirst() then
+                    CustBankAcc_Grc.Init();
 
 
                 StatementAmount := Amount;
-                StatementAmount := ABS(Amount);
+                StatementAmount := Abs(Amount);
 
                 Amount := -Amount;
 
@@ -201,15 +201,15 @@ report 50035 "Bill FTA"
 
                 FormatAddress.SalesInvBillTo(CompanyAddr, "Sales Invoice Header");
 
-                VendorPaymentAddr.INIT();
+                VendorPaymentAddr.Init();
 
                 PostingDate := "Posting Date";
 
 
-                GLSetup.GET();
+                GLSetup.Get();
 
                 if IssueDate = 0D then
-                    IssueDate := WORKDATE();
+                    IssueDate := WorkDate();
 
 
                 if "Currency Code" = '' then
@@ -223,9 +223,9 @@ report 50035 "Bill FTA"
 
             trigger OnPreDataItem()
             begin
-                CurrReport.CREATETOTALS(StatementAmount);
+                CurrReport.CreateTotals(StatementAmount);
 
-                CompanyInfo.GET();
+                CompanyInfo.Get();
                 FormatAddress.Company(VendAdr, CompanyInfo);
                 //>>SOBI
                 IssueCity := CompanyInfo.City;
@@ -250,7 +250,7 @@ report 50035 "Bill FTA"
     labels
     {
         MmeMr = 'Ladies and Gentlemen,';
-        Nous_vous_prions_de_trouver_ci_dessous_etc = 'We ask you to herewith find a promissory note in payment of invoices following :';
+        Nous_vous_prions_de_trouver_ci_dessous_etc = 'We ask you to herewith Find a promissory note in payment of invoices following :';
         Nous_vous_prions_d_agreer_etc = 'Please accept, dear Vendor, our best regards.';
         Le_service_comptabilite_FIRST = 'The accounting department FIRST';
         Contre_cette_LETTRE_DE_CHANGE = 'Against this BILL';
@@ -292,7 +292,7 @@ report 50035 "Bill FTA"
     }
 
     var
-        CompanyInfo: Record "Company Information";
+        CompanyInfo: Record "Company InFormation";
         Customer: Record Customer;
         CustBankAcc_Grc: Record "Customer Bank Account";
         GLSetup: Record "General Ledger Setup";
@@ -325,7 +325,7 @@ report 50035 "Bill FTA"
     procedure PrintCurrencyCode(): Code[10]
     begin
         if ("Sales Invoice Header"."Currency Code" = '') then begin
-            GLSetup.GET();
+            GLSetup.Get();
             exit(GLSetup."LCY Code");
         end;
         exit("Sales Invoice Header"."Currency Code");

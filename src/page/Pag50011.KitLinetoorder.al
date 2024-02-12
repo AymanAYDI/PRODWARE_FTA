@@ -5,7 +5,7 @@ using Microsoft.Sales.Document;
 page 50011 "Kit Line to order"
 {
     InsertAllowed = false;
-    PageType = ListPart;
+    PaGetype = ListPart;
     SourceTable = "Assembly Line";
     SourceTableView = sorting("Remaining Quantity")
                       where("Remaining Quantity" = filter(<> 0));
@@ -141,9 +141,9 @@ page 50011 "Kit Line to order"
         //FctSelectRecForOrder(Rec);
         Rec.FctSelectRecForOrder2(Rec);
         Rec.FILTERGROUP(0);
-        Rec.SETRANGE("Document Type", Rec."Document Type"::Order);
-        Rec.CALCFIELDS("Inventory Value Zero");
-        Rec.SETRANGE("Inventory Value Zero", false);
+        Rec.SetRange("Document Type", Rec."Document Type"::Order);
+        Rec.CalcFields("Inventory Value Zero");
+        Rec.SetRange("Inventory Value Zero", false);
         Rec.FILTERGROUP(2);
     end;
 
@@ -152,27 +152,27 @@ page 50011 "Kit Line to order"
         RecLSalesHeader: Record "Sales Header";
         RecLAssembletoOrderLink: Record "Assemble-to-Order Link";
     begin
-        if RecLAssembletoOrderLink.GET(Rec."Document Type", Rec."Document No.") then begin
-            RecLSalesHeader.SETRANGE("Document Type", RecLAssembletoOrderLink."Document Type");
-            RecLSalesHeader.SETRANGE("No.", RecLAssembletoOrderLink."Document No.");
+        if RecLAssembletoOrderLink.Get(Rec."Document Type", Rec."Document No.") then begin
+            RecLSalesHeader.SetRange("Document Type", RecLAssembletoOrderLink."Document Type");
+            RecLSalesHeader.SetRange("No.", RecLAssembletoOrderLink."Document No.");
             if RecLAssembletoOrderLink."Document Type" = RecLAssembletoOrderLink."Document Type"::Order then
-                page.RUNMODAL(Page::"Sales Order", RecLSalesHeader);
+                page.RunModal(Page::"Sales Order", RecLSalesHeader);
             if RecLAssembletoOrderLink."Document Type" = RecLAssembletoOrderLink."Document Type"::Invoice then
-                page.RUNMODAL(Page::"Sales Invoice", RecLSalesHeader);
+                page.RunModal(Page::"Sales Invoice", RecLSalesHeader);
         end;
     end;
 
     procedure FctShowKitLine(var CodPVendorNo: Code[20]; var BooPSelectLine: Boolean)
     begin
         if CodPVendorNo <> '' then
-            Rec.SETFILTER("Vendor No.", CodPVendorNo)
+            Rec.SetFilter("Vendor No.", CodPVendorNo)
         else
-            Rec.SETRANGE("Vendor No.");
+            Rec.SetRange("Vendor No.");
         if BooPSelectLine then
-            Rec.SETRANGE(Rec."Selected for Order", true)
+            Rec.SetRange(Rec."Selected for Order", true)
         else
-            Rec.SETRANGE("Selected for Order");
-        CurrPage.UPDATE(false);
+            Rec.SetRange("Selected for Order");
+        CurrPage.Update(false);
     end;
 }
 

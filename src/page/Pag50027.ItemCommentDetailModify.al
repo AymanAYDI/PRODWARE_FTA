@@ -8,7 +8,7 @@ page 50027 "Item Comment Detail Modify"
     Caption = 'Modification nomenclature';
     DelayedInsert = true;
     MultipleNewLines = true;
-    PageType = ListPart;
+    PaGetype = ListPart;
     SourceTable = "Item Comment Detail";
     SourceTableView = sorting("Parent Entry No.", "Entry No.")
                       where("Comment Type" = const(Modify));

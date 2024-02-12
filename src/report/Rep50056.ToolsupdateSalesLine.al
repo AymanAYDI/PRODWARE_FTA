@@ -35,9 +35,9 @@ report 50056 "Tools update SalesLine"
                 "Sales Line"."Qty. Shipped Not Invoiced" := 0;
                 "Sales Line"."Qty. Shipped Not Invd. (Base)" := 0;
 
-                MODIFY();
+                Modify();
 
-                MESSAGE('ligne commande modifiée = %1, %2', "Sales Line"."Document No.", "Sales Line"."Line No.");
+                Message('ligne commande modifiée = %1, %2', "Sales Line"."Document No.", "Sales Line"."Line No.");
             end;
         }
     }

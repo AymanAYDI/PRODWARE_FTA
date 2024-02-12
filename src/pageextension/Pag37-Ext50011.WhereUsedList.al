@@ -30,8 +30,8 @@ pageextension 50011 WhereUsedList extends "Where-Used List" //37
     var
         Item: Record "Item";
     begin
-        if Item.GET(ItemNo) then begin
-            Item.CALCFIELDS(Inventory);
+        if Item.Get(ItemNo) then begin
+            Item.CalcFields(Inventory);
             exit(Item.Inventory);
         end;
 
@@ -42,8 +42,8 @@ pageextension 50011 WhereUsedList extends "Where-Used List" //37
     var
         Item: Record Item;
     begin
-        if Item.GET(ItemNo) then begin
-            Item.CALCFIELDS(Inventory, "Qty. on Sales Order", "Reserved Qty. on Purch. Orders", "Qty. on Asm. Component");
+        if Item.Get(ItemNo) then begin
+            Item.CalcFields(Inventory, "Qty. on Sales Order", "Reserved Qty. on Purch. Orders", "Qty. on Asm. Component");
             exit(Item.Inventory - (Item."Qty. on Sales Order" + Item."Qty. on Asm. Component") + Item."Reserved Qty. on Purch. Orders");
         end;
 

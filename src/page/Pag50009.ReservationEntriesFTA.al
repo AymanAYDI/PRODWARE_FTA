@@ -17,7 +17,7 @@ page 50009 "Reservation Entries FTA"
     //DataCaptionExpression = TextCaption;//TODO
     DeleteAllowed = false;
     InsertAllowed = false;
-    PageType = ListPart;
+    PaGetype = ListPart;
     SourceTable = "Reservation Entry";
     ApplicationArea = All;
 
@@ -188,7 +188,7 @@ page 50009 "Reservation Entries FTA"
     var
         ReservEntry: Record "Reservation Entry";
     begin
-        ReservEntry.GET(Rec."Entry No.", false);
+        ReservEntry.Get(Rec."Entry No.", false);
         LookupReserved(ReservEntry);
     end;
 
@@ -197,7 +197,7 @@ page 50009 "Reservation Entries FTA"
     var
         ReservEntry: Record "Reservation Entry";
     begin
-        ReservEntry.GET(Rec."Entry No.", true);
+        ReservEntry.Get(Rec."Entry No.", true);
         LookupReserved(ReservEntry);
     end;
 
@@ -208,104 +208,104 @@ page 50009 "Reservation Entries FTA"
             case "Source Type" of
                 DATABASE::"Sales Line":
                     begin
-                        SalesLine.RESET();
-                        SalesLine.SETRANGE("Document Type", "Source Subtype");
-                        SalesLine.SETRANGE("Document No.", "Source ID");
-                        SalesLine.SETRANGE("Line No.", "Source Ref. No.");
-                        PAGE.RUNMODAL(PAGE::"Sales Lines", SalesLine);
+                        SalesLine.Reset();
+                        SalesLine.SetRange("Document Type", "Source Subtype");
+                        SalesLine.SetRange("Document No.", "Source ID");
+                        SalesLine.SetRange("Line No.", "Source Ref. No.");
+                        PAGE.RunModal(PAGE::"Sales Lines", SalesLine);
                     end;
                 DATABASE::"Requisition Line":
                     begin
-                        ReqLine.RESET();
-                        ReqLine.SETRANGE("Worksheet Template Name", "Source ID");
-                        ReqLine.SETRANGE("Journal Batch Name", "Source Batch Name");
-                        ReqLine.SETRANGE("Line No.", "Source Ref. No.");
-                        PAGE.RUNMODAL(PAGE::"Requisition Lines", ReqLine);
+                        ReqLine.Reset();
+                        ReqLine.SetRange("Worksheet Template Name", "Source ID");
+                        ReqLine.SetRange("Journal Batch Name", "Source Batch Name");
+                        ReqLine.SetRange("Line No.", "Source Ref. No.");
+                        PAGE.RunModal(PAGE::"Requisition Lines", ReqLine);
                     end;
                 DATABASE::"Purchase Line":
                     begin
-                        PurchLine.RESET();
-                        PurchLine.SETRANGE("Document Type", "Source Subtype");
-                        PurchLine.SETRANGE("Document No.", "Source ID");
-                        PurchLine.SETRANGE("Line No.", "Source Ref. No.");
-                        PAGE.RUNMODAL(PAGE::"Purchase Lines", PurchLine);
+                        PurchLine.Reset();
+                        PurchLine.SetRange("Document Type", "Source Subtype");
+                        PurchLine.SetRange("Document No.", "Source ID");
+                        PurchLine.SetRange("Line No.", "Source Ref. No.");
+                        PAGE.RunModal(PAGE::"Purchase Lines", PurchLine);
                     end;
                 DATABASE::"Item Journal Line":
                     begin
-                        ItemJnlLine.RESET();
-                        ItemJnlLine.SETRANGE("Journal Template Name", "Source ID");
-                        ItemJnlLine.SETRANGE("Journal Batch Name", "Source Batch Name");
-                        ItemJnlLine.SETRANGE("Line No.", "Source Ref. No.");
-                        ItemJnlLine.SETRANGE("Entry Type", "Source Subtype");
-                        PAGE.RUNMODAL(PAGE::"Item Journal Lines", ItemJnlLine);
+                        ItemJnlLine.Reset();
+                        ItemJnlLine.SetRange("Journal Template Name", "Source ID");
+                        ItemJnlLine.SetRange("Journal Batch Name", "Source Batch Name");
+                        ItemJnlLine.SetRange("Line No.", "Source Ref. No.");
+                        ItemJnlLine.SetRange("Entry Type", "Source Subtype");
+                        PAGE.RunModal(PAGE::"Item Journal Lines", ItemJnlLine);
                     end;
                 //>>MIG NAV 2015 : Not Supported
                 /*
                 DATABASE::"BOM Journal Line":
                   BEGIN
-                    BOMJnlLine.RESET;
-                    BOMJnlLine.SETRANGE("Journal Template Name","Source ID");
-                    BOMJnlLine.SETRANGE("Journal Batch Name","Source Batch Name");
-                    BOMJnlLine.SETRANGE("Line No.","Source Ref. No.");
-                    PAGE.RUNMODAL(PAGE::"BOM Journal Lines",BOMJnlLine);
+                    BOMJnlLine.Reset;
+                    BOMJnlLine.SetRange("Journal Template Name","Source ID");
+                    BOMJnlLine.SetRange("Journal Batch Name","Source Batch Name");
+                    BOMJnlLine.SetRange("Line No.","Source Ref. No.");
+                    PAGE.RunModal(PAGE::"BOM Journal Lines",BOMJnlLine);
                   END;
                 */
                 //<<MIG NAV 2015 : Not Supported
                 DATABASE::"Item Ledger Entry":
                     begin
-                        ItemLedgEntry.RESET();
-                        ItemLedgEntry.SETRANGE("Entry No.", "Source Ref. No.");
-                        PAGE.RUNMODAL(0, ItemLedgEntry);
+                        ItemLedgEntry.Reset();
+                        ItemLedgEntry.SetRange("Entry No.", "Source Ref. No.");
+                        PAGE.RunModal(0, ItemLedgEntry);
                     end;
                 DATABASE::"Prod. Order Line":
                     begin
-                        ProdOrderLine.RESET();
-                        ProdOrderLine.SETRANGE(Status, "Source Subtype");
-                        ProdOrderLine.SETRANGE("Prod. Order No.", "Source ID");
-                        ProdOrderLine.SETRANGE("Line No.", "Source Prod. Order Line");
-                        PAGE.RUNMODAL(0, ProdOrderLine);
+                        ProdOrderLine.Reset();
+                        ProdOrderLine.SetRange(Status, "Source Subtype");
+                        ProdOrderLine.SetRange("Prod. Order No.", "Source ID");
+                        ProdOrderLine.SetRange("Line No.", "Source Prod. Order Line");
+                        PAGE.RunModal(0, ProdOrderLine);
                     end;
                 DATABASE::"Prod. Order Component":
                     begin
-                        ProdOrderComp.RESET();
-                        ProdOrderComp.SETRANGE(Status, "Source Subtype");
-                        ProdOrderComp.SETRANGE("Prod. Order No.", "Source ID");
-                        ProdOrderComp.SETRANGE("Prod. Order Line No.", "Source Prod. Order Line");
-                        ProdOrderComp.SETRANGE("Line No.", "Source Ref. No.");
-                        PAGE.RUNMODAL(0, ProdOrderComp);
+                        ProdOrderComp.Reset();
+                        ProdOrderComp.SetRange(Status, "Source Subtype");
+                        ProdOrderComp.SetRange("Prod. Order No.", "Source ID");
+                        ProdOrderComp.SetRange("Prod. Order Line No.", "Source Prod. Order Line");
+                        ProdOrderComp.SetRange("Line No.", "Source Ref. No.");
+                        PAGE.RunModal(0, ProdOrderComp);
                     end;
                 DATABASE::"Planning Component":
                     begin
-                        PlanningComponent.RESET();
-                        PlanningComponent.SETRANGE("Worksheet Template Name", "Source ID");
-                        PlanningComponent.SETRANGE("Worksheet Batch Name", "Source Batch Name");
-                        PlanningComponent.SETRANGE("Worksheet Line No.", "Source Prod. Order Line");
-                        PlanningComponent.SETRANGE("Line No.", "Source Ref. No.");
-                        PAGE.RUNMODAL(0, PlanningComponent);
+                        PlanningComponent.Reset();
+                        PlanningComponent.SetRange("Worksheet Template Name", "Source ID");
+                        PlanningComponent.SetRange("Worksheet Batch Name", "Source Batch Name");
+                        PlanningComponent.SetRange("Worksheet Line No.", "Source Prod. Order Line");
+                        PlanningComponent.SetRange("Line No.", "Source Ref. No.");
+                        PAGE.RunModal(0, PlanningComponent);
                     end;
                 DATABASE::"Transfer Line":
                     begin
-                        TransLine.RESET();
-                        TransLine.SETRANGE("Document No.", "Source ID");
-                        TransLine.SETRANGE("Line No.", "Source Ref. No.");
-                        TransLine.SETRANGE("Derived From Line No.", "Source Prod. Order Line");
-                        PAGE.RUNMODAL(0, TransLine);
+                        TransLine.Reset();
+                        TransLine.SetRange("Document No.", "Source ID");
+                        TransLine.SetRange("Line No.", "Source Ref. No.");
+                        TransLine.SetRange("Derived From Line No.", "Source Prod. Order Line");
+                        PAGE.RunModal(0, TransLine);
                     end;
                 DATABASE::"Service Line":
                     begin
-                        ServiceInvLine.SETRANGE("Document Type", "Source Subtype");
-                        ServiceInvLine.SETRANGE("Document No.", "Source ID");
-                        ServiceInvLine.SETRANGE("Line No.", "Source Ref. No.");
-                        PAGE.RUNMODAL(0, ServiceInvLine);
+                        ServiceInvLine.SetRange("Document Type", "Source Subtype");
+                        ServiceInvLine.SetRange("Document No.", "Source ID");
+                        ServiceInvLine.SetRange("Line No.", "Source Ref. No.");
+                        PAGE.RunModal(0, ServiceInvLine);
                     end;
                 DATABASE::"Assembly Line":
 
-                    if AssembletoOrderLink.GET("Source Subtype", "Source ID") then begin
-                        KitSalesLine.RESET();
-                        KitSalesLine.SETRANGE("Document Type", AssembletoOrderLink."Document Type");
-                        KitSalesLine.SETRANGE("Document No.", "Source ID");
-                        KitSalesLine.SETRANGE("Line No.", "Source Ref. No.");
-                        PAGE.RUNMODAL(0, KitSalesLine);
+                    if AssembletoOrderLink.Get("Source Subtype", "Source ID") then begin
+                        KitSalesLine.Reset();
+                        KitSalesLine.SetRange("Document Type", AssembletoOrderLink."Document Type");
+                        KitSalesLine.SetRange("Document No.", "Source ID");
+                        KitSalesLine.SetRange("Line No.", "Source Ref. No.");
+                        PAGE.RunModal(0, KitSalesLine);
 
                     end;
 
@@ -315,7 +315,7 @@ page 50009 "Reservation Entries FTA"
 
     local procedure QuantityBaseOnAfterValidate()
     begin
-        CurrPage.UPDATE();
+        CurrPage.Update();
     end;
 }
 

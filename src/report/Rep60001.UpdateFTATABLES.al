@@ -16,8 +16,8 @@ report 60001 "Update FTA-TABLES"
 
         //     trigger OnAfterGetRecord()
         //     begin
-        //         if not RecgPermission.GET('FTA-TABLES', RecgPermission."Object Type"::Table, ID) then begin
-        //             RecgPermission.INIT();
+        //         if not RecgPermission.Get('FTA-TABLES', RecgPermission."Object Type"::Table, ID) then begin
+        //             RecgPermission.Init();
         //             RecgPermission."Role ID" := 'FTA-TABLES';
         //             RecgPermission."Object Type" := RecgPermission."Object Type"::Table;
         //             RecgPermission."Object ID" := ID;
@@ -26,19 +26,19 @@ report 60001 "Update FTA-TABLES"
         //             RecgPermission."Modify Permission" := RecgPermission."Modify Permission"::Yes;
         //             RecgPermission."Delete Permission" := RecgPermission."Delete Permission"::Yes;
         //             RecgPermission."Execute Permission" := RecgPermission."Execute Permission"::Yes;
-        //             RecgPermission.INSERT();
+        //             RecgPermission.Insert();
         //         end;
         //     end;
 
         //     trigger OnPostDataItem()
         //     begin
-        //         MESSAGE('Fini');
+        //         Message('Fini');
         //     end;
 
         //     trigger OnPreDataItem()
         //     begin
-        //         RecgPermission.SETRANGE("Role ID", 'FTA-TABLES');
-        //         SETRANGE(Type, Type::Table);
+        //         RecgPermission.SetRange("Role ID", 'FTA-TABLES');
+        //         SetRange(Type, Type::Table);
         //     end;
         // }
     }

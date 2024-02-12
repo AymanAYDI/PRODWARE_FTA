@@ -27,7 +27,7 @@ pageextension 50006 "CustomerList" extends "Customer List" //22
                 ToolTip = 'Specifies the value of the Customer Typology field.';
             }
         }
-        modify("Responsibility Center")
+        Modify("Responsibility Center")
         {
             Visible = false;
         }

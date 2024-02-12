@@ -34,60 +34,59 @@ report 50018 "Item copy"
             trigger OnAfterGetRecord()
             var
                 tenantMedia: Record "Tenant Media";
-                filename: Text;
             begin
                 //Nouvelle référence remplace l'ancienne
                 if NvRefRemplaceAnc = true then begin
-                    TSubstituttionRemp.INIT();
+                    TSubstituttionRemp.Init();
                     TSubstituttionRemp."No." := Item."No.";
                     TSubstituttionRemp."Substitute No." := NvNo;
-                    TSubstituttionRemp.INSERT();
+                    TSubstituttionRemp.Insert();
                 end;
 
                 //Article
-                Article.INIT();
-                Article.TRANSFERFIELDS(Item, true);
+                Article.Init();
+                Article.TransferFields(Item, true);
                 Article."No." := NvNo;
                 if CodGSeriesNo <> '' then
                     Article."No. Series" := CodGSeriesNo;
                 BooGCreate := true;
 
-                Article."Creation Date" := WORKDATE();
+                Article."Creation Date" := WorkDate();
 
 
-                Article.INSERT();
+                Article.Insert();
 
                 if CreerPtStMag = true then begin
 
 
-                    StockkeepingUnit.RESET();
-                    StockkeepingUnit.SETRANGE("Item No.", Item."No.");
-                    if StockkeepingUnit.Findfirst() then
+                    StockkeepingUnit.Reset();
+                    StockkeepingUnit.SetRange("Item No.", Item."No.");
+                    if StockkeepingUnit.findFirst() then
                         repeat
                             StockkeepingUnitNew := StockkeepingUnit;
-                            StockkeepingUnitNew.VALIDATE("Item No.", NvNo);
+                            StockkeepingUnitNew.Validate("Item No.", NvNo);
                             StockkeepingUnitNew."Unit Cost" := 0;
                             StockkeepingUnitNew."Standard Cost" := 0;
                             StockkeepingUnitNew."Last Direct Cost" := 0;
-                            StockkeepingUnitNew.INSERT();
-                        until StockkeepingUnit.NEXT() = 0;
+                            StockkeepingUnitNew.Insert();
+                        until StockkeepingUnit.Next() = 0;
 
                 end;
 
 
 
                 //Image
-                //Item.CALCFIELDS(Picture);
+                //Item.CalcFields(Picture);
 
                 //     IF Image AND (Item.Picture.Count <> 0) THEN BEGIN
                 //         Article.Picture.CREATEOUTSTREAM(OutS);
                 //         Item.Picture.CREATEINSTREAM(InS);
-                //         COPYSTREAM(OutS, InS);
+                //         CopyStrEAM(OutS, InS);
 
 
                 //         Article.Picture.ImportStream()
                 //    Item.Picture.CREATEINSTREAM(InS);
-                //         COPYSTREAM(OutS, InS);
+                //         CopyStrEAM(OutS, InS);
                 //     END;
 
 
@@ -107,193 +106,193 @@ report 50018 "Item copy"
 
 
 
-                TUniteMesure.SETRANGE(TUniteMesure."Item No.", Item."No.");
-                if TUniteMesure.Findfirst() then
+                TUniteMesure.SetRange(TUniteMesure."Item No.", Item."No.");
+                if TUniteMesure.findFirst() then
                     repeat
-                        TUniteMesureNew.INIT();
-                        TUniteMesureNew.TRANSFERFIELDS(TUniteMesure, true);
+                        TUniteMesureNew.Init();
+                        TUniteMesureNew.TransferFields(TUniteMesure, true);
                         TUniteMesureNew."Item No." := NvNo;
-                        TUniteMesureNew.INSERT();
-                    until TUniteMesure.NEXT() = 0;
+                        TUniteMesureNew.Insert();
+                    until TUniteMesure.Next() = 0;
 
 
 
 
                 //Prix d'achats
                 if PrixAchat = true then begin
-                    TPrixAchats.SETRANGE(TPrixAchats."Item No.", Item."No.");
-                    if TPrixAchats.Findfirst() then
+                    TPrixAchats.SetRange(TPrixAchats."Item No.", Item."No.");
+                    if TPrixAchats.findFirst() then
                         repeat
-                            TPrixAchatsNew.INIT();
-                            TPrixAchatsNew.TRANSFERFIELDS(TPrixAchats, true);
+                            TPrixAchatsNew.Init();
+                            TPrixAchatsNew.TransferFields(TPrixAchats, true);
                             TPrixAchatsNew."Item No." := NvNo;
-                            TPrixAchatsNew.INSERT();
-                        until TPrixAchats.NEXT() = 0;
+                            TPrixAchatsNew.Insert();
+                        until TPrixAchats.Next() = 0;
                 end;
 
 
                 //Prix de ventes
                 if PrixVentes = true then begin
-                    TPrixVentes.SETRANGE(TPrixVentes."Item No.", Item."No.");
-                    if TPrixVentes.Findfirst() then
+                    TPrixVentes.SetRange(TPrixVentes."Item No.", Item."No.");
+                    if TPrixVentes.findFirst() then
                         repeat
-                            TPrixVentesNew.INIT();
-                            TPrixVentesNew.TRANSFERFIELDS(TPrixVentes, true);
+                            TPrixVentesNew.Init();
+                            TPrixVentesNew.TransferFields(TPrixVentes, true);
                             TPrixVentesNew."Item No." := NvNo;
-                            TPrixVentesNew.INSERT();
-                        until TPrixVentes.NEXT() = 0;
+                            TPrixVentesNew.Insert();
+                        until TPrixVentes.Next() = 0;
                 end;
 
                 //Remises ventes
                 if RemisesVentes = true then begin
-                    TRemisesVentes.SETRANGE(TRemisesVentes.Code, Item."No.");
-                    if TRemisesVentes.Findfirst() then
+                    TRemisesVentes.SetRange(TRemisesVentes.Code, Item."No.");
+                    if TRemisesVentes.findFirst() then
                         repeat
-                            TRemisesVentesNew.INIT();
-                            TRemisesVentesNew.TRANSFERFIELDS(TRemisesVentes, true);
+                            TRemisesVentesNew.Init();
+                            TRemisesVentesNew.TransferFields(TRemisesVentes, true);
                             TRemisesVentesNew.Code := NvNo;
-                            TRemisesVentesNew.INSERT();
-                        until TRemisesVentes.NEXT() = 0;
+                            TRemisesVentesNew.Insert();
+                        until TRemisesVentes.Next() = 0;
                 end;
 
 
                 //Remises achats
                 if RemisesAchats = true then begin
-                    TRemisesAchats.SETRANGE(TRemisesAchats."Item No.", Item."No.");
-                    if TRemisesAchats.Findfirst() then
+                    TRemisesAchats.SetRange(TRemisesAchats."Item No.", Item."No.");
+                    if TRemisesAchats.findFirst() then
                         repeat
-                            TRemisesAchatsNew.INIT();
-                            TRemisesAchatsNew.TRANSFERFIELDS(TRemisesAchats, true);
+                            TRemisesAchatsNew.Init();
+                            TRemisesAchatsNew.TransferFields(TRemisesAchats, true);
                             TRemisesAchatsNew."Item No." := NvNo;
-                            TRemisesAchatsNew.INSERT();
-                        until TRemisesAchats.NEXT() = 0;
+                            TRemisesAchatsNew.Insert();
+                        until TRemisesAchats.Next() = 0;
                 end;
 
                 //Catalogue Fournisseur
                 if CatalogueFour = true then begin
-                    TCataFour.SETRANGE(TCataFour."Item No.", Item."No.");
-                    if TCataFour.Findfirst() then
+                    TCataFour.SetRange(TCataFour."Item No.", Item."No.");
+                    if TCataFour.findFirst() then
                         repeat
-                            TCataFourNew.INIT();
-                            TCataFourNew.TRANSFERFIELDS(TCataFour, true);
+                            TCataFourNew.Init();
+                            TCataFourNew.TransferFields(TCataFour, true);
                             TCataFourNew."Item No." := NvNo;
-                            TCataFourNew.INSERT();
-                        until TCataFour.NEXT() = 0;
+                            TCataFourNew.Insert();
+                        until TCataFour.Next() = 0;
                 end;
 
 
 
-                Item.CALCFIELDS("Assembly BOM");
+                Item.CalcFields("Assembly BOM");
                 if NomenclatureAssemblage and Item."Assembly BOM" then begin
-                    TNomenclature.SETRANGE("Parent Item No.", Item."No.");
-                    if TNomenclature.FINDSET() then
+                    TNomenclature.SetRange("Parent Item No.", Item."No.");
+                    if TNomenclature.FindSet() then
                         repeat
-                            TNomenclatureNew.INIT();
-                            TNomenclatureNew.TRANSFERFIELDS(TNomenclature, true);
+                            TNomenclatureNew.Init();
+                            TNomenclatureNew.TransferFields(TNomenclature, true);
                             TNomenclatureNew."Parent Item No." := NvNo;
-                            TNomenclatureNew.INSERT();
-                        until TNomenclature.NEXT() = 0;
+                            TNomenclatureNew.Insert();
+                        until TNomenclature.Next() = 0;
                 end;
 
 
                 if Substitution = true then begin
-                    TSubstituttion.SETRANGE("No.", Item."No.");
-                    if TSubstituttion.Findfirst() then
+                    TSubstituttion.SetRange("No.", Item."No.");
+                    if TSubstituttion.findFirst() then
                         repeat
-                            TSubstituttionNew.INIT();
-                            TSubstituttionNew.TRANSFERFIELDS(TSubstituttion, true);
+                            TSubstituttionNew.Init();
+                            TSubstituttionNew.TransferFields(TSubstituttion, true);
                             TSubstituttionNew."No." := NvNo;
 
                             TSubstituttionNew."Substitute No." := '';
 
-                            TSubstituttionNew.INSERT();
-                        until TSubstituttion.NEXT() = 0;
+                            TSubstituttionNew.Insert();
+                        until TSubstituttion.Next() = 0;
                 end;
 
 
 
                 if Traductions = true then begin
-                    TTraductions.SETRANGE(TTraductions."Item No.", Item."No.");
-                    if TTraductions.Findfirst() then
+                    TTraductions.SetRange(TTraductions."Item No.", Item."No.");
+                    if TTraductions.findFirst() then
                         repeat
-                            TTraductionsNew.INIT();
-                            TTraductionsNew.TRANSFERFIELDS(TTraductions, true);
+                            TTraductionsNew.Init();
+                            TTraductionsNew.TransferFields(TTraductions, true);
                             TTraductionsNew."Item No." := NvNo;
-                            TTraductionsNew.INSERT();
-                        until TTraductions.NEXT() = 0;
+                            TTraductionsNew.Insert();
+                        until TTraductions.Next() = 0;
                 end;
 
                 if RéférencesEx = true then begin
-                    TRefExterne.SETRANGE(TRefExterne."Item No.", Item."No.");
-                    if TRefExterne.Findfirst() then
+                    TRefExterne.SetRange(TRefExterne."Item No.", Item."No.");
+                    if TRefExterne.findFirst() then
                         repeat
-                            TRefExterneNew.INIT();
-                            TRefExterneNew.TRANSFERFIELDS(TRefExterne, true);
+                            TRefExterneNew.Init();
+                            TRefExterneNew.TransferFields(TRefExterne, true);
                             TRefExterneNew."Item No." := NvNo;
-                            TRefExterneNew.INSERT();
-                        until TRefExterne.NEXT() = 0;
+                            TRefExterneNew.Insert();
+                        until TRefExterne.Next() = 0;
                 end;
 
 
                 if Variantes = true then begin
-                    TVariantes.SETRANGE(TVariantes."Item No.", Item."No.");
-                    if TVariantes.Findfirst() then
+                    TVariantes.SetRange(TVariantes."Item No.", Item."No.");
+                    if TVariantes.findFirst() then
                         repeat
-                            TVariantesNew.INIT();
-                            TVariantesNew.TRANSFERFIELDS(TVariantes, true);
+                            TVariantesNew.Init();
+                            TVariantesNew.TransferFields(TVariantes, true);
                             TVariantesNew."Item No." := NvNo;
-                            TVariantesNew.INSERT();
-                        until TVariantes.NEXT() = 0;
+                            TVariantesNew.Insert();
+                        until TVariantes.Next() = 0;
                 end;
 
 
                 if Commentaires = true then begin
-                    TComment.SETRANGE(TComment."Table Name", TComment."Table Name"::Item);
-                    TComment.SETRANGE(TComment."No.", Item."No.");
-                    if TComment.Findfirst() then
+                    TComment.SetRange(TComment."Table Name", TComment."Table Name"::Item);
+                    TComment.SetRange(TComment."No.", Item."No.");
+                    if TComment.findFirst() then
                         repeat
-                            TCommentNew.INIT();
-                            TCommentNew.TRANSFERFIELDS(TComment, true);
+                            TCommentNew.Init();
+                            TCommentNew.TransferFields(TComment, true);
                             TCommentNew."No." := NvNo;
-                            TCommentNew.INSERT();
-                        until TComment.NEXT() = 0;
+                            TCommentNew.Insert();
+                        until TComment.Next() = 0;
                 end;
 
 
                 if AxesAnalytiques = true then begin
-                    TAxesAnaly.SETRANGE(TAxesAnaly."Table ID", 27);
-                    TAxesAnaly.SETRANGE(TAxesAnaly."No.", Item."No.");
-                    if TAxesAnaly.Findfirst() then
+                    TAxesAnaly.SetRange(TAxesAnaly."Table ID", 27);
+                    TAxesAnaly.SetRange(TAxesAnaly."No.", Item."No.");
+                    if TAxesAnaly.findFirst() then
                         repeat
-                            TAxesAnalyNew.INIT();
-                            TAxesAnalyNew.TRANSFERFIELDS(TAxesAnaly, true);
+                            TAxesAnalyNew.Init();
+                            TAxesAnalyNew.TransferFields(TAxesAnaly, true);
                             TAxesAnalyNew."No." := NvNo;
-                            TAxesAnalyNew.INSERT();
-                        until TAxesAnaly.NEXT() = 0;
+                            TAxesAnalyNew.Insert();
+                        until TAxesAnaly.Next() = 0;
                 end;
 
                 if TextGen = true then begin
-                    TTextGenEntete.SETRANGE(TTextGenEntete."Table Name", TTextGenEntete."Table Name"::Item);
-                    TTextGenEntete.SETRANGE(TTextGenEntete."No.", Item."No.");
-                    if TTextGenEntete.Findfirst() then
+                    TTextGenEntete.SetRange(TTextGenEntete."Table Name", TTextGenEntete."Table Name"::Item);
+                    TTextGenEntete.SetRange(TTextGenEntete."No.", Item."No.");
+                    if TTextGenEntete.findFirst() then
                         repeat
-                            TTextGenEnteteNew.INIT();
-                            TTextGenEnteteNew.TRANSFERFIELDS(TTextGenEntete, true);
+                            TTextGenEnteteNew.Init();
+                            TTextGenEnteteNew.TransferFields(TTextGenEntete, true);
                             TTextGenEnteteNew."No." := NvNo;
-                            TTextGenEnteteNew.INSERT();
-                        until TTextGenEntete.NEXT() = 0;
+                            TTextGenEnteteNew.Insert();
+                        until TTextGenEntete.Next() = 0;
                 end;
 
                 if TextGen = true then begin
-                    TTextGenLigne.SETRANGE(TTextGenLigne."Table Name", TTextGenLigne."Table Name"::Item);
-                    TTextGenLigne.SETRANGE(TTextGenLigne."No.", Item."No.");
-                    if TTextGenLigne.Findfirst() then
+                    TTextGenLigne.SetRange(TTextGenLigne."Table Name", TTextGenLigne."Table Name"::Item);
+                    TTextGenLigne.SetRange(TTextGenLigne."No.", Item."No.");
+                    if TTextGenLigne.findFirst() then
                         repeat
-                            TTextGenLigneNew.INIT();
-                            TTextGenLigneNew.TRANSFERFIELDS(TTextGenLigne, true);
+                            TTextGenLigneNew.Init();
+                            TTextGenLigneNew.TransferFields(TTextGenLigne, true);
                             TTextGenLigneNew."No." := NvNo;
-                            TTextGenLigneNew.INSERT();
-                        until TTextGenLigne.NEXT() = 0;
+                            TTextGenLigneNew.Insert();
+                        until TTextGenLigne.Next() = 0;
                 end;
 
 
@@ -303,7 +302,7 @@ report 50018 "Item copy"
 
             trigger OnPreDataItem()
             begin
-                Item.SETFILTER("No.", AncienNo);
+                Item.SetFilter("No.", AncienNo);
             end;
         }
     }
@@ -425,52 +424,49 @@ report 50018 "Item copy"
         RecLItem: Record "27";
     begin
         if BooGCreate then begin
-            COMMIT();
-            RecLItem.SETRANGE("No.", NvNo);
-            PAGE.RUNMODAL(Page::"Item Card", RecLItem);
+            Commit();
+            RecLItem.SetRange("No.", NvNo);
+            PAGE.RunModal(Page::"Item Card", RecLItem);
         end;
     end;
 
     var
-
-
         Article: Record Item;
-        TNomenclature: Record "BOM Component";
-        TNomenclatureNew: Record "BOM Component";
-        TComment: Record "Comment Line";
-        TCommentNew: Record "Comment Line";
+        StockkeepingUnit: Record "Stockkeeping Unit";
+        StockkeepingUnitNew: Record "Stockkeeping Unit";
         TAxesAnaly: Record "Default Dimension";
         TAxesAnalyNew: Record "Default Dimension";
+        TCataFour: Record "Item Vendor";
+        TCataFourNew: Record "Item Vendor";
+        TComment: Record "Comment Line";
+        TCommentNew: Record "Comment Line";
+        TNomenclature: Record "BOM Component";
+        TNomenclatureNew: Record "BOM Component";
+        TPrixAchats: Record "Purchase Price";
+        TPrixAchatsNew: Record "Purchase Price";
+        TPrixVentes: Record "Sales Price";
+        TPrixVentesNew: Record "Sales Price";
+        TRefExterne: Record "Item reference";
+        TRefExterneNew: Record "Item reference";
+        TRemisesAchats: Record "Purchase Line Discount";
+        TRemisesAchatsNew: Record "Purchase Line Discount";
+        TRemisesVentes: Record "Sales Line Discount";
+        TRemisesVentesNew: Record "Sales Line Discount";
+        TSubstituttion: Record "Item Substitution";
+        TSubstituttionNew: Record "Item Substitution";
+        TSubstituttionRemp: Record "Item Substitution";
         TTextGenEntete: Record "Extended Text Header";
         TTextGenEnteteNew: Record "Extended Text Header";
         TTextGenLigne: Record "Extended Text Line";
         TTextGenLigneNew: Record "Extended Text Line";
-        ItemNew: Record Item;
-        TRefExterne: Record "Item reference";
-        TRefExterneNew: Record "Item reference";
-        TSubstituttion: Record "Item Substitution";
-        TSubstituttionNew: Record "Item Substitution";
-        TSubstituttionRemp: Record "Item Substitution";
         TTraductions: Record "Item Translation";
         TTraductionsNew: Record "Item Translation";
         TUniteMesure: Record "Item Unit of Measure";
         TUniteMesureNew: Record "Item Unit of Measure";
         TVariantes: Record "Item Variant";
         TVariantesNew: Record "Item Variant";
-        TCataFour: Record "Item Vendor";
-        TCataFourNew: Record "Item Vendor";
-        TRemisesAchats: Record "Purchase Line Discount";
-        TRemisesAchatsNew: Record "Purchase Line Discount";
-        TPrixAchats: Record "Purchase Price";
-        TPrixAchatsNew: Record "Purchase Price";
-        TRemisesVentes: Record "Sales Line Discount";
-        TRemisesVentesNew: Record "Sales Line Discount";
-        TPrixVentes: Record "Sales Price";
-        TPrixVentesNew: Record "Sales Price";
-        StockkeepingUnit: Record "Stockkeeping Unit";
-        StockkeepingUnitNew: Record "Stockkeeping Unit";
-        ProdBOMCopy: Codeunit "Production BOM-Copy";
-        iheb: Page "Item Picture";
+        InS: InStream;
+        "RéférencesEx": Boolean;
         AxesAnalytiques: Boolean;
         BooGCreate: Boolean;
         CatalogueFour: Boolean;
@@ -481,29 +477,17 @@ report 50018 "Item copy"
         NvRefRemplaceAnc: Boolean;
         PrixAchat: Boolean;
         PrixVentes: Boolean;
-        "RéférencesEx": Boolean;
         RemisesAchats: Boolean;
         RemisesVentes: Boolean;
         Substitution: Boolean;
-        TextAchats: Boolean;
         TextGen: Boolean;
-        TextVentes: Boolean;
         Traductions: Boolean;
         Variantes: Boolean;
         AncienNo: Code[20];
         CodGSeriesNo: Code[20];
         NvNo: Code[20];
-        InS: InStream;
-        "--NSC1.07--": Integer;
-        "--NSC1.11--": Integer;
-        CopieArticleTexte01: Label 'Numéro d''aticle %1 n''existe pas';
-        CopieArticleTexte02: Label 'Numéro d''aticle %1 existe déjà';
-        OutS: OutStream;
 
-    [Scope('Internal')]
-    procedure "FTA1.00"()
-    begin
-    end;
+
 
 
     procedure FctSearchItemNumber()
@@ -512,10 +496,10 @@ report 50018 "Item copy"
         NoSeriesMgt: Codeunit NoSeriesManagement;
     begin
         if NvNo = '' then begin
-            InvtSetup.GET();
+            InvtSetup.Get();
 
             // GetInvtSetup;
-            InvtSetup.TESTFIELD("Item Nos.");
+            InvtSetup.TestField("Item Nos.");
             NoSeriesMgt.InitSeries(InvtSetup."Item Nos.", '', 0D, NvNo, CodGSeriesNo);
         end;
     end;

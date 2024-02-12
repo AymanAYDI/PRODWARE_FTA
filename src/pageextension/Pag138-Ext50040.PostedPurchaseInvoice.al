@@ -48,29 +48,29 @@ pageextension 50040 "PostedPurchaseInvoice" extends "Posted Purchase Invoice" //
                         TextCdeTransport001: Label 'There is no Shipping Purchase Order.';
                     begin
                         if rec."shipping order no." <> '' then begin
-                            reclpurchheader.reset();
-                            reclpurchheader.setrange("document type", reclpurchheader."document type"::order);
-                            reclpurchheader.setrange("no.", rec."shipping order no.");
-                            if reclpurchheader.findfirst() then begin
+                            reclpurchheader.Reset();
+                            reclpurchheader.SetRange("document type", reclpurchheader."document type"::order);
+                            reclpurchheader.SetRange("no.", rec."shipping order no.");
+                            if reclpurchheader.findFirst() then begin
                                 reclpurchheader.filtergroup(2);
-                                formlpurchaseorder.settableview(reclpurchheader);
-                                formlpurchaseorder.runmodal();
+                                formlpurchaseorder.SetTableView(reclpurchheader);
+                                formlpurchaseorder.RunModal();
                             end
                             else begin
-                                reclinvoicepurchheader.reset();
-                                reclinvoicepurchheader.setcurrentkey("order no.");
-                                reclinvoicepurchheader.setrange("order no.", rec."shipping order no.");
-                                if reclinvoicepurchheader.findfirst() then begin
+                                reclinvoicepurchheader.Reset();
+                                reclinvoicepurchheader.SetCurrentKey("order no.");
+                                reclinvoicepurchheader.SetRange("order no.", rec."shipping order no.");
+                                if reclinvoicepurchheader.findFirst() then begin
                                     reclinvoicepurchheader.filtergroup(2);
-                                    formlinvoicepurchheader.settableview(reclinvoicepurchheader);
-                                    formlinvoicepurchheader.runmodal();
+                                    formlinvoicepurchheader.SetTableView(reclinvoicepurchheader);
+                                    formlinvoicepurchheader.RunModal();
                                 end
                                 else
-                                    error(textcdetransport001);
+                                    Error(textcdetransport001);
                             end;
                         end
                         else
-                            error(textcdetransport001);
+                            Error(textcdetransport001);
                     end;
                 }
             }

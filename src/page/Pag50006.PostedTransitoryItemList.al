@@ -14,7 +14,7 @@ page 50006 "Posted Transitory Item List"
     //                              - Creation
 
     Caption = 'Posted Transitory Item List';
-    PageType = List;
+    PaGetype = List;
     SourceTable = "Sales Invoice Line";
     SourceTableView = where("Item Base" = filter(Transitory | "Transitory Kit"));
     ApplicationArea = All;
@@ -143,25 +143,25 @@ page 50006 "Posted Transitory Item List"
     procedure FctSelection()
     begin
         if CodGVendorNo <> '' then
-            Rec.SETFILTER("Item Vendor No.", CodGVendorNo)
+            Rec.SetFilter("Item Vendor No.", CodGVendorNo)
         else
-            Rec.SETRANGE("Item Vendor No.");
+            Rec.SetRange("Item Vendor No.");
         if CodGProduct <> '' then
-            Rec.SETFILTER("Item Category Code", CodGProduct)
+            Rec.SetFilter("Item Category Code", CodGProduct)
         else
-            Rec.SETRANGE("Item Category Code");
+            Rec.SetRange("Item Category Code");
         if CodGCategory <> '' then
-            Rec.SETFILTER("Item Category Code 2", CodGCategory)
+            Rec.SetFilter("Item Category Code 2", CodGCategory)
         else
-            Rec.SETRANGE("Item Category Code 2");
+            Rec.SetRange("Item Category Code 2");
         if CodGStat <> '' then
-            Rec.SETFILTER("Item Statistics Group", CodGStat)
+            Rec.SetFilter("Item Statistics Group", CodGStat)
         else
-            Rec.SETRANGE("Item Statistics Group");
+            Rec.SetRange("Item Statistics Group");
         if CodGDim <> '' then
-            Rec.SETFILTER("Shortcut Dimension 1 Code", CodGDim)
+            Rec.SetFilter("Shortcut Dimension 1 Code", CodGDim)
         else
-            Rec.SETRANGE("Shortcut Dimension 1 Code");
+            Rec.SetRange("Shortcut Dimension 1 Code");
     end;
 }
 

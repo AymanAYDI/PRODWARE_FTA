@@ -5,7 +5,7 @@ page 50022 "Shipping Costs Carrier"
     // FTA:AM  31.03.2023  Create page
 
     Caption = 'Frais de port transporteur';
-    PageType = List;
+    PaGetype = List;
     SourceTable = "Shipping Costs Carrier";
     ApplicationArea = All;
 

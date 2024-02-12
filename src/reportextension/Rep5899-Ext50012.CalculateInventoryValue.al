@@ -5,7 +5,7 @@ reportextension 50012 "CalculateInventoryValue" extends "Calculate Inventory Val
 {
     dataset
     {
-        modify("Item")
+        Modify("Item")
         {
             RequestFilterFields = "No.", "Costing Method", "Location Filter", "Variant Filter", "Shelf No.";
         }

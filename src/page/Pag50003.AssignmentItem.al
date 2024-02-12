@@ -10,8 +10,8 @@ page 50003 "Assignment Item"
 {
 
     Caption = 'Assignment Item';
-    DataCaptionExpression = STRSUBSTNO(Text0001, FORMAT(Rec."Document Type"), Rec."Document No.", Rec.Type, Rec."No.", Rec.Description);
-    PageType = NavigatePage;
+    DataCaptionExpression = StrSubstNo(Text0001, Format(Rec."Document Type"), Rec."Document No.", Rec.Type, Rec."No.", Rec.Description);
+    PaGetype = NavigatePage;
     SourceTable = "Sales Line";
     ApplicationArea = All;
 
@@ -91,14 +91,14 @@ page 50003 "Assignment Item"
                         RecLItemLedgerEntry: Record "Item Ledger Entry";
                         FrmLItemLedgerEntries: Page "Item Ledger Entries";
                     begin
-                        RecLItemLedgerEntry.RESET();
-                        //ReclItemLedgerEntry.SETRANGE(Type,Type::Item);
-                        RecLItemLedgerEntry.SETRANGE("Item No.", Rec."No.");
+                        RecLItemLedgerEntry.Reset();
+                        //ReclItemLedgerEntry.SetRange(Type,Type::Item);
+                        RecLItemLedgerEntry.SetRange("Item No.", Rec."No.");
                         if Rec."Location Code" <> '' then
-                            RecLItemLedgerEntry.SETFILTER("Location Code", Rec."Location Code");
-                        RecLItemLedgerEntry.SETRANGE(Open, true);
-                        RecLItemLedgerEntry.SETFILTER("Drop Shipment", FORMAT(false));
-                        PAGE.RUNMODAL(Page::"Item Ledger Entries", RecLItemLedgerEntry);
+                            RecLItemLedgerEntry.SetFilter("Location Code", Rec."Location Code");
+                        RecLItemLedgerEntry.SetRange(Open, true);
+                        RecLItemLedgerEntry.SetFilter("Drop Shipment", Format(false));
+                        PAGE.RunModal(Page::"Item Ledger Entries", RecLItemLedgerEntry);
                     end;
                 }
                 field(DecGQtyStock; DecGQtyStock)
@@ -137,23 +137,23 @@ page 50003 "Assignment Item"
                     trigger OnLookup(var Text: Text): Boolean
                     var
                     begin
-                        RecGPurchLine.RESET();
-                        RecGPurchLine.SETRANGE(Type, Rec.Type::Item);
-                        RecGPurchLine.SETRANGE("No.", Rec."No.");
+                        RecGPurchLine.Reset();
+                        RecGPurchLine.SetRange(Type, Rec.Type::Item);
+                        RecGPurchLine.SetRange("No.", Rec."No.");
                         if Rec."Location Code" <> '' then
-                            RecGPurchLine.SETFILTER("Location Code", Rec."Location Code");
+                            RecGPurchLine.SetFilter("Location Code", Rec."Location Code");
                         if Rec."Shipment Date" <> 0D then
-                            RecGPurchLine.SETFILTER("Promised Receipt Date", '..%1', Rec."Shipment Date");
+                            RecGPurchLine.SetFilter("Promised Receipt Date", '..%1', Rec."Shipment Date");
 
                         //>>NDBI
-                        RecGPurchLine.SETFILTER("Promised Receipt Date", '<>%1', 0D);
+                        RecGPurchLine.SetFilter("Promised Receipt Date", '<>%1', 0D);
                         //<<NDBI
 
-                        RecGPurchLine.SETFILTER("Drop Shipment", FORMAT(false));
+                        RecGPurchLine.SetFilter("Drop Shipment", Format(false));
                         //>>JEPE 27052019
-                        //OLD PAGE.RUNMODAL(518,RecGPurchLine);
+                        //OLD PAGE.RunModal(518,RecGPurchLine);
                         Rec.FctDeleteReservation();
-                        COMMIT();
+                        Commit();
 
                         //>>NDBI
                         Rec.FctSetBooResaFTA(true);
@@ -161,7 +161,7 @@ page 50003 "Assignment Item"
 
                         Rec.ShowReservation();
                         Rec."Preparation Type" := Rec."Preparation Type"::Purchase;
-                        Rec.MODIFY(false);
+                        Rec.Modify(false);
                         //<<JEPE 27052019
                     end;
                 }
@@ -244,7 +244,7 @@ page 50003 "Assignment Item"
                     RecLSalesLine: Record "Sales Line";
                 begin
                     //DecGxrecQuantityBase := "Quantity (Base)";
-                    RecLSalesLine.GET(Rec."Document Type", Rec."Document No.", Rec."Line No.");
+                    RecLSalesLine.Get(Rec."Document Type", Rec."Document No.", Rec."Line No.");
                     RecLSalesLine."Quantity (Base)" := Rec."Quantity (Base)" / Rec.Quantity * DecGQtyKit;
                     RecLSalesLine."Outstanding Qty. (Base)" := Rec."Outstanding Qty. (Base)" / Rec.Quantity * DecGQtyKit;
 
@@ -254,8 +254,8 @@ page 50003 "Assignment Item"
                     //<<MIG NAV 2015 : Update OLD Code
 
                     Rec.FctShowKitLinesFTA();
-                    if TempKitSalesLine.FINDFIRST() then;
-                    //MESSAGE(TempKitSalesLine."No.");
+                    if TempKitSalesLine.findFirst() then;
+                    //Message(TempKitSalesLine."No.");
                     //"Quantity (Base)" := DecGxrecQuantityBase;
                     //Rec.Quantity := DecGxrecQuantity;
                     //KitManagement.UpdateKitSales(Rec,TempKitSalesLine);
@@ -275,11 +275,11 @@ page 50003 "Assignment Item"
                 trigger OnAction()
                 begin
                     //>>MIG NAV 2015 : Not supported
-                    //PAGE.RUNMODAL(PAGE::"BOM Journal");
-                    PAGE.RUNMODAL(PAGE::"Item Journal");
+                    //PAGE.RunModal(PAGE::"BOM Journal");
+                    PAGE.RunModal(PAGE::"Item Journal");
                     //<<MIG NAV 2015 : Not supported
-                    FctCalcInformation();
-                    CurrPage.UPDATE(false);
+                    FctCalcInFormation();
+                    CurrPage.Update(false);
                 end;
             }
             action(OK)
@@ -352,14 +352,14 @@ page 50003 "Assignment Item"
         RecGSalesLine := RecPSaleLine;
         DecGxQuantity := DecPxQuantity;
         OptGxPreparationType := OptPxPreparationType;
-        //MESSAGE(FORMAT(DecGxQuantity));
+        //Message(Format(DecGxQuantity));
 
         Rec := RecGSalesLine;
-        FctCalcInformation();
+        FctCalcInFormation();
     end;
 
 
-    procedure FctCalcInformation()
+    procedure FctCalcInFormation()
     var
         RecLAssembletoOrderLink: Record "Assemble-to-Order Link";
         RecLAsmHeader: Record "Assembly Header";
@@ -367,16 +367,16 @@ page 50003 "Assignment Item"
         TempLAsmLine: Record "Assembly Line" temporary;
         AssLineMgt: Codeunit "Assembly Line Management";
     begin
-        RecGItem.RESET();
+        RecGItem.Reset();
         if Rec."Location Code" <> '' then
-            RecGItem.SETFILTER("Location Filter", Rec."Location Code");
+            RecGItem.SetFilter("Location Filter", Rec."Location Code");
         if Rec."Shipment Date" <> 0D then
-            RecGItem.SETFILTER("Date Filter", '..%1', Rec."Shipment Date");
-        RecGItem.SETFILTER("Drop Shipment Filter", FORMAT(false));
-        RecGItem.GET(Rec."No.");
+            RecGItem.SetFilter("Date Filter", '..%1', Rec."Shipment Date");
+        RecGItem.SetFilter("Drop Shipment Filter", Format(false));
+        RecGItem.Get(Rec."No.");
         //>>MIG NAV 2015 : Update OLD Code
         //IF RecGItem."Kit BOM No." = '' THEN
-        RecGItem.CALCFIELDS("Assembly BOM");
+        RecGItem.CalcFields("Assembly BOM");
         if not RecGItem."Assembly BOM" then begin
             BooGVisibleKit := false;
             BooGEditableKit := false;
@@ -384,40 +384,40 @@ page 50003 "Assignment Item"
             BooGVisibleKit := true;
             BooGEditableKit := true;
 
-            Rec.VALIDATE(Rec."Qty. to Assemble to Order", Rec.Quantity);
+            Rec.Validate(Rec."Qty. to Assemble to Order", Rec.Quantity);
 
         end;
         //<<MIG NAV 2015 : Update OLD Code
         //>>NDBI
-        //RecGItem.CALCFIELDS(Inventory,"Reserved Qty. on Inventory","Qty. on Purch. Order","Reserved Qty. on Purch. Orders");
-        RecGItem.CALCFIELDS(Inventory, "Reserved Qty. on Inventory", "Qty. on Purch. Order", "Reserved Qty. on Purch. Orders", "Qty. on Purch. Order Confirmed");
+        //RecGItem.CalcFields(Inventory,"Reserved Qty. on Inventory","Qty. on Purch. Order","Reserved Qty. on Purch. Orders");
+        RecGItem.CalcFields(Inventory, "Reserved Qty. on Inventory", "Qty. on Purch. Order", "Reserved Qty. on Purch. Orders", "Qty. on Purch. Order Confirmed");
         DecGDisposalQtyStock := RecGItem.Inventory - RecGItem."Reserved Qty. on Inventory";
 
         //DecGDisposalQtyPurchOrder := RecGItem."Qty. on Purch. Order" - RecGItem."Reserved Qty. on Purch. Orders" ;
         DecGDisposalQtyPurchOrder := RecGItem."Qty. on Purch. Order Confirmed" - RecGItem."Reserved Qty. on Purch. Orders";
         //<<NDBI
         //KIT
-        TempKitSalesLine.DELETEALL();
-        CLEAR(DecGDisposalQtyKit);
+        TempKitSalesLine.DeleteALL();
+        Clear(DecGDisposalQtyKit);
 
         //>>MIG NAV 2015 : Not supported
         //CheckKitItemAvail.SalesLineShowWarning(Rec,TempKitSalesLine);
         //DecGDisposalQtyKit := CheckKitItemAvail.FctCountKitDisposalToBuild;}
-        TempLAsmLine.DELETEALL();
-        RecLAssembletoOrderLink.RESET();
-        RecLAssembletoOrderLink.SETRANGE("Document Type", Rec."Document Type");
-        RecLAssembletoOrderLink.SETRANGE("Document No.", Rec."Document No.");
-        RecLAssembletoOrderLink.SETRANGE("Document Line No.", Rec."Line No.");
-        if RecLAssembletoOrderLink.FINDFIRST() then
-            if RecLAsmHeader.GET(RecLAssembletoOrderLink."Assembly Document Type", RecLAssembletoOrderLink."Assembly Document No.") then begin
-                RecLAsmLine.SETRANGE("Document Type", RecLAsmHeader."Document Type");
-                RecLAsmLine.SETRANGE("Document No.", RecLAsmHeader."No.");
-                if RecLAsmLine.FINDSET() then begin
+        TempLAsmLine.DeleteALL();
+        RecLAssembletoOrderLink.Reset();
+        RecLAssembletoOrderLink.SetRange("Document Type", Rec."Document Type");
+        RecLAssembletoOrderLink.SetRange("Document No.", Rec."Document No.");
+        RecLAssembletoOrderLink.SetRange("Document Line No.", Rec."Line No.");
+        if RecLAssembletoOrderLink.findFirst() then
+            if RecLAsmHeader.Get(RecLAssembletoOrderLink."Assembly Document Type", RecLAssembletoOrderLink."Assembly Document No.") then begin
+                RecLAsmLine.SetRange("Document Type", RecLAsmHeader."Document Type");
+                RecLAsmLine.SetRange("Document No.", RecLAsmHeader."No.");
+                if RecLAsmLine.FindSet() then begin
                     repeat
-                        TempLAsmLine.INIT();
-                        TempLAsmLine.COPY(RecLAsmLine);
-                        TempLAsmLine.INSERT();
-                    until RecLAsmLine.NEXT() = 0;
+                        TempLAsmLine.Init();
+                        TempLAsmLine.Copy(RecLAsmLine);
+                        TempLAsmLine.Insert();
+                    until RecLAsmLine.Next() = 0;
                     DecGDisposalQtyKit := FTAFunctions.FctCountKitDisposalToBuild(RecLAsmHeader, TempLAsmLine);
                 end;
             end;
@@ -458,20 +458,20 @@ page 50003 "Assignment Item"
         IntLLineNo: Integer;
 
     begin
-        CurrPage.SAVERECORD();
+        CurrPage.SaveRecord();
 
         Rec.FctDeleteReservation();
         FctCalcTotal();
         if DecGTotal > Rec.Quantity then
-            ERROR(CstG014, DecGTotal, Rec.Quantity);
+            Error(CstG014, DecGTotal, Rec.Quantity);
         BooGLineToBeCreate := false;
 
         //Assignment on stock,mono and multilevel Assembly,Disassembling,Assignment on order purchase,Remainder Generation
         if BooGAssemblyKit and (DecGQtyKit <> 0) then begin
             //IF DecGQtyKit > DecGDisposalQtyKit THEN
-            //  ERROR(CstG001,DecGQtyKit,CstG011,DecGDisposalQtyKit);
+            //  Error(CstG001,DecGQtyKit,CstG011,DecGDisposalQtyKit);
             if DecGQtyKit > Rec.Quantity then
-                ERROR(CstG002, DecGQtyKit, CstG011, Rec.Quantity);
+                Error(CstG002, DecGQtyKit, CstG011, Rec.Quantity);
 
             //>>NDBI
             Rec.FctSetBooResaAssFTA(true);
@@ -484,32 +484,32 @@ page 50003 "Assignment Item"
         if BooGAssignOnStock and (DecGQtyStock <> 0) then begin
 
             if DecGQtyStock > DecGDisposalQtyStock then
-                ERROR(CstG001, DecGQtyStock, CstG010, DecGDisposalQtyStock);
+                Error(CstG001, DecGQtyStock, CstG010, DecGDisposalQtyStock);
             if DecGQtyStock > Rec.Quantity then
-                ERROR(CstG002, DecGQtyStock, CstG010, Rec.Quantity);
+                Error(CstG002, DecGQtyStock, CstG010, Rec.Quantity);
             if BooGLineToBeCreate then begin
                 Rec.FctCreateSalesLine(Rec, DecGQtyStock, IntLLineNo);
-                if RecLSalesLine.GET(Rec."Document Type", Rec."Document No.", IntLLineNo) then
+                if RecLSalesLine.Get(Rec."Document Type", Rec."Document No.", IntLLineNo) then
                     DecGRemainingQtyBase := DecGQtyStock * RecLSalesLine."Qty. per Unit of Measure";
                 Rec.FctReserveOnStock(RecLSalesLine, DecGQtyStock, DecGRemainingQtyBase);
             end else begin
                 //>>MIG NAV 2015 : Update OLD Code
-                RecLATOLink.RESET();
-                RecLATOLink.SETCURRENTKEY(Type, "Document Type", "Document No.", "Document Line No.");
-                RecLATOLink.SETRANGE(Type, RecLATOLink.Type::Sale);
-                RecLATOLink.SETRANGE("Document Type", Rec."Document Type");
-                RecLATOLink.SETRANGE("Document No.", Rec."Document No.");
-                RecLATOLink.SETRANGE("Document Line No.", Rec."Line No.");
-                if (RecLATOLink.FINDFIRST()) and (Rec.Type = Rec.Type::Item) then
+                RecLATOLink.Reset();
+                RecLATOLink.SetCurrentKey(Type, "Document Type", "Document No.", "Document Line No.");
+                RecLATOLink.SetRange(Type, RecLATOLink.Type::Sale);
+                RecLATOLink.SetRange("Document Type", Rec."Document Type");
+                RecLATOLink.SetRange("Document No.", Rec."Document No.");
+                RecLATOLink.SetRange("Document Line No.", Rec."Line No.");
+                if (RecLATOLink.findFirst()) and (Rec.Type = Rec.Type::Item) then
                     RecLATOLink.DeleteAsmFromSalesLine(Rec);
 
                 /*
-                KitSalesLine.SETRANGE("Document Type","Document Type");
-                KitSalesLine.SETRANGE("Document No.","Document No.");
-                KitSalesLine.SETRANGE("Document Line No.","Line No.");
-                KitSalesLine.DELETEALL(TRUE);
+                KitSalesLine.SetRange("Document Type","Document Type");
+                KitSalesLine.SetRange("Document No.","Document No.");
+                KitSalesLine.SetRange("Document Line No.","Line No.");
+                KitSalesLine.DeleteALL(TRUE);
                 */
-                Rec.VALIDATE(Rec."Qty. to Assemble to Order", 0);
+                Rec.Validate(Rec."Qty. to Assemble to Order", 0);
                 //<<MIG NAV 2015 : Update OLD Code
                 DecGRemainingQtyBase := DecGQtyStock * RecLSalesLine."Qty. per Unit of Measure";
                 Rec.FctReserveOnStock(Rec, DecGQtyStock, DecGRemainingQtyBase);
@@ -518,34 +518,34 @@ page 50003 "Assignment Item"
         end;
         if BooGAssignOnOrder and (DecGQtyPurchOrder <> 0) then begin
             if DecGQtyPurchOrder > DecGDisposalQtyPurchOrder then
-                ERROR(CstG001, DecGQtyPurchOrder, CstG012, DecGDisposalQtyPurchOrder);
+                Error(CstG001, DecGQtyPurchOrder, CstG012, DecGDisposalQtyPurchOrder);
             if DecGQtyPurchOrder > Rec.Quantity then
-                ERROR(CstG002, DecGQtyPurchOrder, CstG012, Rec.Quantity);
+                Error(CstG002, DecGQtyPurchOrder, CstG012, Rec.Quantity);
             //>>NDBI
             Rec.FctSetBooResaFTA(true);
             //<<NDBI
             if BooGLineToBeCreate then begin
                 Rec.FctCreateSalesLine(Rec, DecGQtyPurchOrder, IntLLineNo);
-                if RecLSalesLine.GET(Rec."Document Type", Rec."Document No.", IntLLineNo) then
+                if RecLSalesLine.Get(Rec."Document Type", Rec."Document No.", IntLLineNo) then
                     SalesLine.FctReserveOnPurchLine(RecLSalesLine, DecGQtyPurchOrder);
             end else begin
                 //>>MIG NAV 2015 : Update OLD Code
-                RecLATOLink.RESET();
-                RecLATOLink.SETCURRENTKEY(Type, "Document Type", "Document No.", "Document Line No.");
-                RecLATOLink.SETRANGE(Type, RecLATOLink.Type::Sale);
-                RecLATOLink.SETRANGE("Document Type", Rec."Document Type");
-                RecLATOLink.SETRANGE("Document No.", Rec."Document No.");
-                RecLATOLink.SETRANGE("Document Line No.", Rec."Line No.");
-                if (RecLATOLink.FINDFIRST()) and (Rec.Type = Rec.Type::Item) then
+                RecLATOLink.Reset();
+                RecLATOLink.SetCurrentKey(Type, "Document Type", "Document No.", "Document Line No.");
+                RecLATOLink.SetRange(Type, RecLATOLink.Type::Sale);
+                RecLATOLink.SetRange("Document Type", Rec."Document Type");
+                RecLATOLink.SetRange("Document No.", Rec."Document No.");
+                RecLATOLink.SetRange("Document Line No.", Rec."Line No.");
+                if (RecLATOLink.findFirst()) and (Rec.Type = Rec.Type::Item) then
                     RecLATOLink.DeleteAsmFromSalesLine(Rec);
 
                 /*
-                KitSalesLine.SETRANGE("Document Type","Document Type");
-                KitSalesLine.SETRANGE("Document No.","Document No.");
-                KitSalesLine.SETRANGE("Document Line No.","Line No.");
-                KitSalesLine.DELETEALL(TRUE);
+                KitSalesLine.SetRange("Document Type","Document Type");
+                KitSalesLine.SetRange("Document No.","Document No.");
+                KitSalesLine.SetRange("Document Line No.","Line No.");
+                KitSalesLine.DeleteALL(TRUE);
                 */
-                Rec.VALIDATE(Rec."Qty. to Assemble to Order", 0);
+                Rec.Validate(Rec."Qty. to Assemble to Order", 0);
                 //<<MIG NAV 2015 : Update OLD Code
                 Rec.FctReserveOnPurchLine(Rec, DecGQtyPurchOrder);
             end;
@@ -554,36 +554,36 @@ page 50003 "Assignment Item"
         //DecGQtyRemainder := Quantity - (DecGQtyStock+DecGQtyKit+DecGQtyPurchOrder);
         if DecGQtyRemainder > 0 then begin
             if DecGQtyRemainder > Rec.Quantity then
-                ERROR(CstG001, DecGQtyRemainder, CstG013, Rec.Quantity);
+                Error(CstG001, DecGQtyRemainder, CstG013, Rec.Quantity);
             if DecGQtyRemainder > Rec.Quantity then
-                ERROR(CstG002, DecGQtyRemainder, CstG013, Rec.Quantity);
+                Error(CstG002, DecGQtyRemainder, CstG013, Rec.Quantity);
             if BooGLineToBeCreate then
                 Rec.FctCreateSalesLine(Rec, DecGQtyRemainder, IntLLineNo)
             else begin
                 //>>MIG NAV 2015 : Update OLD Code
-                RecLATOLink.RESET();
-                RecLATOLink.SETCURRENTKEY(Type, "Document Type", "Document No.", "Document Line No.");
-                RecLATOLink.SETRANGE(Type, RecLATOLink.Type::Sale);
-                RecLATOLink.SETRANGE("Document Type", Rec."Document Type");
-                RecLATOLink.SETRANGE("Document No.", Rec."Document No.");
-                RecLATOLink.SETRANGE("Document Line No.", Rec."Line No.");
-                if (RecLATOLink.FINDFIRST()) and (Rec.Type = Rec.Type::Item) then
+                RecLATOLink.Reset();
+                RecLATOLink.SetCurrentKey(Type, "Document Type", "Document No.", "Document Line No.");
+                RecLATOLink.SetRange(Type, RecLATOLink.Type::Sale);
+                RecLATOLink.SetRange("Document Type", Rec."Document Type");
+                RecLATOLink.SetRange("Document No.", Rec."Document No.");
+                RecLATOLink.SetRange("Document Line No.", Rec."Line No.");
+                if (RecLATOLink.findFirst()) and (Rec.Type = Rec.Type::Item) then
                     RecLATOLink.DeleteAsmFromSalesLine(Rec);
 
                 /*
-                KitSalesLine.SETRANGE("Document Type","Document Type");
-                KitSalesLine.SETRANGE("Document No.","Document No.");
-                KitSalesLine.SETRANGE("Document Line No.","Line No.");
-                KitSalesLine.DELETEALL(TRUE);
+                KitSalesLine.SetRange("Document Type","Document Type");
+                KitSalesLine.SetRange("Document No.","Document No.");
+                KitSalesLine.SetRange("Document Line No.","Line No.");
+                KitSalesLine.DeleteALL(TRUE);
                 "Build Kit":= FALSE;
                 */
-                Rec.VALIDATE(Rec."Qty. to Assemble to Order", 0);
+                Rec.Validate(Rec."Qty. to Assemble to Order", 0);
                 //<<MIG NAV 2015 : Update OLD Code
                 Rec."Preparation Type" := Rec."Preparation Type"::Remainder;
-                Rec.MODIFY();
+                Rec.Modify();
             end;
 
-            CurrPage.UPDATE();
+            CurrPage.Update();
         end;
 
     end;
@@ -618,26 +618,26 @@ page 50003 "Assignment Item"
         if DecGQtyKit <> 0 then begin
 
             //  BooGAssemblyKit := TRUE;
-            RecLSalesLine.GET(Rec."Document Type", Rec."Document No.", Rec."Line No.");
+            RecLSalesLine.Get(Rec."Document Type", Rec."Document No.", Rec."Line No.");
             RecLSalesLine."Quantity (Base)" := Rec."Quantity (Base)" / Rec.Quantity * DecGQtyKit;
             RecLSalesLine."Outstanding Qty. (Base)" := Rec."Outstanding Qty. (Base)" / Rec.Quantity * DecGQtyKit;
 
             //ADD PAMO
 
             //>>MIG NAV 2015 : Update OLD Code
-            RecLATOLink.RESET();
-            RecLATOLink.SETCURRENTKEY(Type, "Document Type", "Document No.", "Document Line No.");
-            RecLATOLink.SETRANGE(Type, RecLATOLink.Type::Sale);
-            RecLATOLink.SETRANGE("Document Type", Rec."Document Type");
-            RecLATOLink.SETRANGE("Document No.", Rec."Document No.");
-            RecLATOLink.SETRANGE("Document Line No.", Rec."Line No.");
-            if RecLATOLink.FINDFIRST() then begin
-                TempKitSalesLine.SETRANGE("Document Type", RecLATOLink."Assembly Document Type");
-                TempKitSalesLine.SETRANGE("Document No.", RecLATOLink."Assembly Document No.");
+            RecLATOLink.Reset();
+            RecLATOLink.SetCurrentKey(Type, "Document Type", "Document No.", "Document Line No.");
+            RecLATOLink.SetRange(Type, RecLATOLink.Type::Sale);
+            RecLATOLink.SetRange("Document Type", Rec."Document Type");
+            RecLATOLink.SetRange("Document No.", Rec."Document No.");
+            RecLATOLink.SetRange("Document Line No.", Rec."Line No.");
+            if RecLATOLink.findFirst() then begin
+                TempKitSalesLine.SetRange("Document Type", RecLATOLink."Assembly Document Type");
+                TempKitSalesLine.SetRange("Document No.", RecLATOLink."Assembly Document No.");
 
-                //TempKitSalesLine.SETRANGE("Document Type",RecLSalesLine."Document Type");
-                //TempKitSalesLine.SETRANGE("Document No.",RecLSalesLine."Document No.");
-                //TempKitSalesLine.SETRANGE("Document Line No.",RecLSalesLine."Line No.");
+                //TempKitSalesLine.SetRange("Document Type",RecLSalesLine."Document Type");
+                //TempKitSalesLine.SetRange("Document No.",RecLSalesLine."Document No.");
+                //TempKitSalesLine.SetRange("Document Line No.",RecLSalesLine."Line No.");
                 //ADD PAMO
                 //>>TI040889.001
                 UpdateKitSales(RecLSalesLine, TempKitSalesLine);
@@ -659,10 +659,10 @@ page 50003 "Assignment Item"
         RecLATOLink: Record "Assemble-to-Order Link";
     begin
         with TempKitSalesLine do
-            if FINDSET() then
+            if FindSet() then
                 repeat
                     //>>MIG NAV 2015 : Update OLD Code
-                    if RecLATOLink.GET("Document Type", "Document No.") then
+                    if RecLATOLink.Get("Document Type", "Document No.") then
                         //PAMO
                         //IF ("Document Type" = SalesLine."Document Type") AND
                         //   ("Document No." = SalesLine."Document No.") AND
@@ -694,9 +694,9 @@ page 50003 "Assignment Item"
                              END;*/
                             end;
                             //OLD "Quantity Shipped (Base)" := "Extended Quantity (Base)" - "Outstanding Qty. (Base)";
-                            MODIFY();
+                            Modify();
                         end;
-                until NEXT() = 0;
+                until Next() = 0;
     end;
 
     local procedure BooGAssignOnOrderOnPush()
@@ -707,7 +707,7 @@ page 50003 "Assignment Item"
     local procedure LookupOKOnPush()
     begin
         FctButtonOK();
-        CurrPage.CLOSE();
+        CurrPage.Close();
     end;
 
     local procedure LookupCancelOnPush()
@@ -720,35 +720,35 @@ page 50003 "Assignment Item"
         if (OptGxPreparationType <> OptGxPreparationType::" ") then begin
             if (OptGxPreparationType <> OptGxPreparationType::Assembly) then begin
                 //>>MIG NAV 2015 : Update OLD Code
-                RecLATOLink.RESET();
-                RecLATOLink.SETCURRENTKEY(Type, "Document Type", "Document No.", "Document Line No.");
-                RecLATOLink.SETRANGE(Type, RecLATOLink.Type::Sale);
-                RecLATOLink.SETRANGE("Document Type", Rec."Document Type");
-                RecLATOLink.SETRANGE("Document No.", Rec."Document No.");
-                RecLATOLink.SETRANGE("Document Line No.", Rec."Line No.");
-                if (RecLATOLink.FINDFIRST()) and (Rec.Type = Rec.Type::Item) then
+                RecLATOLink.Reset();
+                RecLATOLink.SetCurrentKey(Type, "Document Type", "Document No.", "Document Line No.");
+                RecLATOLink.SetRange(Type, RecLATOLink.Type::Sale);
+                RecLATOLink.SetRange("Document Type", Rec."Document Type");
+                RecLATOLink.SetRange("Document No.", Rec."Document No.");
+                RecLATOLink.SetRange("Document Line No.", Rec."Line No.");
+                if (RecLATOLink.findFirst()) and (Rec.Type = Rec.Type::Item) then
                     RecLATOLink.DeleteAsmFromSalesLine(Rec);
 
                 /*
-                KitSalesLine.SETRANGE("Document Type","Document Type");
-                KitSalesLine.SETRANGE("Document No.","Document No.");
-                KitSalesLine.SETRANGE("Document Line No.","Line No.");
-                KitSalesLine.DELETEALL(TRUE);
+                KitSalesLine.SetRange("Document Type","Document Type");
+                KitSalesLine.SetRange("Document No.","Document No.");
+                KitSalesLine.SetRange("Document Line No.","Line No.");
+                KitSalesLine.DeleteALL(TRUE);
                 "Build Kit" := FALSE;
                 */
-                Rec.VALIDATE(Rec."Qty. to Assemble to Order", 0);
+                Rec.Validate(Rec."Qty. to Assemble to Order", 0);
                 //<<MIG NAV 2015 : Update OLD Code
             end;
-            //MESSAGE(FORMAT(DecGxQuantity));
+            //Message(Format(DecGxQuantity));
             Rec."Preparation Type" := OptGxPreparationType;
-            Rec.VALIDATE(Quantity, DecGxQuantity);
-            Rec.MODIFY();
-            MESSAGE(CstL001);
+            Rec.Validate(Quantity, DecGxQuantity);
+            Rec.Modify();
+            Message(CstL001);
         end else begin
-            Rec.DELETE(true);
-            MESSAGE(CstL002);
+            Rec.Delete(true);
+            Message(CstL002);
         end;
-        CurrPage.CLOSE();
+        CurrPage.Close();
 
     end;
 }

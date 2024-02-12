@@ -10,7 +10,7 @@ pageextension 50057 "ItemReclassJournal" extends "Item Reclass. Journal" //393
         {
             trigger OnAfterValidate()
             begin
-                rec.CALCFIELDS("Shelf No.");
+                rec.CalcFields("Shelf No.");
             end;
         }
         addafter(Description)

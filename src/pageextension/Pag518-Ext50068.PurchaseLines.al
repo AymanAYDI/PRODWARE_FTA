@@ -40,12 +40,12 @@ pageextension 50068 "PurchaseLines" extends "Purchase Lines" //518
     begin
         if OptGProcess = OptGProcess::NoAffected then begin
             repeat
-                rec.CALCFIELDS("Reserved Quantity");
+                rec.CalcFields("Reserved Quantity");
                 if rec."Outstanding Quantity" > rec."Reserved Quantity" then
-                    rec.MARK(true);
-            until rec.NEXT() = 0;
-            rec.MARKEDONLY(true);
-            rec.FINDSET();
+                    rec.Mark(true);
+            until rec.Next() = 0;
+            rec.MarkedOnly(true);
+            rec.FindSet();
         end;
     end;
 
@@ -53,12 +53,12 @@ pageextension 50068 "PurchaseLines" extends "Purchase Lines" //518
     begin
         if OptGProcess = OptGProcess::NoAffected then begin
             repeat
-                rec.CALCFIELDS("Reserved Quantity");
+                rec.CalcFields("Reserved Quantity");
                 if rec."Outstanding Quantity" > rec."Reserved Quantity" then
-                    rec.MARK(true);
-            until rec.NEXT() = 0;
-            rec.MARKEDONLY(true);
-            rec.FINDSET();
+                    rec.Mark(true);
+            until rec.Next() = 0;
+            rec.MarkedOnly(true);
+            rec.FindSet();
         end;
     end;
 
@@ -69,7 +69,7 @@ pageextension 50068 "PurchaseLines" extends "Purchase Lines" //518
 
     trigger OnAfterGetCurrRecord()
     begin
-        rec.CALCFIELDS("Reserved Quantity");
+        rec.CalcFields("Reserved Quantity");
         DecGQtyNotAffected := rec."Outstanding Quantity" - rec."Reserved Quantity";
     end;
 }

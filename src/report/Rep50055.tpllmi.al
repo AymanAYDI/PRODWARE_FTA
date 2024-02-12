@@ -14,7 +14,7 @@ report 50055 "tpl lmi"
             trigger OnAfterGetRecord()
             begin
                 "Sales Line"."Internal field" := false;
-                MODIFY();
+                Modify();
             end;
         }
     }

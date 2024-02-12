@@ -46,11 +46,11 @@ pageextension 50009 VendorCard extends "Vendor Card" //26
                 ToolTip = 'Specifies the value of the User field.';
             }
         }
-        modify("Responsibility Center")
+        Modify("Responsibility Center")
         {
             Visible = false;
         }
-        modify("IC Partner Code")
+        Modify("IC Partner Code")
         {
             Visible = false;
         }

@@ -4,7 +4,7 @@ using Microsoft.Purchases.Document;
 page 50008 "Purchase Assignment"
 {
     Caption = 'Purchase Assignment';
-    PageType = Document;
+    PaGetype = Document;
     SourceTable = "Purchase Line";
     ApplicationArea = All;
 
@@ -116,7 +116,7 @@ page 50008 "Purchase Assignment"
 
     trigger OnAfterGetRecord()
     begin
-        Rec.CALCFIELDS("Reserved Quantity");
+        Rec.CalcFields("Reserved Quantity");
         DecGQtyNotAffected := Rec."Outstanding Quantity" - Rec."Reserved Quantity";
         OnAfterGetCurrRecord();
     end;
@@ -132,7 +132,7 @@ page 50008 "Purchase Assignment"
     local procedure OnAfterGetCurrRecord()
     begin
         xRec := Rec;
-        Rec.CALCFIELDS("Reserved Quantity");
+        Rec.CalcFields("Reserved Quantity");
         DecGQtyNotAffected := Rec."Outstanding Quantity" - Rec."Reserved Quantity";
     end;
 }

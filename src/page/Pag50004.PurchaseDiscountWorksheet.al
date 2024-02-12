@@ -5,7 +5,7 @@ page 50004 "Purchase Discount Worksheet"
 {
     Caption = 'Purchase Discount Worksheet';
     DelayedInsert = true;
-    PageType = List;
+    PaGetype = List;
     SaveValues = true;
     SourceTable = "Purchase Discount Worksheet";
     ApplicationArea = All;
@@ -86,7 +86,7 @@ page 50004 "Purchase Discount Worksheet"
                     ToolTip = 'Executes the Suggest &Item Price on Wksh. action.';
                     trigger OnAction()
                     begin
-                        REPORT.RUNMODAL(REPORT::"Suggest Item Price on Wksh.", true, true);
+                        REPORT.RunModal(REPORT::"Suggest Item Price on Wksh.", true, true);
                     end;
                 }
                 action("Suggest &Purchase Price on Wksh.")
@@ -97,7 +97,7 @@ page 50004 "Purchase Discount Worksheet"
 
                     trigger OnAction()
                     begin
-                        REPORT.RUNMODAL(REPORT::"Suggest Purch. Disc. on Wksh.", true, true);
+                        REPORT.RunModal(REPORT::"Suggest Purch. Disc. on Wksh.", true, true);
                     end;
                 }
                 action("I&mplement Discount Change")
@@ -108,7 +108,7 @@ page 50004 "Purchase Discount Worksheet"
 
                     trigger OnAction()
                     begin
-                        REPORT.RUNMODAL(REPORT::"Implement Purch. Disc. Change", true, true, Rec);
+                        REPORT.RunModal(REPORT::"Implement Purch. Disc. Change", true, true, Rec);
                     end;
 
                 }

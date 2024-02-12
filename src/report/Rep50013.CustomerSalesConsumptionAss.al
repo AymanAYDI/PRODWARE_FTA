@@ -29,7 +29,7 @@ report 50013 "Customer Sales ConsumptionAss"
                 trigger OnAfterGetRecord()
                 begin
                     if not BooGViewPurchases then
-                        CurrReport.SKIP();
+                        CurrReport.Skip();
                     if TestItem("Item No.") then begin
                         AddBuffer(ValueEntryBufferPurch, NextEntryNo, "Item No.", Quantity, StartingDate);
                         for i := 1 to 12 do
@@ -42,26 +42,26 @@ report 50013 "Customer Sales ConsumptionAss"
 
                 trigger OnPreDataItem()
                 begin
-                    PurchEntry.SETRANGE("Posting Date", StartingDate, EndingDate);
+                    PurchEntry.SetRange("Posting Date", StartingDate, EndingDate);
                 end;
             }
 
             trigger OnPostDataItem()
             begin
-                ValueEntryBufferPurch.RESET();
-                ValueEntryBuffer2Purch.RESET();
-                if ValueEntryBufferPurch.Findfirst() then
+                ValueEntryBufferPurch.Reset();
+                ValueEntryBuffer2Purch.Reset();
+                if ValueEntryBufferPurch.findFirst() then
                     repeat
-                        if PrintToExcel and Item.GET(ValueEntryBufferPurch."Item No.") then begin
-                            if Vendor.GET(Item."Vendor No.") then;
+                        if PrintToExcel and Item.Get(ValueEntryBufferPurch."Item No.") then begin
+                            if Vendor.Get(Item."Vendor No.") then;
                             MakeExcelDataBodyForPurch();
                         end;
-                    until ValueEntryBufferPurch.NEXT() = 0;
+                    until ValueEntryBufferPurch.Next() = 0;
             end;
 
             trigger OnPreDataItem()
             begin
-                //MESSAGE(ItemFilterTxt);
+                //Message(ItemFilterTxt);
             end;
         }
         dataitem(Customer; Customer)
@@ -86,15 +86,15 @@ report 50013 "Customer Sales ConsumptionAss"
                                 AddBuffer(ValueEntryBuffer2, NextEntryNo2, "Item No.", Quantity, PeriodStartingDate[i]);
                     end;
                     if "Assemble to Order" then begin
-                        AssEntry.GET(SalesEntry."Applies-to Entry");
-                        ConsumptionAssEntry.SETCURRENTKEY("Document Type", "Document No.", "Order Line No.", "Entry Type");
-                        ConsumptionAssEntry.SETRANGE("Document Type", AssEntry."Document Type");
-                        ConsumptionAssEntry.SETRANGE("Document No.", AssEntry."Document No.");
-                        ConsumptionAssEntry.SETRANGE("Order Type", AssEntry."Order Type");
-                        ConsumptionAssEntry.SETRANGE("Order No.", AssEntry."Order No.");
-                        ConsumptionAssEntry.SETFILTER("Entry Type", '%1', "Entry Type"::"Assembly Consumption");
-                        ConsumptionAssEntry.SETRANGE(Positive, false);
-                        if ConsumptionAssEntry.FINDSET() then
+                        AssEntry.Get(SalesEntry."Applies-to Entry");
+                        ConsumptionAssEntry.SetCurrentKey("Document Type", "Document No.", "Order Line No.", "Entry Type");
+                        ConsumptionAssEntry.SetRange("Document Type", AssEntry."Document Type");
+                        ConsumptionAssEntry.SetRange("Document No.", AssEntry."Document No.");
+                        ConsumptionAssEntry.SetRange("Order Type", AssEntry."Order Type");
+                        ConsumptionAssEntry.SetRange("Order No.", AssEntry."Order No.");
+                        ConsumptionAssEntry.SetFilter("Entry Type", '%1', "Entry Type"::"Assembly Consumption");
+                        ConsumptionAssEntry.SetRange(Positive, false);
+                        if ConsumptionAssEntry.FindSet() then
                             repeat
                                 if TestItem(ConsumptionAssEntry."Item No.") then begin
                                     AddBuffer(ValueEntryBuffer, NextEntryNo, ConsumptionAssEntry."Item No.", ConsumptionAssEntry.Quantity, StartingDate);
@@ -103,7 +103,7 @@ report 50013 "Customer Sales ConsumptionAss"
                                            ("Posting Date" <= PeriodEndingDate[i]) then
                                             AddBuffer(ValueEntryBuffer2, NextEntryNo2, ConsumptionAssEntry."Item No.", ConsumptionAssEntry.Quantity, PeriodStartingDate[i]);
                                 end;
-                            until ConsumptionAssEntry.NEXT() = 0;
+                            until ConsumptionAssEntry.Next() = 0;
                     end;
                 end;
 
@@ -111,29 +111,29 @@ report 50013 "Customer Sales ConsumptionAss"
                 begin
 
                     if ByCust then begin
-                        ValueEntryBuffer.RESET();
-                        ValueEntryBuffer2.RESET();
-                        if ValueEntryBuffer.Findfirst() then
+                        ValueEntryBuffer.Reset();
+                        ValueEntryBuffer2.Reset();
+                        if ValueEntryBuffer.findFirst() then
                             repeat
-                                if PrintToExcel and Item.GET(ValueEntryBuffer."Item No.") then begin
-                                    if Vendor.GET(Item."Vendor No.") then;
+                                if PrintToExcel and Item.Get(ValueEntryBuffer."Item No.") then begin
+                                    if Vendor.Get(Item."Vendor No.") then;
                                     MakeExcelDataBody();
                                 end;
-                            until ValueEntryBuffer.NEXT() = 0;
+                            until ValueEntryBuffer.Next() = 0;
                     end;
                 end;
 
                 trigger OnPreDataItem()
                 begin
-                    SalesEntry.SETRANGE("Posting Date", StartingDate, EndingDate);
+                    SalesEntry.SetRange("Posting Date", StartingDate, EndingDate);
 
                     if ByCust then begin
-                        ValueEntryBuffer.RESET();
-                        ValueEntryBuffer.DELETEALL();
+                        ValueEntryBuffer.Reset();
+                        ValueEntryBuffer.DeleteALL();
                         NextEntryNo := 1;
 
-                        ValueEntryBuffer2.RESET();
-                        ValueEntryBuffer2.DELETEALL();
+                        ValueEntryBuffer2.Reset();
+                        ValueEntryBuffer2.DeleteALL();
                         NextEntryNo2 := 1
                     end;
                 end;
@@ -142,26 +142,26 @@ report 50013 "Customer Sales ConsumptionAss"
             trigger OnPostDataItem()
             begin
                 if not ByCust then begin
-                    ValueEntryBuffer.RESET();
-                    ValueEntryBuffer2.RESET();
-                    if ValueEntryBuffer.Findfirst() then
+                    ValueEntryBuffer.Reset();
+                    ValueEntryBuffer2.Reset();
+                    if ValueEntryBuffer.findFirst() then
                         repeat
-                            if PrintToExcel and Item.GET(ValueEntryBuffer."Item No.") then begin
-                                if Vendor.GET(Item."Vendor No.") then;
+                            if PrintToExcel and Item.Get(ValueEntryBuffer."Item No.") then begin
+                                if Vendor.Get(Item."Vendor No.") then;
                                 MakeExcelDataBody();
                             end;
-                        until ValueEntryBuffer.NEXT() = 0;
+                        until ValueEntryBuffer.Next() = 0;
                 end;
             end;
 
             trigger OnPreDataItem()
             begin
-                ValueEntryBuffer.RESET();
-                ValueEntryBuffer.DELETEALL();
+                ValueEntryBuffer.Reset();
+                ValueEntryBuffer.DeleteALL();
                 NextEntryNo := 1;
 
-                ValueEntryBuffer2.RESET();
-                ValueEntryBuffer2.DELETEALL();
+                ValueEntryBuffer2.Reset();
+                ValueEntryBuffer2.DeleteALL();
                 NextEntryNo2 := 1
             end;
         }
@@ -211,25 +211,25 @@ report 50013 "Customer Sales ConsumptionAss"
 
     trigger OnPostReport()
     begin
-        Window.CLOSE();
+        Window.Close();
         if PrintToExcel then
             CreateExcelbook();
     end;
 
     trigger OnPreReport()
     begin
-        CustFilterTxt := Customer.GETFILTERS;
-        ItemFilterTxt := Item.GETFILTERS;
-        ItemLedgEntryFilterTxt := SalesEntry.GETFILTERS;
+        CustFilterTxt := Customer.GetFilters;
+        ItemFilterTxt := Item.GetFilters;
+        ItemLedgEntryFilterTxt := SalesEntry.GetFilters;
 
         CalcDates();
-        SalesEntry.SETRANGE("Posting Date", StartingDate, EndingDate);
-        PeriodText := SalesEntry.GETFILTER("Posting Date");
+        SalesEntry.SetRange("Posting Date", StartingDate, EndingDate);
+        PeriodText := SalesEntry.GetFilter("Posting Date");
 
-        ItemFilterRec.RESET();
-        ItemFilterRec.COPY(Item);
+        ItemFilterRec.Reset();
+        ItemFilterRec.Copy(Item);
 
-        Window.OPEN(Text100);
+        Window.Open(Text100);
         if PrintToExcel then
             MakeExcelInfo();
     end;
@@ -278,31 +278,31 @@ report 50013 "Customer Sales ConsumptionAss"
     procedure MakeExcelInfo()
     begin
         ExcelBuf.SetUseInfoSheet();
-        ExcelBuf.AddInfoColumn(FORMAT(Text003), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(Format(Text003), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddInfoColumn(COMPANYNAME, false, false, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.NewRow();
-        ExcelBuf.AddInfoColumn(FORMAT(Text005), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
-        ExcelBuf.AddInfoColumn(FORMAT(Text002), false, false, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(Format(Text005), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(Format(Text002), false, false, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.NewRow();
-        ExcelBuf.AddInfoColumn(FORMAT(Text004), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(Format(Text004), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddInfoColumn(report::"Customer Sales ConsumptionAss", false, false, false, false, '', ExcelBuf."Cell Type"::Number);
         ExcelBuf.NewRow();
-        ExcelBuf.AddInfoColumn(FORMAT(Text006), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
-        ExcelBuf.AddInfoColumn(USERID, false, false, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(Format(Text006), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(UserId, false, false, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.NewRow();
-        ExcelBuf.AddInfoColumn(FORMAT(Text007), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(Format(Text007), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddInfoColumn(TODAY, false, false, false, false, '', ExcelBuf."Cell Type"::Date);
         ExcelBuf.NewRow();
-        ExcelBuf.AddInfoColumn(FORMAT(Text012), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(Format(Text012), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddInfoColumn(EndingDate, false, false, false, false, '', ExcelBuf."Cell Type"::Date);
         ExcelBuf.NewRow();
-        ExcelBuf.AddInfoColumn(FORMAT(Text008), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(Format(Text008), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddInfoColumn(CustFilterTxt, false, false, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.NewRow();
-        ExcelBuf.AddInfoColumn(FORMAT(Text013), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(Format(Text013), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddInfoColumn(ItemFilterTxt, false, false, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.NewRow();
-        ExcelBuf.AddInfoColumn(FORMAT(Text009), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddInfoColumn(Format(Text009), false, true, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddInfoColumn(ItemLedgEntryFilterTxt, false, false, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.ClearNewRow();
         MakeExcelDataHeader();
@@ -312,14 +312,14 @@ report 50013 "Customer Sales ConsumptionAss"
     begin
 
         ExcelBuf.NewRow();
-        ExcelBuf.AddColumn(Customer.FIELDCAPTION("No."), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
-        ExcelBuf.AddColumn(Customer.FIELDCAPTION(Name), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
-        ExcelBuf.AddColumn(ValueEntryBuffer.FIELDCAPTION("Item No."), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
-        ExcelBuf.AddColumn(Item.FIELDCAPTION(Description), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
-        ExcelBuf.AddColumn(Item.FIELDCAPTION("Vendor No."), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddColumn(Customer.FieldCaption("No."), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddColumn(Customer.FieldCaption(Name), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddColumn(ValueEntryBuffer.FieldCaption("Item No."), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddColumn(Item.FieldCaption(Description), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
+        ExcelBuf.AddColumn(Item.FieldCaption("Vendor No."), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddColumn(Vendor.TABLECAPTION, false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
         for i := 1 to 12 do
-            ExcelBuf.AddColumn(FORMAT(PeriodName[i]), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
+            ExcelBuf.AddColumn(Format(PeriodName[i]), false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddColumn(Text010, false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddColumn(Text011, false, '', true, false, true, '', ExcelBuf."Cell Type"::Text);
     end;
@@ -339,9 +339,9 @@ report 50013 "Customer Sales ConsumptionAss"
         ExcelBuf.AddColumn(Item."Vendor No.", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddColumn(Vendor.Name, false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);
         for i := 1 to 12 do begin
-            ValueEntryBuffer2.SETRANGE("Item No.", ValueEntryBuffer."Item No.");
-            ValueEntryBuffer2.SETRANGE("Posting Date", PeriodStartingDate[i]);
-            if ValueEntryBuffer2.Findfirst() then
+            ValueEntryBuffer2.SetRange("Item No.", ValueEntryBuffer."Item No.");
+            ValueEntryBuffer2.SetRange("Posting Date", PeriodStartingDate[i]);
+            if ValueEntryBuffer2.findFirst() then
                 ExcelBuf.AddColumn(-ValueEntryBuffer2."Invoiced Quantity", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number)
             else
                 ExcelBuf.AddColumn(0, false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);
@@ -352,12 +352,12 @@ report 50013 "Customer Sales ConsumptionAss"
 
     procedure CreateExcelbook()
     begin
-        // ExcelBuf.CreateBookAndOpenExcel(Text001, Text002, Text005, COMPANYNAME, USERID);
+        // ExcelBuf.CreateBookAndOpenExcel(Text001, Text002, Text005, COMPANYNAME, UserId);
         ExcelBuf.CreateNewBook('Customers');
-        ExcelBuf.WriteSheet('Customers Details', COMPANYNAME, USERID);
+        ExcelBuf.WriteSheet('Customers Details', COMPANYNAME, UserId);
         ExcelBuf.CloseBook();
         ExcelBuf.OpenExcel();
-        ERROR('');
+        Error('');
     end;
 
     procedure InitializeRequest(NewPagePerCustomer: Boolean; PrintToExcelFile: Boolean)
@@ -367,18 +367,18 @@ report 50013 "Customer Sales ConsumptionAss"
 
     local procedure AddBuffer(var FromValueEntryBuffer: Record "Value Entry" temporary; var FromNextEntryNo: Integer; ItemNo: Code[20]; Qty: Decimal; PostingDate: Date)
     begin
-        FromValueEntryBuffer.SETRANGE("Item No.", ItemNo);
-        FromValueEntryBuffer.SETRANGE("Posting Date", PostingDate);
-        if not FromValueEntryBuffer.Findfirst() then begin
-            FromValueEntryBuffer.INIT();
+        FromValueEntryBuffer.SetRange("Item No.", ItemNo);
+        FromValueEntryBuffer.SetRange("Posting Date", PostingDate);
+        if not FromValueEntryBuffer.findFirst() then begin
+            FromValueEntryBuffer.Init();
             FromValueEntryBuffer."Entry No." := FromNextEntryNo;
             FromValueEntryBuffer."Posting Date" := PostingDate;
             FromValueEntryBuffer."Item No." := ItemNo;
-            FromValueEntryBuffer.INSERT();
+            FromValueEntryBuffer.Insert();
             FromNextEntryNo := FromNextEntryNo + 1;
         end;
         FromValueEntryBuffer."Invoiced Quantity" += Qty;
-        FromValueEntryBuffer.MODIFY();
+        FromValueEntryBuffer.Modify();
     end;
 
     local procedure CalcDates()
@@ -388,19 +388,19 @@ report 50013 "Customer Sales ConsumptionAss"
         i: Integer;
         PeriodLength: Option Day,Week,Month,Quarter,Year;
     begin
-        CLEAR(PeriodName);
+        Clear(PeriodName);
         if (EndingDate <> 0D) then begin
             PeriodLength := PeriodLength::Month;
-            DateRec.RESET();
-            DateRec.SETRANGE("Period Type", PeriodLength);
-            DateRec.SETFILTER("Period Start", '..%1', EndingDate);
-            DateRec.FINDLAST();
+            DateRec.Reset();
+            DateRec.SetRange("Period Type", PeriodLength);
+            DateRec.SetFilter("Period Start", '..%1', EndingDate);
+            DateRec.FindLast();
             StartingDate := DateRec."Period Start";
             for i := -12 to -1 do begin
                 PeriodStartingDate[-i] := DateRec."Period Start";
-                PeriodEndingDate[-i] := NORMALDATE(DateRec."Period End");
+                PeriodEndingDate[-i] := NormalDate(DateRec."Period End");
                 PeriodName[-i] := PeriodFormMngt.CreatePeriodFormat(DateRec."Period Type", DateRec."Period Start");
-                DateRec.NEXT(-1);
+                DateRec.Next(-1);
             end;
             StartingDate := PeriodStartingDate[1];
             EndingDate := PeriodEndingDate[12];
@@ -410,15 +410,15 @@ report 50013 "Customer Sales ConsumptionAss"
     local procedure TestItem(ItemNo: Code[20]): Boolean
     begin
         ItemFilterRec."No." := ItemNo;
-        exit(ItemFilterRec.FIND('='));
+        exit(ItemFilterRec.Find('='));
     end;
 
     local procedure Fct_IsBOMItem(CodPitem: Code[20]): Boolean
     var
         RecLItem: Record Item;
     begin
-        if RecLItem.GET(CodPitem) then begin
-            RecLItem.CALCFIELDS(RecLItem."Assembly BOM");
+        if RecLItem.Get(CodPitem) then begin
+            RecLItem.CalcFields(RecLItem."Assembly BOM");
             exit(RecLItem."Assembly BOM");
         end
         else
@@ -440,9 +440,9 @@ report 50013 "Customer Sales ConsumptionAss"
         ExcelBuf.AddColumn(Item."Vendor No.", false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);
         ExcelBuf.AddColumn(Vendor.Name, false, '', false, false, false, '', ExcelBuf."Cell Type"::Text);
         for i := 1 to 12 do begin
-            ValueEntryBuffer2Purch.SETRANGE("Item No.", ValueEntryBufferPurch."Item No.");
-            ValueEntryBuffer2Purch.SETRANGE("Posting Date", PeriodStartingDate[i]);
-            if ValueEntryBuffer2Purch.Findfirst() then
+            ValueEntryBuffer2Purch.SetRange("Item No.", ValueEntryBufferPurch."Item No.");
+            ValueEntryBuffer2Purch.SetRange("Posting Date", PeriodStartingDate[i]);
+            if ValueEntryBuffer2Purch.findFirst() then
                 ExcelBuf.AddColumn(-ValueEntryBuffer2Purch."Invoiced Quantity", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number)
             else
                 ExcelBuf.AddColumn(0, false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);

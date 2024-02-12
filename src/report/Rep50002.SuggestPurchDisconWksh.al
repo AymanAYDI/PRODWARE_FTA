@@ -24,16 +24,16 @@ report 50002 "Suggest Purch. Disc. on Wksh."
             trigger OnAfterGetRecord()
             begin
                 if Item."No." <> "Item No." then begin
-                    Item.GET("Item No.");
-                    Window.UPDATE(1, "Item No.");
+                    Item.Get("Item No.");
+                    Window.Update(1, "Item No.");
                 end;
 
-                CLEAR(PurchDiscWksh);
+                Clear(PurchDiscWksh);
                 if ToSalesCode <> '' then
-                    PurchDiscWksh.VALIDATE("Vendor No.", ToSalesCode)
+                    PurchDiscWksh.Validate("Vendor No.", ToSalesCode)
                 else
-                    PurchDiscWksh.VALIDATE("Vendor No.", "Vendor No.");
-                PurchDiscWksh.VALIDATE("Item No.", "Item No.");
+                    PurchDiscWksh.Validate("Vendor No.", "Vendor No.");
+                PurchDiscWksh.Validate("Item No.", "Item No.");
                 PurchDiscWksh."Line Discount %" := "Line Discount %";
                 PurchDiscWksh."New Line Discount %" := "Line Discount %";
                 PurchDiscWksh."Minimum Quantity" := "Minimum Quantity";
@@ -43,15 +43,15 @@ report 50002 "Suggest Purch. Disc. on Wksh."
                 else begin
                     PurchDiscWksh."Unit of Measure Code" := ToUnitOfMeasure.Code;
                     if not (PurchDiscWksh."Unit of Measure Code" in ['', Item."Base Unit of Measure"]) then
-                        if not ItemUnitOfMeasure.GET("Item No.", PurchDiscWksh."Unit of Measure Code") then
-                            CurrReport.SKIP();
+                        if not ItemUnitOfMeasure.Get("Item No.", PurchDiscWksh."Unit of Measure Code") then
+                            CurrReport.Skip();
                     PurchDiscWksh."New Line Discount %" :=
                       PurchDiscWksh."New Line Discount %" *
                       UOMMgt.GetQtyPerUnitOfMeasure(Item, PurchDiscWksh."Unit of Measure Code") /
                       UOMMgt.GetQtyPerUnitOfMeasure(Item, "Unit of Measure Code");
                 end;
-                PurchDiscWksh.VALIDATE("Unit of Measure Code");
-                PurchDiscWksh.VALIDATE("Variant Code", "Variant Code");
+                PurchDiscWksh.Validate("Unit of Measure Code");
+                PurchDiscWksh.Validate("Variant Code", "Variant Code");
 
                 if not ReplaceCurrency then
                     PurchDiscWksh."Currency Code" := "Currency Code"
@@ -59,53 +59,53 @@ report 50002 "Suggest Purch. Disc. on Wksh."
                     PurchDiscWksh."Currency Code" := ToCurrency.Code;
 
                 if not ReplaceStartingDate then
-                    PurchDiscWksh.VALIDATE("Starting Date", "Starting Date")
+                    PurchDiscWksh.Validate("Starting Date", "Starting Date")
                 else
-                    PurchDiscWksh.VALIDATE("Starting Date", ToStartDate);
+                    PurchDiscWksh.Validate("Starting Date", ToStartDate);
                 if not ReplaceEndingDate then
-                    PurchDiscWksh.VALIDATE("Ending Date", "Ending Date")
+                    PurchDiscWksh.Validate("Ending Date", "Ending Date")
                 else
-                    PurchDiscWksh.VALIDATE("Ending Date", ToEndDate);
+                    PurchDiscWksh.Validate("Ending Date", ToEndDate);
 
                 if "Currency Code" <> PurchDiscWksh."Currency Code" then begin
                     if "Currency Code" <> '' then begin
-                        FromCurrency.GET("Currency Code");
-                        FromCurrency.TESTFIELD(Code);
+                        FromCurrency.Get("Currency Code");
+                        FromCurrency.TestField(Code);
                         PurchDiscWksh."New Line Discount %" :=
                           CurrExchRate.ExchangeAmtFCYToLCY(
-                            WORKDATE(), "Currency Code", PurchDiscWksh."New Line Discount %",
+                            WorkDate(), "Currency Code", PurchDiscWksh."New Line Discount %",
                             CurrExchRate.ExchangeRate(
-                              WORKDATE(), "Currency Code"));
+                              WorkDate(), "Currency Code"));
                     end;
                     if PurchDiscWksh."Currency Code" <> '' then
                         PurchDiscWksh."New Line Discount %" :=
                           CurrExchRate.ExchangeAmtLCYToFCY(
-                            WORKDATE(), PurchDiscWksh."Currency Code",
+                            WorkDate(), PurchDiscWksh."Currency Code",
                             PurchDiscWksh."New Line Discount %", CurrExchRate.ExchangeRate(
-                              WORKDATE(), PurchDiscWksh."Currency Code"));
+                              WorkDate(), PurchDiscWksh."Currency Code"));
                 end;
 
                 if PurchDiscWksh."Currency Code" = '' then
                     Currency2.InitRoundingPrecision()
                 else begin
-                    Currency2.GET(PurchDiscWksh."Currency Code");
-                    Currency2.TESTFIELD("Unit-Amount Rounding Precision");
+                    Currency2.Get(PurchDiscWksh."Currency Code");
+                    Currency2.TestField("Unit-Amount Rounding Precision");
                 end;
                 PurchDiscWksh."New Line Discount %" :=
-                  ROUND(PurchDiscWksh."New Line Discount %", Currency2."Unit-Amount Rounding Precision");
+                  Round(PurchDiscWksh."New Line Discount %", Currency2."Unit-Amount Rounding Precision");
 
                 if PurchDiscWksh."New Line Discount %" > PriceLowerLimit then
                     PurchDiscWksh."New Line Discount %" := PurchDiscWksh."New Line Discount %" * UnitPriceFactor;
                 if RoundingMethod.Code <> '' then begin
                     RoundingMethod."Minimum Amount" := PurchDiscWksh."New Line Discount %";
-                    if RoundingMethod.FIND('=<') then begin
+                    if RoundingMethod.Find('=<') then begin
                         PurchDiscWksh."New Line Discount %" :=
                           PurchDiscWksh."New Line Discount %" + RoundingMethod."Amount Added Before";
                         if RoundingMethod.Precision > 0 then
                             PurchDiscWksh."New Line Discount %" :=
-                              ROUND(
+                              Round(
                                 PurchDiscWksh."New Line Discount %",
-                                RoundingMethod.Precision, COPYSTR('=><', RoundingMethod.Type + 1, 1));
+                                RoundingMethod.Precision, CopyStr('=><', RoundingMethod.Type + 1, 1));
                         PurchDiscWksh."New Line Discount %" := PurchDiscWksh."New Line Discount %" +
                           RoundingMethod."Amount Added After";
                     end;
@@ -116,16 +116,16 @@ report 50002 "Suggest Purch. Disc. on Wksh."
                     PurchDiscWksh."New Line Discount %" := DecGNewDisc;
                 if PriceAlreadyExists or CreateNewPrices then begin
                     PurchDiscWksh2 := PurchDiscWksh;
-                    if PurchDiscWksh2.FIND('=') then
-                        PurchDiscWksh.MODIFY(true)
+                    if PurchDiscWksh2.Find('=') then
+                        PurchDiscWksh.Modify(true)
                     else
-                        PurchDiscWksh.INSERT(true);
+                        PurchDiscWksh.Insert(true);
                 end;
             end;
 
             trigger OnPreDataItem()
             begin
-                Window.OPEN(Text001);
+                Window.Open(Text001);
             end;
         }
     }
@@ -160,7 +160,7 @@ report 50002 "Suggest Purch. Disc. on Wksh."
                         trigger OnValidate()
                         begin
                             if ToUnitOfMeasure.Code <> '' then
-                                ToUnitOfMeasure.FIND();
+                                ToUnitOfMeasure.Find();
                         end;
                     }
                     field("ToCurrency.Code"; ToCurrency.Code)
@@ -170,7 +170,7 @@ report 50002 "Suggest Purch. Disc. on Wksh."
                         trigger OnValidate()
                         begin
                             if ToCurrency.Code <> '' then
-                                ToCurrency.FIND();
+                                ToCurrency.Find();
                         end;
                     }
                     field(ToStartDateCtrl; ToStartDate)
@@ -224,10 +224,10 @@ report 50002 "Suggest Purch. Disc. on Wksh."
                 begin
                     ToVend."No." := ToSalesCode;
                     if ToVend."No." <> '' then
-                        ToVend.FIND()
+                        ToVend.Find()
                     else begin
-                        if not ToVend.FIND() then
-                            ToVend.INIT();
+                        if not ToVend.Find() then
+                            ToVend.Init();
                         ToSalesCode := ToVend."No.";
                     end;
                 end;
@@ -240,9 +240,9 @@ report 50002 "Suggest Purch. Disc. on Wksh."
         ReplaceEndingDate := ToEndDate <> 0D;
 
         if ReplaceUnitOfMeasure and (ToUnitOfMeasure.Code <> '') then
-            ToUnitOfMeasure.FIND();
+            ToUnitOfMeasure.Find();
 
-        RoundingMethod.SETRANGE(Code, RoundingMethod.Code);
+        RoundingMethod.SetRange(Code, RoundingMethod.Code);
 
     end;
 
@@ -282,7 +282,7 @@ report 50002 "Suggest Purch. Disc. on Wksh."
         [InDataSet]
         BooGEnableSalesCodeCtrl: Boolean;
 
-    [Scope('Internal')]
+
     procedure InitializeRequest(NewToSalesType: Option Vendor; NewToSalesCode: Code[20]; NewToStartDate: Date; NewToEndDate: Date; NewToCurrCode: Code[10]; NewToUOMCode: Code[10]; NewCreateNewPrices: Boolean)
     begin
         ToSalesType := NewToSalesType;

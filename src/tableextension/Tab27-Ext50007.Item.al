@@ -58,14 +58,14 @@ tableextension 50007 Item extends Item //27
                 RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
-                    TESTFIELD("Vendor No.");
-                    TESTFIELD("Base Unit of Measure");
+                    TestField("Vendor No.");
+                    TestField("Base Unit of Measure");
                     RecLPurchPrice.SetRange("Item No.", "No.");
                     RecLPurchPrice.SetRange("Vendor No.", "Vendor No.");
                     RecLPurchPrice.SetRange("Unit of Measure Code", "Base Unit of Measure");
-                    if RecLPurchPrice.FindFirst() then begin
+                    if RecLPurchPrice.findFirst() then begin
                         RecLPurchPrice.Validate("Direct Unit Cost", "Purchase Price Base");
-                        RecLPurchPrice.MODIFY(true);
+                        RecLPurchPrice.Modify(true);
                     end else begin
                         RecLPurchPrice.Init();
                         RecLPurchPrice.Validate("Item No.", "No.");
@@ -287,14 +287,14 @@ tableextension 50007 Item extends Item //27
                 RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
-                    TESTFIELD("Vendor No.");
-                    TESTFIELD("Base Unit of Measure");
+                    TestField("Vendor No.");
+                    TestField("Base Unit of Measure");
                     RecLPurchPrice.SetRange("Item No.", "No.");
                     RecLPurchPrice.SetRange("Vendor No.", "Vendor No.");
                     RecLPurchPrice.SetRange("Unit of Measure Code", "Base Unit of Measure");
-                    if RecLPurchPrice.FindFirst() then begin
+                    if RecLPurchPrice.findFirst() then begin
                         RecLPurchPrice.Validate("Direct Unit Cost", "Purchase Price Base");
-                        RecLPurchPrice.MODIFY(true);
+                        RecLPurchPrice.Modify(true);
                     end else begin
                         RecLPurchPrice.Init();
                         RecLPurchPrice.Validate("Item No.", "No.");
@@ -314,14 +314,14 @@ tableextension 50007 Item extends Item //27
                 RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
-                    TESTFIELD("Vendor No.");
-                    TESTFIELD("Base Unit of Measure");
+                    TestField("Vendor No.");
+                    TestField("Base Unit of Measure");
                     RecLPurchPrice.SetRange("Item No.", "No.");
                     RecLPurchPrice.SetRange("Vendor No.", "Vendor No.");
                     RecLPurchPrice.SetRange("Unit of Measure Code", "Base Unit of Measure");
-                    if RecLPurchPrice.FindFirst() then begin
+                    if RecLPurchPrice.findFirst() then begin
                         RecLPurchPrice.Validate("Direct Unit Cost", "Purchase Price Base");
-                        RecLPurchPrice.MODIFY(true);
+                        RecLPurchPrice.Modify(true);
                     end else begin
                         RecLPurchPrice.Init();
                         RecLPurchPrice.Validate("Item No.", "No.");
@@ -341,14 +341,14 @@ tableextension 50007 Item extends Item //27
                 RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
-                    TESTFIELD("Vendor No.");
-                    TESTFIELD("Base Unit of Measure");
+                    TestField("Vendor No.");
+                    TestField("Base Unit of Measure");
                     RecLPurchPrice.SetRange("Item No.", "No.");
                     RecLPurchPrice.SetRange("Vendor No.", "Vendor No.");
                     RecLPurchPrice.SetRange("Unit of Measure Code", "Base Unit of Measure");
-                    if RecLPurchPrice.FindFirst() then begin
+                    if RecLPurchPrice.findFirst() then begin
                         RecLPurchPrice.Validate("Direct Unit Cost", "Purchase Price Base");
-                        RecLPurchPrice.MODIFY(true);
+                        RecLPurchPrice.Modify(true);
                     end else begin
                         RecLPurchPrice.Init();
                         RecLPurchPrice.Validate("Item No.", "No.");
@@ -368,14 +368,14 @@ tableextension 50007 Item extends Item //27
                 RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
-                    TESTFIELD("Vendor No.");
-                    TESTFIELD("Base Unit of Measure");
+                    TestField("Vendor No.");
+                    TestField("Base Unit of Measure");
                     RecLPurchPrice.SetRange("Item No.", "No.");
                     RecLPurchPrice.SetRange("Vendor No.", "Vendor No.");
                     RecLPurchPrice.SetRange("Unit of Measure Code", "Base Unit of Measure");
-                    if RecLPurchPrice.FindFirst() then begin
+                    if RecLPurchPrice.findFirst() then begin
                         RecLPurchPrice.Validate("Direct Unit Cost", "Purchase Price Base");
-                        RecLPurchPrice.MODIFY(true);
+                        RecLPurchPrice.Modify(true);
                     end else begin
                         RecLPurchPrice.Init();
                         RecLPurchPrice.Validate("Item No.", "No.");
@@ -395,14 +395,14 @@ tableextension 50007 Item extends Item //27
                 RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
-                    TESTFIELD("Vendor No.");
-                    TESTFIELD("Base Unit of Measure");
+                    TestField("Vendor No.");
+                    TestField("Base Unit of Measure");
                     RecLPurchPrice.SetRange("Item No.", "No.");
                     RecLPurchPrice.SetRange("Vendor No.", "Vendor No.");
                     RecLPurchPrice.SetRange("Unit of Measure Code", "Base Unit of Measure");
-                    if RecLPurchPrice.FindFirst() then begin
+                    if RecLPurchPrice.findFirst() then begin
                         RecLPurchPrice.Validate("Direct Unit Cost", "Purchase Price Base");
-                        RecLPurchPrice.MODIFY(true);
+                        RecLPurchPrice.Modify(true);
                     end else begin
                         RecLPurchPrice.Init();
                         RecLPurchPrice.Validate("Item No.", "No.");
@@ -422,14 +422,14 @@ tableextension 50007 Item extends Item //27
                 RecLPurchPrice: Record "Purchase Price";
             begin
                 if ("Item Base" = "Item Base"::Transitory) then begin
-                    TESTFIELD("Vendor No.");
-                    TESTFIELD("Base Unit of Measure");
+                    TestField("Vendor No.");
+                    TestField("Base Unit of Measure");
                     RecLPurchPrice.SetRange("Item No.", "No.");
                     RecLPurchPrice.SetRange("Vendor No.", "Vendor No.");
                     RecLPurchPrice.SetRange("Unit of Measure Code", "Base Unit of Measure");
-                    if RecLPurchPrice.FindFirst() then begin
+                    if RecLPurchPrice.findFirst() then begin
                         RecLPurchPrice.Validate("Direct Unit Cost", "Purchase Price Base");
-                        RecLPurchPrice.MODIFY(true);
+                        RecLPurchPrice.Modify(true);
                     end else begin
                         RecLPurchPrice.Init();
                         RecLPurchPrice.Validate("Item No.", "No.");
@@ -486,15 +486,15 @@ tableextension 50007 Item extends Item //27
                     if ("Purch. Unit of Measure" <> RecLPurchPrice."Unit of Measure Code") and
                          (RecLPurchPrice."Unit of Measure Code" <> '') then
                         BooLRecOK := false;
-                    if (RecLPurchPrice."Starting Date" <> 0D) and (WORKDATE() < RecLPurchPrice."Starting Date") then
+                    if (RecLPurchPrice."Starting Date" <> 0D) and (WorkDate() < RecLPurchPrice."Starting Date") then
                         BooLRecOK := false;
-                    if (RecLPurchPrice."Ending Date" <> 0D) and (WORKDATE() > RecLPurchPrice."Ending Date") then
+                    if (RecLPurchPrice."Ending Date" <> 0D) and (WorkDate() > RecLPurchPrice."Ending Date") then
                         BooLRecOK := false;
                     if (BooLRecOK = true) and (RecLPurchPrice."Minimum Quantity" <= DecLQty) then begin
                         DecLQty := RecLPurchPrice."Minimum Quantity";
                         DecLCost := RecLPurchPrice."Direct Unit Cost";
                     end;
-                until RecLPurchPrice.NEXT() = 0;
+                until RecLPurchPrice.Next() = 0;
             RecLPurchLineDisc.Reset();
             RecLPurchLineDisc.SetRange("Item No.", "No.");
             RecLPurchLineDisc.SetRange("Vendor No.", "Vendor No.");
@@ -504,15 +504,15 @@ tableextension 50007 Item extends Item //27
                     if ("Purch. Unit of Measure" <> RecLPurchLineDisc."Unit of Measure Code") and
                          (RecLPurchLineDisc."Unit of Measure Code" <> '') then
                         BooLRecOK := false;
-                    if (RecLPurchLineDisc."Starting Date" <> 0D) and (WORKDATE() < RecLPurchLineDisc."Starting Date") then
+                    if (RecLPurchLineDisc."Starting Date" <> 0D) and (WorkDate() < RecLPurchLineDisc."Starting Date") then
                         BooLRecOK := false;
-                    if (RecLPurchLineDisc."Ending Date" <> 0D) and (WORKDATE() > RecLPurchLineDisc."Ending Date") then
+                    if (RecLPurchLineDisc."Ending Date" <> 0D) and (WorkDate() > RecLPurchLineDisc."Ending Date") then
                         BooLRecOK := false;
                     if (BooLRecOK = true) and (RecLPurchLineDisc."Minimum Quantity" <= DecLQty) or
                        (BooLRecOK = true) and (DecLQty = 0) and (RecLPurchLineDisc."Minimum Quantity" = 1) then
                         DecLDisc := RecLPurchLineDisc."Line Discount %";
 
-                until RecLPurchLineDisc.NEXT() = 0;
+                until RecLPurchLineDisc.Next() = 0;
 
             if DecLDisc <> 0 then
                 "Purchase Price Base" := Round(DecLCost * (1 - (DecLDisc / 100)), 0.01)
@@ -521,32 +521,32 @@ tableextension 50007 Item extends Item //27
             ItemProductionCost.Reset();
             ItemProductionCost.SetRange("Item No.", "No.");
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 0);
-            if ItemProductionCost.FindFirst() then
+            if ItemProductionCost.findFirst() then
                 "Purchase Price Base 1" := ItemProductionCost."Unit Cost";
 
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 2);
-            if ItemProductionCost.FindFirst() then
+            if ItemProductionCost.findFirst() then
                 "Purchase Price Base 2" := ItemProductionCost."Unit Cost";
 
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 5);
-            if ItemProductionCost.FindFirst() then
+            if ItemProductionCost.findFirst() then
                 "Purchase Price Base 5" := ItemProductionCost."Unit Cost";
 
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 10);
-            if ItemProductionCost.FindFirst() then
+            if ItemProductionCost.findFirst() then
                 "Purchase Price Base 10" := ItemProductionCost."Unit Cost";
 
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 25);
-            if ItemProductionCost.FindFirst() then
+            if ItemProductionCost.findFirst() then
                 "Purchase Price Base 25" := ItemProductionCost."Unit Cost";
 
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty");
             ItemProductionCost.SetRange(ItemProductionCost."Sales Min Qty", 50);
-            if ItemProductionCost.FindFirst() then
+            if ItemProductionCost.findFirst() then
                 "Purchase Price Base 50" := ItemProductionCost."Unit Cost";
 
             Validate("Margin in %");
@@ -557,13 +557,13 @@ tableextension 50007 Item extends Item //27
     var
         RecLItem: Record Item;
     begin
-        RecPItem.CALCFIELDS(RecPItem."Assembly BOM");
+        RecPItem.CalcFields(RecPItem."Assembly BOM");
         if not RecPItem."Assembly BOM" then begin
             RecPItem."Kit - Sales Price" := 0;
             exit;
         end;
         RollUpPriceFTA(RecPItem, BooPMonoLevel);
-        RecPItem.MODIFY();
+        RecPItem.Modify();
     end;
 
     procedure FctCreateFromTemplate()
@@ -582,7 +582,7 @@ tableextension 50007 Item extends Item //27
             //     HasInvtSetup := true;
             // end;
             RecRef.GetTable(Rec);
-            InvtSetup.TESTFIELD("Template Item Transitory Code");
+            InvtSetup.TestField("Template Item Transitory Code");
             RecLTemplateHeader.Get(InvtSetup."Template Item Transitory Code");
             RecLTemplateLine.SetRange("Data Template Code", InvtSetup."Template Item Transitory Code");
             RecLTemplateLine.SetRange("Field ID", 8);
@@ -598,7 +598,7 @@ tableextension 50007 Item extends Item //27
         if "Item Base" = "Item Base"::"Transitory Kit" then begin
             GetInvtSetup();
             RecRef.GetTable(Rec);
-            InvtSetup.TESTFIELD("Template Item Trans. Kit Code");
+            InvtSetup.TestField("Template Item Trans. Kit Code");
             RecLTemplateHeader.Get(InvtSetup."Template Item Trans. Kit Code");
             RecLTemplateLine.SetRange("Data Template Code", InvtSetup."Template Item Trans. Kit Code");
             RecLTemplateLine.SetRange("Field ID", 8);
@@ -614,7 +614,7 @@ tableextension 50007 Item extends Item //27
         if "Item Base" = "Item Base"::"Bored blocks" then begin
             GetInvtSetup();
             RecRef.GetTable(Rec);
-            InvtSetup.TESTFIELD(InvtSetup."Template Item Bored block Code");
+            InvtSetup.TestField(InvtSetup."Template Item Bored block Code");
             RecLTemplateHeader.Get(InvtSetup."Template Item Bored block Code");
             RecLTemplateLine.SetRange("Data Template Code", InvtSetup."Template Item Bored block Code");
             RecLTemplateLine.SetRange("Field ID", 8);
@@ -635,9 +635,9 @@ tableextension 50007 Item extends Item //27
         FrmLKitBOM: Page "Assembly BOM";
         CstL001: Label 'This item does not have a BOM, do you want to create one?';
     begin
-        RecPItem.CALCFIELDS("Assembly BOM");
+        RecPItem.CalcFields("Assembly BOM");
         if not RecPItem."Assembly BOM" then
-            if not CONFIRM(CstL001, true) then
+            if not Confirm(CstL001, true) then
                 exit;
 
         Clear(FrmLKitBOM);
@@ -680,11 +680,11 @@ tableextension 50007 Item extends Item //27
                     if RecLItem.Get(RecLProductionBOMLine."No.") then begin
                         FctCalcPurchasePriceFTA(RecLItem);
                         FctCalcSalesPriceFTA(RecLItem);
-                        RecLItem.MODIFY();
+                        RecLItem.Modify();
                         if (RecLItem."Replenishment System" = RecLItem."Replenishment System"::Assembly) and
                             (not BooPMonoLevel) then begin
                             RollUpPriceFTA(RecLItem, BooPMonoLevel);
-                            RecLItem.MODIFY();
+                            RecLItem.Modify();
                         end;
                         if (RecLItem."Kit - Sales Price" <> 0) and
                             (not BooPMonoLevel) then
@@ -692,11 +692,11 @@ tableextension 50007 Item extends Item //27
                         else
                             DecLComponentPrice += RecLItem."Unit Price" * RecLProductionBOMLine."Quantity per";
                     end;
-            until RecLProductionBOMLine.NEXT() = 0;
+            until RecLProductionBOMLine.Next() = 0;
         GLSetup.Get();
         DecLComponentPrice := Round(DecLComponentPrice, GLSetup."Unit-Amount Rounding Precision");
         RecPItem."Kit - Sales Price" := DecLComponentPrice;
-        RecPItem.MODIFY();
+        RecPItem.Modify();
     end;
 
     //TODO -> Verifier

@@ -19,9 +19,9 @@ tableextension 50033 ShippingAgent extends "Shipping Agent"//291
         TexCdeTransp001: text;
     begin
 
-        // IF (RecLVendor.GET(Code)) AND (RecLVendor."Vendor Type" = RecLVendor."Vendor Type"::Transport) THEN
-        //     TexCdeTransp001 := (STRSUBSTNO(RecLVendor."No."));
-        // ERROR(TexCdeTransp001)
+        // IF (RecLVendor.Get(Code)) AND (RecLVendor."Vendor Type" = RecLVendor."Vendor Type"::Transport) THEN
+        //     TexCdeTransp001 := (StrSubstNo(RecLVendor."No."));
+        // Error(TexCdeTransp001)
 
     end;
 

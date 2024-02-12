@@ -81,7 +81,7 @@ tableextension 50024 SalesInvoiceLine extends "Sales Invoice Line" //113
         {
             Caption = 'Qty Shipped on Order';
         }
-        modify("Item Category Code")
+        Modify("Item Category Code")
         {
             trigger OnAfterValidate()
             var

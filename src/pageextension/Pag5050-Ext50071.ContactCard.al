@@ -6,7 +6,7 @@ pageextension 50071 "ContactCard" extends "Contact Card" //5050
 {
     layout
     {
-        modify("Job Title")
+        Modify("Job Title")
         {
             visible = true;
         }

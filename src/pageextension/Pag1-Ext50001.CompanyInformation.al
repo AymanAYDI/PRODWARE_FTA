@@ -3,7 +3,7 @@ namespace Prodware.FTA;
 
 using Microsoft.Foundation.Company;
 
-pageextension 50001 CompanyInformation extends "Company Information" //1
+pageextension 50001 CompanyInFormation extends "Company InFormation" //1
 {
     layout
     {

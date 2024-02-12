@@ -78,7 +78,7 @@ tableextension 50004 CustLedgerEntry extends "Cust. Ledger Entry" //21
     "Journal Batch Name" := GenJnlLine."Journal Batch Name";
     "Reason Code" := GenJnlLine."Reason Code";
     "Direct Debit Mandate ID" := GenJnlLine."Direct Debit Mandate ID";
-    "User ID" := USERID;
+    "User ID" := UserId;
     "Bal. Account Type" := GenJnlLine."Bal. Account Type";
     "Bal. Account No." := GenJnlLine."Bal. Account No.";
     "No. Series" := GenJnlLine."Posting No. Series";
@@ -105,11 +105,11 @@ tableextension 50004 CustLedgerEntry extends "Cust. Ledger Entry" //21
     //end;
 
 
-    procedure getCustomerName(CodLCustNo: Code[20]): Text[50]
+    procedure GetCustomerName(CodLCustNo: Code[20]): Text[50]
     var
         RecgLCustomer: Record Customer;
     begin
-        if RecgLCustomer.GET(CodLCustNo) then
+        if RecgLCustomer.Get(CodLCustNo) then
             exit(RecgLCustomer.Name[20])
         else
             exit('');

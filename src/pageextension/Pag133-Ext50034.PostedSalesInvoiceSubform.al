@@ -5,7 +5,7 @@ pageextension 50034 "PostedSalesInvoiceSubform" extends "Posted Sales Invoice Su
 {
     layout
     {
-        modify("Description 2")
+        Modify("Description 2")
         {
             Visible = false;
         }

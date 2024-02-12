@@ -5,7 +5,7 @@ pageextension 50031 "PostedSalesShipment" extends "Posted Sales Shipment" //130
 {
     layout
     {
-        modify("Shipping Agent Code")
+        Modify("Shipping Agent Code")
         {
             Editable = true;
         }
@@ -79,7 +79,7 @@ pageextension 50031 "PostedSalesShipment" extends "Posted Sales Shipment" //130
     }
     actions
     {
-        modify("&Print")
+        Modify("&Print")
         {
             Visible = false;
         }
@@ -93,7 +93,7 @@ pageextension 50031 "PostedSalesShipment" extends "Posted Sales Shipment" //130
                     ToolTip = 'Executes the Expédition valorisée action.';
                     trigger OnAction()
                     begin
-                        CurrPage.SETSELECTIONFILTER(SalesShptHeader);
+                        CurrPage.SetSelectionFilter(SalesShptHeader);
                         SalesShptHeader.PrintRecords(true);
                     end;
                 }

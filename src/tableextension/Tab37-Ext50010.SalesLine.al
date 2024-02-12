@@ -57,15 +57,15 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             var
                 RecLItem: Record Item;
             begin
-                RecLItem.CALCFIELDS("Assembly BOM");
+                RecLItem.CalcFields("Assembly BOM");
                 if (Quantity <> 0) and (xRec.Quantity = 0) and (RecLItem."Assembly BOM") then
                     if ("Document Type" in
                        ["Document Type"::Quote, "Document Type"::Order, "Document Type"::Invoice, "Document Type"::"Blanket Order"])
                     then
                         if not BooGParmFromCompileBL then
-                            VALIDATE("Qty. to Assemble to Order", Quantity);
+                            Validate("Qty. to Assemble to Order", Quantity);
                 if Type = Type::Item then begin
-                    RecLItem.GET("No.");
+                    RecLItem.Get("No.");
                     "Item Work Time" := RecLItem."Item Work Time" * Quantity;
                     "Item Machining Time" := RecLItem."Item Machining Time" * Quantity;
                 end;
@@ -75,12 +75,12 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         {
             trigger OnAfterValidate()
             begin
-                VALIDATE("Margin %");
+                Validate("Margin %");
                 if "Line Discount %" <> 0 then
-                    VALIDATE("Unit Price Discounted", ROUND(ROUND("Unit Price", Currency."Amount Rounding Precision") *
+                    Validate("Unit Price Discounted", Round(Round("Unit Price", Currency."Amount Rounding Precision") *
                                                           (1 - ("Line Discount %" / 100)), Currency."Amount Rounding Precision"))
                 else
-                    VALIDATE("Unit Price Discounted", "Unit Price");
+                    Validate("Unit Price Discounted", "Unit Price");
             end;
         }
         modify("Line Amount")
@@ -88,9 +88,9 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             trigger OnAfterValidate()
             begin
                 if "Line Amount" <> 0 then
-                    VALIDATE("Unit Price Discounted", ROUND("Line Amount" / Quantity, 0.01))
+                    Validate("Unit Price Discounted", Round("Line Amount" / Quantity, 0.01))
                 else
-                    VALIDATE("Unit Price Discounted", 0);
+                    Validate("Unit Price Discounted", 0);
             end;
         }
         modify("Requested Delivery Date")
@@ -100,12 +100,12 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 NewShipmentDate: Date;
             begin
                 if "Promised Delivery Date" <> 0D then
-                    "Planned Shipment Date" := CALCDATE("Shipping Time", "Promised Delivery Date")
+                    "Planned Shipment Date" := CalcDate("Shipping Time", "Promised Delivery Date")
                 else
                     if "Requested Delivery Date" <> 0D then
-                        "Planned Shipment Date" := CALCDATE("Shipping Time", "Requested Delivery Date");
+                        "Planned Shipment Date" := CalcDate("Shipping Time", "Requested Delivery Date");
                 if "Requested Delivery Date" <> 0D then begin
-                    NewShipmentDate := CALCDATE('<-2D>', "Requested Delivery Date");
+                    NewShipmentDate := CalcDate('<-2D>', "Requested Delivery Date");
                     "Shipment Date" := NewShipmentDate;
                     UpdateAssembleOrderLink(NewShipmentDate);
                 end
@@ -122,17 +122,17 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 NewShipmentDate: Date;
             begin
                 if "Promised Delivery Date" <> 0D then
-                    "Planned Shipment Date" := CALCDATE("Shipping Time", "Promised Delivery Date")
+                    "Planned Shipment Date" := CalcDate("Shipping Time", "Promised Delivery Date")
                 else
                     if "Requested Delivery Date" <> 0D then
-                        "Planned Shipment Date" := CALCDATE("Shipping Time", "Requested Delivery Date");
+                        "Planned Shipment Date" := CalcDate("Shipping Time", "Requested Delivery Date");
                 if "Promised Delivery Date" <> 0D then begin
-                    NewShipmentDate := CALCDATE('<-2D>', "Promised Delivery Date");
+                    NewShipmentDate := CalcDate('<-2D>', "Promised Delivery Date");
                     "Shipment Date" := NewShipmentDate;
                     UpdateAssembleOrderLink(NewShipmentDate);
                 end
                 else begin
-                    NewShipmentDate := CALCDATE('<-2D>', "Requested Delivery Date");
+                    NewShipmentDate := CalcDate('<-2D>', "Requested Delivery Date");
                     "Shipment Date" := NewShipmentDate;
                     UpdateAssembleOrderLink(NewShipmentDate);
                 end;
@@ -208,7 +208,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             trigger OnValidate()
             begin
                 if ("Qty to be Ordered" <> 0) then
-                    CALCFIELDS("Reserved Quantity");
+                    CalcFields("Reserved Quantity");
             end;
         }
         field(50008; "Kit Qty To Build Up"; Decimal)
@@ -224,7 +224,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             trigger OnValidate()
             begin
                 if "Selected for Order" and ("Qty to be Ordered" = 0) then begin
-                    CALCFIELDS("Reserved Quantity");
+                    CalcFields("Reserved Quantity");
                     "Qty to be Ordered" := "Outstanding Quantity" - "Reserved Quantity";
                 end;
                 if not "Selected for Order" then
@@ -396,13 +396,13 @@ tableextension 50010 SalesLine extends "Sales Line" //37
            (RecPSalesLine.Quantity = 0) then
             exit;
 
-        RecPSalesLine.CALCFIELDS("Reserved Quantity");
+        RecPSalesLine.CalcFields("Reserved Quantity");
         if RecPSalesLine.Quantity = RecPSalesLine."Reserved Quantity" then
             exit;
 
         RecLSalesLine := RecPSalesLine;
-        RecLSalesLine.TESTFIELD(Type, Type::Item);
-        RecLSalesLine.TESTFIELD("No.");
+        RecLSalesLine.TestField(Type, Type::Item);
+        RecLSalesLine.TestField("No.");
         Clear(Reservation);
         Reservation.SetReservSource(RecLSalesLine);
         ReservMgt.SetReservSource(RecLSalesLine);
@@ -414,12 +414,12 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecLSalesLine.SetHideValidationDialog(true);
 
         DecLOriginQuantity := RecLSalesLine.Quantity;
-        RecLSalesLine.CALCFIELDS(RecLSalesLine."Reserved Quantity");
+        RecLSalesLine.CalcFields(RecLSalesLine."Reserved Quantity");
         if RecLSalesLine."Reserved Quantity" <> DecLOriginQuantity then
             RecLSalesLine.Validate(Quantity, RecLSalesLine."Reserved Quantity");
         RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Stock;
         Validate("Qty. to Assemble to Order", 0);
-        RecLSalesLine.MODIFY();
+        RecLSalesLine.Modify();
         if Type = Type::Item then
             ATOLink.DeleteAsmFromSalesLine(Rec);
         RecLSalesLine.SetHideValidationDialog(false);
@@ -453,13 +453,13 @@ tableextension 50010 SalesLine extends "Sales Line" //37
            (RecPSalesLine.Quantity = 0) then
             exit;
 
-        RecPSalesLine.CALCFIELDS("Reserved Quantity");
+        RecPSalesLine.CalcFields("Reserved Quantity");
         if RecPSalesLine.Quantity = RecPSalesLine."Reserved Quantity" then
             exit;
 
         RecLSalesLine := RecPSalesLine;
-        RecLSalesLine.TESTFIELD(Type, Type::Item);
-        RecLSalesLine.TESTFIELD("No.");
+        RecLSalesLine.TestField(Type, Type::Item);
+        RecLSalesLine.TestField("No.");
         Clear(Reservation);
         Reservation.SetReservSource(RecLSalesLine);
         // Reservation.SetSalesLine(RecLSalesLine);
@@ -477,13 +477,13 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecLSalesLine.SetHideValidationDialog(true);
 
         DecLOriginQuantity := RecLSalesLine.Quantity;
-        RecLSalesLine.CALCFIELDS(RecLSalesLine."Reserved Quantity");
+        RecLSalesLine.CalcFields(RecLSalesLine."Reserved Quantity");
         if RecLSalesLine."Reserved Quantity" <> DecLOriginQuantity then
             RecLSalesLine.Validate(Quantity, RecLSalesLine."Reserved Quantity");
         RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Purchase;
         Validate("Qty. to Assemble to Order", 0);
 
-        RecLSalesLine.MODIFY();
+        RecLSalesLine.Modify();
 
         if Type = Type::Item then
             ATOLink.DeleteAsmFromSalesLine(Rec);
@@ -519,7 +519,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
            (RecPSalesLine.Quantity = 0) then
             exit;
 
-        RecPSalesLine.CALCFIELDS("Reserved Quantity");
+        RecPSalesLine.CalcFields("Reserved Quantity");
         if RecPSalesLine.Quantity = RecPSalesLine."Reserved Quantity" then
             exit;
 
@@ -538,9 +538,9 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             RecLSalesLine.Validate("Line Discount %", DecLLineDisc);
         RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Assembly;
 
-        RecLSalesLine.MODIFY();
+        RecLSalesLine.Modify();
 
-        Item.CALCFIELDS("Assembly BOM");
+        Item.CalcFields("Assembly BOM");
         if Item."Assembly BOM" = false then
             exit;
         FctKitAutoReserveFTA(RecLSalesLine);
@@ -576,7 +576,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
            (RecPSalesLine.Quantity = 0) then
             exit;
 
-        RecPSalesLine.CALCFIELDS("Reserved Quantity");
+        RecPSalesLine.CalcFields("Reserved Quantity");
         if RecPSalesLine.Quantity = RecPSalesLine."Reserved Quantity" then
             exit;
 
@@ -591,7 +591,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
         Validate("Qty. to Assemble to Order", 0);
 
-        RecLSalesLine.MODIFY();
+        RecLSalesLine.Modify();
 
         if Type = Type::Item then
             ATOLink.DeleteAsmFromSalesLine(Rec);
@@ -606,7 +606,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         BooLOk: Boolean;
     begin
         RecLSalesLine.Init();
-        RecLSalesLine.TRANSFERFIELDS(RecPSalesLine);
+        RecLSalesLine.TransferFields(RecPSalesLine);
         RecLSalesLine2.SetRange("Document Type", RecPSalesLine."Document Type");
         RecLSalesLine2.SetRange("Document No.", RecPSalesLine."Document No.");
         RecLSalesLine2.SetRange("Attached to Line No.", RecPSalesLine."Line No.");
@@ -646,7 +646,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecLSalesLine."Description 2" := RecLSalesLine."Description 2";
         RecLSalesLine."Item Base" := RecPSalesLine."Item Base";
 
-        RecLSalesLine.MODIFY(true);
+        RecLSalesLine.Modify(true);
     end;
 
     procedure FctDeleteReservation()
@@ -663,22 +663,22 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         //ReserveSalesLine.FilterReservFor(ReservEntry, Rec);
 
 
-        if ReservEntry.Findfirst() then
+        if ReservEntry.findFirst() then
             repeat
                 Clear(ReservEntry2);
                 ReservEntry2 := ReservEntry;
                 ReservEntry2.SetPointerFilter();
                 //ReservMgt.SetPointerFilter(ReservEntry2);
                 ReservEntry2.SetRange("Reservation Status", ReservEntry2."Reservation Status"::Reservation);
-                if ReservEntry2.Findfirst() then
+                if ReservEntry2.findFirst() then
                     repeat
                         ReservEntry3.Get(ReservEntry2."Entry No.", not ReservEntry2.Positive);
                         "FTA_Functions".CloseReservEntry2(ReservEntry2);
                     // ReservEngineMgt.CloseReservEntry2(ReservEntry2);
-                    until ReservEntry2.NEXT() = 0;
-            until ReservEntry.NEXT() = 0;
+                    until ReservEntry2.Next() = 0;
+            until ReservEntry.Next() = 0;
 
-        MODIFY();
+        Modify();
     end;
 
     procedure FctShowKitLinesFTA()
@@ -686,8 +686,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         KitSalesLine: Record "Assembly Line";
         KitSalesLines: page "Assemble-to-Order Lines";
     begin
-        TESTFIELD("Document No.");
-        TESTFIELD("Line No.");
+        TestField("Document No.");
+        TestField("Line No.");
         if FctGetATOLinkToSalesLine(Rec) then begin
             KitSalesLine.SetRange("Document Type", RecGATOLinkToSalesLine."Assembly Document Type");
             KitSalesLine.SetRange("Document No.", RecGATOLinkToSalesLine."Assembly Document No.");
@@ -718,7 +718,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                     end else
                         if (KitSalesLine."Reserved Quantity" - KitSalesLine."Quantity per") < "Kit Qty To Build Up" then
                             "Kit Qty To Build Up" := KitSalesLine."Reserved Quantity" - KitSalesLine."Quantity per";
-                until KitSalesLine.NEXT() = 0;
+                until KitSalesLine.Next() = 0;
 
         end;
     end;
@@ -800,7 +800,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                 BooLItemNoFound := true;
                                 "No." := RecLItem."No."
                             end;
-                        until (RecLItem.NEXT() = 0) or (BooLItemNoFound = true);
+                        until (RecLItem.Next() = 0) or (BooLItemNoFound = true);
                     RecLItem.SetRange("No.");
                     if not BooLItemNoFound then begin
                         RecLItem.SetFilter("Search Description", StrSubstNo('%1%2', UPPERCASE("No."), '*'));
@@ -810,7 +810,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                     BooLItemNoFound := true;
                                     "No." := RecLItem."No."
                                 end;
-                            until (RecLItem.NEXT() = 0) or (BooLItemNoFound = true);
+                            until (RecLItem.Next() = 0) or (BooLItemNoFound = true);
                     end;
                     if not BooLItemNoFound then
                         case "Item Base" of
@@ -818,7 +818,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                 Error(CstL003, "No.");
                             "Item Base"::Transitory:
                                 begin
-                                    if not CONFIRM(StrSubstNo(CstL001, "Item Base", "No."), false) then
+                                    if not Confirm(StrSubstNo(CstL001, "Item Base", "No."), false) then
                                         Error(CstL002);
                                     RecLItem.Init();
                                     RecLItem."Item Base" := "Item Base"::Transitory;
@@ -826,7 +826,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                     RecLItem.Validate(Description, "No.");
                                     GetSalesHeader();
                                     RecLItem.Validate("Customer Code", SalesHeader."Sell-to Customer No.");
-                                    RecLItem.MODIFY(true);
+                                    RecLItem.Modify(true);
                                     "No." := RecLItem."No.";
                                     Commit();
                                     Clear(FrmTransitoryItem);
@@ -837,7 +837,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                 end;
                             "Item Base"::"Transitory Kit":
                                 begin
-                                    if not CONFIRM(StrSubstNo(CstL001, "Item Base", "No.")) then
+                                    if not Confirm(StrSubstNo(CstL001, "Item Base", "No.")) then
                                         Error(CstL002);
                                     RecLItem.Init();
                                     RecLItem."Item Base" := "Item Base"::"Transitory Kit";
@@ -848,7 +848,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                     RecLItem.Validate("Customer Code", SalesHeader."Sell-to Customer No.");
                                     if "Document Type" = "Document Type"::Quote then
                                         RecLItem."Quote Associated" := true;
-                                    RecLItem.MODIFY(true);
+                                    RecLItem.Modify(true);
                                     Commit();
                                     Clear(FrmTransitoryKitItem);
                                     RecLItem.Reset();
@@ -859,7 +859,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                 end;
                             "Item Base"::"Bored blocks":
                                 begin
-                                    if not CONFIRM(StrSubstNo(CstL001, "Item Base", "No.")) then
+                                    if not Confirm(StrSubstNo(CstL001, "Item Base", "No.")) then
                                         Error(CstL002);
                                     RecLItem.Init();
                                     RecLItem."Item Base" := "Item Base"::"Bored blocks";
@@ -870,7 +870,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                     RecLItem.Validate("Customer Code", SalesHeader."Sell-to Customer No.");
                                     if "Document Type" = "Document Type"::Quote then
                                         RecLItem."Quote Associated" := true;
-                                    RecLItem.MODIFY(true);
+                                    RecLItem.Modify(true);
                                     Commit();
                                     Clear(PagBoredBlocksItemCard);
                                     RecLItem.Reset();
@@ -895,9 +895,9 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecPSalesLine.SetFilter("Document Type", '%1|%2', RecPSalesLine."Document Type"::Order, RecPSalesLine."Document Type"::Invoice);
         RecPSalesLine.SetRange(Type, RecPSalesLine.Type::Item);
         RecPSalesLine.SetFilter("Outstanding Quantity", '<>0');
-        if RecPSalesLine.FindFirst() then
+        if RecPSalesLine.findFirst() then
             repeat
-                RecPSalesLine.CALCFIELDS("Reserved Qty. (Base)");
+                RecPSalesLine.CalcFields("Reserved Qty. (Base)");
                 if (RecPSalesLine."Outstanding Qty. (Base)" > RecPSalesLine."Reserved Qty. (Base)") and (RecPSalesLine."Qty. to Assemble to Order" = 0) then begin
                     RecPSalesLine."Internal field" := true;
                     if (RecPSalesLine."Qty to be Ordered" = 0) and
@@ -905,8 +905,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                         RecPSalesLine.Validate("Selected for Order", true);
                 end else
                     RecPSalesLine."Internal field" := false;
-                RecPSalesLine.MODIFY();
-            until RecPSalesLine.NEXT() = 0;
+                RecPSalesLine.Modify();
+            until RecPSalesLine.Next() = 0;
         RecPSalesLine.SetRange("Internal field", true);
     end;
 
@@ -924,13 +924,13 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecGPurchHeader.Validate("Document Type", RecGPurchHeader."Document Type"::Order);
         RecGPurchHeader.Validate(Status, RecGPurchHeader.Status::Open);
         RecGPurchHeader.Status := RecGPurchHeader.Status::Open;
-        RecGPurchHeader.Validate("Posting Date", WORKDATE());
+        RecGPurchHeader.Validate("Posting Date", WorkDate());
         RecGPurchHeader.Validate("Buy-from Vendor No.", CodPVendorNo);
         RecGPurchHeader.Insert(true);
-        RecGPurchHeader.Validate("Order Date", WORKDATE());
+        RecGPurchHeader.Validate("Order Date", WorkDate());
         RecGPurchHeader.Validate("Shortcut Dimension 1 Code");
         RecGPurchHeader.Validate("Shortcut Dimension 2 Code");
-        RecGPurchHeader.MODIFY();
+        RecGPurchHeader.Modify();
     end;
 
     procedure FctCreatePurchaseOrderLine(var RecPSalesLine: Record "Sales Line"; var CodPDocNo: Code[20])
@@ -950,12 +950,12 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         IntGCountOrder := 0;
         CodLxVendorNo := '';
         RecLSalesLine.SetCurrentKey("Vendor No.", "No.", "Location Code");
-        RecLSalesLine.COPYFILTERS(RecPSalesLine);
+        RecLSalesLine.CopyFilters(RecPSalesLine);
         RecLSalesLine.SetRange("Selected for Order", true);
         RecLSalesLine.SetRange("Internal field", true);
         RecLSalesLine.SetFilter("Qty to be Ordered", '<>0');
-        if RecPSalesLine.GETFILTER("Vendor No.") <> '' then
-            RecLSalesLine.SetFilter("Vendor No.", RecPSalesLine.GETFILTER("Vendor No."))
+        if RecPSalesLine.GetFilter("Vendor No.") <> '' then
+            RecLSalesLine.SetFilter("Vendor No.", RecPSalesLine.GetFilter("Vendor No."))
         else
             RecLSalesLine.SetFilter("Vendor No.", '<>%1', '');
         if RecLSalesLine.FindSet() then
@@ -1006,8 +1006,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                         if (RecLPurchLine."Requested Receipt Date" = 0D) or
                           (RecLPurchLine."Requested Receipt Date" > RecLSalesLine."Requested Delivery Date") then
                             RecLPurchLine.Validate("Requested Receipt Date", RecLSalesLine."Requested Delivery Date");
-                RecLPurchLine.MODIFY();
-                RecLSalesLine.CALCFIELDS("Reserved Quantity");
+                RecLPurchLine.Modify();
+                RecLSalesLine.CalcFields("Reserved Quantity");
                 if ((RecLSalesLine."Outstanding Quantity" - RecLSalesLine."Reserved Quantity") <= RecLSalesLine."Qty to be Ordered") then
                     DecLQtyToReserve := RecLSalesLine."Outstanding Quantity" - RecLSalesLine."Reserved Quantity"
                 else
@@ -1028,14 +1028,14 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                     else
                         ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLReservEntry."Shipment Date");
                 RecLSalesLine.Validate("Selected for Order", false);
-                RecLSalesLine.CALCFIELDS("Reserved Quantity");
+                RecLSalesLine.CalcFields("Reserved Quantity");
                 if RecLSalesLine."Reserved Quantity" = RecLSalesLine."Outstanding Quantity" then
                     RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Purchase;
-                RecLSalesLine.MODIFY();
+                RecLSalesLine.Modify();
                 CodLxVendorNo := RecLSalesLine."Vendor No.";
                 CodLxItemNo := RecLSalesLine."No.";
                 CodLxLocationCode := RecLSalesLine."Location Code";
-            until RecLSalesLine.NEXT() = 0;
+            until RecLSalesLine.Next() = 0;
 
         FctAddKitLines(RecGPurchHeader."No.", CodLxVendorNo);
 
@@ -1086,8 +1086,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                 if (RecLPurchLine."Requested Receipt Date" = 0D) or
                                   (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
                                     RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
-                        RecLPurchLine.MODIFY();
-                        RecGKitSalesLine.CALCFIELDS("Reserved Quantity");
+                        RecLPurchLine.Modify();
+                        RecGKitSalesLine.CalcFields("Reserved Quantity");
                         if ((RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity") <=
                                  RecGKitSalesLine."Qty to be Ordered") then
                             DecLQtyToReserve := RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity"
@@ -1096,7 +1096,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
                         DecLQtyToReserveBase := DecLQtyToReserve * RecGKitSalesLine."Qty. per Unit of Measure";
                         RecGKitSalesLine."Selected for Order" := false;
-                        RecGKitSalesLine.MODIFY();
+                        RecGKitSalesLine.Modify();
                         Clear(Reservation);
                         Reservation.SetReservSource(RecGKitSalesLine);
                         // Reservation.SetAssemblyLine(RecGKitSalesLine);
@@ -1112,9 +1112,9 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                 ReservMgt.AutoReserveOneLine(12, DecLQtyToReserve, DecLQtyToReserveBase, RecLReservEntry.Description, RecLReservEntry."Shipment Date");
                         if RecAssemlyOrder.Get(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.") then;
                         FctMAJPreparationType(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.", RecAssemlyOrder."Document Line No.");
-                    until RecGKitSalesLine.NEXT() = 0;
+                    until RecGKitSalesLine.Next() = 0;
                 end;
-            until RecLPurchLine.NEXT() = 0;
+            until RecLPurchLine.Next() = 0;
         CodLxItemNo := '';
         CodLxLocationCode := '';
         RecGKitSalesLine.SetRange("No.");
@@ -1160,8 +1160,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                         if (RecLPurchLine."Requested Receipt Date" = 0D) or
                           (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
                             RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
-                RecLPurchLine.MODIFY();
-                RecGKitSalesLine.CALCFIELDS("Reserved Quantity");
+                RecLPurchLine.Modify();
+                RecGKitSalesLine.CalcFields("Reserved Quantity");
                 if ((RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity") <=
                          RecGKitSalesLine."Qty to be Ordered") then
                     DecLQtyToReserve := RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity"
@@ -1170,7 +1170,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
 
                 DecLQtyToReserveBase := DecLQtyToReserve * RecGKitSalesLine."Qty. per Unit of Measure";
                 RecGKitSalesLine.Validate("Selected for Order", false);
-                RecGKitSalesLine.MODIFY();
+                RecGKitSalesLine.Modify();
                 Clear(Reservation);
                 Reservation.SetReservSource(RecGKitSalesLine);
                 // Reservation.SetAssemblyLine(RecGKitSalesLine);
@@ -1188,7 +1188,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 FctMAJPreparationType(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.", RecAssemlyOrder."Document Line No.");
                 CodLxItemNo := RecGKitSalesLine."No.";
                 CodLxLocationCode := RecGKitSalesLine."Location Code";
-            until RecGKitSalesLine.NEXT() = 0;
+            until RecGKitSalesLine.Next() = 0;
         end;
     end;
 
@@ -1207,8 +1207,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecGKitSalesLine.SetCurrentKey("Vendor No.", "No.", "Location Code");
         RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
         RecGKitSalesLine.SetRange("Selected for Order", true);
-        if RecPSalesLine.GETFILTER("Vendor No.") <> '' then
-            RecGKitSalesLine.SetFilter("Vendor No.", RecPSalesLine.GETFILTER("Vendor No."))
+        if RecPSalesLine.GetFilter("Vendor No.") <> '' then
+            RecGKitSalesLine.SetFilter("Vendor No.", RecPSalesLine.GetFilter("Vendor No."))
         else
             RecGKitSalesLine.SetFilter("Vendor No.", '<>%1', '');
         RecGKitSalesLine.SetRange("Internal field", true);
@@ -1262,8 +1262,8 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                         if (RecLPurchLine."Requested Receipt Date" = 0D) or
                           (RecLPurchLine."Requested Receipt Date" > RecGKitSalesLine."Requested Delivery Date") then
                             RecLPurchLine.Validate("Requested Receipt Date", RecGKitSalesLine."Requested Delivery Date");
-                RecLPurchLine.MODIFY();
-                RecGKitSalesLine.CALCFIELDS("Reserved Quantity");
+                RecLPurchLine.Modify();
+                RecGKitSalesLine.CalcFields("Reserved Quantity");
 
                 if ((RecGKitSalesLine."Remaining Quantity" - RecGKitSalesLine."Reserved Quantity") <=
                          RecGKitSalesLine."Qty to be Ordered") then
@@ -1274,7 +1274,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 DecLQtyToReserveBase := DecLQtyToReserve * RecGKitSalesLine."Qty. per Unit of Measure";
 
                 RecGKitSalesLine."Selected for Order" := false;
-                RecGKitSalesLine.MODIFY();
+                RecGKitSalesLine.Modify();
                 Clear(Reservation);
                 Reservation.SetReservSource(RecGKitSalesLine);
                 // Reservation.SetAssemblyLine(RecGKitSalesLine);
@@ -1293,7 +1293,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 CodLxItemNo := RecGKitSalesLine."No.";
                 CodLxLocationCode := RecGKitSalesLine."Location Code";
                 CodLxVendorNo := RecGKitSalesLine."Vendor No.";
-            until RecGKitSalesLine.NEXT() = 0;
+            until RecGKitSalesLine.Next() = 0;
         end;
     end;
 
@@ -1319,14 +1319,14 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         if not RecLKitSalesLine.IsEmpty then begin
             RecLKitSalesLine.FindSet();
             repeat
-                RecLKitSalesLine.CALCFIELDS("Reserved Quantity");
+                RecLKitSalesLine.CalcFields("Reserved Quantity");
                 if (RecLKitSalesLine."Reserved Quantity" < RecLKitSalesLine."Remaining Quantity") then
                     BooLOK := false;
-            until (RecLKitSalesLine.NEXT() = 0) or (BooLOK = false);
+            until (RecLKitSalesLine.Next() = 0) or (BooLOK = false);
         end;
         if BooLOK = true then begin
             RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Purchase;
-            RecLSalesLine.MODIFY();
+            RecLSalesLine.Modify();
         end;
     end;
 
@@ -1338,7 +1338,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecLKitSalesLine: Record "Assembly Line";
     begin
         BooLOK := false;
-        RecPSalesLine.CALCFIELDS("Reserved Quantity");
+        RecPSalesLine.CalcFields("Reserved Quantity");
         if (RecPSalesLine."Reserved Quantity" <> 0)
           and (RecPSalesLine."Qty. to Assemble to Order" = 0)
           then begin
@@ -1356,7 +1356,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                         if RecL337b.FindSet() then
                             if RecL337b."Source Type" <> DATABASE::"Item Ledger Entry" then
                                 BooLOK := false;
-                    until (RecL337.NEXT() = 0) or (BooLOK = false);
+                    until (RecL337.Next() = 0) or (BooLOK = false);
             end;
         end else begin
             if FctGetATOLinkToSalesLine(RecPSalesLine) then
@@ -1370,7 +1370,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 BooLOK := true;
                 RecLKitSalesLine.FindSet();
                 repeat
-                    RecLKitSalesLine.CALCFIELDS("Reserved Quantity");
+                    RecLKitSalesLine.CalcFields("Reserved Quantity");
                     if (RecLKitSalesLine."Reserved Quantity" < RecLKitSalesLine."Remaining Quantity (Base)") then
                         BooLOK := false
                     else
@@ -1387,9 +1387,9 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                                     if RecL337b.FindSet() then
                                         if RecL337b."Source Type" <> DATABASE::"Item Ledger Entry" then
                                             BooLOK := false;
-                                until (RecL337.NEXT() = 0) or (BooLOK = false);
+                                until (RecL337.Next() = 0) or (BooLOK = false);
                         end;
-                until (RecLKitSalesLine.NEXT() = 0) or not BooLOK;
+                until (RecLKitSalesLine.Next() = 0) or not BooLOK;
             end;
         end;
     end;
@@ -1419,7 +1419,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         RecGATOLinkToSalesLine.SetRange("Document Type", RecPSalesLine."Document Type");
         RecGATOLinkToSalesLine.SetRange("Document No.", RecPSalesLine."Document No.");
         RecGATOLinkToSalesLine.SetRange("Document Line No.", RecPSalesLine."Line No.");
-        exit(RecGATOLinkToSalesLine.FindFirst());
+        exit(RecGATOLinkToSalesLine.findFirst());
     end;
 
     local procedure FctKitAutoReserveFTA(RecPSalesLine: Record "Sales Line")
@@ -1436,7 +1436,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                     if BooGResaAssFTA then
                         RecLAssemblyLine.FctSetBooResaAssFTA(true);
                     RecLAssemblyLine.FctAutoReserveFTA();
-                until RecLAssemblyLine.NEXT() = 0;
+                until RecLAssemblyLine.Next() = 0;
             end;
         end;
     end;
@@ -1448,43 +1448,43 @@ tableextension 50010 SalesLine extends "Sales Line" //37
             SetRange("Document Type", "Document Type"::Order);
             SetRange(Type, Type::Item);
             SetFilter("Outstanding Quantity", '<>0');
-            if FindFirst() then
+            if findFirst() then
                 repeat
-                    CALCFIELDS("Reserved Qty. (Base)");
+                    CalcFields("Reserved Qty. (Base)");
                     if ("Outstanding Qty. (Base)" > "Reserved Qty. (Base)") and ("Qty. to Assemble to Order" = 0) then begin
                         "Internal field" := true;
                         if ("Qty to be Ordered" = 0) and ("Selected for Order" = true) then
                             Validate("Selected for Order", true);
                     end else
                         "Internal field" := false;
-                    MODIFY();
-                until NEXT() = 0;
+                    Modify();
+                until Next() = 0;
             SetRange("Internal field", true);
         end;
     end;
 
     procedure FctSelectRecForOrder3(var RecPSalesLine: Record "Sales Line")
     begin
-        RecPSalesLine.CLEARMARKS();
+        RecPSalesLine.ClearMARKS();
 
         RecPSalesLine.Reset();
         RecPSalesLine.SetCurrentKey("Document Type", Type, "Outstanding Quantity", "Internal field", "Vendor No.", "No.", "Location Code");
         RecPSalesLine.SetRange("Document Type", "Document Type"::Order);
         RecPSalesLine.SetRange(Type, RecPSalesLine.Type::Item);
         RecPSalesLine.SetFilter("Outstanding Quantity", '<>0');
-        if RecPSalesLine.FindFirst() then
+        if RecPSalesLine.findFirst() then
             repeat
-                RecPSalesLine.CALCFIELDS("Reserved Qty. (Base)");
+                RecPSalesLine.CalcFields("Reserved Qty. (Base)");
                 if (RecPSalesLine."Outstanding Qty. (Base)" > RecPSalesLine."Reserved Qty. (Base)") and (RecPSalesLine."Qty. to Assemble to Order" = 0) then begin
-                    RecPSalesLine.MARK(true);
+                    RecPSalesLine.Mark(true);
                     if (RecPSalesLine."Qty to be Ordered" = 0) and
                        (RecPSalesLine."Selected for Order" = true) then
                         RecPSalesLine.Validate("Selected for Order", true);
                 end else
-                    RecPSalesLine.MARK(false);
-                RecPSalesLine.MODIFY();
-            until RecPSalesLine.NEXT() = 0;
-        RecPSalesLine.MARKEDONLY(true);
+                    RecPSalesLine.Mark(false);
+                RecPSalesLine.Modify();
+            until RecPSalesLine.Next() = 0;
+        RecPSalesLine.MarkedOnly(true);
     end;
 
     procedure FctSetBooResaFTA(BooPResaFTA: Boolean)
@@ -1521,7 +1521,7 @@ tableextension 50010 SalesLine extends "Sales Line" //37
                 AssemblyHeader."Starting Date" := pDate;
                 AssemblyHeader."Ending Date" := pDate;
                 AssemblyHeader."Due Date" := pDate;
-                AssemblyHeader.MODIFY(false);
+                AssemblyHeader.Modify(false);
             end;
     end;
 

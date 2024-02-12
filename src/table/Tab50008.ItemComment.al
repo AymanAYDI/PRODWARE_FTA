@@ -38,7 +38,7 @@ table 50008 "Item Comment"
     trigger OnInsert()
     begin
         Date := TODAY;
-        User := COPYSTR(USERID, 1, 50);
+        User := CopyStr(UserId, 1, 50);
     end;
 }
 

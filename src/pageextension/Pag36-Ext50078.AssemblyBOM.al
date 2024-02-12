@@ -24,9 +24,9 @@ pageextension 50078 "AssemblyBOM" extends "Assembly BOM"//36
                 begin
 
                     rec.TestField(rec."Parent Item No.");
-                    RecLItem.SETRANGE(RecLItem."Assembly BOM", true);
+                    RecLItem.SetRange(RecLItem."Assembly BOM", true);
 
-                    if page.RUNMODAL(0, RecLItem) = ACTION::LookupOK then
+                    if page.RunModal(0, RecLItem) = ACTION::LookupOK then
                         rec.CopyBOM(RecLItem."No.", rec."Parent Item No.");
                 end;
             }
@@ -36,18 +36,18 @@ pageextension 50078 "AssemblyBOM" extends "Assembly BOM"//36
     var
         RecLItem: Record Item;
     begin
-        if (rec.GETFILTER(rec."Parent Item No.") <> '') then begin
-            RecLItem.GET(rec."Parent Item No.");
-            if rec.FINDFIRST() then begin
+        if (rec.GetFilter(rec."Parent Item No.") <> '') then begin
+            RecLItem.Get(rec."Parent Item No.");
+            if rec.findFirst() then begin
                 if RecLItem."Replenishment System" <> RecLItem."Replenishment System"::Assembly then begin
                     RecLItem."Replenishment System" := RecLItem."Replenishment System"::Assembly;
-                    RecLItem.MODIFY();
+                    RecLItem.Modify();
                 end;
             end
             else
                 if RecLItem."Replenishment System" = RecLItem."Replenishment System"::Assembly then begin
                     RecLItem."Replenishment System" := RecLItem."Replenishment System"::Purchase;
-                    RecLItem.MODIFY();
+                    RecLItem.Modify();
                 end;
         end;
     end;

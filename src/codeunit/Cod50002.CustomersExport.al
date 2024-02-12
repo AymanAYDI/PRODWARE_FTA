@@ -25,19 +25,19 @@ codeunit 50002 "Customers Export"
     begin
         //>> Message structure: EDIFACT GENERIX
         // Get setup
-        RecGSalesSetup.GET();
+        RecGSalesSetup.Get();
 
         // Get file setup for this customer
         TxtLRepertory := RecGSalesSetup."Export Customer Repertory";
         //TxtLFileName := 'Item_Export';
 
         TxtLFileName := 'Customer_Export_' +
-          //OLD FORMAT(CURRENTDATETIME,0,'<year4><month,2><Day,2><Hours24,2><Filler Character,0><Minutes,2><Seconds,2>')
-          FORMAT(TODAY, 0, '<year4><month,2><Day,2><Filler Character,0>')
-          + '_' + FORMAT(TIME, 0, '<Hours,2><Minutes,2><Seconds,2><Filler Character,0>')
+          //OLD Format(CURRENTDATETIME,0,'<year4><month,2><Day,2><Hours24,2><Filler Character,0><Minutes,2><Seconds,2>')
+          Format(TODAY, 0, '<year4><month,2><Day,2><Filler Character,0>')
+          + '_' + Format(TIME, 0, '<Hours,2><Minutes,2><Seconds,2><Filler Character,0>')
           + '.csv';
 
-        // STRSUBSTNO(RecPEDICustSetup."File Name",'F' + RecPSalesInvHeader."No.");
+        // StrSubstNo(RecPEDICustSetup."File Name",'F' + RecPSalesInvHeader."No.");
 
         // Create file
         BooGFixedFile := false;
@@ -51,11 +51,11 @@ codeunit 50002 "Customers Export"
         IntLCmp := 0;
 
         // Pour les tests
-        //RecLCustomer.SETRANGE(RecLCustomer."No.",'000001');
+        //RecLCustomer.SetRange(RecLCustomer."No.",'000001');
 
         // ********************************* HEADER ********************************* //
-        CLEAR(TxtLTextFields);
-        if RecLCustomer.FINDSET() then
+        Clear(TxtLTextFields);
+        if RecLCustomer.FindSet() then
             repeat
 
                 if IntLCmp = 0 then begin
@@ -102,7 +102,7 @@ codeunit 50002 "Customers Export"
                 TxtLTextFields[8] := CduGWriteFile.FormatText(RecLCustomer."Phone No.", 30, false);
 
                 CduGWriteFile.FctWriteBigSegment(TxtLTextFields, 8);
-            until RecLCustomer.NEXT() = 0;
+            until RecLCustomer.Next() = 0;
         //Demande Golda pour MARKRO : ne pas prendre en compte :
         //CduGWriteFile.FctWriteBigSegment(TxtLTextFields,71);
 
@@ -112,7 +112,7 @@ codeunit 50002 "Customers Export"
         RecLSalesInvHeader2 := RecPSalesInvHeader;
         RecLSalesInvHeader2."EDI Exported" := TRUE;
         RecLSalesInvHeader2."EDI DateTime Export" := CURRENTDATETIME;
-        RecLSalesInvHeader2.MODIFY;
+        RecLSalesInvHeader2.Modify;
         */
 
         CduGWriteFile.FctEndMessage(TxtLFileName);

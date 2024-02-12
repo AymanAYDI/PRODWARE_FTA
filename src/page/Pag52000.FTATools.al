@@ -5,7 +5,7 @@ page 52000 "FTA Tools"
 {
     ApplicationArea = All;
     Caption = 'FTA Tools';
-    PageType = NavigatePage;
+    PaGetype = NavigatePage;
     UsageCategory = Administration;
     Editable = false;
     InsertAllowed = false;

@@ -10,7 +10,7 @@ page 50020 "Assignment of the remainders v"
     Caption = 'Assignment of the remainders';
     DeleteAllowed = false;
     InsertAllowed = false;
-    PageType = Worksheet;
+    PaGetype = Worksheet;
     SourceTable = "Sales Line";
     SourceTableView = sorting("Vendor No.", "No.", "Location Code")
                       where("Document Type" = filter(Order),
@@ -188,12 +188,12 @@ page 50020 "Assignment of the remainders v"
                     RptPGeneratePurchaseOrder: Report "Generate Purchase Order";
                 begin
 
-                    CLEAR(RptPGeneratePurchaseOrder);
+                    Clear(RptPGeneratePurchaseOrder);
                     if CodGVendorNo <> '' then
-                        RecPSalesLine.SETFILTER("Vendor No.", CodGVendorNo);
-                    RptPGeneratePurchaseOrder.SETTABLEVIEW(RecPSalesLine);
-                    RptPGeneratePurchaseOrder.RUNMODAL();
-                    CurrPage.UPDATE(false);
+                        RecPSalesLine.SetFilter("Vendor No.", CodGVendorNo);
+                    RptPGeneratePurchaseOrder.SetTableView(RecPSalesLine);
+                    RptPGeneratePurchaseOrder.RunModal();
+                    CurrPage.Update(false);
                 end;
             }
         }
@@ -201,7 +201,7 @@ page 50020 "Assignment of the remainders v"
 
     trigger OnAfterGetRecord()
     begin
-        Rec.CALCFIELDS("Reserved Quantity");
+        Rec.CalcFields("Reserved Quantity");
         Rec."Qty Not Assign FTA" := Rec."Outstanding Quantity" - Rec."Reserved Quantity";
     end;
 
@@ -212,9 +212,9 @@ page 50020 "Assignment of the remainders v"
         //FctSelectRecForOrder2(Rec);
         //<<TI302489
         FctSelection();
-        Rec.SETRANGE("Document Type", Rec."Document Type"::Order);
-        Rec.CALCFIELDS("Inventory Value Zero");
-        Rec.SETRANGE("Inventory Value Zero", false);
+        Rec.SetRange("Document Type", Rec."Document Type"::Order);
+        Rec.CalcFields("Inventory Value Zero");
+        Rec.SetRange("Inventory Value Zero", false);
     end;
 
     var
@@ -225,19 +225,19 @@ page 50020 "Assignment of the remainders v"
     procedure FctSelection()
     begin
         if CodGVendorNo <> '' then
-            Rec.SETFILTER("Vendor No.", CodGVendorNo)
+            Rec.SetFilter("Vendor No.", CodGVendorNo)
         else
-            Rec.SETRANGE("Vendor No.");
+            Rec.SetRange("Vendor No.");
         if BooGSelectLine then
-            Rec.SETRANGE("Selected for Order", true)
+            Rec.SetRange("Selected for Order", true)
         else
-            Rec.SETRANGE("Selected for Order");
+            Rec.SetRange("Selected for Order");
         CurrPage.KitLines.PAGE.FctShowKitLine(CodGVendorNo, BooGSelectLine);
     end;
 
     local procedure CodGVendorNoOnAfterValidate()
     begin
-        CurrPage.UPDATE(false);
+        CurrPage.Update(false);
         //CurrForm.UPDATECONTROLS;
     end;
 

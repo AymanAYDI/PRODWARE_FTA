@@ -147,7 +147,7 @@ report 51020 "Sales - Invoice FTA"
                     column(CompanyInfo3Picture; CompanyInfo3.Picture)
                     {
                     }
-                    column(DocCaptCopyText; STRSUBSTNO(DocumentCaption, CopyText))
+                    column(DocCaptCopyText; StrSubstNo(DocumentCaption(), CopyText))
                     {
                     }
                     column(CustAddr1; CustAddr[1])
@@ -204,7 +204,7 @@ report 51020 "Sales - Invoice FTA"
                     column(BilltoCustNo_SalesInvHdr; "Sales Invoice Header"."Bill-to Customer No.")
                     {
                     }
-                    column(PostingDate_SalesInvHdr; FORMAT("Sales Invoice Header"."Posting Date", 0, 4))
+                    column(PostingDate_SalesInvHdr; Format("Sales Invoice Header"."Posting Date", 0, 4))
                     {
                     }
                     column(VATNoText; VATNoText)
@@ -213,7 +213,7 @@ report 51020 "Sales - Invoice FTA"
                     column(VATRegNo_SalesInvHdr; "Sales Invoice Header"."VAT Registration No.")
                     {
                     }
-                    column(DueDate_SalesInvHdr; FORMAT("Sales Invoice Header"."Due Date", 0, 4))
+                    column(DueDate_SalesInvHdr; Format("Sales Invoice Header"."Due Date", 0, 4))
                     {
                     }
                     column(SalesPersonText; SalesPersonText)
@@ -249,7 +249,7 @@ report 51020 "Sales - Invoice FTA"
                     column(CompanyAddr6; CompanyAddr[6])
                     {
                     }
-                    column(DocDate_SalesInvHdr; FORMAT("Sales Invoice Header"."Document Date", 0, 4))
+                    column(DocDate_SalesInvHdr; Format("Sales Invoice Header"."Document Date", 0, 4))
                     {
                     }
                     column(PricesInclVAT_SalesInvHdr; "Sales Invoice Header"."Prices Including VAT")
@@ -258,13 +258,13 @@ report 51020 "Sales - Invoice FTA"
                     column(OutputNo; OutputNo)
                     {
                     }
-                    column(PricesInclVAT1_SalesInvHdr; FORMAT("Sales Invoice Header"."Prices Including VAT"))
+                    column(PricesInclVAT1_SalesInvHdr; Format("Sales Invoice Header"."Prices Including VAT"))
                     {
                     }
                     column(PageCaption; PageCaptionCap)
                     {
                     }
-                    column(PaymentTermsDescription; PaymentTerms.Description + ' - ' + FORMAT("Sales Invoice Header"."Due Date", 0, 4))
+                    column(PaymentTermsDescription; PaymentTerms.Description + ' - ' + Format("Sales Invoice Header"."Due Date", 0, 4))
                     {
                     }
                     column(ShipmentMethodDescription; ShipmentMethod.Description)
@@ -294,10 +294,10 @@ report 51020 "Sales - Invoice FTA"
                     column(PostingDateCaption; PostingDateCaptionLbl)
                     {
                     }
-                    column(BilltoCustNo_SalesInvHdrCaption; "Sales Invoice Header".FIELDCAPTION("Bill-to Customer No."))
+                    column(BilltoCustNo_SalesInvHdrCaption; "Sales Invoice Header".FieldCaption("Bill-to Customer No."))
                     {
                     }
-                    column(PricesInclVAT_SalesInvHdrCaption; "Sales Invoice Header".FIELDCAPTION("Prices Including VAT"))
+                    column(PricesInclVAT_SalesInvHdrCaption; "Sales Invoice Header".FieldCaption("Prices Including VAT"))
                     {
                     }
                     column(CompanyInfoFaxNo; CompanyInfo."Fax No.")
@@ -333,13 +333,13 @@ report 51020 "Sales - Invoice FTA"
                     column(TxtAmountTTC_HT; TxtAmountTTC_HT)
                     {
                     }
-                    column(SalesPurchPersonPhoneNoCaption; SalesPurchPerson.FIELDCAPTION("Phone No."))
+                    column(SalesPurchPersonPhoneNoCaption; SalesPurchPerson.FieldCaption("Phone No."))
                     {
                     }
                     column(SalesPurchPersonPhoneNo; SalesPurchPerson."Phone No.")
                     {
                     }
-                    column(SalesPurchPersonEMailCaption; SalesPurchPerson.FIELDCAPTION("E-Mail"))
+                    column(SalesPurchPersonEMailCaption; SalesPurchPerson.FieldCaption("E-Mail"))
                     {
                     }
                     column(SalesPurchPersonEMail; SalesPurchPerson."E-Mail")
@@ -390,35 +390,35 @@ report 51020 "Sales - Invoice FTA"
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then begin
-                                if not DimSetEntry1.FINDSET then
-                                    CurrReport.BREAK;
+                                if not DimSetEntry1.FindSet() then
+                                    CurrReport.Break();
                             end else
                                 if not Continue then
-                                    CurrReport.BREAK;
+                                    CurrReport.Break();
 
-                            CLEAR(DimText);
+                            Clear(DimText);
                             Continue := false;
                             repeat
                                 OldDimText := DimText;
                                 if DimText = '' then
-                                    DimText := STRSUBSTNO('%1 %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
+                                    DimText := StrSubstNo('%1 %2', DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code")
                                 else
                                     DimText :=
-                                      STRSUBSTNO(
+                                      StrSubstNo(
                                         '%1, %2 %3', DimText,
                                         DimSetEntry1."Dimension Code", DimSetEntry1."Dimension Value Code");
-                                if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                if StrLen(DimText) > MaxStrLen(OldDimText) then begin
                                     DimText := OldDimText;
                                     Continue := true;
                                     exit;
                                 end;
-                            until DimSetEntry1.NEXT = 0;
+                            until DimSetEntry1.Next() = 0;
                         end;
 
                         trigger OnPreDataItem()
                         begin
                             if not ShowInternalInfo then
-                                CurrReport.BREAK;
+                                CurrReport.Break();
                         end;
                     }
                     dataitem("Sales Invoice Line"; "Sales Invoice Line")
@@ -428,7 +428,7 @@ report 51020 "Sales - Invoice FTA"
                         DataItemTableView = sorting("Document No.", "Line No.");
                         column(LineAmt_SalesInvLine; "Line Amount")
                         {
-                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode;
+                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode();
                             AutoFormatType = 1;
                         }
                         column(Desc_SalesInvLine; Description)
@@ -445,7 +445,7 @@ report 51020 "Sales - Invoice FTA"
                         }
                         column(UnitPrice_SalesInvLine; "Unit Price")
                         {
-                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode;
+                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode();
                             AutoFormatType = 2;
                         }
                         column(LineDisc_SalesInvLine; "Line Discount %")
@@ -454,10 +454,10 @@ report 51020 "Sales - Invoice FTA"
                         column(VATIdentifier_SalesInvLine; "VAT Identifier")
                         {
                         }
-                        column(PostedShipmentDate; FORMAT(PostedShipmentDate))
+                        column(PostedShipmentDate; Format(PostedShipmentDate))
                         {
                         }
-                        column(Type_SalesInvLine; FORMAT("Sales Invoice Line".Type))
+                        column(Type_SalesInvLine; Format("Sales Invoice Line".Type))
                         {
                         }
                         column(GetTotalLineAmt; GetTotalLineAmount)
@@ -468,7 +468,7 @@ report 51020 "Sales - Invoice FTA"
                         }
                         column(InvDiscAmt; -"Inv. Discount Amount")
                         {
-                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode;
+                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode();
                             AutoFormatType = 1;
                         }
                         column(TotalSubTotal; TotalSubTotal)
@@ -486,7 +486,7 @@ report 51020 "Sales - Invoice FTA"
                         }
                         column(Amt_SalesInvLine; Amount)
                         {
-                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode;
+                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode();
                             AutoFormatType = 1;
                         }
                         column(TotalAmt; TotalAmount)
@@ -496,15 +496,15 @@ report 51020 "Sales - Invoice FTA"
                         }
                         column(AmtIncludingVATAmt_SalesInvLine; "Amount Including VAT" - Amount)
                         {
-                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode;
+                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode();
                             AutoFormatType = 1;
                         }
                         column(AmtInclVAT_SalesInvLine; "Amount Including VAT")
                         {
-                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode;
+                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode();
                             AutoFormatType = 1;
                         }
-                        column(VATAmtText_SalesInvLine; VATAmountLine.VATAmountText)
+                        column(VATAmtText_SalesInvLine; VATAmountLine.VATAmountText())
                         {
                         }
                         column(TotalExclVATText; TotalExclVATText)
@@ -555,19 +555,19 @@ report 51020 "Sales - Invoice FTA"
                         column(PmtDiscVATCaption; PmtDiscVATCaptionLbl)
                         {
                         }
-                        column(Desc_SalesInvLineCaption; FIELDCAPTION(Description))
+                        column(Desc_SalesInvLineCaption; FieldCaption(Description))
                         {
                         }
-                        column(No_SalesInvLineCaption; FIELDCAPTION("No."))
+                        column(No_SalesInvLineCaption; FieldCaption("No."))
                         {
                         }
-                        column(Quantity_SalesInvLineCaption; FIELDCAPTION(Quantity))
+                        column(Quantity_SalesInvLineCaption; FieldCaption(Quantity))
                         {
                         }
-                        column(UnitofMeasure_SalesInvLineCaption; FIELDCAPTION("Unit of Measure"))
+                        column(UnitofMeasure_SalesInvLineCaption; FieldCaption("Unit of Measure"))
                         {
                         }
-                        column(VATIdentifier_SalesInvLineCaption; FIELDCAPTION("VAT Identifier"))
+                        column(VATIdentifier_SalesInvLineCaption; FieldCaption("VAT Identifier"))
                         {
                         }
                         column(SalesLineDescription2; "Sales Invoice Line"."Description 2")
@@ -576,12 +576,12 @@ report 51020 "Sales - Invoice FTA"
                         column(RecGItemNo2; TexGRefFou)
                         {
                         }
-                        column(SalesLinePlannedDeliveryDate; FORMAT("Sales Invoice Line"."Shipment Date", 0, 1))
+                        column(SalesLinePlannedDeliveryDate; Format("Sales Invoice Line"."Shipment Date", 0, 1))
                         {
                         }
                         column(DecGNetUnitPriceExcludingVAT; DecGNetUnitPriceExcludingVAT)
                         {
-                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode;
+                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode();
                         }
                         column(RefClient; RefClient)
                         {
@@ -598,7 +598,7 @@ report 51020 "Sales - Invoice FTA"
                         dataitem("Sales Shipment Buffer"; Integer)
                         {
                             DataItemTableView = sorting(Number);
-                            column(SalesShipmentBufferPostingDate; FORMAT(SalesShipmentBuffer."Posting Date"))
+                            column(SalesShipmentBufferPostingDate; Format(SalesShipmentBuffer."Posting Date"))
                             {
                             }
                             column(SalesShipmentBufferQty; SalesShipmentBuffer.Quantity)
@@ -612,17 +612,17 @@ report 51020 "Sales - Invoice FTA"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then
-                                    SalesShipmentBuffer.Findfirst()
+                                    SalesShipmentBuffer.findFirst()
                                 else
-                                    SalesShipmentBuffer.NEXT;
+                                    SalesShipmentBuffer.Next();
                             end;
 
                             trigger OnPreDataItem()
                             begin
-                                SalesShipmentBuffer.SETRANGE("Document No.", "Sales Invoice Line"."Document No.");
-                                SalesShipmentBuffer.SETRANGE("Line No.", "Sales Invoice Line"."Line No.");
+                                SalesShipmentBuffer.SetRange("Document No.", "Sales Invoice Line"."Document No.");
+                                SalesShipmentBuffer.SetRange("Line No.", "Sales Invoice Line"."Line No.");
 
-                                SETRANGE(Number, 1, SalesShipmentBuffer.COUNT);
+                                SetRange(Number, 1, SalesShipmentBuffer.Count);
                             end;
                         }
                         dataitem(DimensionLoop2; Integer)
@@ -639,37 +639,37 @@ report 51020 "Sales - Invoice FTA"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then begin
-                                    if not DimSetEntry2.FINDSET then
-                                        CurrReport.BREAK;
+                                    if not DimSetEntry2.FindSet() then
+                                        CurrReport.Break();
                                 end else
                                     if not Continue then
-                                        CurrReport.BREAK;
+                                        CurrReport.Break();
 
-                                CLEAR(DimText);
+                                Clear(DimText);
                                 Continue := false;
                                 repeat
                                     OldDimText := DimText;
                                     if DimText = '' then
-                                        DimText := STRSUBSTNO('%1 %2', DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
+                                        DimText := StrSubstNo('%1 %2', DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code")
                                     else
                                         DimText :=
-                                          STRSUBSTNO(
+                                          StrSubstNo(
                                             '%1, %2 %3', DimText,
                                             DimSetEntry2."Dimension Code", DimSetEntry2."Dimension Value Code");
-                                    if STRLEN(DimText) > MAXSTRLEN(OldDimText) then begin
+                                    if StrLen(DimText) > MaxStrLen(OldDimText) then begin
                                         DimText := OldDimText;
                                         Continue := true;
                                         exit;
                                     end;
-                                until DimSetEntry2.NEXT = 0;
+                                until DimSetEntry2.Next() = 0;
                             end;
 
                             trigger OnPreDataItem()
                             begin
                                 if not ShowInternalInfo then
-                                    CurrReport.BREAK;
+                                    CurrReport.Break();
 
-                                DimSetEntry2.SETRANGE("Dimension Set ID", "Sales Invoice Line"."Dimension Set ID");
+                                DimSetEntry2.SetRange("Dimension Set ID", "Sales Invoice Line"."Dimension Set ID");
                             end;
                         }
                         dataitem(AsmLoop; Integer)
@@ -687,29 +687,29 @@ report 51020 "Sales - Invoice FTA"
                             // {
                             //    // DecimalPlaces = 0 : 5; //todo
                             // }
-                            column(TempPostedAsmLineDesc; BlanksForIndent + TempPostedAsmLine.Description)
+                            column(TempPostedAsmLineDesc; BlanksForIndent() + TempPostedAsmLine.Description)
                             {
                             }
-                            column(TempPostedAsmLineNo; BlanksForIndent + TempPostedAsmLine."No.")
+                            column(TempPostedAsmLineNo; BlanksForIndent() + TempPostedAsmLine."No.")
                             {
                             }
 
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then
-                                    TempPostedAsmLine.FINDSET
+                                    TempPostedAsmLine.FindSet()
                                 else
-                                    TempPostedAsmLine.NEXT;
+                                    TempPostedAsmLine.Next();
                             end;
 
                             trigger OnPreDataItem()
                             begin
-                                CLEAR(TempPostedAsmLine);
-                                if not DisplayAssemblyInformation then
-                                    CurrReport.BREAK;
-                                CollectAsmInformation;
-                                CLEAR(TempPostedAsmLine);
-                                SETRANGE(Number, 1, TempPostedAsmLine.COUNT);
+                                Clear(TempPostedAsmLine);
+                                if not DisplayAssemblyInFormation then
+                                    CurrReport.Break();
+                                CollectAsmInFormation();
+                                Clear(TempPostedAsmLine);
+                                SetRange(Number, 1, TempPostedAsmLine.Count);
                             end;
                         }
 
@@ -719,12 +719,12 @@ report 51020 "Sales - Invoice FTA"
                         begin
                             PostedShipmentDate := 0D;
                             if Quantity <> 0 then
-                                PostedShipmentDate := FindPostedShipmentDate;
+                                PostedShipmentDate := FindPostedShipmentDate();
 
                             if (Type = Type::"G/L Account") and (not ShowInternalInfo) then
                                 "No." := '';
 
-                            VATAmountLine.INIT;
+                            VATAmountLine.Init();
                             VATAmountLine."VAT Identifier" := "VAT Identifier";
                             VATAmountLine."VAT Calculation Type" := "VAT Calculation Type";
                             VATAmountLine."Tax Group Code" := "Tax Group Code";
@@ -736,7 +736,7 @@ report 51020 "Sales - Invoice FTA"
                                 VATAmountLine."Inv. Disc. Base Amount" := "Line Amount";
                             VATAmountLine."Invoice Discount Amount" := "Inv. Discount Amount";
                             VATAmountLine."VAT Clause Code" := "VAT Clause Code";
-                            VATAmountLine.InsertLine;
+                            VATAmountLine.InsertLine();
 
                             TotalSubTotal += "Line Amount";
                             TotalInvoiceDiscountAmount -= "Inv. Discount Amount";
@@ -747,9 +747,9 @@ report 51020 "Sales - Invoice FTA"
 
                             /*
                             IF IncludeShptNo THEN BEGIN
-                              ShipmentInvoiced.RESET;
-                              ShipmentInvoiced.SETRANGE("Invoice No.","Sales Invoice Line"."Document No.");
-                              ShipmentInvoiced.SETRANGE("Invoice Line No.","Sales Invoice Line"."Line No.");
+                              ShipmentInvoiced.Reset;
+                              ShipmentInvoiced.SetRange("Invoice No.","Sales Invoice Line"."Document No.");
+                              ShipmentInvoiced.SetRange("Invoice Line No.","Sales Invoice Line"."Line No.");
                             END;
                             */
 
@@ -764,16 +764,16 @@ report 51020 "Sales - Invoice FTA"
 
                             //>>FExxxx.001
                             if ("Sales Invoice Line".Type = "Sales Invoice Line".Type::Item) and ("Sales Invoice Line"."No." <> '') then begin
-                                RecGItem.GET("Sales Invoice Line"."No.");
+                                RecGItem.Get("Sales Invoice Line"."No.");
                                 TexGRefFou := '';
-                                RecGItem.GET("No.");
-                                RecLItemCrossReference.RESET;
-                                RecLItemCrossReference.SETRANGE("Item No.", "No.");
-                                RecLItemCrossReference.SETRANGE("Unit of Measure", "Unit of Measure Code");
-                                RecLItemCrossReference.SETRANGE("Reference Type", RecLItemCrossReference."Reference Type"::Customer);
-                                RecLItemCrossReference.SETRANGE("Reference Type No.", "Sales Invoice Header"."Bill-to Customer No.");
-                                if RecLItemCrossReference.FINDSET then
-                                    TexGRefFou := STRSUBSTNO(CstG002, RecLItemCrossReference."Reference No.") + ' - ';
+                                RecGItem.Get("No.");
+                                RecLItemCrossReference.Reset();
+                                RecLItemCrossReference.SetRange("Item No.", "No.");
+                                RecLItemCrossReference.SetRange("Unit of Measure", "Unit of Measure Code");
+                                RecLItemCrossReference.SetRange("Reference Type", RecLItemCrossReference."Reference Type"::Customer);
+                                RecLItemCrossReference.SetRange("Reference Type No.", "Sales Invoice Header"."Bill-to Customer No.");
+                                if RecLItemCrossReference.FindSet() then
+                                    TexGRefFou := StrSubstNo(CstG002, RecLItemCrossReference."Reference No.") + ' - ';
                                 TexGRefFou += RecGItem."No. 2";
                                 //>>FTA.REPORTS2018-0607
                                 //item description
@@ -781,14 +781,14 @@ report 51020 "Sales - Invoice FTA"
                                 //<<FTA.REPORTS2018-0607
 
                             end else begin
-                                RecGItem.INIT;
+                                RecGItem.Init();
                                 TexGRefFou := '';
 
                             end;
 
-                            CLEAR(DecGNetUnitPriceExcludingVAT);
+                            Clear(DecGNetUnitPriceExcludingVAT);
                             if ("Sales Invoice Line"."Line Discount %" <> 0) and ("Sales Invoice Line".Quantity <> 0) then begin
-                                DecGNetUnitPriceExcludingVAT := ROUND(("Sales Invoice Line"."Line Amount" / "Sales Invoice Line".Quantity), GLSetup."Amount Rounding Precision");
+                                DecGNetUnitPriceExcludingVAT := Round(("Sales Invoice Line"."Line Amount" / "Sales Invoice Line".Quantity), GLSetup."Amount Rounding Precision");
                             end else begin
                                 DecGNetUnitPriceExcludingVAT := "Sales Invoice Line"."Unit Price";
                             end;
@@ -801,12 +801,12 @@ report 51020 "Sales - Invoice FTA"
                             RefClient := '-';
                             if ("Sales Invoice Line".Type = "Sales Invoice Line".Type::Item) and ("Sales Invoice Line"."No." <> '') then begin
 
-                                RecLItemCrossReference.RESET;
-                                RecLItemCrossReference.SETRANGE("Item No.", "Sales Invoice Line"."No.");
-                                RecLItemCrossReference.SETRANGE("Unit of Measure", "Sales Invoice Line"."Unit of Measure Code");
-                                RecLItemCrossReference.SETRANGE("Reference Type", RecLItemCrossReference."Reference Type"::Customer);
-                                RecLItemCrossReference.SETRANGE("Reference Type No.", "Sales Invoice Header"."Bill-to Customer No.");
-                                if RecLItemCrossReference.FINDFIRST then RefClient := RecLItemCrossReference."Reference No.";
+                                RecLItemCrossReference.Reset();
+                                RecLItemCrossReference.SetRange("Item No.", "Sales Invoice Line"."No.");
+                                RecLItemCrossReference.SetRange("Unit of Measure", "Sales Invoice Line"."Unit of Measure Code");
+                                RecLItemCrossReference.SetRange("Reference Type", RecLItemCrossReference."Reference Type"::Customer);
+                                RecLItemCrossReference.SetRange("Reference Type No.", "Sales Invoice Header"."Bill-to Customer No.");
+                                if RecLItemCrossReference.findFirst() then RefClient := RecLItemCrossReference."Reference No.";
                             end;
 
                             RefFournisseur := RecGItem."No. 2";
@@ -816,17 +816,17 @@ report 51020 "Sales - Invoice FTA"
 
                         trigger OnPreDataItem()
                         begin
-                            VATAmountLine.DELETEALL;
-                            SalesShipmentBuffer.RESET;
-                            SalesShipmentBuffer.DELETEALL;
+                            VATAmountLine.DeleteALL();
+                            SalesShipmentBuffer.Reset();
+                            SalesShipmentBuffer.DeleteALL();
                             FirstValueEntryNo := 0;
                             MoreLines := Findlast();
                             while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
-                                MoreLines := NEXT(-1) <> 0;
+                                MoreLines := Next(-1) <> 0;
                             if not MoreLines then
-                                CurrReport.BREAK;
-                            SETRANGE("Line No.", 0, "Line No.");
-                            CurrReport.CREATETOTALS("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
+                                CurrReport.Break();
+                            SetRange("Line No.", 0, "Line No.");
+                            CurrReport.CreateTotals("Line Amount", Amount, "Amount Including VAT", "Inv. Discount Amount");
 
                             GetTotalLineAmount := 0;
                             GetTotalInvDiscAmount := 0;
@@ -839,7 +839,7 @@ report 51020 "Sales - Invoice FTA"
                         DataItemTableView = sorting(Number);
                         column(VATAmtLineVATBase; VATAmountLine."VAT Base")
                         {
-                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode;
+                            AutoFormatExpression = "Sales Invoice Line".GetCurrencyCode();
                             AutoFormatType = 1;
                         }
                         column(VATAmtLineVATAmt; VATAmountLine."VAT Amount")
@@ -910,16 +910,16 @@ report 51020 "Sales - Invoice FTA"
                         begin
                             VATAmountLine.GetLine(Number);
                             //>>TDL_TVA.001
-                            if not VATClause.GET(VATAmountLine."VAT Clause Code") then
-                                CurrReport.SKIP;
+                            if not VATClause.Get(VATAmountLine."VAT Clause Code") then
+                                CurrReport.Skip();
                             VATClause.TranslateDescription("Sales Invoice Header"."Language Code");
                             //<<TDL_TVA.001
                         end;
 
                         trigger OnPreDataItem()
                         begin
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
-                            CurrReport.CREATETOTALS(
+                            SetRange(Number, 1, VATAmountLine.Count);
+                            CurrReport.CreateTotals(
                               VATAmountLine."Line Amount", VATAmountLine."Inv. Disc. Base Amount",
                               VATAmountLine."Invoice Discount Amount", VATAmountLine."VAT Base", VATAmountLine."VAT Amount");
                         end;
@@ -958,17 +958,17 @@ report 51020 "Sales - Invoice FTA"
                         begin
                             VATAmountLine.GetLine(Number);
                             //>>TDL_TVA.001
-                            //IF NOT VATClause.GET(VATAmountLine."VAT Clause Code") THEN
-                            //  CurrReport.SKIP;
+                            //IF NOT VATClause.Get(VATAmountLine."VAT Clause Code") THEN
+                            //  CurrReport.Skip;
                             //VATClause.TranslateDescription("Sales Invoice Header"."Language Code");
                             //<<TDL_TVA.001
                         end;
 
                         trigger OnPreDataItem()
                         begin
-                            CLEAR(VATClause);
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
-                            CurrReport.CREATETOTALS(VATAmountLine."VAT Amount");
+                            Clear(VATClause);
+                            SetRange(Number, 1, VATAmountLine.Count);
+                            CurrReport.CreateTotals(VATAmountLine."VAT Amount");
                         end;
                     }
                     dataitem(VatCounterLCY; Integer)
@@ -1014,19 +1014,19 @@ report 51020 "Sales - Invoice FTA"
                             if (not GLSetup."Print VAT specification in LCY") or
                                ("Sales Invoice Header"."Currency Code" = '')
                             then
-                                CurrReport.BREAK;
+                                CurrReport.Break();
 
-                            SETRANGE(Number, 1, VATAmountLine.COUNT);
-                            CurrReport.CREATETOTALS(VALVATBaseLCY, VALVATAmountLCY);
+                            SetRange(Number, 1, VATAmountLine.Count);
+                            CurrReport.CreateTotals(VALVATBaseLCY, VALVATAmountLCY);
 
                             if GLSetup."LCY Code" = '' then
                                 VALSpecLCYHeader := Text007 + Text008
                             else
-                                VALSpecLCYHeader := Text007 + FORMAT(GLSetup."LCY Code");
+                                VALSpecLCYHeader := Text007 + Format(GLSetup."LCY Code");
 
                             CurrExchRate.FindCurrency("Sales Invoice Header"."Posting Date", "Sales Invoice Header"."Currency Code", 1);
-                            CalculatedExchRate := ROUND(1 / "Sales Invoice Header"."Currency Factor" * CurrExchRate."Exchange Rate Amount", 0.000001);
-                            VALExchRate := STRSUBSTNO(Text009, CalculatedExchRate, CurrExchRate."Exchange Rate Amount");
+                            CalculatedExchRate := Round(1 / "Sales Invoice Header"."Currency Factor" * CurrExchRate."Exchange Rate Amount", 0.000001);
+                            VALExchRate := StrSubstNo(Text009, CalculatedExchRate, CurrExchRate."Exchange Rate Amount");
                         end;
                     }
                     dataitem(Total; Integer)
@@ -1065,7 +1065,7 @@ report 51020 "Sales - Invoice FTA"
                         column(ShipToAddr8; ShipToAddr[8])
                         {
                         }
-                        column(SelltoCustNo_SalesInvHdrCaption; "Sales Invoice Header".FIELDCAPTION("Sell-to Customer No."))
+                        column(SelltoCustNo_SalesInvHdrCaption; "Sales Invoice Header".FieldCaption("Sell-to Customer No."))
                         {
                         }
 
@@ -1074,7 +1074,7 @@ report 51020 "Sales - Invoice FTA"
                             //>>PW
                             /*OLD
                             IF NOT ShowShippingAddr THEN
-                              CurrReport.BREAK;
+                              CurrReport.Break;
                             */
                             //<<PW
 
@@ -1102,16 +1102,16 @@ report 51020 "Sales - Invoice FTA"
                 trigger OnPostDataItem()
                 begin
                     if not CurrReport.PREVIEW then
-                        SalesInvCountPrinted.RUN("Sales Invoice Header");
+                        SalesInvCountPrinted.Run("Sales Invoice Header");
                 end;
 
                 trigger OnPreDataItem()
                 begin
-                    NoOfLoops := ABS(NoOfCopies) + Cust."Invoice Copies" + 1;
+                    NoOfLoops := Abs(NoOfCopies) + Cust."Invoice Copies" + 1;
                     if NoOfLoops <= 0 then
                         NoOfLoops := 1;
                     CopyText := '';
-                    SETRANGE(Number, 1, NoOfLoops);
+                    SetRange(Number, 1, NoOfLoops);
                     OutputNo := 1;
                 end;
             }
@@ -1123,7 +1123,7 @@ report 51020 "Sales - Invoice FTA"
             begin
                 CurrReport.LANGUAGE := Language.GetLanguageIdOrDefault("Language Code");
 
-                if RespCenter.GET("Responsibility Center") then begin
+                if RespCenter.Get("Responsibility Center") then begin
                     FormatAddr.RespCenter(CompanyAddr, RespCenter);
                     CompanyInfo."Phone No." := RespCenter."Phone No.";
                     CompanyInfo."Fax No." := RespCenter."Fax No.";
@@ -1131,51 +1131,51 @@ report 51020 "Sales - Invoice FTA"
                     FormatAddr.Company(CompanyAddr, CompanyInfo);
                 end;
 
-                DimSetEntry1.SETRANGE("Dimension Set ID", "Dimension Set ID");
+                DimSetEntry1.SetRange("Dimension Set ID", "Dimension Set ID");
 
                 if "Order No." = '' then
                     OrderNoText := ''
                 else
-                    OrderNoText := FIELDCAPTION("Order No.");
+                    OrderNoText := FieldCaption("Order No.");
                 if "Salesperson Code" = '' then begin
-                    SalesPurchPerson.INIT;
+                    SalesPurchPerson.Init();
                     SalesPersonText := '';
                 end else begin
-                    SalesPurchPerson.GET("Salesperson Code");
+                    SalesPurchPerson.Get("Salesperson Code");
                     SalesPersonText := Text000;
                 end;
                 if "Your Reference" = '' then
                     ReferenceText := ''
                 else
-                    ReferenceText := FIELDCAPTION("Your Reference");
+                    ReferenceText := FieldCaption("Your Reference");
                 if "VAT Registration No." = '' then
                     VATNoText := ''
                 else
-                    VATNoText := FIELDCAPTION("VAT Registration No.");
+                    VATNoText := FieldCaption("VAT Registration No.");
                 if "Currency Code" = '' then begin
-                    GLSetup.TESTFIELD("LCY Code");
-                    TotalText := STRSUBSTNO(Text001, GLSetup."LCY Code");
-                    TotalInclVATText := STRSUBSTNO(Text002, GLSetup."LCY Code");
-                    TotalExclVATText := STRSUBSTNO(Text006, GLSetup."LCY Code");
+                    GLSetup.TestField("LCY Code");
+                    TotalText := StrSubstNo(Text001, GLSetup."LCY Code");
+                    TotalInclVATText := StrSubstNo(Text002, GLSetup."LCY Code");
+                    TotalExclVATText := StrSubstNo(Text006, GLSetup."LCY Code");
                 end else begin
-                    TotalText := STRSUBSTNO(Text001, "Currency Code");
-                    TotalInclVATText := STRSUBSTNO(Text002, "Currency Code");
-                    TotalExclVATText := STRSUBSTNO(Text006, "Currency Code");
+                    TotalText := StrSubstNo(Text001, "Currency Code");
+                    TotalInclVATText := StrSubstNo(Text002, "Currency Code");
+                    TotalExclVATText := StrSubstNo(Text006, "Currency Code");
                 end;
                 FormatAddr.SalesInvBillTo(CustAddr, "Sales Invoice Header");
-                if not Cust.GET("Bill-to Customer No.") then
-                    CLEAR(Cust);
+                if not Cust.Get("Bill-to Customer No.") then
+                    Clear(Cust);
 
                 if "Payment Terms Code" = '' then
-                    PaymentTerms.INIT
+                    PaymentTerms.Init()
                 else begin
-                    PaymentTerms.GET("Payment Terms Code");
+                    PaymentTerms.Get("Payment Terms Code");
                     PaymentTerms.TranslateDescription(PaymentTerms, "Language Code");
                 end;
                 if "Shipment Method Code" = '' then
-                    ShipmentMethod.INIT
+                    ShipmentMethod.Init()
                 else begin
-                    ShipmentMethod.GET("Shipment Method Code");
+                    ShipmentMethod.Get("Shipment Method Code");
                     ShipmentMethod.TranslateDescription(ShipmentMethod, "Language Code");
                 end;
                 FormatAddr.SalesInvShipTo(ShipToAddr, CustAddr, "Sales Invoice Header");
@@ -1201,19 +1201,19 @@ report 51020 "Sales - Invoice FTA"
 
                 //>>PW
                 //Read Contact
-                if not RecGContact.GET("Sales Invoice Header"."Sell-to Contact No.") then
-                    CLEAR(RecGContact);
+                if not RecGContact.Get("Sales Invoice Header"."Sell-to Contact No.") then
+                    Clear(RecGContact);
 
                 if "Currency Code" = '' then
                     TxtGCodeDevise := GLSetup."LCY Code"
                 else
                     TxtGCodeDevise := "Currency Code";
 
-                if RecLCurrency.GET(TxtGCodeDevise) then
+                if RecLCurrency.Get(TxtGCodeDevise) then
                     TxtGLibDevise := RecLCurrency.Description;
 
-                CLEAR(RecGPaymentMethod);
-                if "Payment Method Code" <> '' then RecGPaymentMethod.GET("Payment Method Code");
+                Clear(RecGPaymentMethod);
+                if "Payment Method Code" <> '' then RecGPaymentMethod.Get("Payment Method Code");
 
                 if "Prices Including VAT" then
                     TxtAmountTTC_HT := 'TTC'
@@ -1224,16 +1224,16 @@ report 51020 "Sales - Invoice FTA"
                 if "Sell-to Customer No." <> "Bill-to Customer No." then
                     TxtGOurReferences := TxtGOurReferences + ' / ' + "Bill-to Customer No.";
 
-                RecGCustomer.GET("Sell-to Customer No.");
+                RecGCustomer.Get("Sell-to Customer No.");
 
-                CLEAR(TxtGMailFax);
+                Clear(TxtGMailFax);
                 if BoolGPrintFax then begin
 
-                    CompanyInfo.TESTFIELD(CompanyInfo."ECOM ID");
-                    RecGUserSetup.GET(USERID);
-                    RecGUserSetup.TESTFIELD("E-Mail");
+                    CompanyInfo.TestField(CompanyInfo."ECOM ID");
+                    RecGUserSetup.Get(UserId);
+                    RecGUserSetup.TestField("E-Mail");
                     TxtGMailFax[1] := 'ID:' + CompanyInfo."ECOM ID" + ' ' + '!';
-                    TESTFIELD("Fax No.");
+                    TestField("Fax No.");
                     TxtGMailFax[2] := 'Email:' + RecGUserSetup."E-Mail" + ' ' + '!';
                     TxtGMailFax[3] := 'Fax:' + "Fax No." + ' ' + '!';
 
@@ -1242,19 +1242,19 @@ report 51020 "Sales - Invoice FTA"
                 //<<PW
 
                 //>>FExxxx.001
-                CLEAR(TxtGShipmentInvoiced);
-                RecGShipmentInvoiced.SETRANGE("Invoice No.", "Sales Invoice Header"."No.");
-                if not RecGShipmentInvoiced.ISEMPTY then begin
-                    RecGShipmentInvoiced.FINDSET;
+                Clear(TxtGShipmentInvoiced);
+                RecGShipmentInvoiced.SetRange("Invoice No.", "Sales Invoice Header"."No.");
+                if not RecGShipmentInvoiced.IsEmpty then begin
+                    RecGShipmentInvoiced.FindSet();
 
                     repeat
                         if STRPOS(TxtGShipmentInvoiced, RecGShipmentInvoiced."Shipment No.") = 0 then begin
                             TxtGShipmentInvoiced := TxtGShipmentInvoiced + RecGShipmentInvoiced."Shipment No." + ' ';
                         end;
-                    until RecGShipmentInvoiced.NEXT = 0;
+                    until RecGShipmentInvoiced.Next() = 0;
 
-                    if STRLEN(TxtGShipmentInvoiced) <> 0 then
-                        TxtGShipmentInvoiced := COPYSTR(TxtGShipmentInvoiced, 1, STRLEN(TxtGShipmentInvoiced) - 1);
+                    if StrLen(TxtGShipmentInvoiced) <> 0 then
+                        TxtGShipmentInvoiced := CopyStr(TxtGShipmentInvoiced, 1, StrLen(TxtGShipmentInvoiced) - 1);
                 end;
                 //<<FExxxx.001
 
@@ -1279,7 +1279,7 @@ report 51020 "Sales - Invoice FTA"
                     }
                     field(ShowInternalInfo; ShowInternalInfo)
                     {
-                        Caption = 'Show Internal Information';
+                        Caption = 'Show Internal InFormation';
                     }
                     field(LogInteraction; LogInteraction)
                     {
@@ -1290,7 +1290,7 @@ report 51020 "Sales - Invoice FTA"
                     {
                         Caption = 'Include Shipment No.';
                     }
-                    field(DisplayAsmInformation; DisplayAssemblyInformation)
+                    field(DisplayAsmInFormation; DisplayAssemblyInFormation)
                     {
                         Caption = 'Show Assembly Components';
                     }
@@ -1317,7 +1317,7 @@ report 51020 "Sales - Invoice FTA"
 
         trigger OnOpenPage()
         begin
-            InitLogInteraction;
+            InitLogInteraction();
             LogInteractionEnable := LogInteraction;
         end;
     }
@@ -1328,35 +1328,35 @@ report 51020 "Sales - Invoice FTA"
 
     trigger OnInitReport()
     begin
-        GLSetup.GET;
-        CompanyInfo.GET;
-        SalesSetup.GET;
-        CompanyInfo.VerifyAndSetPaymentInfo;
+        GLSetup.Get();
+        CompanyInfo.Get();
+        SalesSetup.Get();
+        CompanyInfo.VerifyAndSetPaymentInfo();
         case SalesSetup."Logo Position on Documents" of
             SalesSetup."Logo Position on Documents"::Left:
                 begin
-                    CompanyInfo3.CALCFIELDS(Picture);
+                    CompanyInfo3.CalcFields(Picture);
                 end;
             SalesSetup."Logo Position on Documents"::Center:
                 begin
-                    CompanyInfo1.GET;
-                    CompanyInfo1.CALCFIELDS(Picture);
+                    CompanyInfo1.Get();
+                    CompanyInfo1.CalcFields(Picture);
                 end;
             SalesSetup."Logo Position on Documents"::Right:
                 begin
-                    CompanyInfo2.GET;
-                    CompanyInfo2.CALCFIELDS(Picture);
+                    CompanyInfo2.Get();
+                    CompanyInfo2.CalcFields(Picture);
                 end;
         end;
 
-        if RecGUserReport.GET(USERID, 51020) then begin
+        if RecGUserReport.Get(UserId, 51020) then begin
             if RecGUserReport.Email then begin
-                CompanyInfo3.GET;
-                CompanyInfo3.CALCFIELDS(Picture);
+                CompanyInfo3.Get();
+                CompanyInfo3.CalcFields(Picture);
             end;
         end;
 
-        CLEAR(TxtGInvoiceText);
+        Clear(TxtGInvoiceText);
         if SalesSetup."Print Invoice Text" then
             TxtGInvoiceText := SalesSetup."Invoice Text";
     end;
@@ -1367,13 +1367,13 @@ report 51020 "Sales - Invoice FTA"
             BooGPrintLogo := true;
 
         if BooGPrintLogo then begin
-            CompanyInfo3.GET;
-            CompanyInfo3.CALCFIELDS(Picture);
+            CompanyInfo3.Get();
+            CompanyInfo3.CalcFields(Picture);
         end;
 
 
         if not CurrReport.USEREQUESTPAGE then
-            InitLogInteraction;
+            InitLogInteraction();
     end;
 
     var
@@ -1409,7 +1409,7 @@ report 51020 "Sales - Invoice FTA"
         BooGPrintLogo: Boolean;
         BoolGPrintFax: Boolean;
         Continue: Boolean;
-        DisplayAssemblyInformation: Boolean;
+        DisplayAssemblyInFormation: Boolean;
         IncludeShptNo: Boolean;
         LogInteraction: Boolean;
         [InDataSet]
@@ -1508,7 +1508,7 @@ report 51020 "Sales - Invoice FTA"
         Text000: Label 'Salesperson';
         Text001: Label 'Total %1';
         Text002: Label 'Total %1 Incl. VAT';
-        Text003: Label 'COPY';
+        Text003: Label 'Copy';
         Text004: Label 'Invoice %1';
         Text006: Label 'Total %1 Excl. VAT';
         Text007: Label 'VAT Amount Specification in ';
@@ -1569,7 +1569,7 @@ report 51020 "Sales - Invoice FTA"
     begin
         NextEntryNo := 1;
         if "Sales Invoice Line"."Shipment No." <> '' then
-            if SalesShipmentHeader.GET("Sales Invoice Line"."Shipment No.") then
+            if SalesShipmentHeader.Get("Sales Invoice Line"."Shipment No.") then
                 exit(SalesShipmentHeader."Posting Date");
 
         if "Sales Invoice Header"."Order No." = '' then
@@ -1585,20 +1585,20 @@ report 51020 "Sales - Invoice FTA"
                 exit(0D);
         end;
 
-        SalesShipmentBuffer.RESET;
-        SalesShipmentBuffer.SETRANGE("Document No.", "Sales Invoice Line"."Document No.");
-        SalesShipmentBuffer.SETRANGE("Line No.", "Sales Invoice Line"."Line No.");
-        if SalesShipmentBuffer.Findfirst() then begin
+        SalesShipmentBuffer.Reset();
+        SalesShipmentBuffer.SetRange("Document No.", "Sales Invoice Line"."Document No.");
+        SalesShipmentBuffer.SetRange("Line No.", "Sales Invoice Line"."Line No.");
+        if SalesShipmentBuffer.findFirst() then begin
             SalesShipmentBuffer2 := SalesShipmentBuffer;
-            if SalesShipmentBuffer.NEXT = 0 then begin
-                SalesShipmentBuffer.GET(
+            if SalesShipmentBuffer.Next() = 0 then begin
+                SalesShipmentBuffer.Get(
                   SalesShipmentBuffer2."Document No.", SalesShipmentBuffer2."Line No.", SalesShipmentBuffer2."Entry No.");
-                SalesShipmentBuffer.DELETE;
+                SalesShipmentBuffer.Delete();
                 exit(SalesShipmentBuffer2."Posting Date");
             end;
-            SalesShipmentBuffer.CALCSUMS(Quantity);
+            SalesShipmentBuffer.CalcSums(Quantity);
             if SalesShipmentBuffer.Quantity <> "Sales Invoice Line".Quantity then begin
-                SalesShipmentBuffer.DELETEALL;
+                SalesShipmentBuffer.DeleteALL();
                 exit("Sales Invoice Header"."Posting Date");
             end;
         end else
@@ -1614,14 +1614,14 @@ report 51020 "Sales - Invoice FTA"
         TotalQuantity: Decimal;
     begin
         TotalQuantity := SalesInvoiceLine2."Quantity (Base)";
-        ValueEntry.SETCURRENTKEY("Document No.");
-        ValueEntry.SETRANGE("Document No.", SalesInvoiceLine2."Document No.");
-        ValueEntry.SETRANGE("Posting Date", "Sales Invoice Header"."Posting Date");
-        ValueEntry.SETRANGE("Item Charge No.", '');
-        ValueEntry.SETFILTER("Entry No.", '%1..', FirstValueEntryNo);
-        if ValueEntry.Findfirst() then
+        ValueEntry.SetCurrentKey("Document No.");
+        ValueEntry.SetRange("Document No.", SalesInvoiceLine2."Document No.");
+        ValueEntry.SetRange("Posting Date", "Sales Invoice Header"."Posting Date");
+        ValueEntry.SetRange("Item Charge No.", '');
+        ValueEntry.SetFilter("Entry No.", '%1..', FirstValueEntryNo);
+        if ValueEntry.findFirst() then
             repeat
-                if ItemLedgerEntry.GET(ValueEntry."Item Ledger Entry No.") then begin
+                if ItemLedgerEntry.Get(ValueEntry."Item Ledger Entry No.") then begin
                     if SalesInvoiceLine2."Qty. per Unit of Measure" <> 0 then
                         Quantity := ValueEntry."Invoiced Quantity" / SalesInvoiceLine2."Qty. per Unit of Measure"
                     else
@@ -1633,7 +1633,7 @@ report 51020 "Sales - Invoice FTA"
                     TotalQuantity := TotalQuantity + ValueEntry."Invoiced Quantity";
                 end;
                 FirstValueEntryNo := ValueEntry."Entry No." + 1;
-            until (ValueEntry.NEXT = 0) or (TotalQuantity = 0);
+            until (ValueEntry.Next() = 0) or (TotalQuantity = 0);
     end;
 
     procedure GenerateBufferFromShipment(SalesInvoiceLine: Record "113")
@@ -1646,39 +1646,39 @@ report 51020 "Sales - Invoice FTA"
         TotalQuantity: Decimal;
     begin
         TotalQuantity := 0;
-        SalesInvoiceHeader.SETCURRENTKEY("Order No.");
-        SalesInvoiceHeader.SETFILTER("No.", '..%1', "Sales Invoice Header"."No.");
-        SalesInvoiceHeader.SETRANGE("Order No.", "Sales Invoice Header"."Order No.");
-        if SalesInvoiceHeader.Findfirst() then
+        SalesInvoiceHeader.SetCurrentKey("Order No.");
+        SalesInvoiceHeader.SetFilter("No.", '..%1', "Sales Invoice Header"."No.");
+        SalesInvoiceHeader.SetRange("Order No.", "Sales Invoice Header"."Order No.");
+        if SalesInvoiceHeader.findFirst() then
             repeat
-                SalesInvoiceLine2.SETRANGE("Document No.", SalesInvoiceHeader."No.");
-                SalesInvoiceLine2.SETRANGE("Line No.", SalesInvoiceLine."Line No.");
-                SalesInvoiceLine2.SETRANGE(Type, SalesInvoiceLine.Type);
-                SalesInvoiceLine2.SETRANGE("No.", SalesInvoiceLine."No.");
-                SalesInvoiceLine2.SETRANGE("Unit of Measure Code", SalesInvoiceLine."Unit of Measure Code");
-                if SalesInvoiceLine2.Findfirst() then
+                SalesInvoiceLine2.SetRange("Document No.", SalesInvoiceHeader."No.");
+                SalesInvoiceLine2.SetRange("Line No.", SalesInvoiceLine."Line No.");
+                SalesInvoiceLine2.SetRange(Type, SalesInvoiceLine.Type);
+                SalesInvoiceLine2.SetRange("No.", SalesInvoiceLine."No.");
+                SalesInvoiceLine2.SetRange("Unit of Measure Code", SalesInvoiceLine."Unit of Measure Code");
+                if SalesInvoiceLine2.findFirst() then
                     repeat
                         TotalQuantity := TotalQuantity + SalesInvoiceLine2.Quantity;
-                    until SalesInvoiceLine2.NEXT = 0;
-            until SalesInvoiceHeader.NEXT = 0;
+                    until SalesInvoiceLine2.Next() = 0;
+            until SalesInvoiceHeader.Next() = 0;
 
-        SalesShipmentLine.SETCURRENTKEY("Order No.", "Order Line No.");
-        SalesShipmentLine.SETRANGE("Order No.", "Sales Invoice Header"."Order No.");
-        SalesShipmentLine.SETRANGE("Order Line No.", SalesInvoiceLine."Line No.");
-        SalesShipmentLine.SETRANGE("Line No.", SalesInvoiceLine."Line No.");
-        SalesShipmentLine.SETRANGE(Type, SalesInvoiceLine.Type);
-        SalesShipmentLine.SETRANGE("No.", SalesInvoiceLine."No.");
-        SalesShipmentLine.SETRANGE("Unit of Measure Code", SalesInvoiceLine."Unit of Measure Code");
-        SalesShipmentLine.SETFILTER(Quantity, '<>%1', 0);
+        SalesShipmentLine.SetCurrentKey("Order No.", "Order Line No.");
+        SalesShipmentLine.SetRange("Order No.", "Sales Invoice Header"."Order No.");
+        SalesShipmentLine.SetRange("Order Line No.", SalesInvoiceLine."Line No.");
+        SalesShipmentLine.SetRange("Line No.", SalesInvoiceLine."Line No.");
+        SalesShipmentLine.SetRange(Type, SalesInvoiceLine.Type);
+        SalesShipmentLine.SetRange("No.", SalesInvoiceLine."No.");
+        SalesShipmentLine.SetRange("Unit of Measure Code", SalesInvoiceLine."Unit of Measure Code");
+        SalesShipmentLine.SetFilter(Quantity, '<>%1', 0);
 
-        if SalesShipmentLine.Findfirst() then
+        if SalesShipmentLine.findFirst() then
             repeat
                 if "Sales Invoice Header"."Get Shipment Used" then
                     CorrectShipment(SalesShipmentLine);
-                if ABS(SalesShipmentLine.Quantity) <= ABS(TotalQuantity - SalesInvoiceLine.Quantity) then
+                if Abs(SalesShipmentLine.Quantity) <= Abs(TotalQuantity - SalesInvoiceLine.Quantity) then
                     TotalQuantity := TotalQuantity - SalesShipmentLine.Quantity
                 else begin
-                    if ABS(SalesShipmentLine.Quantity) > ABS(TotalQuantity) then
+                    if Abs(SalesShipmentLine.Quantity) > Abs(TotalQuantity) then
                         SalesShipmentLine.Quantity := TotalQuantity;
                     Quantity :=
                       SalesShipmentLine.Quantity - (TotalQuantity - SalesInvoiceLine.Quantity);
@@ -1686,38 +1686,38 @@ report 51020 "Sales - Invoice FTA"
                     TotalQuantity := TotalQuantity - SalesShipmentLine.Quantity;
                     SalesInvoiceLine.Quantity := SalesInvoiceLine.Quantity - Quantity;
 
-                    if SalesShipmentHeader.GET(SalesShipmentLine."Document No.") then begin
+                    if SalesShipmentHeader.Get(SalesShipmentLine."Document No.") then begin
                         AddBufferEntry(
                           SalesInvoiceLine,
                           Quantity,
                           SalesShipmentHeader."Posting Date");
                     end;
                 end;
-            until (SalesShipmentLine.NEXT = 0) or (TotalQuantity = 0);
+            until (SalesShipmentLine.Next() = 0) or (TotalQuantity = 0);
     end;
 
     procedure CorrectShipment(var SalesShipmentLine: Record "111")
     var
         SalesInvoiceLine: Record "113";
     begin
-        SalesInvoiceLine.SETCURRENTKEY("Shipment No.", "Shipment Line No.");
-        SalesInvoiceLine.SETRANGE("Shipment No.", SalesShipmentLine."Document No.");
-        SalesInvoiceLine.SETRANGE("Shipment Line No.", SalesShipmentLine."Line No.");
-        if SalesInvoiceLine.Findfirst() then
+        SalesInvoiceLine.SetCurrentKey("Shipment No.", "Shipment Line No.");
+        SalesInvoiceLine.SetRange("Shipment No.", SalesShipmentLine."Document No.");
+        SalesInvoiceLine.SetRange("Shipment Line No.", SalesShipmentLine."Line No.");
+        if SalesInvoiceLine.findFirst() then
             repeat
                 SalesShipmentLine.Quantity := SalesShipmentLine.Quantity - SalesInvoiceLine.Quantity;
-            until SalesInvoiceLine.NEXT = 0;
+            until SalesInvoiceLine.Next() = 0;
     end;
 
 
     procedure AddBufferEntry(SalesInvoiceLine: Record "113"; QtyOnShipment: Decimal; PostingDate: Date)
     begin
-        SalesShipmentBuffer.SETRANGE("Document No.", SalesInvoiceLine."Document No.");
-        SalesShipmentBuffer.SETRANGE("Line No.", SalesInvoiceLine."Line No.");
-        SalesShipmentBuffer.SETRANGE("Posting Date", PostingDate);
-        if SalesShipmentBuffer.Findfirst() then begin
+        SalesShipmentBuffer.SetRange("Document No.", SalesInvoiceLine."Document No.");
+        SalesShipmentBuffer.SetRange("Line No.", SalesInvoiceLine."Line No.");
+        SalesShipmentBuffer.SetRange("Posting Date", PostingDate);
+        if SalesShipmentBuffer.findFirst() then begin
             SalesShipmentBuffer.Quantity := SalesShipmentBuffer.Quantity + QtyOnShipment;
-            SalesShipmentBuffer.MODIFY;
+            SalesShipmentBuffer.Modify();
             exit;
         end;
 
@@ -1729,7 +1729,7 @@ report 51020 "Sales - Invoice FTA"
             "No." := SalesInvoiceLine."No.";
             Quantity := QtyOnShipment;
             "Posting Date" := PostingDate;
-            INSERT;
+            Insert();
             NextEntryNo := NextEntryNo + 1
         end;
     end;
@@ -1741,17 +1741,17 @@ report 51020 "Sales - Invoice FTA"
         exit(Text004);
     end;
 
-    [Scope('Internal')]
+
     procedure InitializeRequest(NewNoOfCopies: Integer; NewShowInternalInfo: Boolean; NewLogInteraction: Boolean; IncludeShptNo: Boolean; DisplAsmInfo: Boolean)
     begin
         NoOfCopies := NewNoOfCopies;
         ShowInternalInfo := NewShowInternalInfo;
         LogInteraction := NewLogInteraction;
         IncludeShptNo := IncludeShptNo;
-        DisplayAssemblyInformation := DisplAsmInfo;
+        DisplayAssemblyInFormation := DisplAsmInfo;
     end;
 
-    procedure CollectAsmInformation()
+    procedure CollectAsmInFormation()
     var
         ItemLedgerEntry: Record "32";
         SalesShipmentLine: Record "111";
@@ -1759,49 +1759,49 @@ report 51020 "Sales - Invoice FTA"
         PostedAsmLine: Record "911";
         ValueEntry: Record "5802";
     begin
-        TempPostedAsmLine.DELETEALL;
+        TempPostedAsmLine.DeleteALL();
         if "Sales Invoice Line".Type <> "Sales Invoice Line".Type::Item then
             exit;
         with ValueEntry do begin
-            SETCURRENTKEY("Document No.");
-            SETRANGE("Document No.", "Sales Invoice Line"."Document No.");
-            SETRANGE("Document Type", "Document Type"::"Sales Invoice");
-            SETRANGE("Document Line No.", "Sales Invoice Line"."Line No.");
-            SETRANGE(Adjustment, false);
-            if not FINDSET then
+            SetCurrentKey("Document No.");
+            SetRange("Document No.", "Sales Invoice Line"."Document No.");
+            SetRange("Document Type", "Document Type"::"Sales Invoice");
+            SetRange("Document Line No.", "Sales Invoice Line"."Line No.");
+            SetRange(Adjustment, false);
+            if not FindSet() then
                 exit;
         end;
         repeat
-            if ItemLedgerEntry.GET(ValueEntry."Item Ledger Entry No.") then begin
+            if ItemLedgerEntry.Get(ValueEntry."Item Ledger Entry No.") then begin
                 if ItemLedgerEntry."Document Type" = ItemLedgerEntry."Document Type"::"Sales Shipment" then begin
-                    SalesShipmentLine.GET(ItemLedgerEntry."Document No.", ItemLedgerEntry."Document Line No.");
+                    SalesShipmentLine.Get(ItemLedgerEntry."Document No.", ItemLedgerEntry."Document Line No.");
                     if SalesShipmentLine.AsmToShipmentExists(PostedAsmHeader) then begin
-                        PostedAsmLine.SETRANGE("Document No.", PostedAsmHeader."No.");
-                        if PostedAsmLine.FINDSET then
+                        PostedAsmLine.SetRange("Document No.", PostedAsmHeader."No.");
+                        if PostedAsmLine.FindSet() then
                             repeat
                                 TreatAsmLineBuffer(PostedAsmLine);
-                            until PostedAsmLine.NEXT = 0;
+                            until PostedAsmLine.Next() = 0;
                     end;
                 end;
             end;
-        until ValueEntry.NEXT = 0;
+        until ValueEntry.Next() = 0;
     end;
 
     procedure TreatAsmLineBuffer(PostedAsmLine: Record "911")
     begin
-        CLEAR(TempPostedAsmLine);
-        TempPostedAsmLine.SETRANGE(Type, PostedAsmLine.Type);
-        TempPostedAsmLine.SETRANGE("No.", PostedAsmLine."No.");
-        TempPostedAsmLine.SETRANGE("Variant Code", PostedAsmLine."Variant Code");
-        TempPostedAsmLine.SETRANGE(Description, PostedAsmLine.Description);
-        TempPostedAsmLine.SETRANGE("Unit of Measure Code", PostedAsmLine."Unit of Measure Code");
-        if TempPostedAsmLine.FINDFIRST then begin
+        Clear(TempPostedAsmLine);
+        TempPostedAsmLine.SetRange(Type, PostedAsmLine.Type);
+        TempPostedAsmLine.SetRange("No.", PostedAsmLine."No.");
+        TempPostedAsmLine.SetRange("Variant Code", PostedAsmLine."Variant Code");
+        TempPostedAsmLine.SetRange(Description, PostedAsmLine.Description);
+        TempPostedAsmLine.SetRange("Unit of Measure Code", PostedAsmLine."Unit of Measure Code");
+        if TempPostedAsmLine.findFirst() then begin
             TempPostedAsmLine.Quantity += PostedAsmLine.Quantity;
-            TempPostedAsmLine.MODIFY;
+            TempPostedAsmLine.Modify();
         end else begin
-            CLEAR(TempPostedAsmLine);
+            Clear(TempPostedAsmLine);
             TempPostedAsmLine := PostedAsmLine;
-            TempPostedAsmLine.INSERT;
+            TempPostedAsmLine.Insert();
         end;
     end;
 
@@ -1810,7 +1810,7 @@ report 51020 "Sales - Invoice FTA"
     var
         UnitOfMeasure: Record "204";
     begin
-        if not UnitOfMeasure.GET(UOMCode) then
+        if not UnitOfMeasure.Get(UOMCode) then
             exit(UOMCode);
         exit(UnitOfMeasure.Description);
     end;
@@ -1818,7 +1818,7 @@ report 51020 "Sales - Invoice FTA"
 
     procedure BlanksForIndent(): Text[10]
     begin
-        exit(PADSTR('', 2, ' '));
+        exit(PadStr('', 2, ' '));
     end;
 }
 

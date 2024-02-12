@@ -6,7 +6,7 @@ tableextension 50020 ItemVendor extends "Item Vendor" //99
 {
     fields
     {
-        modify("Item No.")
+        Modify("Item No.")
         {
             TableRelation = Item where("Quote Associated" = filter(false));
         }

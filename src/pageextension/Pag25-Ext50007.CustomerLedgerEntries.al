@@ -71,11 +71,11 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
     local procedure ApplyFilters();
     begin
         if CodGPostGrpFilter <> '' then
-            rec.setfilter("Customer Posting Group", CodGPostGrpFilter)
+            rec.SetFilter("Customer Posting Group", CodGPostGrpFilter)
         else
-            rec.setfilter("Customer Posting Group", '');
+            rec.SetFilter("Customer Posting Group", '');
 
-        CurrPage.UPDATE(false);
+        CurrPage.Update(false);
     end;
 
     local procedure CalcRecBalance(): Decimal;
@@ -83,15 +83,15 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
         RecLCustEntry: Record "Cust. Ledger Entry";
         DecLAmount: Decimal;
     begin
-        RecLCustEntry.COPY(Rec);
+        RecLCustEntry.Copy(Rec);
 
-        if RecLCustEntry.FindFirst() then
+        if RecLCustEntry.findFirst() then
             repeat
 
-                RecLCustEntry.CALCFIELDS("Remaining Amt. (LCY)");
+                RecLCustEntry.CalcFields("Remaining Amt. (LCY)");
                 DecLAmount += RecLCustEntry."Remaining Amt. (LCY)";
 
-            until RecLCustEntry.NEXT() = 0;
+            until RecLCustEntry.Next() = 0;
 
 
         exit(DecLAmount);
@@ -107,8 +107,8 @@ pageextension 50007 "CustomerLedgerEntries" extends "Customer Ledger Entries" //
 
     trigger OnOpenPage()
     begin
-        if rec.GETFILTER(Rec."Customer Posting Group") <> '' then
-            CodGPostGrpFilter := rec.GETFILTER(Rec."Customer Posting Group")
+        if rec.GetFilter(Rec."Customer Posting Group") <> '' then
+            CodGPostGrpFilter := rec.GetFilter(Rec."Customer Posting Group")
         else
             CodGPostGrpFilter := '';
     end;

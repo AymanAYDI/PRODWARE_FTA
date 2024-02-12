@@ -19,7 +19,7 @@ page 51087 "Returns Not Invoiced"
 
     Caption = 'Sales Returns Not Invoiced';
     Editable = true;
-    PageType = List;
+    PaGetype = List;
     SourceTable = "Sales Line";
     SourceTableView = sorting("Document Type", "Document No.", "Line No.")
                       where("Document Type" = filter("Return Order"),
@@ -122,9 +122,9 @@ page 51087 "Returns Not Invoiced"
 
                     trigger OnAction()
                     begin
-                        RecGSalesHeader.SETRANGE("No.", Rec."Document No.");
-                        if RecGSalesHeader.FINDFIRST() then
-                            page.RUN(page::"Sales Return Order", RecGSalesHeader);
+                        RecGSalesHeader.SetRange("No.", Rec."Document No.");
+                        if RecGSalesHeader.findFirst() then
+                            page.Run(page::"Sales Return Order", RecGSalesHeader);
                     end;
                 }
                 action(Dimensions)
@@ -164,7 +164,7 @@ page 51087 "Returns Not Invoiced"
 
                 trigger OnAction()
                 begin
-                    //REPORT.RUN(REPORT::"Credit Memo to Emit",TRUE,FALSE,Rec);
+                    //REPORT.Run(REPORT::"Credit Memo to Emit",TRUE,FALSE,Rec);
                 end;
             }
         }
@@ -172,10 +172,10 @@ page 51087 "Returns Not Invoiced"
 
     trigger OnAfterGetRecord()
     begin
-        RecGSalesHeader.SETRANGE("No.", Rec."Document No.");
-        RecGSalesHeader.FINDFIRST();
-        RecGCostumer.GET(Rec."Bill-to Customer No.");
-        DecGQteReturnRestante := ROUND(Rec."Return Qty. Received" - Rec."Quantity Invoiced");
+        RecGSalesHeader.SetRange("No.", Rec."Document No.");
+        RecGSalesHeader.findFirst();
+        RecGCostumer.Get(Rec."Bill-to Customer No.");
+        DecGQteReturnRestante := Round(Rec."Return Qty. Received" - Rec."Quantity Invoiced");
     end;
 
     var

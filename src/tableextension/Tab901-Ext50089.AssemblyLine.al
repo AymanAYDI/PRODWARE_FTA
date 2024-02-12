@@ -22,65 +22,65 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
                     "Originally Ordered Var. Code" := '';
                 end;
                 if Type = Type::Item then
-                    RecLItem.SETFILTER("Location Filter", "Location Code");
-                if RecLItem.GET("No.") then
+                    RecLItem.SetFilter("Location Filter", "Location Code");
+                if RecLItem.Get("No.") then
                     "Vendor No." := RecLItem."Vendor No.";
-                RecLItem.CALCFIELDS(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
+                RecLItem.CalcFields(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
                 DecGQtyKit := 0;
-                RecGKitSalesLine.SETRANGE("Document Type", RecGKitSalesLine."Document Type"::Order);
-                RecGKitSalesLine.SETRANGE(Type, RecGKitSalesLine.Type::Item);
-                RecGKitSalesLine.SETRANGE("No.", "No.");
-                RecGKitSalesLine.SETFILTER("Remaining Quantity (Base)", '<>0');
+                RecGKitSalesLine.SetRange("Document Type", RecGKitSalesLine."Document Type"::Order);
+                RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
+                RecGKitSalesLine.SetRange("No.", "No.");
+                RecGKitSalesLine.SetFilter("Remaining Quantity (Base)", '<>0');
 
 
-                if not RecGKitSalesLine.ISEMPTY then begin
-                    RecGKitSalesLine.FINDSET();
+                if not RecGKitSalesLine.IsEmpty then begin
+                    RecGKitSalesLine.FindSet();
                     repeat
-                        if RecGAssemLink.GET(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.") then
+                        if RecGAssemLink.Get(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.") then
                             if (RecGKitSalesLine."Document No." <> RecGAssemLink."Document No.") or (RecGKitSalesLine."Line No." <> RecGAssemLink."Document Line No.") then
                                 DecGQtyKit += RecGKitSalesLine."Remaining Quantity (Base)";
-                    until RecGKitSalesLine.NEXT() = 0;
+                    until RecGKitSalesLine.Next() = 0;
                 end;
                 "Avaibility no reserved" := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + DecGQtyKit)
                                                                                         + RecLItem."Reserved Qty. on Purch. Orders";
-                RecLItem.CALCFIELDS("Assembly BOM");
+                RecLItem.CalcFields("Assembly BOM");
                 if RecLItem."Assembly BOM" then
                     "Kit Qty Available by Assembly" := 0
                 else begin
                     "Kit Qty Available by Assembly" := 0;
                     BoolFirstRead := false;
-                    RecLProductionBOMLine.RESET();
-                    RecLProductionBOMLine.SETRANGE("Parent Item No.", RecLItem."No.");
-                    if RecLProductionBOMLine.FINDSET() then
+                    RecLProductionBOMLine.Reset();
+                    RecLProductionBOMLine.SetRange("Parent Item No.", RecLItem."No.");
+                    if RecLProductionBOMLine.FindSet() then
                         repeat
                             if (RecLProductionBOMLine.Type = RecLProductionBOMLine.Type::Item) then
-                                if RecLItem.GET(RecLProductionBOMLine."No.") then begin
-                                    RecLItem.SETFILTER("Location Filter", "Location Code");
-                                    RecLItem.CALCFIELDS(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
+                                if RecLItem.Get(RecLProductionBOMLine."No.") then begin
+                                    RecLItem.SetFilter("Location Filter", "Location Code");
+                                    RecLItem.CalcFields(Inventory, "Qty. on Sales Order", "Qty. on Asm. Component", "Reserved Qty. on Purch. Orders");
                                     DecGQtyKit := 0;
-                                    RecGKitSalesLine.SETRANGE("Document Type", RecGKitSalesLine."Document Type"::Order);
-                                    RecGKitSalesLine.SETRANGE(Type, RecGKitSalesLine.Type::Item);
-                                    RecGKitSalesLine.SETRANGE("No.", "No.");
-                                    RecGKitSalesLine.SETFILTER(RecGKitSalesLine."Remaining Quantity (Base)", '<>0');
-                                    RecGAssemLink.GET(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.");
-                                    if not RecGKitSalesLine.ISEMPTY then begin
-                                        RecGKitSalesLine.FINDSET();
+                                    RecGKitSalesLine.SetRange("Document Type", RecGKitSalesLine."Document Type"::Order);
+                                    RecGKitSalesLine.SetRange(Type, RecGKitSalesLine.Type::Item);
+                                    RecGKitSalesLine.SetRange("No.", "No.");
+                                    RecGKitSalesLine.SetFilter(RecGKitSalesLine."Remaining Quantity (Base)", '<>0');
+                                    RecGAssemLink.Get(RecGKitSalesLine."Document Type", RecGKitSalesLine."Document No.");
+                                    if not RecGKitSalesLine.IsEmpty then begin
+                                        RecGKitSalesLine.FindSet();
                                         repeat
                                             if (RecGKitSalesLine."Document No." <> RecGAssemLink."Document No.") or (RecGKitSalesLine."Line No." <> RecGAssemLink."Document Line No.") then
                                                 DecGQtyKit += RecGKitSalesLine."Remaining Quantity (Base)";
-                                        until RecGKitSalesLine.NEXT() = 0;
+                                        until RecGKitSalesLine.Next() = 0;
                                     end;
                                     DecLAvailibityNoReserved := RecLItem.Inventory - (RecLItem."Qty. on Sales Order" + DecGQtyKit) +
                                        RecLItem."Reserved Qty. on Purch. Orders";
 
                                     if not BoolFirstRead then
-                                        "Kit Qty Available by Assembly" := ROUND(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<')
+                                        "Kit Qty Available by Assembly" := Round(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<')
                                     else
-                                        if ROUND(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<') < "Kit Qty Available by Assembly" then
-                                            "Kit Qty Available by Assembly" := ROUND(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<');
+                                        if Round(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<') < "Kit Qty Available by Assembly" then
+                                            "Kit Qty Available by Assembly" := Round(DecLAvailibityNoReserved / RecLProductionBOMLine."Quantity per", 1, '<');
                                     BoolFirstRead := true;
                                 end;
-                        until RecLProductionBOMLine.NEXT() = 0;
+                        until RecLProductionBOMLine.Next() = 0;
                 end;
             end;
         }
@@ -105,10 +105,10 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
                     "Kit Action"::Assembly:
 
                         if "Quantity per" <> 0 then
-                            ERROR(CstL001, FORMAT("Kit Action"));
+                            Error(CstL001, Format("Kit Action"));
                     "Kit Action"::Disassembly:
                         if "x Quantity per" <> 0 then
-                            ERROR(CstL001, FORMAT("Kit Action"));
+                            Error(CstL001, Format("Kit Action"));
                 end;
             end;
         }
@@ -183,7 +183,7 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
             trigger OnValidate()
             begin
                 if "Selected for Order" and ("Qty to be Ordered" = 0) then begin
-                    CALCFIELDS("Reserved Quantity");
+                    CalcFields("Reserved Quantity");
                     "Qty to be Ordered" := "Remaining Quantity" - "Reserved Quantity";
                 end;
                 if not "Selected for Order" then
@@ -198,7 +198,7 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
             trigger OnValidate()
             begin
                 if ("Qty to be Ordered" <> 0) then begin
-                    CALCFIELDS("Reserved Quantity");
+                    CalcFields("Reserved Quantity");
                     if "Qty to be Ordered" > "Remaining Quantity" - "Reserved Quantity" then;
                 end;
             end;
@@ -311,24 +311,24 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
     procedure FctSelectRecForOrder(var RecPKitSalesLine: Record 901)
     begin
         with RecPKitSalesLine do begin
-            RESET();
-            SETCURRENTKEY("Document Type", "Document No.", Type, "Quantity per");
-            SETFILTER("Document Type", '%1', "Document Type"::Order);
-            SETRANGE(Type, Type::Item);
-            SETFILTER("Quantity per", '<>0');
+            Reset();
+            SetCurrentKey("Document Type", "Document No.", Type, "Quantity per");
+            SetFilter("Document Type", '%1', "Document Type"::Order);
+            SetRange(Type, Type::Item);
+            SetFilter("Quantity per", '<>0');
 
-            if FINDSET() then
+            if FindSet() then
                 repeat
-                    CALCFIELDS("Reserved Qty. (Base)");
+                    CalcFields("Reserved Qty. (Base)");
                     if "Remaining Quantity (Base)" > "Reserved Qty. (Base)" then begin
                         "Internal field" := true;
                         if ("Qty to be Ordered" = 0) and "Selected for Order" then
-                            VALIDATE("Selected for Order", true);
+                            Validate("Selected for Order", true);
                     end else
                         "Internal field" := false;
-                    MODIFY();
-                until NEXT() = 0;
-            SETRANGE("Internal field", true);
+                    Modify();
+                until Next() = 0;
+            SetRange("Internal field", true);
         end;
     end;
 
@@ -343,26 +343,26 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
         if Type <> Type::Item then
             exit;
 
-        TESTFIELD("No.");
+        TestField("No.");
 
         //IF Reserve <> Reserve::Always THEN
         //  EXIT;
 
         if "Remaining Quantity (Base)" <> 0 then begin
             if "Quantity per" <> 0 then
-                TESTFIELD("Due Date");
+                TestField("Due Date");
             ReservMgt.SetReservSource(Rec);
             // ReservMgt.SetAssemblyLine(Rec);
             //TODO : migration codeunit reservation management 
             // if BooGResaAssFTA then
             //     ReservMgt.FctSetBooResaAssFTA(true);
             ReservMgt.AutoReserve(FullAutoReservation, '', "Due Date", "Remaining Quantity", "Remaining Quantity (Base)");
-            FIND();
+            Find();
             if not FullAutoReservation and (CurrFieldNo <> 0) then
-                if CONFIRM(Text001, true) then begin
-                    COMMIT();
+                if Confirm(Text001, true) then begin
+                    Commit();
                     ShowReservation();
-                    FIND();
+                    Find();
                 end;
         end;
     end;
@@ -370,23 +370,23 @@ tableextension 50089 AssemblyLine extends "Assembly Line"//901
     procedure FctSelectRecForOrder2(var recKitLine: Record 901)
     begin
         with recKitLine do begin
-            SETCURRENTKEY("Document Type", "Document No.", Type, "Quantity per");
-            SETFILTER("Document Type", '%1', "Document Type"::Order);
-            SETRANGE(Type, Type::Item);
-            SETFILTER("Quantity per", '<>0');
-            SETFILTER("Remaining Quantity", '<>0');
-            if FINDFIRST() then
+            SetCurrentKey("Document Type", "Document No.", Type, "Quantity per");
+            SetFilter("Document Type", '%1', "Document Type"::Order);
+            SetRange(Type, Type::Item);
+            SetFilter("Quantity per", '<>0');
+            SetFilter("Remaining Quantity", '<>0');
+            if findFirst() then
                 repeat
-                    CALCFIELDS("Reserved Qty. (Base)");
+                    CalcFields("Reserved Qty. (Base)");
                     if "Remaining Quantity (Base)" > "Reserved Qty. (Base)" then begin
                         "Internal field" := true;
                         if ("Qty to be Ordered" = 0) and "Selected for Order" then
-                            VALIDATE("Selected for Order", true);
+                            Validate("Selected for Order", true);
                     end else
                         "Internal field" := false;
-                    MODIFY();
-                until NEXT() = 0;
-            SETRANGE("Internal field", true);
+                    Modify();
+                until Next() = 0;
+            SetRange("Internal field", true);
         end;
     end;
 

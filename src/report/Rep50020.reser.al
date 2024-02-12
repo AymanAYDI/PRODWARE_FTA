@@ -12,7 +12,7 @@ report 50020 reser
             trigger OnAfterGetRecord()
             begin
                 "Item Ledger Entry"."Reserved Quantity" := 0;
-                MODIFY();
+                Modify();
             end;
         }
     }

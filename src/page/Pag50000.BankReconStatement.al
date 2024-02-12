@@ -11,7 +11,7 @@ page 50000 "Bank Recon. Statement"
     DataCaptionFields = "Bank Account No.";
     DeleteAllowed = false;
     InsertAllowed = false;
-    PageType = Document;
+    PaGetype = Document;
     SourceTable = "Bank Account Ledger Entry";
     SourceTableView = sorting("Bank Account No.", Open) where(Open = const(true));
     ApplicationArea = All;
@@ -44,21 +44,21 @@ page 50000 "Bank Recon. Statement"
                     trigger OnValidate()
                     begin
                         if TxtGDateFilter <> '' then
-                            Rec.SETFILTER("Posting Date", TxtGDateFilter)
+                            Rec.SetFilter("Posting Date", TxtGDateFilter)
                         else
-                            Rec.SETRANGE("Posting Date");
+                            Rec.SetRange("Posting Date");
                         if CodGBankCode = '' then
                             CodGBankCode := '512100';
 
-                        RecGBankAccount.GET(CodGBankCode);
-                        if Rec.GETFILTER("Posting Date") <> '' then
-                            RecGBankAccount.SETFILTER("Date Filter", Rec.GETFILTER("Posting Date"));
-                        RecGBankAccount.CALCFIELDS("Net Change");
-                        TxtGBankStat := STRSUBSTNO(Txt004, RecGBankAccount."Last Statement No.");
-                        RecGBankLedg.COPYFILTERS(Rec);
-                        RecGBankLedg.CALCSUMS(Amount);
+                        RecGBankAccount.Get(CodGBankCode);
+                        if Rec.GetFilter("Posting Date") <> '' then
+                            RecGBankAccount.SetFilter("Date Filter", Rec.GetFilter("Posting Date"));
+                        RecGBankAccount.CalcFields("Net Change");
+                        TxtGBankStat := StrSubstNo(Txt004, RecGBankAccount."Last Statement No.");
+                        RecGBankLedg.CopyFilters(Rec);
+                        RecGBankLedg.CalcSums(Amount);
 
-                        CurrPage.UPDATE(true);
+                        CurrPage.Update(true);
                     end;
                 }
             }
@@ -210,7 +210,7 @@ page 50000 "Bank Recon. Statement"
                 trigger OnAction()
                 begin
                     Navigate.SetDoc(Rec."Posting Date", Rec."Document No.");
-                    Navigate.RUN();
+                    Navigate.Run();
                 end;
             }
         }
@@ -221,13 +221,13 @@ page 50000 "Bank Recon. Statement"
         if CodGBankCode = '' then
             CodGBankCode := '512100';
 
-        RecGBankAccount.GET(CodGBankCode);
-        if Rec.GETFILTER("Posting Date") <> '' then
-            RecGBankAccount.SETFILTER("Date Filter", Rec.GETFILTER("Posting Date"));
-        RecGBankAccount.CALCFIELDS("Net Change");
-        TxtGBankStat := STRSUBSTNO(Txt004, RecGBankAccount."Last Statement No.");
-        RecGBankLedg.COPYFILTERS(Rec);
-        RecGBankLedg.CALCSUMS(Amount);
+        RecGBankAccount.Get(CodGBankCode);
+        if Rec.GetFilter("Posting Date") <> '' then
+            RecGBankAccount.SetFilter("Date Filter", Rec.GetFilter("Posting Date"));
+        RecGBankAccount.CalcFields("Net Change");
+        TxtGBankStat := StrSubstNo(Txt004, RecGBankAccount."Last Statement No.");
+        RecGBankLedg.CopyFilters(Rec);
+        RecGBankLedg.CalcSums(Amount);
     end;
 
     var

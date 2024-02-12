@@ -13,7 +13,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
         {
             trigger OnAfterValidate()
             begin
-                if RecGContact.GET("Buy-from Contact No.") then begin
+                if RecGContact.Get("Buy-from Contact No.") then begin
                     "E-Mail" := RecGContact."E-Mail";
                     "Fax No." := RecGContact."Fax No.";
                     "Subject Mail" := '';
@@ -29,7 +29,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
         {
             trigger OnAfterValidate()
             begin
-                if RecGContact.GET("Buy-from Contact No.") then begin
+                if RecGContact.Get("Buy-from Contact No.") then begin
                     "E-Mail" := RecGContact."E-Mail";
                     "Fax No." := RecGContact."Fax No.";
                     "Subject Mail" := '';
@@ -47,32 +47,32 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
             var
                 "**FTA1.00": Integer;
                 RecLPurchLine: Record "Purchase Line";
-                CstL001: label 'This change can delete the reservation of the lines : do want to continue?';
+                CstL001: label 'This change can Delete the reservation of the lines : do want to continue?';
                 CstL002: label 'Canceled operation';
             begin
-                RecLPurchLine.SETRANGE("Document Type", "Document Type");
-                RecLPurchLine.SETRANGE("Document No.", "No.");
-                RecLPurchLine.SETFILTER("Expected Receipt Date", '<%1', "Requested Receipt Date");
-                RecLPurchLine.SETRANGE(Type, RecLPurchLine.Type::Item);
+                RecLPurchLine.SetRange("Document Type", "Document Type");
+                RecLPurchLine.SetRange("Document No.", "No.");
+                RecLPurchLine.SetFilter("Expected Receipt Date", '<%1', "Requested Receipt Date");
+                RecLPurchLine.SetRange(Type, RecLPurchLine.Type::Item);
 
-                if not RecLPurchLine.ISEMPTY() then begin
-                    RecLPurchLine.FINDSET();
+                if not RecLPurchLine.IsEmpty() then begin
+                    RecLPurchLine.FindSet();
                     repeat
-                        RecLPurchLine.CALCFIELDS("Reserved Qty. (Base)");
+                        RecLPurchLine.CalcFields("Reserved Qty. (Base)");
                         if RecLPurchLine."Reserved Qty. (Base)" <> 0 then
-                            if not CONFIRM(CstL001, false) then
-                                ERROR(CstL002);
-                    until (RecLPurchLine.NEXT() = 0) or (RecLPurchLine."Reserved Qty. (Base)" <> 0);
+                            if not Confirm(CstL001, false) then
+                                Error(CstL002);
+                    until (RecLPurchLine.Next() = 0) or (RecLPurchLine."Reserved Qty. (Base)" <> 0);
                 end;
             end;
 
             trigger OnAfterValidate()
             begin
                 if "Promised Receipt Date" <> 0D then
-                    "Planned Receipt Date" := CALCDATE("Lead Time Calculation", "Promised Receipt Date")
+                    "Planned Receipt Date" := CalcDate("Lead Time Calculation", "Promised Receipt Date")
                 else
                     if "Requested Receipt Date" <> 0D then
-                        "Planned Receipt Date" := CALCDATE("Lead Time Calculation", "Requested Receipt Date");
+                        "Planned Receipt Date" := CalcDate("Lead Time Calculation", "Requested Receipt Date");
             end;
         }
         modify("Lead Time Calculation")
@@ -80,10 +80,10 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
             trigger OnAfterValidate()
             begin
                 if "Promised Receipt Date" <> 0D then
-                    "Planned Receipt Date" := CALCDATE("Lead Time Calculation", "Promised Receipt Date")
+                    "Planned Receipt Date" := CalcDate("Lead Time Calculation", "Promised Receipt Date")
                 else
                     if "Requested Receipt Date" <> 0D then
-                        "Planned Receipt Date" := CALCDATE("Lead Time Calculation", "Requested Receipt Date");
+                        "Planned Receipt Date" := CalcDate("Lead Time Calculation", "Requested Receipt Date");
             end;
         }
         field(50005; "Fax No."; Text[30])
@@ -119,13 +119,13 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
             trigger OnValidate()
             var
                 RecLPurchHeader: Record "Purchase Header";
-                TextCdeTransp003: Label 'You cannot modify Shipping Code agent because there is a Shipping Purchase Order linked (Order %1) !!';
+                TextCdeTransp003: Label 'You cannot Modify Shipping Code agent because there is a Shipping Purchase Order linked (Order %1) !!';
             begin
-                TESTFIELD(Status, Status::Open);
+                TestField(Status, Status::Open);
                 if xRec."Shipping Agent Code" = "Shipping Agent Code" then
                     exit;
                 if "Shipping Order No." <> '' then
-                    error(StrSubstNo(TextCdeTransp003, "Shipping Order No."));
+                    Error(StrSubstNo(TextCdeTransp003, "Shipping Order No."));
                 if (xRec."Shipping Agent Code" <> '') and ("Shipping Agent Code" = '') then
                     RecLPurchHeader.TestVerifExistence("No.");
 
@@ -174,7 +174,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
         "--NAVEASY.001--": Integer;
         RecLSalesHeader: Record "Sales Header";
         RecLPurchHeader: Record "Purchase Header";
-        TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
+        TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to Delete this order?';
     begin
         PurchLine.SetRange("Document Type", "Document Type");
         PurchLine.SetRange("Document No.", "No.");
@@ -182,31 +182,31 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
         if not PurchLine.IsEmpty then
             PurchLine.FindSet();
         repeat
-            PurchLine.CALCFIELDS("Reserved Quantity");
-            PurchLine.TESTFIELD("Reserved Quantity", 0);
-        until PurchLine.NEXT() = 0;
+            PurchLine.CalcFields("Reserved Quantity");
+            PurchLine.TestField("Reserved Quantity", 0);
+        until PurchLine.Next() = 0;
     end;
 
     trigger OnAfterDelete()
     begin
-        CALCFIELDS("Order Type");
+        CalcFields("Order Type");
         if "Order Type" = "Order Type"::Transport then
             if "Initial Order No." <> '' then
                 case "Initial Order Type" of
                     "Initial Order Type"::Sale:
                         if RecLSalesHeader.Get(RecLSalesHeader."Document Type"::Order, "Initial Order No.") then begin
                             RecLSalesHeader.Validate("Shipping Order No.", '');
-                            RecLSalesHeader.MODIFY();
+                            RecLSalesHeader.Modify();
                         end;
                     "Initial Order Type"::Purchase:
                         if RecLPurchHeader.Get(RecLSalesHeader."Document Type"::Order, "Initial Order No.") then begin
                             RecLPurchHeader.Validate("Shipping Order No.", '');
-                            RecLPurchHeader.MODIFY();
+                            RecLPurchHeader.Modify();
                         end;
                 end;
         if "Order Type" <> "Order Type"::Transport then
             if "Shipping Order No." <> '' then
-                if CONFIRM(StrSubstNo(TextCdeTransp002, "Shipping Order No.")) then
+                if Confirm(StrSubstNo(TextCdeTransp002, "Shipping Order No.")) then
                     if RecLPurchHeader.Get(RecLPurchHeader."Document Type"::Order, "Shipping Order No.") then RecLPurchHeader.Delete(true);
     end;
 
@@ -217,7 +217,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
     begin
         TestVerifExistence(CodLInitialOrder);
         PurchSetup.Get();
-        PurchSetup.TESTFIELD("Charge (Item) used for Transp.");
+        PurchSetup.TestField("Charge (Item) used for Transp.");
         CodLTransportOrder := CreatePurchHeadTransport(CodLNumVendor, CodLInitialOrder, CodLCurrency, OptLTypeInitialOrder);
         CreatePurchLineTransport(CodLTransportOrder, CodLNumVendor, DecLPrice, DateLRequested, DateLPromised, DateLPlanned);
         if RecLPurchHead.Get(RecLPurchHead."Document Type"::Order, CodLTransportOrder) then
@@ -229,12 +229,12 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
     procedure TestVerifExistence(CodLInitialOrder: Code[20])
     var
         RecLPurchHead: Record "Purchase Header";
-        TextCdeTransp001: Label 'There is a Transport Purchase order linked to this document.\ Impossible to modify or to create another Transport Purchase order !!';
+        TextCdeTransp001: Label 'There is a Transport Purchase order linked to this document.\ Impossible to Modify or to create another Transport Purchase order !!';
     begin
         RecLPurchHead.Reset();
         RecLPurchHead.SetRange(RecLPurchHead."Document Type", RecLPurchHead."Document Type"::Order);
         RecLPurchHead.SetRange("Initial Order No.", CodLInitialOrder);
-        if RecLPurchHead.FindFirst() then Error(TextCdeTransp001);
+        if RecLPurchHead.findFirst() then Error(TextCdeTransp001);
     end;
 
     procedure CreatePurchHeadTransport(CodLNumVendor: Code[20]; CodLInitialOrder: Code[20]; CodLCurrency: Code[10]; OptLTypeInitialOrder: Enum "Initial Order Type"): Code[20]
@@ -245,7 +245,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
         RecLPurchHead."Document Type" := RecLPurchHead."Document Type"::Order;
         RecLPurchHead.Validate("Buy-from Vendor No.", CodLNumVendor);
         RecLPurchHead.Validate("Initial Order No.", CodLInitialOrder);
-        RecLPurchHead.Validate("Posting Date", WORKDATE());
+        RecLPurchHead.Validate("Posting Date", WorkDate());
         RecLPurchHead.Validate("Currency Code", CodLCurrency);
         RecLPurchHead."Initial Order Type" := OptLTypeInitialOrder;
 
@@ -275,7 +275,7 @@ tableextension 50011 PurchaseHeader extends "Purchase Header" //38
     var
         RecLSalesHeader: Record "Sales Header";
         RecLPurchHeader: Record "Purchase Header";
-        TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
+        TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to Delete this order?';
         ShippingAgent: Record "Shipping Agent";
         RecGContact: Record Contact;
 }

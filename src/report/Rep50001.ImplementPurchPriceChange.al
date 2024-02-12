@@ -15,20 +15,20 @@ report 50001 "Implement Purch. Price Change"
 
             trigger OnAfterGetRecord()
             begin
-                Window.UPDATE(1, "Item No.");
-                Window.UPDATE(2, "Vendor No.");
-                //Window.UPDATE(3,"Sales Code");
-                Window.UPDATE(3, "Currency Code");
-                Window.UPDATE(4, "Starting Date");
+                Window.Update(1, "Item No.");
+                Window.Update(2, "Vendor No.");
+                //Window.Update(3,"Sales Code");
+                Window.Update(3, "Currency Code");
+                Window.Update(4, "Starting Date");
 
-                PurchasePrice.INIT();
-                PurchasePrice.VALIDATE("Item No.", "Item No.");
-                PurchasePrice.VALIDATE("Vendor No.", "Vendor No.");
-                //PurchasePrice.VALIDATE("Sales Code","Sales Code");
-                PurchasePrice.VALIDATE("Unit of Measure Code", "Unit of Measure Code");
-                PurchasePrice.VALIDATE("Variant Code", "Variant Code");
-                PurchasePrice.VALIDATE("Starting Date", "Starting Date");
-                PurchasePrice.VALIDATE("Ending Date", "Ending Date");
+                PurchasePrice.Init();
+                PurchasePrice.Validate("Item No.", "Item No.");
+                PurchasePrice.Validate("Vendor No.", "Vendor No.");
+                //PurchasePrice.Validate("Sales Code","Sales Code");
+                PurchasePrice.Validate("Unit of Measure Code", "Unit of Measure Code");
+                PurchasePrice.Validate("Variant Code", "Variant Code");
+                PurchasePrice.Validate("Starting Date", "Starting Date");
+                PurchasePrice.Validate("Ending Date", "Ending Date");
                 PurchasePrice."Minimum Quantity" := "Minimum Quantity";
                 PurchasePrice."Currency Code" := "Currency Code";
                 PurchasePrice."Direct Unit Cost" := "New Unit Cost";
@@ -38,27 +38,27 @@ report 50001 "Implement Purch. Price Change"
                 //PurchasePrice."VAT Bus. Posting Gr. (Price)" := "VAT Bus. Posting Gr. (Price)";
                 if PurchasePrice."Direct Unit Cost" <> 0 then begin
                     if PurchasePrice."Starting Date" <> 0D then begin
-                        RecGPuchPrice.SETRANGE("Item No.", "Item No.");
-                        RecGPuchPrice.SETRANGE("Vendor No.", "Vendor No.");
-                        RecGPuchPrice.SETRANGE("Unit of Measure Code", "Unit of Measure Code");
-                        RecGPuchPrice.SETRANGE("Variant Code", "Variant Code");
-                        RecGPuchPrice.SETRANGE("Minimum Quantity", "Minimum Quantity");
-                        RecGPuchPrice.SETRANGE("Currency Code", "Currency Code");
-                        RecGPuchPrice.SETFILTER("Ending Date", '%1', 0D);
-                        if RecGPuchPrice.FINDSET() then
+                        RecGPuchPrice.SetRange("Item No.", "Item No.");
+                        RecGPuchPrice.SetRange("Vendor No.", "Vendor No.");
+                        RecGPuchPrice.SetRange("Unit of Measure Code", "Unit of Measure Code");
+                        RecGPuchPrice.SetRange("Variant Code", "Variant Code");
+                        RecGPuchPrice.SetRange("Minimum Quantity", "Minimum Quantity");
+                        RecGPuchPrice.SetRange("Currency Code", "Currency Code");
+                        RecGPuchPrice.SetFilter("Ending Date", '%1', 0D);
+                        if RecGPuchPrice.FindSet() then
                             repeat
-                                RecGPuchPrice.VALIDATE("Ending Date", CALCDATE('<-1D>', PurchasePrice."Starting Date"));
-                                RecGPuchPrice.MODIFY(true);
-                            until RecGPuchPrice.NEXT() = 0;
+                                RecGPuchPrice.Validate("Ending Date", CalcDate('<-1D>', PurchasePrice."Starting Date"));
+                                RecGPuchPrice.Modify(true);
+                            until RecGPuchPrice.Next() = 0;
                     end;
-                    if not PurchasePrice.INSERT(true) then
-                        PurchasePrice.MODIFY(true);
+                    if not PurchasePrice.Insert(true) then
+                        PurchasePrice.Modify(true);
                 end;
             end;
 
             trigger OnPreDataItem()
             begin
-                Window.OPEN(
+                Window.Open(
                   Text000 +
                   Text007 +
                   Text008 +
@@ -97,7 +97,7 @@ report 50001 "Implement Purch. Price Change"
         DeleteWhstLine: Boolean;
 
 
-    [Scope('Internal')]
+
     procedure InitializeRequest(NewDeleteWhstLine: Boolean)
     begin
         DeleteWhstLine := NewDeleteWhstLine;

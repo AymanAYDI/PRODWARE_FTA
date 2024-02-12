@@ -29,10 +29,10 @@ report 50015 "Sales Reservation Avail.spe" //dupliquer de 209
             column(CompanyName; COMPANYPROPERTY.DisplayName())
             {
             }
-            column(StrsubstnoDocTypeDocNo; StrSubstNo('%1 %2 - 3%', "Document Type", "Document No.", CustomerCard.Name))
+            column(StrSubstNoDocTypeDocNo; StrSubstNo('%1 %2 - 3%', "Document Type", "Document No.", CustomerCard.Name))
             {
             }
-            column(StrsubstnoDocTypeDocNo1; StrSubstNo('%1 %2', "Document Type", "Document No."))
+            column(StrSubstNoDocTypeDocNo1; StrSubstNo('%1 %2', "Document Type", "Document No."))
             {
             }
             column(ShowSalesLineGrHeader2; ShowSalesLineGrHeader2)
@@ -49,7 +49,7 @@ report 50015 "Sales Reservation Avail.spe" //dupliquer de 209
             column(ShpmtDt__SalesLine; Format("Shipment Date"))
             {
             }
-            column(Preparation_Type_FORMAT; FORMAT("Preparation Type"))
+            column(Preparation_Type_Format; Format("Preparation Type"))
             {
 
             }
@@ -208,19 +208,19 @@ report 50015 "Sales Reservation Avail.spe" //dupliquer de 209
                             CalcFields("Reserved Qty. (Base)");
                             if ("Outstanding Qty. (Base)" = LineQuantityOnHand) and ("Outstanding Qty. (Base)" <> 0) then begin
                                 BooLOK := true;
-                                RecL337.SETRANGE("Source Type", DATABASE::"Sales Line");
-                                RecL337.SETRANGE("Source Subtype", "Document Type");
-                                RecL337.SETRANGE("Source ID", "Document No.");
-                                RecL337.SETRANGE("Source Ref. No.", "Line No.");
-                                RecL337.SETRANGE("Reservation Status", RecL337."Reservation Status"::Reservation);
-                                if RecL337.FINDSET() then
+                                RecL337.SetRange("Source Type", DATABASE::"Sales Line");
+                                RecL337.SetRange("Source Subtype", "Document Type");
+                                RecL337.SetRange("Source ID", "Document No.");
+                                RecL337.SetRange("Source Ref. No.", "Line No.");
+                                RecL337.SetRange("Reservation Status", RecL337."Reservation Status"::Reservation);
+                                if RecL337.FindSet() then
                                     repeat
-                                        RecL337b.SETRANGE("Entry No.", RecL337."Entry No.");
-                                        RecL337b.SETFILTER("Source Type", '<>%1', DATABASE::"Sales Line");
-                                        if RecL337b.FINDSET() then
+                                        RecL337b.SetRange("Entry No.", RecL337."Entry No.");
+                                        RecL337b.SetFilter("Source Type", '<>%1', DATABASE::"Sales Line");
+                                        if RecL337b.FindSet() then
                                             if RecL337b."Source Type" <> DATABASE::"Item Ledger Entry" then
                                                 BooLOK := false;
-                                    until (RecL337.NEXT() = 0) or (BooLOK = false);
+                                    until (RecL337.Next() = 0) or (BooLOK = false);
                                 if BooLOK = true then
                                     LineStatus := LineStatus::"Full Shipment";
                             end
@@ -337,18 +337,18 @@ report 50015 "Sales Reservation Avail.spe" //dupliquer de 209
                 if TempSalesLines.Next() <> 0 then
                     ClearDocumentStatus := (TempSalesLines."Document No." <> OldDocumentNo) or (TempSalesLines."Document Type" <> OldDocumentType);
                 if "No." <> '' then begin
-                    RecGItem.RESET();
+                    RecGItem.Reset();
                     if "Location Code" <> '' then
-                        RecGItem.SETFILTER("Location Filter", "Location Code");
+                        RecGItem.SetFilter("Location Filter", "Location Code");
                     if "Shipment Date" <> 0D then
-                        RecGItem.SETFILTER("Date Filter", '..%1', "Shipment Date");
-                    RecGItem.SETFILTER("Drop Shipment Filter", FORMAT(false));
-                    RecGItem.GET("No.");
-                    RecGItem.CALCFIELDS(Inventory, "Reserved Qty. on Inventory", "Qty. on Purch. Order", "Reserved Qty. on Purch. Orders");
+                        RecGItem.SetFilter("Date Filter", '..%1', "Shipment Date");
+                    RecGItem.SetFilter("Drop Shipment Filter", Format(false));
+                    RecGItem.Get("No.");
+                    RecGItem.CalcFields(Inventory, "Reserved Qty. on Inventory", "Qty. on Purch. Order", "Reserved Qty. on Purch. Orders");
                     DecGDisposalQtyStock := RecGItem.Inventory - RecGItem."Reserved Qty. on Inventory";
                 end;
                 //<<FED_20090415:PA 15/04/2009
-                if not CustomerCard.GET("Sales Line"."Sell-to Customer No.") then;
+                if not CustomerCard.Get("Sales Line"."Sell-to Customer No.") then;
             end;
 
             trigger OnPreDataItem()
@@ -477,45 +477,45 @@ report 50015 "Sales Reservation Avail.spe" //dupliquer de 209
         BooGPurchase := false;
         BooGNegativeAvailable := false;
 
-        RecLAssemblyOrderLink.SETRANGE("Document Type", SalesLine."Document Type");
-        RecLAssemblyOrderLink.SETRANGE("Document No.", SalesLine."Document No.");
-        RecLAssemblyOrderLink.SETRANGE("Document Line No.", SalesLine."Line No.");
-        if not RecLAssemblyOrderLink.FINDFIRST() then
-            RecLAssemblyOrderLink.INIT();
+        RecLAssemblyOrderLink.SetRange("Document Type", SalesLine."Document Type");
+        RecLAssemblyOrderLink.SetRange("Document No.", SalesLine."Document No.");
+        RecLAssemblyOrderLink.SetRange("Document Line No.", SalesLine."Line No.");
+        if not RecLAssemblyOrderLink.findFirst() then
+            RecLAssemblyOrderLink.Init();
 
-        RecLKitSalesLine.SETRANGE("Document Type", RecLAssemblyOrderLink."Assembly Document Type");
-        RecLKitSalesLine.SETRANGE("Document No.", RecLAssemblyOrderLink."Assembly Document No.");
+        RecLKitSalesLine.SetRange("Document Type", RecLAssemblyOrderLink."Assembly Document Type");
+        RecLKitSalesLine.SetRange("Document No.", RecLAssemblyOrderLink."Assembly Document No.");
 
-        RecLKitSalesLine.SETRANGE(Type, RecLKitSalesLine.Type::Item);
-        RecLKitSalesLine.SETFILTER("Remaining Quantity", '<>0');
+        RecLKitSalesLine.SetRange(Type, RecLKitSalesLine.Type::Item);
+        RecLKitSalesLine.SetFilter("Remaining Quantity", '<>0');
 
-        if not RecLKitSalesLine.ISEMPTY then begin
+        if not RecLKitSalesLine.IsEmpty then begin
             BooLOK := true;
-            RecLKitSalesLine.FINDSET();
+            RecLKitSalesLine.FindSet();
             repeat
                 DecGQtyReserv := 0;
-                RecLKitSalesLine.CALCFIELDS("Reserved Quantity");
+                RecLKitSalesLine.CalcFields("Reserved Quantity");
                 if (RecLKitSalesLine."Reserved Quantity" < RecLKitSalesLine."Remaining Quantity (Base)") then
                     BooLOK := false
                 else
                     if (RecLKitSalesLine."Reserved Quantity" <> 0) then begin
-                        RecL337.SETRANGE("Source Type", DATABASE::"Assembly Line");
-                        RecL337.SETRANGE("Source Subtype", RecLKitSalesLine."Document Type");
-                        RecL337.SETRANGE("Source Subtype", RecLKitSalesLine."Document Type");
-                        RecL337.SETRANGE("Source ID", RecLKitSalesLine."Document No.");
-                        RecL337.SETRANGE("Source Ref. No.", RecLKitSalesLine."Line No.");
-                        RecL337.SETRANGE("Reservation Status", RecL337."Reservation Status"::Reservation);
-                        if RecL337.FINDSET() then
+                        RecL337.SetRange("Source Type", DATABASE::"Assembly Line");
+                        RecL337.SetRange("Source Subtype", RecLKitSalesLine."Document Type");
+                        RecL337.SetRange("Source Subtype", RecLKitSalesLine."Document Type");
+                        RecL337.SetRange("Source ID", RecLKitSalesLine."Document No.");
+                        RecL337.SetRange("Source Ref. No.", RecLKitSalesLine."Line No.");
+                        RecL337.SetRange("Reservation Status", RecL337."Reservation Status"::Reservation);
+                        if RecL337.FindSet() then
                             repeat
-                                RecL337b.SETRANGE("Entry No.", RecL337."Entry No.");
-                                RecL337b.SETFILTER("Source Type", '<>901');
-                                if RecL337b.FINDSET() then
+                                RecL337b.SetRange("Entry No.", RecL337."Entry No.");
+                                RecL337b.SetFilter("Source Type", '<>901');
+                                if RecL337b.FindSet() then
                                     if RecL337b."Source Type" <> DATABASE::"Item Ledger Entry" then
                                         BooLOK := false;
                                 if RecL337b."Source Type" = DATABASE::"Purchase Line" then
                                     BooGPurchase := true;
                                 DecGQtyReserv += RecL337b."Quantity (Base)";
-                            until (RecL337.NEXT() = 0) or (BooLOK = false);
+                            until (RecL337.Next() = 0) or (BooLOK = false);
                     end;
 
                 if not BooGPurchase and (DecGQtyReserv < RecLKitSalesLine."Remaining Quantity (Base)") then
@@ -524,7 +524,7 @@ report 50015 "Sales Reservation Avail.spe" //dupliquer de 209
                     else
                         BooLOK := false;
 
-            until (RecLKitSalesLine.NEXT() = 0) or not BooLOK;
+            until (RecLKitSalesLine.Next() = 0) or not BooLOK;
         end;
     end;
 
@@ -534,8 +534,8 @@ report 50015 "Sales Reservation Avail.spe" //dupliquer de 209
         DecLAvailable: Decimal;
         DecLDisposalQtyStock: Decimal;
     begin
-        RecLItem.GET(RecPKitSalesLine."No.");
-        RecLItem.CALCFIELDS(Inventory, "Reserved Qty. on Inventory",
+        RecLItem.Get(RecPKitSalesLine."No.");
+        RecLItem.CalcFields(Inventory, "Reserved Qty. on Inventory",
                             "Qty. on Sales Order", "Reserved Qty. on Purch. Orders");
         DecLDisposalQtyStock := RecLItem.Inventory - (RecLItem."Reserved Qty. on Inventory");
         DecLAvailable := RecLItem.Inventory - (RecLItem."Qty. on Sales Order")
