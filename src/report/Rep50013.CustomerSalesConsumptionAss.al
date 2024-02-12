@@ -50,7 +50,7 @@ report 50013 "Customer Sales ConsumptionAss"
             begin
                 ValueEntryBufferPurch.RESET();
                 ValueEntryBuffer2Purch.RESET();
-                if ValueEntryBufferPurch.FIND('-') then
+                if ValueEntryBufferPurch.Findfirst() then
                     repeat
                         if PrintToExcel and Item.GET(ValueEntryBufferPurch."Item No.") then begin
                             if Vendor.GET(Item."Vendor No.") then;
@@ -113,7 +113,7 @@ report 50013 "Customer Sales ConsumptionAss"
                     if ByCust then begin
                         ValueEntryBuffer.RESET();
                         ValueEntryBuffer2.RESET();
-                        if ValueEntryBuffer.FIND('-') then
+                        if ValueEntryBuffer.Findfirst() then
                             repeat
                                 if PrintToExcel and Item.GET(ValueEntryBuffer."Item No.") then begin
                                     if Vendor.GET(Item."Vendor No.") then;
@@ -144,7 +144,7 @@ report 50013 "Customer Sales ConsumptionAss"
                 if not ByCust then begin
                     ValueEntryBuffer.RESET();
                     ValueEntryBuffer2.RESET();
-                    if ValueEntryBuffer.FIND('-') then
+                    if ValueEntryBuffer.Findfirst() then
                         repeat
                             if PrintToExcel and Item.GET(ValueEntryBuffer."Item No.") then begin
                                 if Vendor.GET(Item."Vendor No.") then;
@@ -341,7 +341,7 @@ report 50013 "Customer Sales ConsumptionAss"
         for i := 1 to 12 do begin
             ValueEntryBuffer2.SETRANGE("Item No.", ValueEntryBuffer."Item No.");
             ValueEntryBuffer2.SETRANGE("Posting Date", PeriodStartingDate[i]);
-            if ValueEntryBuffer2.FIND('-') then
+            if ValueEntryBuffer2.Findfirst() then
                 ExcelBuf.AddColumn(-ValueEntryBuffer2."Invoiced Quantity", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number)
             else
                 ExcelBuf.AddColumn(0, false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);
@@ -369,7 +369,7 @@ report 50013 "Customer Sales ConsumptionAss"
     begin
         FromValueEntryBuffer.SETRANGE("Item No.", ItemNo);
         FromValueEntryBuffer.SETRANGE("Posting Date", PostingDate);
-        if not FromValueEntryBuffer.FIND('-') then begin
+        if not FromValueEntryBuffer.Findfirst() then begin
             FromValueEntryBuffer.INIT();
             FromValueEntryBuffer."Entry No." := FromNextEntryNo;
             FromValueEntryBuffer."Posting Date" := PostingDate;
@@ -442,7 +442,7 @@ report 50013 "Customer Sales ConsumptionAss"
         for i := 1 to 12 do begin
             ValueEntryBuffer2Purch.SETRANGE("Item No.", ValueEntryBufferPurch."Item No.");
             ValueEntryBuffer2Purch.SETRANGE("Posting Date", PeriodStartingDate[i]);
-            if ValueEntryBuffer2Purch.FIND('-') then
+            if ValueEntryBuffer2Purch.Findfirst() then
                 ExcelBuf.AddColumn(-ValueEntryBuffer2Purch."Invoiced Quantity", false, '', false, false, false, '', ExcelBuf."Cell Type"::Number)
             else
                 ExcelBuf.AddColumn(0, false, '', false, false, false, '', ExcelBuf."Cell Type"::Number);

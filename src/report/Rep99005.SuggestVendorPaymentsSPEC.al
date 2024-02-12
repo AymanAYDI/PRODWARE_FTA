@@ -774,10 +774,10 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
             RemainingAmtAvailable := OriginalAmtAvailable;
             RemovePaymentsAboveLimit(TempPayableVendorLedgerEntry, RemainingAmtAvailable);
         end;
-        if TempPayableVendorLedgerEntry.Find('-') then
+        if TempPayableVendorLedgerEntry.Findfirst() then
             repeat
                 TempPayableVendorLedgerEntry.SetRange("Vendor No.", TempPayableVendorLedgerEntry."Vendor No.");
-                TempPayableVendorLedgerEntry.Find('-');
+                TempPayableVendorLedgerEntry.Findfirst();
                 repeat
                     VendLedgEntry.Get(TempPayableVendorLedgerEntry."Vendor Ledg. Entry No.");
                     SetPostingDate(GenJnlLine1, VendLedgEntry."Due Date", PostingDate);
@@ -867,7 +867,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                 until not TempPayableVendorLedgerEntry.FindSet();
                 TempPayableVendorLedgerEntry.DeleteAll();
                 TempPayableVendorLedgerEntry.SetRange("Vendor No.");
-            until not TempPayableVendorLedgerEntry.Find('-');
+            until not TempPayableVendorLedgerEntry.Findfirst();
 
         Clear(TempOldVendorPaymentBuffer);
         TempVendorPaymentBuffer.SetCurrentKey("Document No.");
@@ -875,7 +875,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
           "Vendor Ledg. Entry Doc. Type", '<>%1&<>%2', TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Refund,
           TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Payment);
 
-        if TempVendorPaymentBuffer.Find('-') then
+        if TempVendorPaymentBuffer.Findfirst() then
             repeat
                 InsertGenJournalLine();
             until TempVendorPaymentBuffer.Next() = 0;
@@ -1379,10 +1379,10 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
             RemainingAmtAvailable := OriginalAmtAvailable;
             RemovePaymentsAboveLimit(TempPayableVendorLedgerEntry, RemainingAmtAvailable);
         end;
-        if TempPayableVendorLedgerEntry.Find('-') then
+        if TempPayableVendorLedgerEntry.Findfirst() then
             repeat
                 TempPayableVendorLedgerEntry.SetRange("Vendor No.", TempPayableVendorLedgerEntry."Vendor No.");
-                TempPayableVendorLedgerEntry.Find('-');
+                TempPayableVendorLedgerEntry.Findfirst();
                 repeat
                     VendLedgEntry.Get(TempPayableVendorLedgerEntry."Vendor Ledg. Entry No.");
                     SetPostingDate(GenJnlLine1, VendLedgEntry."Due Date", PostingDate);
@@ -1489,7 +1489,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
                 until not TempPayableVendorLedgerEntry.FindSet();
                 TempPayableVendorLedgerEntry.DeleteAll();
                 TempPayableVendorLedgerEntry.SetRange("Vendor No.");
-            until not TempPayableVendorLedgerEntry.Find('-');
+            until not TempPayableVendorLedgerEntry.Findfirst();
 
         Clear(TempOldVendorPaymentBuffer);
         TempVendorPaymentBuffer.SetCurrentKey("Document No.");
@@ -1497,7 +1497,7 @@ report 99005 "Suggest Vendor PaymentsSPEC"//393
           "Vendor Ledg. Entry Doc. Type", '<>%1&<>%2', TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Refund,
           TempVendorPaymentBuffer."Vendor Ledg. Entry Doc. Type"::Payment);
 
-        if TempVendorPaymentBuffer.Find('-') then
+        if TempVendorPaymentBuffer.Findfirst() then
             repeat
                 InsertGenJournalLine();
             until TempVendorPaymentBuffer.Next() = 0;

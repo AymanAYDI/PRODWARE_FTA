@@ -47,7 +47,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                     Reset();
                     CopyFilters(Cust2);
                     Window.Open(Text007);
-                    if Find('-') then
+                    if Findfirst() then
                         repeat
                             Window.Update(1, "No.");
                             PayableCustLedgEntry.SetRange("Vendor No.", "No.");
@@ -243,7 +243,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
         CustLedgEntry.SetRange("On Hold", '');
         // add
         CustLedgEntry.SETFILTER("Payment Method Code", CodGPayMetFilter);
-        if CustLedgEntry.Find('-') then
+        if CustLedgEntry.Findfirst() then
             repeat
                 SaveAmount();
             until CustLedgEntry.Next() = 0;
@@ -291,7 +291,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
     begin
         PayableCustLedgEntry.SetRange("Vendor No.", Customer."No.");
         PayableCustLedgEntry.SetRange(Future, Future);
-        if PayableCustLedgEntry.Find('-') then begin
+        if PayableCustLedgEntry.Findfirst() then begin
             PrevCurrency := PayableCustLedgEntry."Currency Code";
             repeat
                 if PayableCustLedgEntry."Currency Code" <> PrevCurrency then begin
@@ -334,10 +334,10 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
     begin
         TempPaymentPostBuffer.DeleteAll();
 
-        if PayableCustLedgEntry.Find('-') then
+        if PayableCustLedgEntry.Findfirst() then
             repeat
                 PayableCustLedgEntry.SetRange("Vendor No.", PayableCustLedgEntry."Vendor No.");
-                PayableCustLedgEntry.Find('-');
+                PayableCustLedgEntry.Findfirst();
                 repeat
                     CustLedgEntry.Get(PayableCustLedgEntry."Vendor Ledg. Entry No.");
                     TempPaymentPostBuffer."Account No." := CustLedgEntry."Customer No.";
@@ -399,7 +399,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                     CODEUNIT.Run(CODEUNIT::"Cust. Entry-Edit", CustLedgEntry)
                 until PayableCustLedgEntry.Next() = 0;
                 PayableCustLedgEntry.SetFilter("Vendor No.", '>%1', PayableCustLedgEntry."Vendor No.");
-            until not PayableCustLedgEntry.Find('-');
+            until not PayableCustLedgEntry.Findfirst();
 
         Clear(OldTempPaymentPostBuffer);
         TempPaymentPostBuffer.SetCurrentKey("Document No.");
@@ -469,7 +469,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                             begin
                                 PayableCustLedgEntry.SetCurrentKey("Vendor No.", "Due Date");
                                 PayableCustLedgEntry.SetRange("Vendor No.", TempPaymentPostBuffer."Account No.");
-                                PayableCustLedgEntry.Find('+');
+                                PayableCustLedgEntry.Findlast();
                                 "Due Date" := PayableCustLedgEntry."Due Date";
                                 PayableCustLedgEntry.DeleteAll();
                             end;
@@ -511,7 +511,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
         CustLedgEntry.SetRange("On Hold", '');
         // add
         CustLedgEntry.SETFILTER("Payment Method Code", CodGPayMetFilter);
-        if CustLedgEntry.Find('-') then
+        if CustLedgEntry.Findfirst() then
             repeat
                 SaveAmount();
             until CustLedgEntry.Next() = 0;
@@ -524,10 +524,10 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
     begin
         TempPaymentPostBuffer.DeleteAll();
 
-        if PayableCustLedgEntry.Find('-') then
+        if PayableCustLedgEntry.Findfirst() then
             repeat
                 PayableCustLedgEntry.SetRange("Vendor No.", PayableCustLedgEntry."Vendor No.");
-                PayableCustLedgEntry.Find('-');
+                PayableCustLedgEntry.Findfirst();
                 repeat
                     CustLedgEntry.Get(PayableCustLedgEntry."Vendor Ledg. Entry No.");
                     TempPaymentPostBuffer."Account No." := CustLedgEntry."Customer No.";
@@ -590,7 +590,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                     CODEUNIT.Run(CODEUNIT::"Cust. Entry-Edit", CustLedgEntry)
                 until PayableCustLedgEntry.Next() = 0;
                 PayableCustLedgEntry.SetFilter("Vendor No.", '>%1', PayableCustLedgEntry."Vendor No.");
-            until not PayableCustLedgEntry.Find('-');
+            until not PayableCustLedgEntry.Findfirst();
 
         Clear(OldTempPaymentPostBuffer);
         TempPaymentPostBuffer.SetCurrentKey("Document No.");
@@ -659,7 +659,7 @@ report 50012 "Suggest Customer Payments SPE" //Duplicated from 10864
                             begin
                                 PayableCustLedgEntry.SetCurrentKey("Vendor No.", "Due Date");
                                 PayableCustLedgEntry.SetRange("Vendor No.", TempPaymentPostBuffer."Account No.");
-                                PayableCustLedgEntry.Find('+');
+                                PayableCustLedgEntry.Findlast();
                                 "Due Date" := PayableCustLedgEntry."Due Date";
                                 PayableCustLedgEntry.DeleteAll();
                             end;

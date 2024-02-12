@@ -60,6 +60,11 @@ tableextension 50024 SalesInvoiceLine extends "Sales Invoice Line" //113
         //     Editable = false;
         //     FieldClass = FlowField;
         // }
+        field(50016; "Parent Category Code"; Code[20])
+        {
+            Caption = 'Item Parent Category Code';
+            Editable = false;
+        }
         field(50041; Prepare; Boolean)
         {
             Caption = 'Préparé';
@@ -76,6 +81,19 @@ tableextension 50024 SalesInvoiceLine extends "Sales Invoice Line" //113
         {
             Caption = 'Qty Shipped on Order';
         }
+        modify("Item Category Code")
+        {
+            trigger OnAfterValidate()
+            var
+                ItemCat: Record "Item Category";
+            begin
+                ItemCat.Get("Item Category Code");
+                Rec."Parent Category Code" := ItemCat."Parent Category";
+                Rec.Modify();  //TODO : verifier ,c'est pour remplacer product group
+            end;
+        }
     }
+
+
 }
 

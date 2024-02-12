@@ -28,7 +28,7 @@ report 50011 "Preparatory delivery FTA"
 {
 
     DefaultLayout = RDLC;
-    RDLCLayout = './PreparatorydeliveryFTA.rdlc';
+    RDLCLayout = './src/report/rdl/PreparatorydeliveryFTA.rdl';
 
     Caption = 'Work Order';
 

@@ -672,7 +672,7 @@ report 51003 "Purchases - Order FTA"
                             RecLItemCrossReference: Record "Item Reference";
                         begin
                             if Number = 1 then
-                                PurchLine.FIND('-')
+                                PurchLine.Findfirst()
                             else
                                 PurchLine.NEXT();
                             "Purchase Line" := PurchLine;
@@ -733,7 +733,7 @@ report 51003 "Purchases - Order FTA"
 
                         trigger OnPreDataItem()
                         begin
-                            MoreLines := PurchLine.FIND('+');
+                            MoreLines := PurchLine.Findlast();
                             while MoreLines and (PurchLine.Description = '') and (PurchLine."Description 2" = '') and
                                   (PurchLine."No." = '') and (PurchLine.Quantity = 0) and
                                   (PurchLine.Amount = 0)
@@ -1021,7 +1021,7 @@ report 51003 "Purchases - Order FTA"
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then begin
-                                if not PrepmtInvBuf.FIND('-') then
+                                if not PrepmtInvBuf.Findfirst() then
                                     CurrReport.BREAK();
                             end else
                                 if PrepmtInvBuf.NEXT() = 0 then

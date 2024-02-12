@@ -663,14 +663,14 @@ tableextension 50010 SalesLine extends "Sales Line" //37
         //ReserveSalesLine.FilterReservFor(ReservEntry, Rec);
 
 
-        if ReservEntry.Find('-') then
+        if ReservEntry.Findfirst() then
             repeat
                 Clear(ReservEntry2);
                 ReservEntry2 := ReservEntry;
                 ReservEntry2.SetPointerFilter();
                 //ReservMgt.SetPointerFilter(ReservEntry2);
                 ReservEntry2.SetRange("Reservation Status", ReservEntry2."Reservation Status"::Reservation);
-                if ReservEntry2.Find('-') then
+                if ReservEntry2.Findfirst() then
                     repeat
                         ReservEntry3.Get(ReservEntry2."Entry No.", not ReservEntry2.Positive);
                         "FTA_Functions".CloseReservEntry2(ReservEntry2);

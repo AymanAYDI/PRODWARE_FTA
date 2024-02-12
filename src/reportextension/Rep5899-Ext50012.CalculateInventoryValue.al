@@ -8,7 +8,6 @@ reportextension 50012 "CalculateInventoryValue" extends "Calculate Inventory Val
         modify("Item")
         {
             RequestFilterFields = "No.", "Costing Method", "Location Filter", "Variant Filter", "Shelf No.";
-
         }
     }
 

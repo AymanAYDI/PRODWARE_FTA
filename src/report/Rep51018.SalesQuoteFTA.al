@@ -7,36 +7,8 @@ using Microsoft.CRM.Contact;
 using System.Globalization;
 report 51018 "Sales - Quote FTA"
 {
-    // ------------------------------------------------------------------------
-    // Prodware - www.prodware.fr
-    // ------------------------------------------------------------------------
-    // //>>FTA1.00
-    // FExxxx.001:PA 27/05/2015 : FE Short name
-    // - Add SalesPurchPersonPhoneNo in Data Type DataItem, Data Source Integer, Name PageLoop
-    //       SalesPurchPersonEMail
-    //       LblRefInt
-    //       LblPlannedDeliveryDate
-    //       SalesLineDescription2 in Data Type DataItem, Data Source Integer, Name RoundLoop
-    //       RecGItemNo2
-    //       SalesLinePlannedDeliveryDate
-    //       DecGNetUnitPriceExcludingVAT
-    // - Add C/AL Globals Variables
-    //                    Text Constants
-    // - Add C/AL in RoundLoop - OnAfterGetRecord()
-    // ------------------------------------------------------------------------
-    // 
-    // //>>FTA.REPORT2018-0511
-    //   RoundLoop - OnAfterGetRecord()
-    //   Mise en Page (En-tête + colonnage)
-    // 
-    // //>>FTA.REPORT2018-0607
-    //    RoundLoop - OnAfterGetRecord()
-    // 
-    // //>>TI491536 - 09/04/2020 : report devis client dans le pavé CONDITION DE LIVRAISON ajout Montant Franco de la fiche client
-    //                             - Fields Added in DataItem PageLoop: Cust_FrancoAmount, LblFrancoAmount, ShipmentMethodCode
-    //                             - Layout modified: ModeLivr_Description__gTextLieuIncoterm
     DefaultLayout = RDLC;
-    RDLCLayout = './SalesQuoteFTA.rdlc';
+    RDLCLayout = './src/report/rdl/SalesQuoteFTA.rdl';
 
     Caption = 'Sales - Quote FTA';
 
@@ -653,7 +625,7 @@ report 51018 "Sales - Quote FTA"
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then
-                                SalesLine.FIND('-')
+                                SalesLine.Findfirst()
                             else
                                 SalesLine.NEXT;
                             "Sales Line" := SalesLine;
@@ -704,7 +676,7 @@ report 51018 "Sales - Quote FTA"
 
                         trigger OnPreDataItem()
                         begin
-                            MoreLines := SalesLine.FIND('+');
+                            MoreLines := SalesLine.Findlast();
                             while MoreLines and (SalesLine.Description = '') and (SalesLine."Description 2" = '') and
                                   (SalesLine."No." = '') and (SalesLine.Quantity = 0) and
                                   (SalesLine.Amount = 0)
@@ -1084,7 +1056,7 @@ report 51018 "Sales - Quote FTA"
             //     COMMIT;
             //     CurrReport.LANGUAGE := GLOBALLANGUAGE;
             //     IF NOT FileManagement.IsWebClient THEN
-            //         IF FIND('-') AND ToDo.WRITEPERMISSION THEN
+            //         IF Findfirst() AND ToDo.WRITEPERMISSION THEN
             //             IF Print AND (NoOfRecords = 1) THEN
             //                 IF CONFIRM(Text007) THEN
             //                     CreateTodo;

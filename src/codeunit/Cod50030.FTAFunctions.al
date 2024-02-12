@@ -42,7 +42,7 @@ codeunit 50030 "FTA_Functions"
                 exit;
         end;
         ReportSelection.SETFILTER("Report ID", '<>0');
-        ReportSelection.FIND('-');
+        ReportSelection.Findfirst();
         repeat
             if not RecLReportUser.GET(USERID, ReportSelection."Report ID") then begin
                 RecLReportUser.INIT();
@@ -253,7 +253,7 @@ codeunit 50030 "FTA_Functions"
             ItemSubstitution.SETRANGE("No.", AssemblyLine."No.");
             ItemSubstitution.SETRANGE("Variant Code", "Variant Code");
             ItemSubstitution.SETRANGE("Location Filter", "Location Code");
-            if ItemSubstitution.FIND('-') then
+            if ItemSubstitution.Findfirst() then
                 repeat
                     TempItemSubstitution.INIT();
                     TempItemSubstitution."No." := ItemSubstitution."No.";
@@ -302,7 +302,7 @@ codeunit 50030 "FTA_Functions"
         end;
 
         TempItemSubstitution.RESET();
-        if TempItemSubstitution.FIND('-') then begin
+        if TempItemSubstitution.Findfirst() then begin
             repeat
                 TempAssemblyLine.INIT();
                 TempAssemblyLine := AssemblyLine;
@@ -396,11 +396,11 @@ codeunit 50030 "FTA_Functions"
             ERROR(CstL001);
     end;//Codeunit 12
 
-    // procedure FctFromPaymentMgt(BooPPaymentMgt: Boolean);
+    procedure FctFromPaymentMgt(BooPPaymentMgt: Boolean);
     // var
-    // begin
-    //     BooGPaymentMgt := BooPPaymentMgt;
-    // end;//Codeunit 12
+    begin
+        //     BooGPaymentMgt := BooPPaymentMgt;
+    end;//Codeunit 12
 
 
     //CodeUnit 246
@@ -453,7 +453,7 @@ codeunit 50030 "FTA_Functions"
 
             ToItemJnlLine := Rec;
             FromBOMComp.SETFILTER("No.", '<>%1', '');
-            if FromBOMComp.FIND('-') then
+            if FromBOMComp.Findfirst() then
                 repeat
                     Item.GET(FromBOMComp."No.");
                     ToItemJnlLine."Line No." := 0;
@@ -566,7 +566,7 @@ codeunit 50030 "FTA_Functions"
 
             ToItemJnlLine := Rec;
             FromBOMComp.SETFILTER("No.", '<>%1', '');
-            if FromBOMComp.FIND('-') then
+            if FromBOMComp.Findfirst() then
                 repeat
                     Item.GET(FromBOMComp."No.");
                     ToItemJnlLine."Line No." := 0;

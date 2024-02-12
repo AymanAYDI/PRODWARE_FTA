@@ -482,7 +482,7 @@ report 99003 "Service - Credit Memo PW" //8044281
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then
-                                    ServiceShipmentBuffer.FIND('-')
+                                    ServiceShipmentBuffer.Findfirst()
                                 else
                                     ServiceShipmentBuffer.NEXT();
                             end;
@@ -554,7 +554,7 @@ report 99003 "Service - Credit Memo PW" //8044281
                             ServiceShipmentBuffer.RESET();
                             ServiceShipmentBuffer.DELETEALL();
                             FirstValueEntryNo := 0;
-                            MoreLines := FIND('+');
+                            MoreLines := Findlast();
                             while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
                                 MoreLines := NEXT(-1) <> 0;
                             if not MoreLines then
@@ -1031,7 +1031,7 @@ report 99003 "Service - Credit Memo PW" //8044281
         ServiceShipmentBuffer.SETRANGE("Document No.", "Service Cr.Memo Line"."Document No.");
         ServiceShipmentBuffer.SETRANGE("Line No.", "Service Cr.Memo Line"."Line No.");
 
-        if ServiceShipmentBuffer.FIND('-') then begin
+        if ServiceShipmentBuffer.Findfirst() then begin
             ServiceShipmentBuffer2 := ServiceShipmentBuffer;
             if ServiceShipmentBuffer.NEXT() = 0 then begin
                 ServiceShipmentBuffer.GET(ServiceShipmentBuffer2."Document No.", ServiceShipmentBuffer2."Line No.", ServiceShipmentBuffer2.
@@ -1061,7 +1061,7 @@ report 99003 "Service - Credit Memo PW" //8044281
         ValueEntry.SETRANGE("Posting Date", "Service Cr.Memo Header"."Posting Date");
         ValueEntry.SETRANGE("Item Charge No.", '');
         ValueEntry.SETFILTER("Entry No.", '%1..', FirstValueEntryNo);
-        if ValueEntry.FIND('-') then
+        if ValueEntry.Findfirst() then
             repeat
                 if ItemLedgerEntry.GET(ValueEntry."Item Ledger Entry No.") then begin
                     if ServiceCrMemoLine2."Qty. per Unit of Measure" <> 0 then
@@ -1083,7 +1083,7 @@ report 99003 "Service - Credit Memo PW" //8044281
         ServiceShipmentBuffer.SETRANGE("Document No.", ServiceCrMemoLine."Document No.");
         ServiceShipmentBuffer.SETRANGE("Line No.", ServiceCrMemoLine."Line No.");
         ServiceShipmentBuffer.SETRANGE("Posting Date", PostingDate);
-        if ServiceShipmentBuffer.FIND('-') then begin
+        if ServiceShipmentBuffer.Findfirst() then begin
             ServiceShipmentBuffer.Quantity := ServiceShipmentBuffer.Quantity - QtyOnShipment;
             ServiceShipmentBuffer.MODIFY();
             exit;

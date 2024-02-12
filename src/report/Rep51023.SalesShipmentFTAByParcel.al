@@ -678,7 +678,7 @@ report 51023 "Sales - Shipment FTA By Parcel"
 
                         trigger OnPreDataItem()
                         begin
-                            MoreLines := FIND('+');
+                            MoreLines := Findlast();
                             while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) do
                                 MoreLines := NEXT(-1) <> 0;
                             if not MoreLines then

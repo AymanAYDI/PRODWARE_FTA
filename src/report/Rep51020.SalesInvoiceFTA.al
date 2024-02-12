@@ -2,7 +2,7 @@ report 51020 "Sales - Invoice FTA"
 {
 
     DefaultLayout = RDLC;
-    RDLCLayout = './SalesInvoiceFTA.rdlc';
+    RDLCLayout = './src/report/rdl/SalesInvoiceFTA.rdl';
 
     Caption = 'Sales - Invoice FTA';
     Permissions = TableData "Sales Shipment Buffer" = rimd;
@@ -612,7 +612,7 @@ report 51020 "Sales - Invoice FTA"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then
-                                    SalesShipmentBuffer.FIND('-')
+                                    SalesShipmentBuffer.Findfirst()
                                 else
                                     SalesShipmentBuffer.NEXT;
                             end;
@@ -820,7 +820,7 @@ report 51020 "Sales - Invoice FTA"
                             SalesShipmentBuffer.RESET;
                             SalesShipmentBuffer.DELETEALL;
                             FirstValueEntryNo := 0;
-                            MoreLines := FIND('+');
+                            MoreLines := Findlast();
                             while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
                                 MoreLines := NEXT(-1) <> 0;
                             if not MoreLines then
@@ -1588,7 +1588,7 @@ report 51020 "Sales - Invoice FTA"
         SalesShipmentBuffer.RESET;
         SalesShipmentBuffer.SETRANGE("Document No.", "Sales Invoice Line"."Document No.");
         SalesShipmentBuffer.SETRANGE("Line No.", "Sales Invoice Line"."Line No.");
-        if SalesShipmentBuffer.FIND('-') then begin
+        if SalesShipmentBuffer.Findfirst() then begin
             SalesShipmentBuffer2 := SalesShipmentBuffer;
             if SalesShipmentBuffer.NEXT = 0 then begin
                 SalesShipmentBuffer.GET(
@@ -1619,7 +1619,7 @@ report 51020 "Sales - Invoice FTA"
         ValueEntry.SETRANGE("Posting Date", "Sales Invoice Header"."Posting Date");
         ValueEntry.SETRANGE("Item Charge No.", '');
         ValueEntry.SETFILTER("Entry No.", '%1..', FirstValueEntryNo);
-        if ValueEntry.FIND('-') then
+        if ValueEntry.Findfirst() then
             repeat
                 if ItemLedgerEntry.GET(ValueEntry."Item Ledger Entry No.") then begin
                     if SalesInvoiceLine2."Qty. per Unit of Measure" <> 0 then
@@ -1649,14 +1649,14 @@ report 51020 "Sales - Invoice FTA"
         SalesInvoiceHeader.SETCURRENTKEY("Order No.");
         SalesInvoiceHeader.SETFILTER("No.", '..%1', "Sales Invoice Header"."No.");
         SalesInvoiceHeader.SETRANGE("Order No.", "Sales Invoice Header"."Order No.");
-        if SalesInvoiceHeader.FIND('-') then
+        if SalesInvoiceHeader.Findfirst() then
             repeat
                 SalesInvoiceLine2.SETRANGE("Document No.", SalesInvoiceHeader."No.");
                 SalesInvoiceLine2.SETRANGE("Line No.", SalesInvoiceLine."Line No.");
                 SalesInvoiceLine2.SETRANGE(Type, SalesInvoiceLine.Type);
                 SalesInvoiceLine2.SETRANGE("No.", SalesInvoiceLine."No.");
                 SalesInvoiceLine2.SETRANGE("Unit of Measure Code", SalesInvoiceLine."Unit of Measure Code");
-                if SalesInvoiceLine2.FIND('-') then
+                if SalesInvoiceLine2.Findfirst() then
                     repeat
                         TotalQuantity := TotalQuantity + SalesInvoiceLine2.Quantity;
                     until SalesInvoiceLine2.NEXT = 0;
@@ -1671,7 +1671,7 @@ report 51020 "Sales - Invoice FTA"
         SalesShipmentLine.SETRANGE("Unit of Measure Code", SalesInvoiceLine."Unit of Measure Code");
         SalesShipmentLine.SETFILTER(Quantity, '<>%1', 0);
 
-        if SalesShipmentLine.FIND('-') then
+        if SalesShipmentLine.Findfirst() then
             repeat
                 if "Sales Invoice Header"."Get Shipment Used" then
                     CorrectShipment(SalesShipmentLine);
@@ -1703,7 +1703,7 @@ report 51020 "Sales - Invoice FTA"
         SalesInvoiceLine.SETCURRENTKEY("Shipment No.", "Shipment Line No.");
         SalesInvoiceLine.SETRANGE("Shipment No.", SalesShipmentLine."Document No.");
         SalesInvoiceLine.SETRANGE("Shipment Line No.", SalesShipmentLine."Line No.");
-        if SalesInvoiceLine.FIND('-') then
+        if SalesInvoiceLine.Findfirst() then
             repeat
                 SalesShipmentLine.Quantity := SalesShipmentLine.Quantity - SalesInvoiceLine.Quantity;
             until SalesInvoiceLine.NEXT = 0;
@@ -1715,7 +1715,7 @@ report 51020 "Sales - Invoice FTA"
         SalesShipmentBuffer.SETRANGE("Document No.", SalesInvoiceLine."Document No.");
         SalesShipmentBuffer.SETRANGE("Line No.", SalesInvoiceLine."Line No.");
         SalesShipmentBuffer.SETRANGE("Posting Date", PostingDate);
-        if SalesShipmentBuffer.FIND('-') then begin
+        if SalesShipmentBuffer.Findfirst() then begin
             SalesShipmentBuffer.Quantity := SalesShipmentBuffer.Quantity + QtyOnShipment;
             SalesShipmentBuffer.MODIFY;
             exit;

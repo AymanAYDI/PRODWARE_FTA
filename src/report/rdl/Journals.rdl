@@ -2719,6 +2719,12 @@ End Function
         <Field Name="Hidden">
           <DataField>Hidden</DataField>
         </Field>
+        <Field Name="GBoolCentralisationPiece">
+          <DataField>GBoolCentralisationPiece</DataField>
+        </Field>
+        <Field Name="ConstGText001">
+          <DataField>ConstGText001</DataField>
+        </Field>
         <Field Name="FiscalYearStatusText">
           <DataField>FiscalYearStatusText</DataField>
         </Field>
@@ -2850,12 +2856,6 @@ End Function
         </Field>
         <Field Name="G_L_Account__Name">
           <DataField>G_L_Account__Name</DataField>
-        </Field>
-        <Field Name="GBoolCentralisationPiece">
-          <DataField>GBoolCentralisationPiece</DataField>
-        </Field>
-        <Field Name="ConstGText001">
-          <DataField>ConstGText001</DataField>
         </Field>
       </Fields>
       <Query>

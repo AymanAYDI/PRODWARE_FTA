@@ -517,7 +517,7 @@ report 90001 "Sales - Credit Memo PW" //8044275
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then
-                                    SalesShipmentBuffer.FIND('-')
+                                    SalesShipmentBuffer.Findfirst()
                                 else
                                     SalesShipmentBuffer.NEXT();
                             end;
@@ -544,7 +544,7 @@ report 90001 "Sales - Credit Memo PW" //8044275
                                 Text021: Label '%1 %2  %3', Comment = '%1=DimText,2% = DimSetEntry2."Dimension Code", 3% = DimSetEntry2."Dimension Value Code"';
                             begin
                                 if Number = 1 then begin
-                                    if not DimSetEntry2.FIND('-') then
+                                    if not DimSetEntry2.Findfirst() then
                                         CurrReport.BREAK();
                                 end else
                                     if not Continue then
@@ -614,7 +614,7 @@ report 90001 "Sales - Credit Memo PW" //8044275
                             SalesShipmentBuffer.RESET();
                             SalesShipmentBuffer.DELETEALL();
                             FirstValueEntryNo := 0;
-                            MoreLines := FIND('+');
+                            MoreLines := Findlast();
                             while MoreLines and (Description = '') and ("No." = '') and (Quantity = 0) and (Amount = 0) do
                                 MoreLines := NEXT(-1) <> 0;
                             if not MoreLines then
@@ -1236,7 +1236,7 @@ report 90001 "Sales - Credit Memo PW" //8044275
         SalesShipmentBuffer.SETRANGE("Document No.", "Sales Cr.Memo Line"."Document No.");
         SalesShipmentBuffer.SETRANGE("Line No.", "Sales Cr.Memo Line"."Line No.");
 
-        if SalesShipmentBuffer.FIND('-') then begin
+        if SalesShipmentBuffer.Findfirst() then begin
             SalesShipmentBuffer2 := SalesShipmentBuffer;
             if SalesShipmentBuffer.NEXT() = 0 then begin
                 SalesShipmentBuffer.GET(
@@ -1266,7 +1266,7 @@ report 90001 "Sales - Credit Memo PW" //8044275
         ValueEntry.SETRANGE("Posting Date", "Sales Cr.Memo Header"."Posting Date");
         ValueEntry.SETRANGE("Item Charge No.", '');
         ValueEntry.SETFILTER("Entry No.", '%1..', FirstValueEntryNo);
-        if ValueEntry.FIND('-') then
+        if ValueEntry.Findfirst() then
             repeat
                 if ItemLedgerEntry.GET(ValueEntry."Item Ledger Entry No.") then begin
                     if SalesCrMemoLine2."Qty. per Unit of Measure" <> 0 then
@@ -1296,14 +1296,14 @@ report 90001 "Sales - Credit Memo PW" //8044275
         SalesCrMemoHeader.SETCURRENTKEY("Return Order No.");
         SalesCrMemoHeader.SETFILTER("No.", '..%1', "Sales Cr.Memo Header"."No.");
         SalesCrMemoHeader.SETRANGE("Return Order No.", "Sales Cr.Memo Header"."Return Order No.");
-        if SalesCrMemoHeader.FIND('-') then
+        if SalesCrMemoHeader.Findfirst() then
             repeat
                 SalesCrMemoLine2.SETRANGE("Document No.", SalesCrMemoHeader."No.");
                 SalesCrMemoLine2.SETRANGE("Line No.", SalesCrMemoLine."Line No.");
                 SalesCrMemoLine2.SETRANGE(Type, SalesCrMemoLine.Type);
                 SalesCrMemoLine2.SETRANGE("No.", SalesCrMemoLine."No.");
                 SalesCrMemoLine2.SETRANGE("Unit of Measure Code", SalesCrMemoLine."Unit of Measure Code");
-                if SalesCrMemoLine2.FIND('-') then
+                if SalesCrMemoLine2.Findfirst() then
                     repeat
                         TotalQuantity := TotalQuantity + SalesCrMemoLine2.Quantity;
                     until SalesCrMemoLine2.NEXT() = 0;
@@ -1318,7 +1318,7 @@ report 90001 "Sales - Credit Memo PW" //8044275
         ReturnReceiptLine.SETRANGE("Unit of Measure Code", SalesCrMemoLine."Unit of Measure Code");
         ReturnReceiptLine.SETFILTER(Quantity, '<>%1', 0);
 
-        if ReturnReceiptLine.FIND('-') then
+        if ReturnReceiptLine.Findfirst() then
             repeat
                 if "Sales Cr.Memo Header"."Get Return Receipt Used" then
                     CorrectShipment(ReturnReceiptLine);
@@ -1349,7 +1349,7 @@ report 90001 "Sales - Credit Memo PW" //8044275
         SalesCrMemoLine.SETCURRENTKEY("Return Receipt No.", "Return Receipt Line No.");
         SalesCrMemoLine.SETRANGE("Return Receipt No.", ReturnReceiptLine."Document No.");
         SalesCrMemoLine.SETRANGE("Return Receipt Line No.", ReturnReceiptLine."Line No.");
-        if SalesCrMemoLine.FIND('-') then
+        if SalesCrMemoLine.Findfirst() then
             repeat
                 ReturnReceiptLine.Quantity := ReturnReceiptLine.Quantity - SalesCrMemoLine.Quantity;
             until SalesCrMemoLine.NEXT() = 0;
@@ -1360,7 +1360,7 @@ report 90001 "Sales - Credit Memo PW" //8044275
         SalesShipmentBuffer.SETRANGE("Document No.", SalesCrMemoLine."Document No.");
         SalesShipmentBuffer.SETRANGE("Line No.", SalesCrMemoLine."Line No.");
         SalesShipmentBuffer.SETRANGE("Posting Date", PostingDate);
-        if SalesShipmentBuffer.FIND('-') then begin
+        if SalesShipmentBuffer.Findfirst() then begin
             SalesShipmentBuffer.Quantity := SalesShipmentBuffer.Quantity - QtyOnShipment;
             SalesShipmentBuffer.MODIFY();
             exit;

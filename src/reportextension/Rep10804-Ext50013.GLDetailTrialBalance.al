@@ -5,6 +5,7 @@ using Microsoft.Finance.GeneralLedger.Reports;
 using Microsoft.Finance.GeneralLedger.Ledger;
 reportextension 50013 "GLDetailTrialBalance" extends "G/L Detail Trial Balance"//10804
 {
+    RDLCLayout = './src/reportextension/rdlc/GLDetailTrialBalance.rdl';
     dataset
     {
         add("G/L Account")

@@ -95,7 +95,7 @@ pageextension 50005 "VendorLedgerEntries" extends "Vendor Ledger Entries"//29
         DecLAmount: Decimal;
     begin
         RecLVendEntry.COPY(Rec);
-        if RecLVendEntry.FIND('-') then
+        if RecLVendEntry.Findfirst() then
             repeat
 
                 RecLVendEntry.CALCFIELDS("Remaining Amt. (LCY)");

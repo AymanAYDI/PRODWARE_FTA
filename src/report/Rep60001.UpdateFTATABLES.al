@@ -6,7 +6,7 @@ using System.Security.AccessControl;
 report 60001 "Update FTA-TABLES"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './UpdateFTATABLES.rdlc';
+    RDLCLayout = './src/report/rdl/UpdateFTATABLES.rdl';
 
     dataset
     {

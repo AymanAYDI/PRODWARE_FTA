@@ -272,7 +272,7 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Page, Page::"Apply Customer Entries", 'OnSetCustApplIdAfterCheckAgainstApplnCurrency', '', false, false)]
     local procedure OnSetCustApplIdAfterCheckAgainstApplnCurrency(var CustLedgerEntry: Record "Cust. Ledger Entry"; CalcType: Option; var GenJnlLine: Record "Gen. Journal Line"; SalesHeader: Record "Sales Header"; ServHeader: Record "Service Header"; ApplyingCustLedgEntry: Record "Cust. Ledger Entry")
     var
-        ApplyCustomerEntries: Page "Apply Customer Entries";
+        ApplyCustomerEntries: Page "Apply Customer Entries"; //Todo : verifier 
     begin
         ApplyCustomerEntries.VerifPostingGroup(CustLedgerEntry."Applies-to ID", CustLedgerEntry."Customer Posting Group");
     end;
@@ -280,10 +280,10 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnCodeOnBeforeTestOrder', '', false, false)]
     local procedure OnCodeOnBeforeTestOrder(ItemJnlLine: Record "Item Journal Line"; var IsHandled: Boolean)
     begin
-        if not IsHandled then
-            if ItemJnlLine.IsAssemblyOutputLine() then
-                ItemJnlLine.TestField("Order Line No.", 0);
+        if ItemJnlLine.IsAssemblyOutputLine() then
+            ItemJnlLine.TestField("Order Line No.", 0);
         IsHandled := true;
+
     end;
     //CodeUnit 22
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnItemQtyPostingOnBeforeApplyItemLedgEntry', '', false, false)]
@@ -471,12 +471,12 @@ codeunit 50031 "FTA_Events"
             RecLReportUser.Email := SendAsEmail;
             RecLReportUser.MODIFY();
             COMMIT();
+            if SendAsEmail then
+                ReportSelections.SendEmailToCust(
+                    ReportUsage, SalesHeader, SalesHeader."No.", SalesHeader.GetDocTypeTxt(), true, SalesHeader.GetBillToNo())
+            else
+                ReportSelections.PrintForCust(ReportUsage, SalesHeader, SalesHeader.FieldNo("Bill-to Customer No."));
         until ReportSelections.Next() = 0;
-        if SendAsEmail then
-            ReportSelections.SendEmailToCust(
-                ReportUsage, SalesHeader, SalesHeader."No.", SalesHeader.GetDocTypeTxt(), true, SalesHeader.GetBillToNo())
-        else
-            ReportSelections.PrintForCust(ReportUsage, SalesHeader, SalesHeader.FieldNo("Bill-to Customer No."));
         IsPrinted := true;
     end;
     //CodeUnit 229
@@ -563,6 +563,7 @@ codeunit 50031 "FTA_Events"
                 ShowStrMenu := false;
             end;
     end;
+    //  todo : line 322
     //CodeUnit 5812
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Calculate Standard Cost", 'OnCalcAssemblyItemOnAfterCalcItemCost', '', false, false)]
     local procedure OnCalcAssemblyItemOnAfterCalcItemCost(var Item: Record Item; CompItem: Record Item; BOMComponent: Record "BOM Component"; ComponentQuantity: Decimal)
@@ -573,6 +574,8 @@ codeunit 50031 "FTA_Events"
         end
         else
             if not (CompItem.IsAssemblyItem() or CompItem.IsMfgItem()) then begin
+                Item."Rolled-up Material Cost" -= ComponentQuantity * CompItem."Unit Cost";
+                Item."Single-Level Material Cost" -= ComponentQuantity * CompItem."Unit Cost";
                 Item."Rolled-up Material Cost" += ComponentQuantity * CompItem."Purchase Price Base";
                 Item."Single-Level Material Cost" += ComponentQuantity * CompItem."Purchase Price Base";
             end
@@ -597,6 +600,20 @@ codeunit 50031 "FTA_Events"
         //         IncrCost(RUMat, CompItem."Unit Cost", CompItemQtyBase);
         //     end;
     end;
+    // todo : verifier line 606
+    //CodeUnit 5812
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Calculate Standard Cost", 'OnCalcProdBOMCostOnAfterCalcAnyItem', '', false, false)]
+    local procedure OnCalcProdBOMCostOnAfterCalcAnyItem2(var ProductionBOMLine: Record "Production BOM Line"; MfgItem: Record Item; MfgItemQtyBase: Decimal; CompItem: Record Item; CompItemQtyBase: Decimal; Level: Integer; IsTypeItem: Boolean; UOMFactor: Decimal; var SLMat: Decimal; var RUMat: Decimal; var RUCap: Decimal; var RUSub: Decimal; var RUCapOvhd: Decimal; var RUMfgOvhd: Decimal)
+    var
+        GLSetup: Record "General Ledger Setup";
+    begin
+        GLSetup.get();
+        if CompItem.IsInventoriableType() then
+            if CompItem.IsMfgItem() or CompItem.IsAssemblyItem() then begin
+                SLMat := SLMat - Round(CompItemQtyBase * CompItem."Standard Cost", GLSetup."Unit-Amount Rounding Precision");
+                SLMat := SLMat + Round(CompItemQtyBase * CompItem."Purchase Price Base", GLSetup."Unit-Amount Rounding Precision");
+            end;
+    end;
     //CodeUnit 10860
     //TODO: i can't find solution line 263..264
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Payment Management", 'OnCopyLigBorOnBeforeToPaymentLineInsert', '', false, false)]
@@ -611,10 +628,9 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Payment Management", 'OnPostInvPostingBufferOnBeforeGenJnlPostLineRunWithCheck', '', false, false)]
     local procedure OnPostInvPostingBufferOnBeforeGenJnlPostLineRunWithCheck(var GenJnlLine: Record "Gen. Journal Line"; var PaymentHeader: Record "Payment Header"; var PaymentClass: Record "Payment Class")
     var
-        GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line";
+        ftaFunctions: Codeunit FTA_Functions;
     begin
-        //TODO : procedure not migrated yet
-        //GenJnlPostLine.FctFromPaymentMgt(true);
+        ftaFunctions.FctFromPaymentMgt(true);
     end;
     //CodeUnit 99000831
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reservation Engine Mgt.", 'OnBeforeCloseReservEntry', '', false, false)]
@@ -754,7 +770,8 @@ codeunit 50031 "FTA_Events"
         Clear(ValueArray);
         case EntryStatus of
             0:
-                begin // Reservation
+                begin
+                    // Reservation
                     ValueArray[1] := Enum::"Reservation Summary Type"::"Item Ledger Entry".AsInteger();
                     ValueArray[2] := Enum::"Reservation Summary Type"::"Sales Order".AsInteger();
                     //    TODO : variable globale
@@ -818,6 +835,12 @@ codeunit 50031 "FTA_Events"
                 end;
         end;
         IsHandled := true;
+    end;
+    //Page 498
+    [EventSubscriber(ObjectType::Page, Page::"Reservation", 'OnAfterSetSalesLine', '', false, false)]
+    local procedure OnAfterSetSalesLine2(var EntrySummary: Record "Entry Summary"; ReservEntry: Record "Reservation Entry")
+    begin
+        // SetReservEntryFTA(ReservEntry); //TODO : i can't find solution
     end;
     //<<<<<<<<<<<<<<<<<<Partie Mortadha >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     //Codeunit 12 Line 811
@@ -1216,70 +1239,102 @@ codeunit 50031 "FTA_Events"
     end;
 
     //codeunit 99000830
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Create Reserv. Entry", 'OnTransferReservEntryOnAfterTransferFields', '', false, false)]
-    local procedure OnTransferReservEntryOnAfterTransferFields(var NewReservationEntry: Record "Reservation Entry"; var OldReservationEntry: Record "Reservation Entry"; var UseQtyToHandle: Boolean; var UseQtyToInvoice: Boolean; var CurrSignFactor: Integer)
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Create Reserv. Entry", 'OnTransferReservEntryOnAfterTransferFields', '', false, false)]
+    // local procedure OnTransferReservEntryOnAfterTransferFields(var NewReservationEntry: Record "Reservation Entry"; var OldReservationEntry: Record "Reservation Entry"; var UseQtyToHandle: Boolean; var UseQtyToInvoice: Boolean; var CurrSignFactor: Integer)
+    // var
+    //     ItemJournalLine: Record "Item Journal Line";
+    //     RecLReservEntry: Record "Reservation Entry";
+    //     RecLxOldReservEntry: Record "Reservation Entry" temporary;
+    //     RecLSalesLine: Record "Sales Line";
+    //     RecLSalesLine2: Record "Sales Line";
+    //     CreateReservEntry: Codeunit "Create Reserv. Entry";
+    //     QtyToHandleThisLine: Decimal;
+    //     QtyToInvoiceThisLine: Decimal;
+    //     TransferQty: Decimal;
+    //     xTransferQty: Decimal;
+
+    // begin
+
+    //     RecLxOldReservEntry.TRANSFERFIELDS(OldReservationEntry);
+
+
+    //     /*******************/
+    //     case OldReservationEntry."Source Type" of
+    //         Database::"Sales Line":
+    //             begin
+    //                 UseQtyToHandle := OldReservationEntry.TrackingExists();
+    //                 RecLSalesLine2.get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
+    //                 TransferQty := RecLSalesLine2."Outstanding Qty. (Base)";
+    //                 CurrSignFactor := CreateReservEntry.SignFactor(OldReservationEntry);
+    //                 TransferQty := TransferQty * CurrSignFactor;
+    //                 xTransferQty := TransferQty;
+
+    //                 if UseQtyToHandle then begin // Used when handling Item Tracking
+    //                     QtyToHandleThisLine := OldReservationEntry."Qty. to Handle (Base)";
+    //                     QtyToInvoiceThisLine := OldReservationEntry."Qty. to Invoice (Base)";
+    //                     if Abs(TransferQty) > Abs(QtyToHandleThisLine) then
+    //                         TransferQty := QtyToHandleThisLine;
+    //                     if UseQtyToInvoice then // Used when posting sales and purchase
+    //                         if Abs(TransferQty) > Abs(QtyToInvoiceThisLine) then
+    //                             TransferQty := QtyToInvoiceThisLine;
+    //                 end else
+    //                     QtyToHandleThisLine := OldReservationEntry."Quantity (Base)";
+    //             end;
+    //         Database::"Item Journal Line":
+    //             begin
+    //                 UseQtyToHandle := OldReservationEntry.TrackingExists();
+    //                 ItemJournalLine.get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
+    //                 // TransferQty := ItemJournalLine."Outstanding Qty. (Base)";//QtyToBeShippedBase("Quanity (Base)")
+    //                 CurrSignFactor := CreateReservEntry.SignFactor(OldReservationEntry);
+    //                 TransferQty := TransferQty * CurrSignFactor;
+    //                 xTransferQty := TransferQty;
+
+    //                 if UseQtyToHandle then begin // Used when handling Item Tracking
+    //                     QtyToHandleThisLine := OldReservationEntry."Qty. to Handle (Base)";
+    //                     QtyToInvoiceThisLine := OldReservationEntry."Qty. to Invoice (Base)";
+    //                     if Abs(TransferQty) > Abs(QtyToHandleThisLine) then
+    //                         TransferQty := QtyToHandleThisLine;
+    //                     if UseQtyToInvoice then // Used when posting sales and purchase
+    //                         if Abs(TransferQty) > Abs(QtyToInvoiceThisLine) then
+    //                             TransferQty := QtyToInvoiceThisLine;
+    //                 end else
+    //                     QtyToHandleThisLine := OldReservationEntry."Quantity (Base)";
+    //             end;
+    //     end;
+    //     /*************************/
+
+
+    //     if (TransferQty <> 0) and (RecLxOldReservEntry."Source Type" = 39) then begin
+    //         RecLReservEntry.SETRANGE("Entry No.", RecLxOldReservEntry."Entry No.");
+    //         RecLReservEntry.SETRANGE("Source Type", 37);
+    //         RecLReservEntry.SETRANGE("Item No.", RecLxOldReservEntry."Item No.");
+    //         if not RecLReservEntry.ISEMPTY then begin
+    //             RecLReservEntry.FINDSET();
+    //             repeat
+    //                 if RecLSalesLine.GET(RecLReservEntry."Source Subtype", RecLReservEntry."Source ID", RecLReservEntry."Source Ref. No.") then begin
+    //                     RecLSalesLine.CALCFIELDS("Reserved Quantity");
+    //                     if (RecLSalesLine."Preparation Type" <> RecLSalesLine."Preparation Type"::Stock) and
+    //                        (RecLSalesLine."Reserved Quantity" <= ABS(TransferQty)) and
+    //                         (RecLSalesLine."Outstanding Qty. (Base)" <= ABS(TransferQty)) then begin
+    //                         RecLSalesLine."Preparation Type" := RecLSalesLine."Preparation Type"::Stock;
+    //                         RecLSalesLine.MODIFY();
+    //                     end;
+    //                 end;
+    //             until RecLReservEntry.NEXT() = 0;
+    //         end;
+    //     end;
+    //     //<<FE-DIVERS 18/09/2009
+    // end; //TODO Verif
+
+    //codeunit 99000830
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Create Reserv. Entry", 'OnTransferReservEntryOnAfterCalcNewButUnchangedVersion', '', false, false)]
+    local procedure OnTransferReservEntryOnAfterCalcNewButUnchangedVersion(var NewReservEntry: Record "Reservation Entry"; OldReservEntry: Record "Reservation Entry"; TransferQty: Decimal; var DoCreateNewButUnchangedVersion: Boolean)
     var
-        ItemJournalLine: Record "Item Journal Line";
         RecLReservEntry: Record "Reservation Entry";
         RecLxOldReservEntry: Record "Reservation Entry" temporary;
         RecLSalesLine: Record "Sales Line";
-        RecLSalesLine2: Record "Sales Line";
-        CreateReservEntry: Codeunit "Create Reserv. Entry";
-        QtyToHandleThisLine: Decimal;
-        QtyToInvoiceThisLine: Decimal;
-        TransferQty: Decimal;
-        xTransferQty: Decimal;
-
     begin
-
-        RecLxOldReservEntry.TRANSFERFIELDS(OldReservationEntry);
-
-
-        /*******************/
-        case OldReservationEntry."Source Type" of
-            Database::"Sales Line":
-                begin
-                    UseQtyToHandle := OldReservationEntry.TrackingExists();
-                    RecLSalesLine2.get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
-                    TransferQty := RecLSalesLine2."Outstanding Qty. (Base)";
-                    CurrSignFactor := CreateReservEntry.SignFactor(OldReservationEntry);
-                    TransferQty := TransferQty * CurrSignFactor;
-                    xTransferQty := TransferQty;
-
-                    if UseQtyToHandle then begin // Used when handling Item Tracking
-                        QtyToHandleThisLine := OldReservationEntry."Qty. to Handle (Base)";
-                        QtyToInvoiceThisLine := OldReservationEntry."Qty. to Invoice (Base)";
-                        if Abs(TransferQty) > Abs(QtyToHandleThisLine) then
-                            TransferQty := QtyToHandleThisLine;
-                        if UseQtyToInvoice then // Used when posting sales and purchase
-                            if Abs(TransferQty) > Abs(QtyToInvoiceThisLine) then
-                                TransferQty := QtyToInvoiceThisLine;
-                    end else
-                        QtyToHandleThisLine := OldReservationEntry."Quantity (Base)";
-                end;
-            Database::"Item Journal Line":
-                begin
-                    UseQtyToHandle := OldReservationEntry.TrackingExists();
-                    ItemJournalLine.get(OldReservationEntry."Source Type", OldReservationEntry."Source ID", OldReservationEntry."Source Ref. No.");
-                    // TransferQty := ItemJournalLine."Outstanding Qty. (Base)";//QtyToBeShippedBase("Quanity (Base)")
-                    CurrSignFactor := CreateReservEntry.SignFactor(OldReservationEntry);
-                    TransferQty := TransferQty * CurrSignFactor;
-                    xTransferQty := TransferQty;
-
-                    if UseQtyToHandle then begin // Used when handling Item Tracking
-                        QtyToHandleThisLine := OldReservationEntry."Qty. to Handle (Base)";
-                        QtyToInvoiceThisLine := OldReservationEntry."Qty. to Invoice (Base)";
-                        if Abs(TransferQty) > Abs(QtyToHandleThisLine) then
-                            TransferQty := QtyToHandleThisLine;
-                        if UseQtyToInvoice then // Used when posting sales and purchase
-                            if Abs(TransferQty) > Abs(QtyToInvoiceThisLine) then
-                                TransferQty := QtyToInvoiceThisLine;
-                    end else
-                        QtyToHandleThisLine := OldReservationEntry."Quantity (Base)";
-                end;
-        end;
-        /*************************/
-
+        RecLxOldReservEntry.TRANSFERFIELDS(OldReservEntry);
 
         if (TransferQty <> 0) and (RecLxOldReservEntry."Source Type" = 39) then begin
             RecLReservEntry.SETRANGE("Entry No.", RecLxOldReservEntry."Entry No.");
@@ -1300,26 +1355,7 @@ codeunit 50031 "FTA_Events"
                 until RecLReservEntry.NEXT() = 0;
             end;
         end;
-        //<<FE-DIVERS 18/09/2009
     end;
-    //Report 296   
-    [EventSubscriber(ObjectType::Report, Report::"Batch Post Sales Orders", 'OnAfterOnOpenPage', '', true, false)]
-    local procedure OnAfterOnOpenPage(var ShipReq: Boolean; var InvReq: Boolean; var PostingDateReq: Date; var ReplacePostingDate: Boolean; var ReplaceDocumentDate: Boolean; var CalcInvDisc: Boolean; var ReplaceVATDateReq: Boolean; var VATDateReq: Date)
-    var
-        RecLSalesReceivablesSetup: Record "Sales & Receivables Setup";
-    begin
-        //>>FE-DIVERS 18/09/2009
-        RecLSalesReceivablesSetup.GET();
-        if RecLSalesReceivablesSetup."Default Posting Date" = RecLSalesReceivablesSetup."Default Posting Date"::"Work Date" then begin
-            PostingDateReq := WORKDATE();
-            ReplacePostingDate := true;
-        end;
-        ShipReq := false;
-        InvReq := true;
-        //<<FE-DIVERS 18/09/2009
-    end;
-
-
     //<<<<<<<<<<<<<<<<<<Partie Iheb >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     //Report 295
     [EventSubscriber(ObjectType::Report, report::"Combine Shipments", 'OnBeforeSalesInvHeaderModify', '', false, false)]
@@ -1409,7 +1445,7 @@ codeunit 50031 "FTA_Events"
     [EventSubscriber(ObjectType::Page, Page::"Apply Vendor Entries", 'OnBeforeCallVendEntrySetApplIDSetApplId', '', true, false)]
     local procedure OnBeforeCallVendEntrySetApplIDSetApplId(VendEntrySetApplID: Codeunit "Vend. Entry-SetAppl.ID"; var VendorLedgerEntry: Record "Vendor Ledger Entry"; var TempApplyingVendLedgEntry: Record "Vendor Ledger Entry"; var IsHandled: Boolean)
     var
-        AppVendEntries: Page "Apply Vendor Entries";
+        AppVendEntries: Page "Apply Vendor Entries"; //todo : ---> verifier 
     begin
         AppVendEntries.VerifPostingGroup(VendorLedgerEntry."Applies-to ID", VendorLedgerEntry."Vendor Posting Group");
     end;
@@ -1443,12 +1479,18 @@ codeunit 50031 "FTA_Events"
         PurchaseLine.CALCFIELDS("Reserved Quantity");
         PurchaseLine.TESTFIELD("Reserved Quantity", 0);
     end;
-
+    //redirect report
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Reporting Triggers", 'SubstituteReport', '', false, false)]
     local procedure SubstituteReport(ReportId: Integer; RunMode: Option Normal,ParametersOnly,Execute,Print,SaveAs,RunModal; RequestPageXml: Text; RecordRef: RecordRef; var NewReportId: Integer)
     begin
         if ReportId = Report::"Batch Post Sales Orders" then
             NewReportId := Report::"Batch.Post.Sales.Orders";
+        if ReportId = Report::"Sales Reservation Avail." then
+            NewReportId := Report::"Sales Reservation Avail.spe";
+        if ReportId = Report::"Item Register - Quantity" then
+            NewReportId := Report::"Item Register - Quantityspe";
+        if ReportId = Report::Journals then
+            NewReportId := Report::JournalsFTA;
     end;
     //Table 21
     [EventSubscriber(ObjectType::Table, Database::"Cust. Ledger Entry", 'OnAfterCopyCustLedgerEntryFromGenJnlLine', '', false, false)]
@@ -1464,7 +1506,6 @@ codeunit 50031 "FTA_Events"
         RecLPurchHeader: Record "Purchase Header";
         SalesHeader: Record "Sales Header";//TODO A verifier
         TextCdeTransp002: Label 'There is a Shipping Purchase order linked (Order %1), do you want to delete this order?';
-
     begin
         if SalesHeader."Shipping Order No." <> '' then
             if CONFIRM(STRSUBSTNO(TextCdeTransp002, SalesHeader."Shipping Order No.")) then
@@ -1487,36 +1528,7 @@ codeunit 50031 "FTA_Events"
             SalesHeader.TESTFIELD(Packer);
         end;
     end;
-
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeCheckPostingFlags', '', false, false)]
-
-    local procedure OnBeforeCheckPostingFlags(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean)
-    begin
-        //      //>>FEP_ST01_20070801_stock negatif.002
-        //           {
-        //           //>>FEP_ST01_20070801_stock negatif.001
-        //           BooLInventory := FALSE;
-        //           IF RecLInventorySetup.GET THEN;
-        //           IF Ship THEN
-        //             IF RecLInventorySetup."Negative Inventory Not Allowed" THEN
-        //             BEGIN
-        //               CLEAR(RecLSalesLineInventory);
-        //               RecLSalesLineInventory.SETRANGE("Document Type",SalesHeader."Document Type");
-        //               RecLSalesLineInventory.SETRANGE("Document No.",SalesHeader."No.");
-        //               IF RecLSalesLineInventory.FINDFIRST THEN
-        //               REPEAT
-        //                 IF CuLSalesInfoPaneMgt.CalcAvailability(RecLSalesLineInventory) < 0 THEN
-        //                   BooLInventory := TRUE;
-        //               UNTIL RecLSalesLineInventory.NEXT = 0;
-        //             END;
-
-        //           IF BooLInventory THEN
-        //             ERROR(CtsL001);
-        //           //<<FEP_ST01_20070801_stock negatif.001
-        //           }
-        //           //<<FEP_ST01_20070801_stock negatif.002
-    end; //TODO
-         //Codeunit 80
+    //Codeunit 80
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforeArchiveUnpostedOrder', '', false, false)]
 
     local procedure OnBeforeArchiveUnpostedOrder(var SalesHeader: Record "Sales Header"; var IsHandled: Boolean; PreviewMode: Boolean; var OrderArchived: Boolean)
@@ -2197,50 +2209,47 @@ codeunit 50031 "FTA_Events"
         if FTASingleInstance.FctGetBooResaAssFTA() then
             FTASingleInstance.FctSetBooResaAssFTA(true);
     end;
-
-    //TODO Salesline and PurchLina are declared on global
-    // [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnAfterAutoReserve', '', false, false)]
-    // local procedure OnAfterAutoReserve(ReservEntry: Record "Reservation Entry")
-    // var
-    //     RecLReservEntry: Record "Reservation Entry";
-    //     RecLReservEntry2: Record "Reservation Entry";
-    //     RecLSalesLine: Record "Sales Line";
-    // begin
-    //     IF SalesLine."Document No." <> '' THEN BEGIN
-    //         RecLReservEntry.SETRANGE("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
-    //         RecLReservEntry.SETRANGE("Source Type", DATABASE::"Sales Line");
-    //         RecLReservEntry.SETRANGE("Source Subtype", SalesLine."Document Type");
-    //         RecLReservEntry.SETRANGE("Source ID", SalesLine."Document No.");
-    //         RecLReservEntry.SETRANGE("Source Ref. No.", SalesLine."Line No.");
-    //         IF RecLReservEntry.FINDLAST THEN BEGIN
-    //             IF RecLReservEntry2.GET(RecLReservEntry."Entry No.", TRUE) THEN BEGIN
-    //                 IF RecLReservEntry2."Source Type" = DATABASE::"Purchase Line" THEN
-    //                     SalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
-    //                 IF "Table ID" = DATABASE::"Item Ledger Entry" THEN
-    //                     SalesLine."Preparation Type" := SalesLine."Preparation Type"::Stock;
-    //                 SalesLine.MODIFY;
-    //             END;
-    //         END
-    //     END ELSE
-    //         IF PurchLine."Document No." <> '' THEN BEGIN
-    //             //>>TI298981
+    // todo : prod AutoReserve page 498
+    //    [EventSubscriber(ObjectType::Page, Page::Reservation, 'OnAfterAutoReserve', '', false, false)]
+    //     local procedure OnAfterAutoReserve(ReservEntry: Record "Reservation Entry")
+    //     var
+    //         RecLReservEntry: Record "Reservation Entry";
+    //         RecLReservEntry2: Record "Reservation Entry";
+    //         RecLSalesLine: Record "Sales Line";
+    //     begin
+    //         if SalesLine."Document No." <> '' then begin
     //             RecLReservEntry.SETRANGE("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
-    //             RecLReservEntry.SETRANGE("Source Type", DATABASE::"Purchase Line");
-    //             RecLReservEntry.SETRANGE("Source Subtype", PurchLine."Document Type");
-    //             RecLReservEntry.SETRANGE("Source ID", PurchLine."Document No.");
-    //             RecLReservEntry.SETRANGE("Source Ref. No.", PurchLine."Line No.");
-    //             IF RecLReservEntry.FINDLAST THEN
-    //                 IF RecLReservEntry2.GET(RecLReservEntry."Entry No.", FALSE) THEN
-    //                     IF RecLReservEntry2."Source Type" = DATABASE::"Sales Line" THEN
-    //                         IF RecLSalesLine.GET(RecLReservEntry2."Source Subtype", RecLReservEntry2."Source ID", RecLReservEntry2."Source Ref. No.") THEN BEGIN
-    //                             RecLSalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
-    //                             RecLSalesLine.MODIFY;
-    //                         END;
-    //         end;
-    // end;
-
+    //             RecLReservEntry.SETRANGE("Source Type", DATABASE::"Sales Line");
+    //             RecLReservEntry.SETRANGE("Source Subtype", SalesLine."Document Type");
+    //             RecLReservEntry.SETRANGE("Source ID", SalesLine."Document No.");
+    //             RecLReservEntry.SETRANGE("Source Ref. No.", SalesLine."Line No.");
+    //             if RecLReservEntry.FINDLAST then begin
+    //                 if RecLReservEntry2.GET(RecLReservEntry."Entry No.", true) then begin
+    //                     if RecLReservEntry2."Source Type" = DATABASE::"Purchase Line" then
+    //                         SalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
+    //                     if "Table ID" = DATABASE::"Item Ledger Entry" then
+    //                         SalesLine."Preparation Type" := SalesLine."Preparation Type"::Stock;
+    //                     SalesLine.MODIFY;
+    //                 end;
+    //             end
+    //         end else
+    //             if PurchLine."Document No." <> '' then begin
+    //                 //>>TI298981
+    //                 RecLReservEntry.SETRANGE("Reservation Status", RecLReservEntry."Reservation Status"::Reservation);
+    //                 RecLReservEntry.SETRANGE("Source Type", DATABASE::"Purchase Line");
+    //                 RecLReservEntry.SETRANGE("Source Subtype", PurchLine."Document Type");
+    //                 RecLReservEntry.SETRANGE("Source ID", PurchLine."Document No.");
+    //                 RecLReservEntry.SETRANGE("Source Ref. No.", PurchLine."Line No.");
+    //                 if RecLReservEntry.FINDLAST then
+    //                     if RecLReservEntry2.GET(RecLReservEntry."Entry No.", false) then
+    //                         if RecLReservEntry2."Source Type" = DATABASE::"Sales Line" then
+    //                             if RecLSalesLine.GET(RecLReservEntry2."Source Subtype", RecLReservEntry2."Source ID", RecLReservEntry2."Source Ref. No.") then begin
+    //                                 RecLSalesLine."Preparation Type" := SalesLine."Preparation Type"::Purchase;
+    //                                 RecLSalesLine.MODIFY();
+    //                             end;
+    //             end;
+    //     end;
     //    TODO can't find event  on DrillDownTotalQuantity
-
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Posting Selection Management", 'OnConfirmPostSalesDocumentOnBeforeSalesOrderGetSalesInvoicePostingPolicy', '', false, false)]
     local procedure OnConfirmPostSalesDocumentOnBeforeSalesOrderGetSalesInvoicePostingPolicy(var SalesHeader: Record "Sales Header")
     var
@@ -2250,5 +2259,13 @@ codeunit 50031 "FTA_Events"
         if RecLSalesReceivablesSetup."Default Posting Date" = RecLSalesReceivablesSetup."Default Posting Date"::"Work Date" then
             SalesHeader.VALIDATE("Posting Date", WORKDATE());
     end;
-
-}//
+    // Todo : i can't find solution table 9053
+    // [EventSubscriber(ObjectType::Table, Database::"Sales Cue", 'OnFilterOrdersOnAfterSalesHeaderSetFilters', '', false, false)]
+    // local procedure OnFilterOrdersOnAfterSalesHeaderSetFilters(var SalesHeader: Record "Sales Header")
+    // begin
+    //     SalesHeader.reset();
+    //     SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
+    //     SalesHeader.SetRange(Status, SalesHeader.Status::Released);
+    //     SalesHeader.SetRange("Completely Shipped", false);
+    // end;
+}

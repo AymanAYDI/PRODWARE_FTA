@@ -28,41 +28,8 @@ using Microsoft.Inventory.Item;
 using System.Security.User;
 report 51022 "Sales - Order Confirmation FTA"
 {
-    // ------------------------------------------------------------------------
-    // Prodware - www.prodware.fr
-    // ------------------------------------------------------------------------
-    // //>>FTA1.00
-    // FExxxx.001:PA 27/05/2015 : FE Short name
-    // - Add SalesPurchPersonPhoneNo in Data Type DataItem, Data Source Integer, Name PageLoop
-    //       SalesPurchPersonEMail
-    //       LblRefInt
-    //       LblPlannedDeliveryDate
-    //       SalesLineDescription2 in Data Type DataItem, Data Source Integer, Name RoundLoop
-    //       RecGItemNo2
-    //       SalesLinePlannedDeliveryDate
-    //       DecGNetUnitPriceExcludingVAT
-    // - Add C/AL Globals Variables
-    //                    Text Constants
-    // - Modify C/AL Globals Text Constants LblDescription
-    //                                      LblNo
-    //                                      UnitPriceCaptionLbl
-    //                                      AmountCaptionLbl
-    // - Add C/AL in RoundLoop - OnAfterGetRecord()
-    // - Design
-    // 
-    // //>>MODIF HL
-    // TI399519 DO.GEPO 08/01/2018 : modify layout : make hidden fields in bottom total HT
-    // ------------------------------------------------------------------------
-    // 
-    // //>>FTA.REPORT2018-0511
-    //   RoundLoop - OnAfterGetRecord()
-    //   Mise en Page (En-tête + colonnage)
-    // 
-    // //>>NDBI
-    // LALE.PA 27/07/2021 cf REQ-07040-V7Y7J4: Modification de l'accusé de réception
-    //         Modif C/AL Globals LblPlannedDeliveryDate
     DefaultLayout = RDLC;
-    RDLCLayout = './SalesOrderConfirmationFTA.rdlc';
+    RDLCLayout = './src/report/rdl/SalesOrderConfirmationFTA.rdl';
 
     Caption = 'Sales - Order Confirmation FTA';
 
@@ -460,7 +427,7 @@ report 51022 "Sales - Order Confirmation FTA"
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then begin
-                                if not DimSetEntry1.FIND('-') then
+                                if not DimSetEntry1.Findfirst() then
                                     CurrReport.BREAK();
                             end else
                                 if not Continue then
@@ -781,7 +748,7 @@ report 51022 "Sales - Order Confirmation FTA"
                             RecLItemCrossReference: Record "Item Reference";
                         begin
                             if Number = 1 then
-                                SalesLine.FIND('-')
+                                SalesLine.Findfirst()
                             else
                                 SalesLine.NEXT();
                             "Sales Line" := SalesLine;
@@ -861,7 +828,7 @@ report 51022 "Sales - Order Confirmation FTA"
 
                         trigger OnPreDataItem()
                         begin
-                            MoreLines := SalesLine.FIND('+');
+                            MoreLines := SalesLine.Findlast();
                             while MoreLines and (SalesLine.Description = '') and (SalesLine."Description 2" = '') and
                                   (SalesLine."No." = '') and (SalesLine.Quantity = 0) and
                                   (SalesLine.Amount = 0)
@@ -1111,7 +1078,7 @@ report 51022 "Sales - Order Confirmation FTA"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then begin
-                                    if not TempPrepmtDimSetEntry.FIND('-') then
+                                    if not TempPrepmtDimSetEntry.Findfirst() then
                                         CurrReport.BREAK();
                                 end else
                                     if not Continue then
@@ -1141,7 +1108,7 @@ report 51022 "Sales - Order Confirmation FTA"
                         trigger OnAfterGetRecord()
                         begin
                             if Number = 1 then begin
-                                if not PrepmtInvBuf.FIND('-') then
+                                if not PrepmtInvBuf.Findfirst() then
                                     CurrReport.BREAK();
                             end else
                                 if PrepmtInvBuf.NEXT() = 0 then
@@ -1217,7 +1184,7 @@ report 51022 "Sales - Order Confirmation FTA"
 
                         trigger OnPreDataItem()
                         begin
-                            if not PrepmtInvBuf.FIND('-') then
+                            if not PrepmtInvBuf.Findfirst() then
                                 CurrReport.BREAK();
                         end;
                     }

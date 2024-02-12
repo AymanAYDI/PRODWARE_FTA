@@ -136,7 +136,7 @@ table 50001 "Purchase Discount Worksheet"
         PurchLineDiscount.SETRANGE("Starting Date", 0D, "Starting Date");
         PurchLineDiscount.SETRANGE("Minimum Quantity", 0, "Minimum Quantity");
         PurchLineDiscount.SETRANGE("Variant Code", "Variant Code");
-        if PurchLineDiscount.FIND('+') then begin
+        if PurchLineDiscount.Findlast() then begin
             "New Line Discount %" := PurchLineDiscount."Line Discount %";
             PriceAlreadyExists := PurchLineDiscount."Starting Date" = "Starting Date";
         end else begin

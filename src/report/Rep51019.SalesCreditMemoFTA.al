@@ -565,7 +565,7 @@ report 51019 "Sales - Credit Memo FTA"
                             trigger OnAfterGetRecord()
                             begin
                                 if Number = 1 then
-                                    TempSalesShipmentBuffer.FIND('-')
+                                    TempSalesShipmentBuffer.Findfirst()
                                 else
                                     TempSalesShipmentBuffer.NEXT();
                             end;
@@ -592,7 +592,7 @@ report 51019 "Sales - Credit Memo FTA"
                                 Lbltxt002: Label '%1, %2 %3', Comment = '%1=DimText %2="Dimension Code" %3="Dimension Value Code"';
                             begin
                                 if Number = 1 then begin
-                                    if not DimSetEntry2.FIND('-') then
+                                    if not DimSetEntry2.Findfirst() then
                                         CurrReport.BREAK();
                                 end else
                                     if not Continue then
@@ -1408,7 +1408,7 @@ report 51019 "Sales - Credit Memo FTA"
         TempSalesShipmentBuffer.SETRANGE("Document No.", "Sales Cr.Memo Line"."Document No.");
         TempSalesShipmentBuffer.SETRANGE("Line No.", "Sales Cr.Memo Line"."Line No.");
 
-        if TempSalesShipmentBuffer.FIND('-') then begin
+        if TempSalesShipmentBuffer.Findfirst() then begin
             TempSalesShipmentBuffer2 := TempSalesShipmentBuffer;
             if TempSalesShipmentBuffer.NEXT() = 0 then begin
                 TempSalesShipmentBuffer.GET(
@@ -1439,7 +1439,7 @@ report 51019 "Sales - Credit Memo FTA"
         ValueEntry.SETRANGE("Posting Date", "Sales Cr.Memo Header"."Posting Date");
         ValueEntry.SETRANGE("Item Charge No.", '');
         ValueEntry.SETFILTER("Entry No.", '%1..', FirstValueEntryNo);
-        if ValueEntry.FIND('-') then
+        if ValueEntry.Findfirst() then
             repeat
                 if ItemLedgerEntry.GET(ValueEntry."Item Ledger Entry No.") then begin
                     if SalesCrMemoLine2."Qty. per Unit of Measure" <> 0 then
@@ -1470,14 +1470,14 @@ report 51019 "Sales - Credit Memo FTA"
         SalesCrMemoHeader.SETCURRENTKEY("Return Order No.");
         SalesCrMemoHeader.SETFILTER("No.", '..%1', "Sales Cr.Memo Header"."No.");
         SalesCrMemoHeader.SETRANGE("Return Order No.", "Sales Cr.Memo Header"."Return Order No.");
-        if SalesCrMemoHeader.FIND('-') then
+        if SalesCrMemoHeader.Findfirst() then
             repeat
                 SalesCrMemoLine2.SETRANGE("Document No.", SalesCrMemoHeader."No.");
                 SalesCrMemoLine2.SETRANGE("Line No.", SalesCrMemoLine."Line No.");
                 SalesCrMemoLine2.SETRANGE(Type, SalesCrMemoLine.Type);
                 SalesCrMemoLine2.SETRANGE("No.", SalesCrMemoLine."No.");
                 SalesCrMemoLine2.SETRANGE("Unit of Measure Code", SalesCrMemoLine."Unit of Measure Code");
-                if SalesCrMemoLine2.FIND('-') then
+                if SalesCrMemoLine2.Findfirst() then
                     repeat
                         TotalQuantity := TotalQuantity + SalesCrMemoLine2.Quantity;
                     until SalesCrMemoLine2.NEXT() = 0;
@@ -1492,7 +1492,7 @@ report 51019 "Sales - Credit Memo FTA"
         ReturnReceiptLine.SETRANGE("Unit of Measure Code", SalesCrMemoLine."Unit of Measure Code");
         ReturnReceiptLine.SETFILTER(Quantity, '<>%1', 0);
 
-        if ReturnReceiptLine.FIND('-') then
+        if ReturnReceiptLine.Findfirst() then
             repeat
                 if "Sales Cr.Memo Header"."Get Return Receipt Used" then
                     CorrectShipment(ReturnReceiptLine);
@@ -1524,7 +1524,7 @@ report 51019 "Sales - Credit Memo FTA"
         SalesCrMemoLine.SETCURRENTKEY("Return Receipt No.", "Return Receipt Line No.");
         SalesCrMemoLine.SETRANGE("Return Receipt No.", ReturnReceiptLine."Document No.");
         SalesCrMemoLine.SETRANGE("Return Receipt Line No.", ReturnReceiptLine."Line No.");
-        if SalesCrMemoLine.FIND('-') then
+        if SalesCrMemoLine.Findfirst() then
             repeat
                 ReturnReceiptLine.Quantity := ReturnReceiptLine.Quantity - SalesCrMemoLine.Quantity;
             until SalesCrMemoLine.NEXT() = 0;
@@ -1536,7 +1536,7 @@ report 51019 "Sales - Credit Memo FTA"
         TempSalesShipmentBuffer.SETRANGE("Document No.", SalesCrMemoLine."Document No.");
         TempSalesShipmentBuffer.SETRANGE("Line No.", SalesCrMemoLine."Line No.");
         TempSalesShipmentBuffer.SETRANGE("Posting Date", PostingDate);
-        if TempSalesShipmentBuffer.FIND('-') then begin
+        if TempSalesShipmentBuffer.Findfirst() then begin
             TempSalesShipmentBuffer.Quantity := TempSalesShipmentBuffer.Quantity - QtyOnShipment;
             TempSalesShipmentBuffer.MODIFY();
             exit;

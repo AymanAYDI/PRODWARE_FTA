@@ -1069,7 +1069,7 @@ report 50080 "Sales - PROFORMA FTA"
             //     COMMIT();
             //     CurrReport.LANGUAGE := GLOBALLANGUAGE;
             //     if not FileManagement.IsWebClient() then
-            //         if FIND('-') and ToDo.WRITEPERMISSION then
+            //         if Findfirst() and ToDo.WRITEPERMISSION then
             //             if Print and (NoOfRecords = 1) then
             //                 if CONFIRM(Text007) then
             //                     CreateTodo;

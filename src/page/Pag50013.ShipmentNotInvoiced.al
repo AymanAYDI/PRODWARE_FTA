@@ -255,7 +255,7 @@ page 50013 "Shipment Not Invoiced"
                                 if Rec."Document No." <> OldDocumentNo then begin
                                     SalesShipLine2.RESET();
                                     SalesShipLine2.SETRANGE("Document No.", Rec."Document No.");
-                                    //FGIF SalesShipLine2.FIND('-') THEN
+                                    //FGIF SalesShipLine2.Findfirst() THEN
                                     //FGSalesGetShpt.CreateInvLinesWithAll(SalesShipLine2);
                                 end;
                                 OldDocumentNo := Rec."Document No.";

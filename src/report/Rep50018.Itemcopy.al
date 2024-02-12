@@ -62,7 +62,7 @@ report 50018 "Item copy"
 
                     StockkeepingUnit.RESET();
                     StockkeepingUnit.SETRANGE("Item No.", Item."No.");
-                    if StockkeepingUnit.FIND('-') then
+                    if StockkeepingUnit.Findfirst() then
                         repeat
                             StockkeepingUnitNew := StockkeepingUnit;
                             StockkeepingUnitNew.VALIDATE("Item No.", NvNo);
@@ -108,7 +108,7 @@ report 50018 "Item copy"
 
 
                 TUniteMesure.SETRANGE(TUniteMesure."Item No.", Item."No.");
-                if TUniteMesure.FIND('-') then
+                if TUniteMesure.Findfirst() then
                     repeat
                         TUniteMesureNew.INIT();
                         TUniteMesureNew.TRANSFERFIELDS(TUniteMesure, true);
@@ -122,7 +122,7 @@ report 50018 "Item copy"
                 //Prix d'achats
                 if PrixAchat = true then begin
                     TPrixAchats.SETRANGE(TPrixAchats."Item No.", Item."No.");
-                    if TPrixAchats.FIND('-') then
+                    if TPrixAchats.Findfirst() then
                         repeat
                             TPrixAchatsNew.INIT();
                             TPrixAchatsNew.TRANSFERFIELDS(TPrixAchats, true);
@@ -135,7 +135,7 @@ report 50018 "Item copy"
                 //Prix de ventes
                 if PrixVentes = true then begin
                     TPrixVentes.SETRANGE(TPrixVentes."Item No.", Item."No.");
-                    if TPrixVentes.FIND('-') then
+                    if TPrixVentes.Findfirst() then
                         repeat
                             TPrixVentesNew.INIT();
                             TPrixVentesNew.TRANSFERFIELDS(TPrixVentes, true);
@@ -147,7 +147,7 @@ report 50018 "Item copy"
                 //Remises ventes
                 if RemisesVentes = true then begin
                     TRemisesVentes.SETRANGE(TRemisesVentes.Code, Item."No.");
-                    if TRemisesVentes.FIND('-') then
+                    if TRemisesVentes.Findfirst() then
                         repeat
                             TRemisesVentesNew.INIT();
                             TRemisesVentesNew.TRANSFERFIELDS(TRemisesVentes, true);
@@ -160,7 +160,7 @@ report 50018 "Item copy"
                 //Remises achats
                 if RemisesAchats = true then begin
                     TRemisesAchats.SETRANGE(TRemisesAchats."Item No.", Item."No.");
-                    if TRemisesAchats.FIND('-') then
+                    if TRemisesAchats.Findfirst() then
                         repeat
                             TRemisesAchatsNew.INIT();
                             TRemisesAchatsNew.TRANSFERFIELDS(TRemisesAchats, true);
@@ -172,7 +172,7 @@ report 50018 "Item copy"
                 //Catalogue Fournisseur
                 if CatalogueFour = true then begin
                     TCataFour.SETRANGE(TCataFour."Item No.", Item."No.");
-                    if TCataFour.FIND('-') then
+                    if TCataFour.Findfirst() then
                         repeat
                             TCataFourNew.INIT();
                             TCataFourNew.TRANSFERFIELDS(TCataFour, true);
@@ -198,7 +198,7 @@ report 50018 "Item copy"
 
                 if Substitution = true then begin
                     TSubstituttion.SETRANGE("No.", Item."No.");
-                    if TSubstituttion.FIND('-') then
+                    if TSubstituttion.Findfirst() then
                         repeat
                             TSubstituttionNew.INIT();
                             TSubstituttionNew.TRANSFERFIELDS(TSubstituttion, true);
@@ -214,7 +214,7 @@ report 50018 "Item copy"
 
                 if Traductions = true then begin
                     TTraductions.SETRANGE(TTraductions."Item No.", Item."No.");
-                    if TTraductions.FIND('-') then
+                    if TTraductions.Findfirst() then
                         repeat
                             TTraductionsNew.INIT();
                             TTraductionsNew.TRANSFERFIELDS(TTraductions, true);
@@ -225,7 +225,7 @@ report 50018 "Item copy"
 
                 if RéférencesEx = true then begin
                     TRefExterne.SETRANGE(TRefExterne."Item No.", Item."No.");
-                    if TRefExterne.FIND('-') then
+                    if TRefExterne.Findfirst() then
                         repeat
                             TRefExterneNew.INIT();
                             TRefExterneNew.TRANSFERFIELDS(TRefExterne, true);
@@ -237,7 +237,7 @@ report 50018 "Item copy"
 
                 if Variantes = true then begin
                     TVariantes.SETRANGE(TVariantes."Item No.", Item."No.");
-                    if TVariantes.FIND('-') then
+                    if TVariantes.Findfirst() then
                         repeat
                             TVariantesNew.INIT();
                             TVariantesNew.TRANSFERFIELDS(TVariantes, true);
@@ -250,7 +250,7 @@ report 50018 "Item copy"
                 if Commentaires = true then begin
                     TComment.SETRANGE(TComment."Table Name", TComment."Table Name"::Item);
                     TComment.SETRANGE(TComment."No.", Item."No.");
-                    if TComment.FIND('-') then
+                    if TComment.Findfirst() then
                         repeat
                             TCommentNew.INIT();
                             TCommentNew.TRANSFERFIELDS(TComment, true);
@@ -263,7 +263,7 @@ report 50018 "Item copy"
                 if AxesAnalytiques = true then begin
                     TAxesAnaly.SETRANGE(TAxesAnaly."Table ID", 27);
                     TAxesAnaly.SETRANGE(TAxesAnaly."No.", Item."No.");
-                    if TAxesAnaly.FIND('-') then
+                    if TAxesAnaly.Findfirst() then
                         repeat
                             TAxesAnalyNew.INIT();
                             TAxesAnalyNew.TRANSFERFIELDS(TAxesAnaly, true);
@@ -275,7 +275,7 @@ report 50018 "Item copy"
                 if TextGen = true then begin
                     TTextGenEntete.SETRANGE(TTextGenEntete."Table Name", TTextGenEntete."Table Name"::Item);
                     TTextGenEntete.SETRANGE(TTextGenEntete."No.", Item."No.");
-                    if TTextGenEntete.FIND('-') then
+                    if TTextGenEntete.Findfirst() then
                         repeat
                             TTextGenEnteteNew.INIT();
                             TTextGenEnteteNew.TRANSFERFIELDS(TTextGenEntete, true);
@@ -287,7 +287,7 @@ report 50018 "Item copy"
                 if TextGen = true then begin
                     TTextGenLigne.SETRANGE(TTextGenLigne."Table Name", TTextGenLigne."Table Name"::Item);
                     TTextGenLigne.SETRANGE(TTextGenLigne."No.", Item."No.");
-                    if TTextGenLigne.FIND('-') then
+                    if TTextGenLigne.Findfirst() then
                         repeat
                             TTextGenLigneNew.INIT();
                             TTextGenLigneNew.TRANSFERFIELDS(TTextGenLigne, true);
